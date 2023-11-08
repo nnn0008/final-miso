@@ -7,10 +7,10 @@ import com.kh.springfinal.vo.PaginationVO;
 
 public interface OneDao {
 	public void insert(OneDto oneDto);
-	public void delete(int oneNo);
+	boolean delete(int oneNo);
 	public List<OneDto> lsit();
 	OneDto selectOne(int oneNo);
-	public void update(OneDto oneDto);
+	boolean update(OneDto oneDto);
 
 	
 	

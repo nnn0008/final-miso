@@ -1,5 +1,6 @@
 package com.kh.springfinal.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,9 +23,8 @@ public class OneDaoImpl implements OneDao {
 	}
 
 	@Override
-	public void delete(int oneNo) {
-		int result = sqlSession.delete("one.delete",oneNo);
-		if(result == 0) return;//throw new NoTargetException();
+	public boolean delete(int oneNo) {
+		return sqlSession.delete("one.delete",oneNo)>0;
 	}
 
 	@Override
@@ -33,10 +33,11 @@ public class OneDaoImpl implements OneDao {
 	}
 
 	@Override
-	public void update(OneDto oneDto) {
-		Map<String, Object> param = Map.of("oneNo", oneDto.getOneNo(), "oneDto",oneDto);
-		int result = sqlSession.update("one.edit",param);
-		if(result == 0) return;//throw new NoTargetException();
+	public boolean update(OneDto oneDto) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("oneNo",oneDto.getOneNo());
+		params.put("oneDto",oneDto);
+		return sqlSession.update("one.edit",params)>0;
 	}
 
 	
