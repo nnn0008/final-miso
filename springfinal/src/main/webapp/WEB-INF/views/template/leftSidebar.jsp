@@ -5,7 +5,7 @@
    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.2/zephyr/bootstrap.min.css" rel="stylesheet">
     <!-- 스타일시트 로딩 코드 -->
-	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/reset.css">
+   <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/reset.css">
     <link href="${pageContext.request.contextPath}/css/misolayout.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/miso.css" rel="stylesheet">
     
