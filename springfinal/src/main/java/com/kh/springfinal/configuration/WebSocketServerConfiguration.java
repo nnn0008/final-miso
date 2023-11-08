@@ -9,6 +9,7 @@ import org.springframework.web.socket.server.support.HttpSessionHandshakeInterce
 
 import com.kh.springfinal.websocket.WebSocketServer;
 
+
 @EnableWebSocket //중요(기본적으로 잠겨있음)
 @Configuration
 public class WebSocketServerConfiguration implements WebSocketConfigurer{
