@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="chatRoom">
+	<insert id="add">
+		insert into chat_room(
+		chat_room_no
+		) values(
+		chat_room_seq.nextval
+		)
+	</insert>
+	
+	<select id="allList" resultType="ChatRoomDto">
+		select * from chat_room order by chat_room_no asc
+	</select>
+	
+	<select id="find" resultType="ChatRoomDto">
+	SELECT cr.chat_room_no
+	FROM chat_room cr
+	INNER JOIN club c ON c.club_no = cr.club_no
+	INNER JOIN club_member cm ON c.club_no = cm.club_no
+	WHERE cm.member_id = #{memberId}
+	</select>
+	
+	<select id="findChatRoomsByClubNo" resultType="ChatRoomDto">
+    SELECT cr.chat_room_no
+    FROM chat_room cr
+    INNER JOIN club c ON c.club_no = cr.club_no
+    WHERE c.club_no = #{clubNo}
+</select>
+	
+</mapper>
