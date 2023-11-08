@@ -1,0 +1,98 @@
+main {
+    margin: 0 auto; /* 가운데 정렬 */
+    font-size: 16px;
+    position: relative; /* main 요소를 relative로 설정 */
+    width: 1000px; /* main 요소의 너비를 1000px로 설정 */
+}
+header {
+        display: flex;
+        flex-wrap: nowrap;
+        min-height: 80px;
+    }
+    header > .logo {
+        width: 25%;
+    }
+    header > .title {
+        flex-grow: 1;
+    }
+    header > .etc {
+        width: 25%;
+    }
+    header > .logo,
+    header > .title,
+    header > .etc {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    nav {
+        position: relative;
+        text-align: center;
+    }
+
+section {
+    min-height: 500px;
+    display: flex;
+    justify-content: space-between;
+    position: relative; /* section을 relative로 설정 */
+}
+
+section > aside {
+    width: 200px;
+    position: absolute; /* absolute로 변경 */
+    top: 0;
+    bottom: 0;
+}
+
+section > aside:first-child {
+    top: 100px; /* 원하는 높이로 조정하세요 */
+    left: auto;
+    right: auto;
+    position: fixed;
+}
+
+section > aside:last-child {
+    right: 0;
+    left: auto;
+}
+
+section > article {
+    flex-grow: 1;
+    padding-left: 200px; /* 왼쪽 aside 너비보다 큰 여백 추가 */
+    padding-right: 200px; /* 오른쪽 aside 너비보다 큰 여백 추가 */
+    box-sizing: border-box; /* 여백을 포함하여 전체 너비 유지 */
+}
+
+    a.link,
+    a.link:visited {
+        text-decoration: none;
+        color: #2d3436;
+    }
+
+    a.link:hover {
+        color: #0652DD;
+    }
+
+    .bg-miso {
+        color: #2d3436;
+        background-color: #ACCEFF;
+    }
+
+    .btn-miso {
+        width: 170px;
+        font-size: 15px;
+    }
+
+    .category {
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    pre{
+        font-size: 10px;
+    }
+

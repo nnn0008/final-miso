@@ -1,0 +1,49 @@
+/* 부트스트랩 스타일 수정 */
+.alert.alert-dismissible.alert-light {
+    padding: 16px 16px 16px 16px;
+    margin: 0;
+}
+
+.card-header,
+.card-body {
+    padding: 5px 5px 5px 15px;
+}
+
+/* 기본 디자인 스타일 */
+a.link,
+a.link:visited {
+    text-decoration: none;
+    color: #2d3436;
+}
+
+a.link:hover {
+    color: #0652DD;
+}
+
+.category:hover{ /* 마우스가 버튼에 올라가면 배경을 조금 더 어둡게 처리 */
+    filter: brightness(95%);
+}
+
+
+.bg-miso {
+    color: #2d3436;
+    background-color: #ACCEFF;
+}
+
+.btn-miso {
+    width: 170px;
+    font-size: 15px;
+}
+
+.category {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+pre{
+    font-size: 10px;
+}

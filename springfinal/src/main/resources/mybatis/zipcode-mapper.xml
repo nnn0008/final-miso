@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="zipcode">
+	<insert id="add">
+	insert into zip_code(
+	zip_code_no,
+	sido,
+	sigungu,
+	eupmyun,
+	doro,
+	build_name,
+	dong_name,
+	hdong_name
+	) values(
+	zip_code_seq.nextval,
+	#{sido},
+	#{sigungu},
+	#{eupmyun},
+	#{doro},
+	#{buildName},
+	#{dongName},
+	#{hdongName}
+	)
+	</insert>
+
+
+</mapper>
