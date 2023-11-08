@@ -6,23 +6,29 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.kh.springfinal.dto.ZipCodeDto;
+import com.kh.springfinal.dto.ClubDto;
+import com.kh.springfinal.dto.MajorCategoryDto;
 
 @Repository
-public class ZipCodeDaoImpl implements ZipCodeDao{
-	
+public class ClubDaoImpl implements ClubDao{
+
 	@Autowired
 	private SqlSession sqlSession;
 	
 	@Override
-	public void insert(ZipCodeDto zipCodeDto) {
-		sqlSession.insert("zipcode.add", zipCodeDto);
+	public void insert(ClubDto clubDto) {
+		
+		sqlSession.insert("club.add",clubDto);
+		
 	}
 
 	@Override
-	public List<ZipCodeDto> list() {
+	public int sequence() {
 		
-		return sqlSession.selectList("zipcode.list");
+		return sqlSession.selectOne("club.sequence");
+		
 	}
+
 	
+
 }

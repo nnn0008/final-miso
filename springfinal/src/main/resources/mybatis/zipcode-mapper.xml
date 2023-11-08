@@ -26,6 +26,13 @@
 	#{hdongName}
 	)
 	</insert>
+	
+	<select id="list" resultType="zipCodeDto">
+	
+		select * from zip_code
+	
+	</select>
+		
 
 
 </mapper>
