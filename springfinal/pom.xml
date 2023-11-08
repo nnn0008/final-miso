@@ -76,6 +76,17 @@
 			<version>2.3.1</version>
 			<scope>test</scope>
 		</dependency>
+		
+		<!-- 프로젝트에 JSP를 사용하기 위한 라이브러리(의존성) -->
+		<dependency>
+		    <groupId>javax.servlet</groupId>
+		    <artifactId>jstl</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.tomcat.embed</groupId>
+		    <artifactId>tomcat-embed-jasper</artifactId>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
