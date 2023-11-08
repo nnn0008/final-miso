@@ -23,4 +23,9 @@ public class ChatRoomDaoImpl implements ChatRoomDao{
 	public List<ChatRoomDto> list() {
 		return sqlSession.selectList("chatRoom.allList");
 	}
+	
+	@Override
+	public ChatRoomDto selectOne(String memberId) {
+		return sqlSession.selectOne("chatRoom.find", memberId);
+	}
 }

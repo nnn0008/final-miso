@@ -63,6 +63,7 @@ section > article {
     box-sizing: border-box; /* 여백을 포함하여 전체 너비 유지 */
 }
 
+
     a.link,
     a.link:visited {
         text-decoration: none;
