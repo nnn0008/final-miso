@@ -27,7 +27,7 @@ public class ClubBoardController {
 	
 	@GetMapping("/write")
 	public String write() {
-		return "/WEB-INF/views/clubBoard/write.jsp";
+		return "clubBoard/write";
 	}
 	
 	@PostMapping("/write")
