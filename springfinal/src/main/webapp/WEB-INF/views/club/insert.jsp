@@ -6,7 +6,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://unpkg.com/hangul-js" type="text/javascript"></script>
     <script>
-
+ 
     $(function(){
     	
     	$(".select1").change(function(){
@@ -211,4 +211,3 @@
     
     
     
-    <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>
