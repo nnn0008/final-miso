@@ -5,8 +5,11 @@
 <head>
 <meta charset="UTF-8">
 <title>회원가입</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.2/sandstone/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+
 <form action="./join" method="post">
 	<input type="text" name="memberId" placeholder="아이디">
 	<input type="text" name="memberPw" placeholder="비밀번호">
