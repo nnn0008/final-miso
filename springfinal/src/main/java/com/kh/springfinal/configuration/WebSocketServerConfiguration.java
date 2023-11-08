@@ -21,6 +21,6 @@ public class WebSocketServerConfiguration implements WebSocketConfigurer{
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		registry.addHandler(websocketServer, "/ws/chat")
 		.addInterceptors(new HttpSessionHandshakeInterceptor())
-		.withSockJS();
+		.withSockJS(); //spring 표준
 	}
 }
