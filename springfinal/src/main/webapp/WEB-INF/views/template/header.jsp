@@ -68,7 +68,7 @@
 <main>
  <header>
             <div class="col mt-2">
-                <a href="#" class="link"><img src="./images/miso_logo.png" width="200px"></a>
+                <a href="#" class="link"><img src="${pageContext.request.contextPath}/images/miso_logo.png" width="200px"></a>
             </div>
             <div class="title">
                 <div class="input-group d-flex justify-content-center">  

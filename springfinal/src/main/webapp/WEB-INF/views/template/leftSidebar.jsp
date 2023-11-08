@@ -16,7 +16,7 @@
                     <div class="row mt-3">
                         <div class="col">
                             <div class="col d-flex justify-content-center">
-                                <img src="./images/avatar50.png" width="35%">
+                                <img src="${pageContext.request.contextPath}/images/avatar50.png" width="35%">
                             </div>
                             <div class="col d-flex justify-content-center">
                                 <label>프로필</label>
@@ -27,7 +27,7 @@
                     <div class="row mt-3 p-2">
                         <div class="col">
                             <a href="#" class="link">
-                                <img src="./images/Vector-3.png" width="20%">
+                                <img src="${pageContext.request.contextPath}/images/Vector-3.png" width="20%">
                                 <strong class="ms-2">홈</strong> 
                             </a>
                         </div>
@@ -36,7 +36,7 @@
                     <div class="row p-2">
                         <div class="col">
                             <a href="#" class="link">
-                                <img src="./images/Vector.png" width="20%">
+                                <img src="${pageContext.request.contextPath}/images/Vector.png" width="20%">
                                 <strong class="ms-2">모임 찾기</strong> 
                             </a>
                         </div>
@@ -45,7 +45,7 @@
                     <div class="row p-2">
                         <div class="col">
                             <a href="#" class="link">
-                                <img src="./images/Vector-1.png" width="20%">
+                                <img src="${pageContext.request.contextPath}/images/Vector-1.png" width="20%">
                                 <strong class="ms-2">채팅</strong> 
                             </a>
                         </div>
@@ -54,7 +54,7 @@
                     <div class="row p-2">
                         <div class="col">
                             <a href="#" class="link">
-                                <img src="./images/Vector-2.png" width="20%">
+                                <img src="${pageContext.request.contextPath}/images/Vector-2.png" width="20%">
                                 <strong class="ms-2">프로필</strong> 
                             </a>
                         </div>
@@ -71,7 +71,7 @@
                     <div class="row mt-4">
                         <div class="col text-center d-flex align-items-center justify-content-center">
                             <a href="#" class="link">
-                                <img src="./images/Vector-4.png" width="30%">
+                                <img src="${pageContext.request.contextPath}/images/Vector-4.png" width="30%">
                                 <strong class="ms-2">로그인</strong> 
                             </a>
                         </div>
