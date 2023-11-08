@@ -21,6 +21,11 @@ public class WebSocketServerConfiguration implements WebSocketConfigurer{
 		registry.addHandler(websocketServer, "/ws/chat")
 		.addInterceptors(new HttpSessionHandshakeInterceptor())
 		.withSockJS();
+
+	@Override
+	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+		// TODO Auto-generated method stub
+
 	}
 
 }
