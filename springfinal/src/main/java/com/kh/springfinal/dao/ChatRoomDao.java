@@ -8,4 +8,5 @@ public interface ChatRoomDao {
 
 	void insert(ChatRoomDto chatRoomDto);
 	List<ChatRoomDto> list();
+	ChatRoomDto selectOne(String memberId);
 }

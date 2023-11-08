@@ -20,9 +20,9 @@
 	<select id="find" resultType="ChatRoomDto">
 	SELECT cr.chat_room_no
 	FROM chat_room cr
-	INNER JOIN club c ON c.club_no = cr.club_no
+	INNER JOIN club c ON c.chat_room_no = cr.chat_room_no
 	INNER JOIN club_member cm ON c.club_no = cm.club_no
-	WHERE cm.member_id = #{memberId}
+	WHERE cm.club_member_id = #{memberId}
 	</select>
 
 </mapper>

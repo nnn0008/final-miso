@@ -6,8 +6,10 @@
 		- 절대경로를 사용할 것
 --%>
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
 
-                <div class="row m-2 mt-4">
+
+ <div class="row m-2 mt-4">
 
 
                     <div class="row mb-3">
@@ -168,4 +170,6 @@
 
                 </div>
 
-<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>
+
+
+<jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>
