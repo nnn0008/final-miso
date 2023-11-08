@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.kh.springfinal.dao.ClubBoardDao;
+import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dto.ClubBoardDto;
 
 @Controller
@@ -17,6 +18,12 @@ import com.kh.springfinal.dto.ClubBoardDto;
 public class ClubBoardController {
 	@Autowired
 	private ClubBoardDao clubBoardDao;
+	
+	@Autowired
+	private MemberDao memberDao;
+	
+//	@Autowired
+//	private ClubDao clubDao;
 	
 	@GetMapping("/write")
 	public String write() {
@@ -26,7 +33,7 @@ public class ClubBoardController {
 	@PostMapping("/write")
 	public String write(@ModelAttribute ClubBoardDto clubBoardDto, HttpSession session) {
 		int clubBoardNo = clubBoardDao.sequence();
-//		clubBoardDto.setClubMemberNo();
+//		clubBoardDto.setClubMemberNo(session.get);
 		return "redirect:club?clubNo="+clubBoardDto.getClubNo()+"/clubList";
 	}
 }
