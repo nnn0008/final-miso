@@ -28,6 +28,7 @@ public class MemberController {
 	}
 	@PostMapping("/join")
 	public String join(@ModelAttribute MemberDto memberDto) {
+		//회원 정보 DB저장
 		memberDao.join(memberDto);
 		return "redirect:./login";
 	}
@@ -39,11 +40,29 @@ public class MemberController {
 	@PostMapping("/login")
 	public String login(@RequestParam String memberId, @RequestParam String memberPw,
 								HttpSession session) {
-		log.debug(memberId);
-		MemberDto memberDto = memberDao.loginId(memberId);
-//		if(memberDto!=null) {
-//			session.setAttribute("name", memberId);
-//		}
-		return "redirect:/miso";	
+		//db 유저 정보
+		MemberDto userDto = memberDao.loginId(memberId);
+		//틀리면 되돌림
+		if(userDto==null) {
+			log.debug("아이디");
+			return "redirect:login?error";
+		}
+		//db Pw
+		String userPw = userDto.getMemberPw();
+		//db Pw 와 입력값Pw 검사 후 session입력
+		if(userPw.equals(memberPw)) {
+			session.setAttribute("name", userDto.getMemberId());
+			session.setAttribute("level", userDto.getMemberLevel());
+		}
+		else {
+			return "redirect:login?error";
+		}
+		//로그인 완료창으로 보내기
+		return "redirect:./loginFinish";	
+	}
+	//로그인 완료창
+	@RequestMapping("/loginFinish")
+	public String loginFinish() {
+		return "member/loginFinish";
 	}
 }
