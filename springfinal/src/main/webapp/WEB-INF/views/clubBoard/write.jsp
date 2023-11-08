@@ -3,26 +3,90 @@
 
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
-		<form method="post" action=""> 
+<script>
+$(function(){
+	$(".fail-feedback").hide();
+	 var status = {
+			title: false,
+			content: false,
+			category: false,
+			ok:function(){
+				return this.title && this.content && this.category;
+			},
+	}; 
+	
+	$(".content").on("input", function(){
+		var content = $(this).val();
+		var isInvalid = content.length > 1300 || content.length == 0;
+		
+		if(isInvalid){
+			$(".content-length").text(content.length).addClass("text-danger");
+			$(this).addClass("is-invalid");
+		}
+		else{
+			$(".content-length").text(content.length).removeClass("text-danger");
+			$(this).removeClass("is-invalid");
+		}
+		status.content = !isInvalid;
+	});
+	
+	$(".title").on("input", function(){
+		var title = $(this).val();
+		var isInvalid = title.length > 40 || title.length == 0;
+		
+		if(isInvalid){
+			$(this).addClass("is-invalid");
+			$(".fail-feedback").show();
+		}
+		else{
+			$(this).removeClass("is-invalid");
+			$(".fail-feedback").hide();
+		}
+		status.title = !isInvalid;
+	});
+	
+	$(".form-select").change("select", function(){
+		var isInvalid = $(this).val() == null;
+		if(isInvalid) $(this).addClass("is-invalid");
+		else $(this).removeClass("is-invalid");
+		status.category = !isInvalid;
+	});
+	
+	$(".write-form").submit(function(e){
+		//console.table(status);
+		$(".form-control form-select").blur();
+		if(status.ok() == false){
+			e.preventDefault();
+		}
+	});
+	
+});
+
+
+
+</script>
+
+<form method="post" action="" class="write-form"> 
 	<div class="row m-2 mt-4">
 		
 
 		<div class="row">
 			<div class="col">
-				게시글 카테고리
 				<select name="clubBoardCategory" class="form-select mt-2">
-					<option>자유</option>
-					<option>관심사</option>
-					<option>모임후기</option>
-					<option>가입인사</option>
-					<option>공지사항</option>
+					<option value="">카테고리를 고르세요</option>
+					<option value="자유">자유</option>
+					<option value="관심사">관심사</option>
+					<option value="모임후기">모임후기</option>
+					<option value="가입인사">가입인사</option>
+					<option value="공지사항">공지사항</option>
 				</select>
 			</div>
 		</div>
 		
 		<div class="row mt-2">
 			<div class="col-12">
-				<input type="text" class="form-control w-100" placeholder="제목(40자)">
+				<input type="text" class="form-control w-100 title" placeholder="제목(40자)">
+				<p class="fail-feedback text-end mt-1 text-danger fs-6">제목을 다시 정하세요(한글 40자, 영어 120자 이내)</p>
 			</div>
 		</div>
 	
@@ -34,7 +98,7 @@
 		
 		<div class="row mt-2">
 			<div class="col-12">
-				<textarea class="form-control w-100" placeholder="내용" rows="10"></textarea>
+				<textarea class="form-control w-100 content" placeholder="내용" rows="10" ></textarea>
 			</div>
 		</div>
 		
@@ -45,7 +109,7 @@
 				</label>
 			</div>
 			<div class="col-6 text-end">
-				0 / 1300
+				<label class="content-length">0</label> / 1300
 			</div>
 		</div>
 		
@@ -63,6 +127,6 @@
 		
 	
 	</div>
-		</form> 
+</form> 
 
 <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>
