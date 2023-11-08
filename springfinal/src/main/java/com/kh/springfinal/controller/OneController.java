@@ -7,9 +7,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dao.OneDao;
 import com.kh.springfinal.dto.OneDto;
 
@@ -22,8 +24,8 @@ public class OneController {
 	@Autowired
 	private OneDao oneDao;
 	
-//	@Autowired
-//	private MemberDao memberDao; 
+	@Autowired
+	private MemberDao memberDao; 
 	//등록
 	@GetMapping("/insert")
 	public String insert(Model model,
@@ -39,41 +41,42 @@ public class OneController {
 		}
 		return "one/insert";
 	}
-//	@PostMapping("/insert")
-//	public String insert(@ModelAttribute OneDto oneDto, HttpSession session) {
-//		oneDto.setOneNo(oneDto.getOneNo());
-//		
-//		String memberId=(String)session.getAttribute("name");
-//		oneDto.setOneMember(memberId);//작성자 넣고
-//		
-//		//새글/답글
-//		if(oneDto.getOneParent()==null) {//새글일떄
-//			oneDto.setOneGroup(oneDto.getOneNo());//그룹번호는 글번호
-//			oneDto.setOneParent(null);//상위글없으니 null
-//			oneDto.setOneDepth(0);
-//		}
-//		else {//답글일때
-//			OneDto originDto = oneDao.selectOne(oneDto.getOneParent());
-//			oneDto.setOneGroup(originDto.getOneGroup());
-//			oneDto.setOneParent(originDto.getOneNo());
-//			oneDto.setOneDepth(originDto.getOneDepth()+1);
-//		}
-//	}
+	@PostMapping("/insert")
+	public String insert(@ModelAttribute OneDto oneDto, HttpSession session) {
+		oneDto.setOneNo(oneDto.getOneNo());
+		
+		String memberId=(String)session.getAttribute("name");
+		oneDto.setOneMember(memberId);//작성자 넣고
+		
+		//새글/답글
+		if(oneDto.getOneParent()==null) {//새글일떄
+			oneDto.setOneGroup(oneDto.getOneNo());//그룹번호는 글번호
+			oneDto.setOneParent(null);//상위글없으니 null
+			oneDto.setOneDepth(0);
+		}
+		else {//답글일때
+			OneDto originDto = oneDao.selectOne(oneDto.getOneParent());
+			oneDto.setOneGroup(originDto.getOneGroup());
+			oneDto.setOneParent(originDto.getOneNo());
+			oneDto.setOneDepth(originDto.getOneDepth()+1);
+		}
+		return "redirect:detail?oneNo="+oneDto.getOneNo();
+	}
 	
-//	// 상세조회
-//	@RequestMapping("/detail")
-//	public String detail(@RequestParam int oneNo,Model model,
-//								HttpSession session) {
-//		OneDto oneDto = oneDao.selectOne(oneNo);
-//		model.addAttribute("oneDto",oneDto);
-////		작성자 정보
-//		String oneMemberId = oneDto.getOneMember();
-//		if(oneMemberId != null) {
+	// 상세조회
+	@RequestMapping("/detail")
+	public String detail(@RequestParam int oneNo,Model model,
+								HttpSession session) {
+		OneDto oneDto = oneDao.selectOne(oneNo);
+		model.addAttribute("oneDto",oneDto);
+//		작성자 정보
+		String oneMemberId = oneDto.getOneMember();
+		if(oneMemberId != null) {
 //			MemberDto memberDto = memberDao.selectOne(oneMemberId);
 //			model.addAttribute("oneMemberId",memberDto);
-//		}
-//		return"one/detail";
-//	}
+		}
+		return"one/detail";
+	}
 	
 //	//목록
 //	@RequestMapping("/list")
@@ -88,43 +91,55 @@ public class OneController {
 //		return"one/list"
 //	}
 	
-//	//삭제
-//	@RequestMapping("/delete")
-//	public String delete(@RequestParam int oneNo,HttpSession session) {
-//		OneDto oneDto = oneDao.selectOne(oneNo);
-//		String oneMember = oneDto.getOneMember();
-//		
-//		String memberId = (String) session.getAttribute("name");
-//		if(memberId.equals(oneMember)) {
-//			oneDao.delete(oneNo);
-//			return "redirect:list";
-//		}
-//		else {
-////			throw new AuthorityException("글 작성자가 아닙니다");
-//		}
-//	}
-	
-//	//수정
-//	@GetMapping("/edit")
-//	public String edit(@RequestParam int oneNo, Model model, HttpSession session) {
-//		String memberId=(String) session.getAttribute("name");
-//		OneDto oneDto = oneDao.selectOne(oneNo);
-//		if(oneDto.getOneMember().equals(memberId)) {
-//			model.addAttribute("oneDto",oneDto);
-//			return"one/edit";
-//		}
-//		else {
-////			throw new NoTargetException();
-//		}
-//	}
-//	@PostMapping("/edit")
-//	public String edit(@ModelAttribute OneDto oneDto, HttpSession session) {
-//		String memberId=(String) session.getAttribute("name");
-//		OneDto findDto = oneDao.selectOne(oneDto.getOneNo());
-//		if(findDto.getOneMember().equals(memberId)) {
-//			oneDao.update(oneDto);
-//		}
-//	}
+	//삭제
+	@RequestMapping("/delete")
+	public String delete(@RequestParam int oneNo,HttpSession session) {
+		OneDto oneDto = oneDao.selectOne(oneNo);
+		String oneMember = oneDto.getOneMember();
+		
+		String memberId = (String) session.getAttribute("name");
+		if(memberId.equals(oneMember)) {
+			oneDao.delete(oneNo);
+			return "redirect:list";
+		}
+		else {
+//			throw new AuthorityException("글 작성자가 아닙니다");
+			return"redirect:에러페이지주소";
+	 }
+	}
+	//수정
+	@GetMapping("/edit")
+	public String edit(@RequestParam int oneNo, Model model, HttpSession session) {
+		String memberId=(String) session.getAttribute("name");
+		OneDto oneDto = oneDao.selectOne(oneNo);
+		if(oneDto.getOneMember().equals(memberId)) {
+			model.addAttribute("oneDto",oneDto);
+			return"one/edit";
+		}
+		else {
+//			throw new NoTargetException();
+			return"redirect:에러페이지주소";
+		}
+	}
+	@PostMapping("/edit")
+	public String edit(@ModelAttribute OneDto oneDto, HttpSession session) {
+		String memberId=(String) session.getAttribute("name");
+		OneDto findDto = oneDao.selectOne(oneDto.getOneNo());
+		if(findDto.getOneMember().equals(memberId)) {
+			boolean result =oneDao.update(oneDto);
+			if(result) {
+				return"redirect:detail?oneNo="+oneDto.getOneNo();
+			}
+			else {
+				return"redirect:에러페이지주소";
+			}
+		}
+		else {
+			return"redirect:에러페이지주소";
+//			throw new AuthorityException("존재하지 않는 글 번호");
+		}
+			
+	}
 	
 	
 	
