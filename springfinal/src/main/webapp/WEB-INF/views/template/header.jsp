@@ -15,12 +15,18 @@
 <!-- 부트스트랩 CDN -->
    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.2/zephyr/bootstrap.min.css" rel="stylesheet">
-    
+
 <!-- 스타일시트 로딩 코드 -->
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/reset.css">
     <link href="${pageContext.request.contextPath}/css/misolayout.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/miso.css" rel="stylesheet">
 <!-- <link rel="stylesheet" type="text/css" href="/css/test.css"> -->
+
+
+<!-- jquery cdn -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+
 <style>
 .circle {
         width: 100px;
@@ -46,6 +52,14 @@
     .text-inc{
     font-size: 12px;
     }
+    
+    .iconContainer{
+    margin-right: 1em;
+    }
+    
+    .card {
+    width: 250px;
+    }
 </style>
 
 <%-- 
@@ -59,11 +73,10 @@
 	window.contextPath = "${pageContext.request.contextPath}";
 </script>
 
-<!-- jquery cdn -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 </head>
 <body>
+
 
 <main>
  <header>
@@ -75,12 +88,11 @@
             </div>
             <div class="title">
                 <div class="input-group d-flex justify-content-center">  
-
-                    <input type=" search" class="form-control rounded" placeholder="Search" aria-label="Search"  
-                  
+                    <input type=" search" class="form-control rounded-pill" placeholder="Search" aria-label="Search"  
+                 
                     aria-describedby="search-addon" />  
-                  
-                    <button type="button" class="btn btn-outline-primary">search</button>  
+                    <button type="button" class="btn btn-outline-primary rounded-pill"><i class="fa-solid fa-magnifying-glass"></i></button>  
+                 
                   
                    </div>  
             </div>
@@ -90,7 +102,6 @@
         <nav>
         </nav>
         <section>
-
 
 
             <!-- 헤더 -->

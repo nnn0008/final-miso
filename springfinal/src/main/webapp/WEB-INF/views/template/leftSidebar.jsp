@@ -19,7 +19,7 @@
                                 <img src="${pageContext.request.contextPath}/images/avatar50.png" width="35%">
                             </div>
                             <div class="col d-flex justify-content-center">
-                                <label>프로필</label>
+                               <strong class="ms-2">프로필</strong>
                             </div>
                         </div>
                     </div>
@@ -69,13 +69,14 @@
                     </div>
 
                     <div class="row mt-4">
-                        <div class="col text-center d-flex align-items-center justify-content-center">
+                        <div class="col text-center d-flex align-items-center justify-content-center login">
                             <a href="#" class="link">
-                                <img src="${pageContext.request.contextPath}/images/Vector-4.png" width="30%">
+                                <img src="${pageContext.request.contextPath}/images/Vector-4.png" width="20%">
                                 <strong class="ms-2">로그인</strong> 
                             </a>
                         </div>
                     </div>
+                    
      </aside>
      
      <article class="main-content">
