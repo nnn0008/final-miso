@@ -1,5 +1,7 @@
 package com.kh.springfinal.websocket;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -71,6 +73,33 @@ public class WebSocketServer extends TextWebSocketHandler{
 		    }
 		}
 	
+		// 채팅방 멤버 명단을 전송하는 메소드
+		public void sendRoomMembersList(Integer chatRoomNo) throws IOException {
+		    // 1. 채팅방 멤버 명단을 전송 가능한 형태(JSON 문자열)로 변환한다
+		    ObjectMapper mapper = new ObjectMapper();
+
+		    Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo); // 채팅방 번호에 해당하 멤버 명단 가져오기
+
+		    if (roomMembers != null) {
+		        Map<String, Object> data = new HashMap<>();
+		        data.put("roomMembers", roomMembers);
+		        String roomMembersJson = mapper.writeValueAsString(data);
+
+		        // 2. 동호회 멤버에게 전송
+		        TextMessage message = new TextMessage(roomMembersJson);
+
+		        for (ClientVO roomMember : roomMembers) {
+		            roomMember.send(message);
+		        }
+		    }
+		}
+
+//	//접속한 사용자에게 메세지 이력을 전송하는 메소드
+//	public void sendMessageList(Client client) {
+//		List<chatDto> list = chatDao.
+//	}
+//		
+		
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		//사용자가 보낸 메세지를 처리하는 메소드
