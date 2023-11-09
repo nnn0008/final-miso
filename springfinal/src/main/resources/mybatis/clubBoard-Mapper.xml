@@ -13,12 +13,12 @@
 		insert into club_board
 		(
 			club_board_no, club_board_title, club_board_content, club_board_category,
-			club_member_no, club_no
+			club_member_no, club_no, club_board_name
 		) 
 		values
 		(
 			club_board_no_seq.nextval, #{clubBoardTitle}, #{clubBoardContent}, #{clubBoardCategory}
-			#{clubMemberNo}, #{clubNo}
+			#{clubMemberNo}, #{clubNo}, #{clubBoardName}
 		)
 	</insert>
 	
