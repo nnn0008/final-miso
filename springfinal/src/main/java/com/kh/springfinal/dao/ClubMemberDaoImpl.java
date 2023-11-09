@@ -18,4 +18,11 @@ public class ClubMemberDaoImpl implements ClubMemberDao{
 		return sqlSession.selectOne("clubMember.detail",clubMemberNo);
 	}
 
+	@Override
+	public void insert(ClubMemberDto clubMemberDto) {
+		
+		sqlSession.insert("clubMember.add",clubMemberDto);
+		
+	}
+
 }

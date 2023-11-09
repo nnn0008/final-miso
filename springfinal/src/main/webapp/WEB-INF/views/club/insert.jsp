@@ -31,68 +31,74 @@
                 }    
             },
         });
-    	})
-    	
-    	
-             //[1] 다 숨겨
-             $(".zip").hide();
-
-             //[2] 검색하면 찾아서 보여줘
-             $(".search-input").on("input", function(){
-                 var keyword = $(this).val();
-                 if(keyword.length == 0) {
-                     $(".zip").hide();
-                     return;
-                 }
-                 
-                 console.log(keyword);
-
-                 var count = 0;
-                 $(".zip").each(function(idx, el){
-                	 
-                	 var presentEl=$(el);
-                	
-                     var text = $(el).text().trim();
-                     //var index = text.indexOf(keyword);
-                     //if(index >= 0) {
-                     if(count < 5 && Hangul.search(text, keyword) >= 0) {
-                    	 
-                         $(el).show();
-                         count++;
-                    	 console.log(count)
-                     }
-                     else {
-                         $(el).hide();
-                     }
-               
-                 
-
-             //[3] 목록 누르면 입력창에 넣어
-             $(".addr-list").find(".zip").click(function(){
-                 $(".search-input").val($(this).text());
-                 $(".zip").hide();
-             });
-       
-    	
+    	});
     });
+    </script>
     
+    	<script>
+    $(function(){
+    	
+    	    // [1] 모든 .zip 엘리먼트 숨기기
+
+    	    // [2] 검색어 입력 처리
+    	    $(".search-input").change(function() {
+    	    	console.log("검색중")
+    	    	if(/^[가-힣]/.test($(this).val())){
+    	    		
+    	        var keyword = $(this).val();
+    	    	
+    	    	console.log(keyword);
+    	        
+    	        if (keyword.length == 0) {
+    	            $(".zip").hide();
+    	            return;
+    	        }
+
+    	        $.ajax({
+    	            url: "http://localhost:8080/rest/zip",
+    	            method: "get",
+    	            data: {keyword: keyword},
+    	            success: function (response) {
+    	                console.log(response);
+    	                console.log("통신시작");
+
+    	                // 검색 결과를 처리
+    	                var zipList = $('.addr-list');
+    	                // 이전 검색 결과 지우기
+    	                zipList.empty();
+
+    	                for (var i = 0; i < 5; i++) {
+    	                    var text = (response[i].sido != null ? response[i].sido + ' ' : '') +
+    	                    (response[i].sigungu != null ? response[i].sigungu + ' ' : '') +
+    	                    (response[i].eupmyun != null ? response[i].eupmyun + ' ' : '') +
+    	                    (response[i].doro != null ? response[i].doro + ' ' : '') +
+    	                    (response[i].buildName != null ? response[i].buildName + ' ' : '') +
+    	                    (response[i].dongName != null ? response[i].dongName + ' ' : '') +
+    	                    (response[i].hdongName != null ? response[i].hdongName + ' ' : '')
+;
+
+    	                    console.log(text);
+
+    	                    zipList.append($("<li>")
+    	                        .addClass("list-group-item zip")
+    	                        .text(text));
+    	                }
+
+    	                console.log("통신끝");
+    	            }
+    	        });
+
+
+    	    // [3] 목록을 클릭하면 입력창에 채우고 .zip 엘리먼트 숨기기
+    	    $(".addr-list").on("click", ".zip", function() {
+    	        var selectedAddress = $(this).text();
+    	        $(".search-input").val(selectedAddress);
+    	        $(".zip").hide();
+    	    });
+    };
+    	        
     });
-    
     });
-    	
-    	
-    	
-    
-    	
-	    	
-    	
-    	
-    	
-    	
-    	
-    	
-    
-    
 
 	</script>
     
@@ -152,7 +158,7 @@
                 <div class="row mt-4">
                     <div class="col">
                         <input type="search" class="form-control search-input"
-                            placeholder="검색할 주소 입력">
+                            placeholder="동,읍,면을 입력해주세요">
                     </div>                    
                 </div>
                 <div class="row">
@@ -161,11 +167,11 @@
                         
                       <%--   <c:forEach var="zipList" items="${zipList}">
                             <li class="list-group-item zip">
-                            #{zipCodeName}
+                            ${zipCodeName}
                             </li>
                         </c:forEach> --%>
                         
-                        <li class="list-group-item zip">서울시 서대문구 홍제동</li>
+                        	 <!-- <li class="list-group-item zip">서울시 서대문구 홍제동</li>
                             <li class="list-group-item zip">서울시 서대문구 홍제1동</li>
                             <li class="list-group-item zip">서울시 서대문구 홍제2동</li>
                             <li class="list-group-item zip">서울시 서대문구 홍제3동</li>
@@ -180,7 +186,7 @@
                             <li class="list-group-item zip">서울시 서대문구 홍제12동</li>
                             <li class="list-group-item zip">서울시 서대문구 홍제13동</li>
                             <li class="list-group-item zip">서울시 서대문구 홍제14동</li>
-                            <li class="list-group-item zip">전혀관</li>
+                            <li class="list-group-item zip">전혀관</li>  -->
                         
                         </ul>
                     </div>

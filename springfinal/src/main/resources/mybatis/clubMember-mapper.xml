@@ -24,7 +24,7 @@
 
     	</insert>
     	
-    	<select id="detail">
+    	<select id="detail" >
     		
     		select * from club_member where club_member_no=#{clubMemberNo}
     		
