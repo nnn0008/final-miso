@@ -5,7 +5,10 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
     
     <mapper namespace="one">
-	 
+	 <!-- 시퀀스 생성 -->
+	 	<select id="sequence" resultType="int">
+	 		select one_seq.nextval from dual
+	 	</select>
 	 
 	 <!-- 게시글 등록 -->
 	 <insert id="insert">
@@ -14,7 +17,7 @@
 	 	one_category,one_group,one_depth,one_parent
 	 	)
 	 	values(
-	 	one_seq.nextval,#{oneMember},#{oneLevel},#{oneTitle},#{oneContent}, 
+	 	#{oneNo},#{oneMember},#{oneLevel},#{oneTitle},#{oneContent}, 
 	 	#{oneStatus},#{oneCategory},#{oneGroup},#{oneDepth},#{oneParent}
 	 	)
 	 </insert>
@@ -34,9 +37,16 @@
 	 	</update>
 	 	
 	 	<!-- 게시글 목록 -->
-	 	<select id="list" resultType="OneDto">
+	 	<!-- <select id="list" resultType="OneDto">
 	 		select * from one order by one_no desc
 	 	</select>
+	 	 -->
+	 	<select id="list" resultType="OneDto">
+	    select * from one
+	    start with one_parent is null
+	    connect by prior one_no = one_parent
+	    order siblings by one_group desc, one_no asc
+		</select>
 	 	
 	 	<!-- 게시글 상세 -->
 	 	<select id="find" resultType="OneDto">

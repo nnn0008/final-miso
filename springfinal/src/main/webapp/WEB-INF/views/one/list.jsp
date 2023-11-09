@@ -29,8 +29,14 @@
 							<td>${OneDto.oneCategory}</td>
 							<td>${OneDto.oneNo}</td>
 							<td class="text-left">
-							<c:if test="${OneDto.oneDepth >0}">
-								<img src="https://dummyimage.com/15x15/000/fff" width="15" height="15">						
+							<%-- for(int i=1; i <= 차수; i++) { --%>
+							<c:forEach var="i" begin="1" end="${OneDto.oneDepth}" step="1">
+							&nbsp;&nbsp;
+							</c:forEach>
+						
+							<%-- 띄어쓰기 뒤에 화살표 표시 --%>
+							<c:if test="${OneDto.oneDepth > 0}">
+								<i class="fa-solid fa-reply fa-rotate-180"></i>
 							</c:if>
 							<a href="detail?oneNo=${OneDto.oneNo}">${OneDto.oneTitle}</a>
 							</td>

@@ -16,6 +16,10 @@ public class OneDaoImpl implements OneDao {
 	@Autowired
 	private SqlSession sqlSession;
 	
+	@Override
+	public int sequence() {
+		return sqlSession.selectOne("one.sequence");
+	}
 
 	@Override
 	public void insert(OneDto oneDto) {
@@ -58,20 +62,9 @@ public class OneDaoImpl implements OneDao {
 		return sqlSession.selectList("one.findByOneTitle",oneTitle);
 	}
 
-	@Override
-	public int countList(PaginationVO vo) {
-	    return sqlSession.selectOne("one.countList", vo);
-	}
+	
 
-//	@Override
-//	public List<OneDto> selectListByPage(PaginationVO vo) {
-//		if(vo.isSearch()) {
-//			return selectListByPage(vo.getType(),vo.getKeyword(),vo.getPage());
-//		}
-//		else {
-//			return selectListByPage(vo.getPage());
-//		}
-//	}
+
 
 	
 
