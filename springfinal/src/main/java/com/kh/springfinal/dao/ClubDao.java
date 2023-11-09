@@ -9,6 +9,6 @@ public interface ClubDao {
 	
 	int sequence();
 	void insert(ClubDto clubDto);
-	
-
+	List<ClubDto> list();
+	ClubDto selectOne(String memberId);
 }

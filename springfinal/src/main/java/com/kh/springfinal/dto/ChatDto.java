@@ -15,6 +15,6 @@ public class ChatDto {
 	private String chatSender;
 	private String chatReceiver;
 	private String chatContent;
-	private Date chatDate;
+	private Date chatTime;
 	private int attachNo;
 }

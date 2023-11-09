@@ -211,28 +211,27 @@
 				};
 	
 		var formattedTime = chatTime.toLocaleTimeString("ko-KR", options);
-
 		
 		
 		//사용자가 접속하거나 종료했을 때 서버에서 오는 데이터로 목록을 갱신
 		//사용자가 메세지를 보냈을 때 서버에서 이를 전체에게 전달한다
-		//data.clients에 회원 목록이 있다
-		if (data.clubMembers) { // 목록 처리
+		//data.roomMember에 채팅방 멤버 목록이 있다
+		if (data.roomMembers) { // 목록 처리
 		    $(".client-list").empty();
 	
 		    var ul = $("<ul>").addClass("list-group");
 		    var loggedInUserId = "${sessionScope.name}";
 		    var loggedInUserItem = null;
 		    
-		    var clubNumber = "${sessionScope.clubNo}";
-		    console.log("ClubNumber: " + clubNumber);
+		    var chatRoomNo = "${sessionScope.chatRoomNo}";
+		    console.log("chatRoomNo: " + chatRoomNo);
 
-		    for (var i = 0; i < data.clubMembers.length; i++) {
-		        var memberId = data.clubMembers[i].memberId;
-		        var memberLevel = data.clubMembers[i].memberLevel;
-		        var memberNickname = data.clubMembers[i].memberNickname;
-		        var clubNo = data.clubMembers[i].clubNo;
-		        console.log("clubNo: " + clubNo);
+		    for (var i = 0; i < data.roomMembers.length; i++) {
+		        var memberId = data.roomMembers[i].memberId;
+		        var roomNo = data.roomMembers[i].chatRoomNo;
+		        console.log("chatRoomNo: " + chatRoomNo);
+		        
+		        var memberLevel = "${sessionScope.memberLevel}";
 
 		        // 레벨에 따라 배지 스타일 변경
 		     	     var badgeClass = "bg-miso";
@@ -241,7 +240,6 @@
 			        } else if (memberLevel === "VIP") {
 			            badgeClass = "bg-warning";
 			        }
-		        
 			        
 			        var listItem = $("<li>")
 			            .addClass("list-group-item d-flex justify-content-between align-items-center")
@@ -249,7 +247,7 @@
 			                $("<img>").addClass("rounded-circle user_img").attr("src", "images/member.png").css("width", "50px")
 			            )
 			            .append(
-			                $("<span>").text(memberNickname)
+			                $("<span>").text(memberId)
 			            )
 			            .append(
 			                $("<span>").addClass("badge rounded-pill").addClass(badgeClass)
@@ -263,16 +261,12 @@
 				            listItem.append($("<span>").addClass("badge rounded-pill bg-warning").text("나"));
 				        } else {
 				            ul.append(listItem);
-				        }
-		        
+				        }	        
 				}
-
 			    if (loggedInUserItem) {
 			        // 본인의 아이디를 목록의 맨 위에 추가
 			        ul.prepend(loggedInUserItem);
 		    } 
-		    
-		    
 		    // 목록이 client-list에 표시됩니다.
 		    ul.appendTo(".client-list");
 		}
@@ -364,9 +358,7 @@
 	
 		//메세지를 전송하는 코드
 		//-메세지가 @로 시작하면 DM으로 처리(아이디 유무 검사정도 하면 좋음)
-		//- @아이디 메세지
-		
-		
+		//- @아이디 메세지		
 		//엔터키로 메세지 전송
 		$(".message-input").keydown(function (e) {
 	    if (e.keyCode === 13) { // Enter 키 눌림
