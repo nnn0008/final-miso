@@ -9,7 +9,6 @@
     <link href="${pageContext.request.contextPath}/css/misolayout.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/miso.css" rel="stylesheet">
     
-    
  <!-- 오른쪽 사이드바 -->
  </article>
             <aside class="right-sidebar ">

@@ -131,3 +131,4 @@ $(function(){
 </form> 
 
 <jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>
+
