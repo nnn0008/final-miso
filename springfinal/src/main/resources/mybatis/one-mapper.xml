@@ -10,12 +10,12 @@
 	 <!-- 게시글 등록 -->
 	 <insert id="insert">
 	 	insert into one(
-	 	one_no,one_member,one_level,one_title,one_content,one_date,one_status,
+	 	one_no,one_member,one_level,one_title,one_content,one_status,
 	 	one_category,one_group,one_depth,one_parent
 	 	)
 	 	values(
-	 	one_seq.nextval, #{oneMember},#{oneLevel}, #{oneTitle}, #{oneContent}, 
-	 	#{oneStatus},#{oneCategory},#{oneGroup},#{oneDepth}
+	 	one_seq.nextval,#{oneMember},#{oneLevel},#{oneTitle},#{oneContent}, 
+	 	#{oneStatus},#{oneCategory},#{oneGroup},#{oneDepth},#{oneParent}
 	 	)
 	 </insert>
 	 
