@@ -15,4 +15,5 @@ public class ClubBoardDto {
 	private String clubBoardDate;
 	private int clubMemberNo;
 	private int clubNo;
+	private String clubBoardName;
 }

@@ -6,6 +6,7 @@
     
     <mapper namespace="clubMember">
     
+
     <select id="chatRoomClubMembers" resultType="ClubMemberDto">
     SELECT cm.club_member_id
 	FROM club_member cm
@@ -14,6 +15,20 @@
 	WHERE c.club_no = #{clubNo} AND cr.chat_room_no = #{chatRoomNo}
 
     </select>
+
+    	<insert id="add">
+    			
+    	insert into club_member(club_member_no,club_member_id,
+    	club_no,club_member_rank) 
+    	values(#{clubMemberNo},#{clubMemberId},#{clubNo},#{clubMemberRank})
+
+    	</insert>
     	
+    	<select id="detail">
+    		
+    		select * from club_member where club_member_no=#{clubMemberNo}
+    		
+    	</select>
+    
     
     </mapper>

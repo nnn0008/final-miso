@@ -42,7 +42,7 @@ public class ClubController {
 		model.addAttribute("majorCategory",majorList);
 //		model.addAttribute("zipList",zipList);
 		 
-		return "/WEB-INF/views/club/insert.jsp";
+		return "club/insert";
 		
 	}
 	

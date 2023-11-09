@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
 
 <script>
 $(function(){
@@ -128,4 +129,6 @@ $(function(){
 	
 	</div>
 </form> 
+
+<jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>
 

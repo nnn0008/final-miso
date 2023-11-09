@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.kh.springfinal.dao.ClubBoardDao;
+import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dto.ClubBoardDto;
+import com.kh.springfinal.dto.ClubMemberDto;
+import com.kh.springfinal.dto.MemberDto;
 
 @Controller
 @RequestMapping("/clubBoard")
@@ -22,8 +25,11 @@ public class ClubBoardController {
 	@Autowired
 	private MemberDao memberDao;
 	
+	@Autowired
+	private ClubDao clubDao;
+	
 //	@Autowired
-//	private ClubDao clubDao;
+//	private clubMemberDao clubMemberDao;
 	
 	@GetMapping("/write")
 	public String write() {
@@ -31,9 +37,21 @@ public class ClubBoardController {
 	}
 	
 	@PostMapping("/write")
-	public String write(@ModelAttribute ClubBoardDto clubBoardDto, HttpSession session) {
+	public String write(@ModelAttribute ClubBoardDto clubBoardDto, @ModelAttribute MemberDto memberDto, @ModelAttribute ClubMemberDto clubMemberDto, HttpSession session) {
+		memberDto = memberDao.loginId((String)session.getAttribute("name")); //여기서 회원 이름을 얻어야함
+		clubMemberDto = clubMemberDao.selectOne(memberDto.getMemberId());
 		int clubBoardNo = clubBoardDao.sequence();
-//		clubBoardDto.setClubMemberNo(session.get);
-		return "redirect:club?clubNo="+clubBoardDto.getClubNo()+"/clubList";
+		int clubMemberNo = clubMemberDto.getClubMemberNo();
+		String clubBoradName = memberDto.getMemberName();
+		int clubNo = clubMemberDto.getClubNo();
+		
+		clubBoardDto.setClubBoardNo(clubBoardNo);
+		clubBoardDto.setClubNo(clubNo);
+		clubBoardDto.setClubMemberNo(clubMemberNo);
+		clubBoardDto.setClubBoardName(clubBoradName);
+		
+		clubBoardDao.insert(clubBoardDto);
+		
+		return "redirect:club?clubNo="+clubBoardDto.getClubNo()+"/clubBoardList";
 	}
 }
