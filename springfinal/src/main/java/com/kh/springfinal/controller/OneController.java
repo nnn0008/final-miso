@@ -1,5 +1,7 @@
 package com.kh.springfinal.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dao.OneDao;
+import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.dto.OneDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +63,10 @@ public class OneController {
 			oneDto.setOneParent(originDto.getOneNo());
 			oneDto.setOneDepth(originDto.getOneDepth()+1);
 		}
-		return "redirect:detail?oneNo="+oneDto.getOneNo();
+		
+		oneDao.insert(oneDto);//글쓰기
+//		return "redirect:detail?oneNo="+oneDto.getOneNo();
+		return "redirect:insert";
 	}
 	
 	// 상세조회
@@ -68,28 +74,23 @@ public class OneController {
 	public String detail(@RequestParam int oneNo,Model model,
 								HttpSession session) {
 		OneDto oneDto = oneDao.selectOne(oneNo);
-		model.addAttribute("oneDto",oneDto);
-//		작성자 정보
-		String oneMemberId = oneDto.getOneMember();
-		if(oneMemberId != null) {
+		model.addAttribute("OneDto",oneDto);
+//		//작성자 정보
+//		String oneMemberId = oneDto.getOneMember();
+//		if(oneMemberId != null) {
 //			MemberDto memberDto = memberDao.selectOne(oneMemberId);
 //			model.addAttribute("oneMemberId",memberDto);
-		}
+//		}
 		return"one/detail";
 	}
 	
-//	//목록
-//	@RequestMapping("/list")
-//	public String list(@ModelAttribute(name = "vo") PaginationVO vo,
-//								Model model) {
-//		int count = oneDao.countList(vo);
-//		vo.setCount(count);
-//		
-//		List<OneDto> list = oneDao.selectListByPage(vo);
-//		model.addAttribute(list);
-//		
-//		return"one/list"
-//	}
+//목록
+	@RequestMapping("/list")
+	public String list(Model model) {
+		List<OneDto>list = oneDao.selectList();
+		model.addAttribute("list",list);
+		return "one/list";
+	}
 	
 	//삭제
 	@RequestMapping("/delete")

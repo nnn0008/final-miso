@@ -28,7 +28,7 @@ public class OneDaoImpl implements OneDao {
 	}
 
 	@Override
-	public List<OneDto> lsit() {
+	public List<OneDto>selectList() {
 		return sqlSession.selectList("one.list");
 	}
 
