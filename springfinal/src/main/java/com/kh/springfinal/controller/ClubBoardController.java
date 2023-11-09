@@ -39,7 +39,7 @@ public class ClubBoardController {
 	@PostMapping("/write")
 	public String write(@ModelAttribute ClubBoardDto clubBoardDto, @ModelAttribute MemberDto memberDto, @ModelAttribute ClubMemberDto clubMemberDto, HttpSession session) {
 		memberDto = memberDao.loginId((String)session.getAttribute("name")); //여기서 회원 이름을 얻어야함
-		clubMemberDto = clubMemberDao.selectOne(memberDto.getMemberId());
+//		clubMemberDto = clubMemberDao.selectOne(memberDto.getMemberId());
 		int clubBoardNo = clubBoardDao.sequence();
 		int clubMemberNo = clubMemberDto.getClubMemberNo();
 		String clubBoradName = memberDto.getMemberName();

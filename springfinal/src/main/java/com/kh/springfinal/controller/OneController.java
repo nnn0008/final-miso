@@ -46,14 +46,15 @@ public class OneController {
 	}
 	@PostMapping("/insert")
 	public String insert(@ModelAttribute OneDto oneDto, HttpSession session) {
-		oneDto.setOneNo(oneDto.getOneNo());
+		int oneNo = oneDao.sequence();
+		oneDto.setOneNo(oneNo);//번호 넣고
 		
 		String memberId=(String)session.getAttribute("name");
 		oneDto.setOneMember(memberId);//작성자 넣고
 		
 		//새글/답글
 		if(oneDto.getOneParent()==null) {//새글일떄
-			oneDto.setOneGroup(oneDto.getOneNo());//그룹번호는 글번호
+			oneDto.setOneGroup(oneNo);//그룹번호는 글번호
 			oneDto.setOneParent(null);//상위글없으니 null
 			oneDto.setOneDepth(0);
 		}
@@ -65,8 +66,7 @@ public class OneController {
 		}
 		
 		oneDao.insert(oneDto);//글쓰기
-//		return "redirect:detail?oneNo="+oneDto.getOneNo();
-		return "redirect:insert";
+		return "redirect:detail?oneNo="+oneNo;
 	}
 	
 	// 상세조회
@@ -114,7 +114,7 @@ public class OneController {
 		String memberId=(String) session.getAttribute("name");
 		OneDto oneDto = oneDao.selectOne(oneNo);
 		if(oneDto.getOneMember().equals(memberId)) {
-			model.addAttribute("oneDto",oneDto);
+			model.addAttribute("OneDto",oneDto);
 			return"one/edit";
 		}
 		else {
@@ -132,11 +132,11 @@ public class OneController {
 				return"redirect:detail?oneNo="+oneDto.getOneNo();
 			}
 			else {
-				return"redirect:에러페이지주소";
+				return"redirect:에러페이지주소?oneNo=" + oneDto.getOneNo();
 			}
 		}
 		else {
-			return"redirect:에러페이지주소";
+			return"redirect:에러페이지주소?oneNo=" + oneDto.getOneNo();
 //			throw new AuthorityException("존재하지 않는 글 번호");
 		}
 			
