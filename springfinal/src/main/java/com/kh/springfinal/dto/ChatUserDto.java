@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @Data @AllArgsConstructor @NoArgsConstructor @Builder
 public class ChatUserDto {
 	private int chatRoomNo;
-	private String memberId;
+	private String clubMemberId;
 }

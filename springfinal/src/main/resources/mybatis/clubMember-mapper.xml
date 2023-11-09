@@ -6,6 +6,16 @@
     
     <mapper namespace="clubMember">
     
+
+    <select id="chatRoomClubMembers" resultType="ClubMemberDto">
+    SELECT cm.club_member_id
+	FROM club_member cm
+	INNER JOIN club c ON cm.club_no = c.club_no
+	INNER JOIN chat_room cr ON c.chat_room_no = cr.chat_room_no
+	WHERE c.club_no = #{clubNo} AND cr.chat_room_no = #{chatRoomNo}
+
+    </select>
+
     	<insert id="add">
     			
     	insert into club_member(club_member_no,club_member_id,
@@ -20,6 +30,5 @@
     		
     	</select>
     
-    	
     
     </mapper>

@@ -29,6 +29,14 @@ public class ClubDaoImpl implements ClubDao{
 		
 	}
 
+	@Override
+	public List<ClubDto> list() {
+		return sqlSession.selectList("club.allList");
+	}
 	
+	@Override
+	public ClubDto selectOne(String memberId) {
+		return sqlSession.selectOne("club.find", memberId);
+	}
 
 }

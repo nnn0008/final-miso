@@ -6,7 +6,21 @@
 	<div class="container">
 		<div class="row mt-4">
 			<div class="col">
-				새글 작성
+				<h2>새글 작성</h2>
+			</div>
+		</div>
+		
+		<div class="row mt-4">
+			<div class="col">
+				<select name="oneCategory" required class="form-control">
+					<option  disabled selected hidden>종류를 선택해주세요.</option>
+					<option>회원</option>
+					<option>동호회</option>
+					<option>신고</option>
+					<option>고소</option>
+					<option>결제</option>
+					<option>기타문의</option>
+				</select>
 			</div>
 		</div>
 		

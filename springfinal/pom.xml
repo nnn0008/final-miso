@@ -137,8 +137,13 @@
 		    <groupId>org.apache.tomcat.embed</groupId>
 		    <artifactId>tomcat-embed-jasper</artifactId>
 		</dependency>
-		
 
+
+		<dependency>
+			<groupId>com.kh</groupId>
+			<artifactId>spring20websocket</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>

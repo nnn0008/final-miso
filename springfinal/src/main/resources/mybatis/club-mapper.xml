@@ -19,7 +19,15 @@
     	select club_seq.nextval from dual
     	</select>
     	
+   	<select id="allList" resultType="ClubDto">
+   		select * from club where club_no = #{clubNo}
+   	</select>
 
-    
+    <select id="find" resultType="ClubDto">
+    SELECT c.club_no
+	FROM club c
+	INNER JOIN club_member cm ON c.club_no = cm.club_no
+	WHERE cm.club_member_id = #{memberId}
+    </select>
     
     </mapper>
