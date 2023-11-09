@@ -61,13 +61,35 @@ $(function(){
 		}
 	});
 	
+	$(".board-fix").change(function(e){
+		if($(this).is(":checked")){
+			$(".board-fix").val("Y");
+			console.log($(this).val());
+		}
+		else{
+			$(".board-fix").val("N");
+			console.log($(this).val());
+		}
+	}); 
+	
+	
 });
-
+	/* window.addEventListener("load", function(){
+		document.querySelector("[name=clubBoardFix").addEventListener("change", function() {
+		  if (this.checked) {
+		    this.value = "Y";
+		  } else {
+		    this.value = "N";
+		  }
+		});	
+	}); */
 
 
 </script>
 
-<form method="post" action="" class="write-form"> 
+<form method="post" action="write" class="write-form" enctype="multipart/form-data" autocomplete="off"> 
+	<input type="hidden" name="clubNo" value="${clubNo}">
+	
 	<div class="row m-2 mt-4">
 		
 
@@ -86,7 +108,7 @@ $(function(){
 		
 		<div class="row mt-2">
 			<div class="col-12">
-				<input type="text" class="form-control w-100 title" placeholder="제목(40자)">
+				<input type="text" class="form-control w-100 title" placeholder="제목(40자)" name="clubBoardTitle">
 				<p class="fail-feedback text-end mt-1 text-danger fs-6">제목을 다시 정하세요(한글 40자, 영어 120자 이내)</p>
 			</div>
 		</div>
@@ -99,14 +121,14 @@ $(function(){
 		
 		<div class="row mt-2">
 			<div class="col-12">
-				<textarea class="form-control w-100 content" placeholder="내용" rows="10" ></textarea>
+				<textarea class="form-control w-100 content" placeholder="내용" rows="10"  name="clubBoardContent"></textarea>
 			</div>
 		</div>
 		
 		<div class="row mt-2">
 			<div class="col-6">
 				<label>게시글 상위고정
-				<input type="checkbox" class="text-end">
+				<input type="checkbox" class="text-end board-fix" name="clubBoardFix" value='N'>
 				</label>
 			</div>
 			<div class="col-6 text-end">
@@ -116,7 +138,7 @@ $(function(){
 		
 		<div class="row mt-4">
 			<div class="col-12">
-				여기에 파일첨부
+				<input type="file" class="form-control" accept="image/*" name="attach">
 			</div>
 		</div>
 		
