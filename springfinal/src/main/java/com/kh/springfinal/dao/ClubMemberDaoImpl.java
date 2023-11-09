@@ -15,7 +15,7 @@ public class ClubMemberDaoImpl implements ClubMemberDao{
 	@Override
 	public ClubMemberDto selectOne(int clubMemberNo) {
 		
-		return sqlSession.selectOne("clubMember.add",clubMemberNo);
+		return sqlSession.selectOne("clubMember.detail",clubMemberNo);
 	}
 
 }
