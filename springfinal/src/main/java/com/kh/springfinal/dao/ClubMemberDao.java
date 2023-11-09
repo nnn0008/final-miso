@@ -5,5 +5,7 @@ import com.kh.springfinal.dto.ClubMemberDto;
 public interface ClubMemberDao {
 	
 	ClubMemberDto selectOne(int clubMemberNo);
+	
+	void insert(ClubMemberDto clubMemberDto);
 
 }

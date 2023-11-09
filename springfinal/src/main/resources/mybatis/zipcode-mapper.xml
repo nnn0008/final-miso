@@ -11,8 +11,6 @@
 	sido,
 	sigungu,
 	eupmyun,
-	doro,
-	build_name,
 	dong_name,
 	hdong_name
 	) values(
@@ -20,8 +18,6 @@
 	#{sido},
 	#{sigungu},
 	#{eupmyun},
-	#{doro},
-	#{buildName},
 	#{dongName},
 	#{hdongName}
 	)
@@ -32,6 +28,43 @@
 		select * from zip_code
 	
 	</select>
+	
+	<select id="searchList" resultType="zipCodeDto">
+	
+	SELECT * FROM (
+    SELECT ROWNUM RN, TMP.* FROM (
+        SELECT * FROM zip_code
+        WHERE sido LIKE CONCAT(#{keyword}, '%') 
+        OR sigungu LIKE CONCAT(#{keyword}, '%')
+        OR eupmyun LIKE CONCAT(#{keyword}, '%')
+        OR (dong_name LIKE CONCAT(#{keyword}, '%') AND eupmyun IS NULL AND doro IS NULL AND build_name IS NULL)
+        OR (hdong_name LIKE CONCAT(#{keyword}, '%') AND eupmyun IS NULL AND doro IS NULL AND build_name IS NULL AND dong_name IS NULL)
+        ORDER BY 
+            CASE 
+                WHEN sido LIKE CONCAT(#{keyword}, '%') THEN 1
+                WHEN sigungu LIKE CONCAT(#{keyword}, '%') THEN 2
+                WHEN build_name LIKE CONCAT(#{keyword}, '%') AND eupmyun IS NULL AND doro IS NULL THEN 3
+                WHEN dong_name LIKE CONCAT(#{keyword}, '%') AND eupmyun IS NULL AND doro IS NULL AND build_name IS NULL THEN 4
+                WHEN hdong_name LIKE CONCAT(#{keyword}, '%') AND eupmyun IS NULL AND doro IS NULL AND build_name IS NULL AND dong_name IS NULL THEN 5
+                ELSE 6 
+            END
+    ) TMP
+) WHERE RN BETWEEN 1 AND 5
+
+	
+	</select>
+	
+	<select id="selectOne" resultType="zipCodeDto">
+		
+		select * from zip_code where sido=#{sido} and 
+		hdong_name=#{hdong} and
+		sigungu=#{sigungu} and
+		eupmyun=#{eupmyun} and
+		dongName=#{dongName}
+		
+		
+	
+	</select> 
 		
 
 
