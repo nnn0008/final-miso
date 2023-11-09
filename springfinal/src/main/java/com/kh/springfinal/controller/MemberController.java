@@ -60,15 +60,14 @@ public class MemberController {
 		//db Pw 와 입력값Pw 검사 후 session입력
 		if(userPw.equals(memberPw)) {
 			session.setAttribute("name", userDto.getMemberId());
-			session.setAttribute("level", userDto.getMemberLevel());
+			session.setAttribute("level", userDto.getMemberLevel());			
 			
-			log.debug("memberId: {}", memberId);
-			ChatRoomDto chatRoomDto = chatRoomDao.selectOne(userDto.getMemberId());
-			log.debug("chatRoomDto: {}", chatRoomDto);
-			
-			if(chatRoomDto != null ) { //채팅방 번호가 있다면
-				session.setAttribute("chatRoomNo", chatRoomDto.getChatRoomNo()); //채팅방 번호를 넣어라
-			}		
+//			ChatRoomDto chatRoomDto = chatRoomDao.selectOne(userDto.getMemberId());
+//			log.debug("chatRoomDto: {}", chatRoomDto);
+//			
+//			if(chatRoomDto != null ) { //채팅방 번호가 있다면
+//				session.setAttribute("chatRoomNo", chatRoomDto.getChatRoomNo()); //채팅방 번호를 넣어라
+//			}		
 		}
 		else {
 			return "redirect:login?error";

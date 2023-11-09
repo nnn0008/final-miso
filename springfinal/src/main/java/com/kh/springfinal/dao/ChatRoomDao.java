@@ -11,4 +11,6 @@ public interface ChatRoomDao {
 	List<ChatRoomDto> list();
 	ChatRoomDto selectOne(String memberId);
 	List<ClubMemberDto> chatRoomClubMembers(int clubNo, int chatRoomNo);
+	List<ChatRoomDto> chatRoomList(String memberId);
+	List<Integer> selectRoomNoByMemberId(String memberId);
 }

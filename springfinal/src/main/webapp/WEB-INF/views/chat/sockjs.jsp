@@ -155,6 +155,7 @@
 									  </div>
 									  <div class="offcanvas-body">
 									      <div class="col-md-4 client-list"></div>
+									      <div class="col-md-4 chatRoom-list"></div>
 									    <div>
 									    </div>
 									  </div>
@@ -196,6 +197,11 @@
 	
 	window.socket = new SockJS("${pageContext.request.contextPath}/ws/chat"); //http로 시작하는 주소
 	
+	
+	window.socket.onopen = function(e){
+		console.log('Info: connection opened.');
+	}
+	
 		window.socket.onmessage = function(e){
 		
 		var data = JSON.parse(e.data);
@@ -212,11 +218,30 @@
 	
 		var formattedTime = chatTime.toLocaleTimeString("ko-KR", options);
 		
+		if (data.chatRooms) { // 방 목록
+		    $(".chatRoom-list").empty();
+
+		    var ul = $("<ul>").addClass("list-group");
+
+		    for (var i = 0; i < data.chatRooms.length; i++) {
+		        var chatRoomNo = data.chatRooms[i].chatRoomNo;
+		        console.log("chatRoomNo : " + chatRoomNo);
+
+		        var listItem = $("<li>")
+		            .addClass("list-group-item chatRoomNo")
+		            .text(chatRoomNo+"번방");
+
+		        ul.append(listItem);
+		    }
+		    // 목록을 chatRoom-list에 표시 
+		    ul.appendTo(".chatRoom-list");
+		}
+		
 		
 		//사용자가 접속하거나 종료했을 때 서버에서 오는 데이터로 목록을 갱신
 		//사용자가 메세지를 보냈을 때 서버에서 이를 전체에게 전달한다
 		//data.roomMember에 채팅방 멤버 목록이 있다
-		if (data.roomMembers) { // 목록 처리
+		else if (data.roomMembers) { // 목록 처리
 		    $(".client-list").empty();
 	
 		    var ul = $("<ul>").addClass("list-group");

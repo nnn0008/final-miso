@@ -18,13 +18,12 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.springfinal.dao.ChatDao;
 import com.kh.springfinal.dao.ChatRoomDao;
-import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dto.ChatDto;
 import com.kh.springfinal.dto.ChatRoomDto;
-import com.kh.springfinal.dto.ClubDto;
 import com.kh.springfinal.vo.ClientVO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -49,47 +48,54 @@ public class WebSocketServer extends TextWebSocketHandler{
 	private Set<ClientVO> clients = new CopyOnWriteArraySet<>(); //전체 회원(로그인)
 	private Map<Integer, Set<ClientVO>> roomMembersMap = new ConcurrentHashMap<>(); // 채팅방 멤버, 채팅방 번호를 키로 사용
 	
-//		//접속 성공
+	
+//	//접속 성공
 //		@Override
 //		public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 //			ClientVO client = new ClientVO(session);
 //			
-//			if(client.isMember()) { 
-//				clients.add(client); //로그인한 멤버를 clients에 추가
-//				
-//				ChatRoomDto chatRoomDto = chatRoomDao.selectOne(client.getMemberId());	 //아이디에 해당하는 룸번호를 찾아서 넣어라 		
-//				Integer chatRoomNo = chatRoomDto.getChatRoomNo();
-//						
-//				log.debug("접속 채팅방번호 {}", chatRoomNo);
-//						
+//			if(client.isMember()) {
+//				clients.add(client);
+//				ChatRoomDto chatRoomDto =
+//						chatRoomDao.selectOne(client.getMemberId());	 //아이디에 해당하는 룸번호를 찾아서 넣어라 		
+//				Integer chatRoomNo = client.getChatRoomNo();
 //				if(chatRoomNo != null) {
-//							addRoomMember(client, chatRoomNo);  //클라이언트를 채팅방 멤버 목록에 추가
-//					}
+//					addRoomMember(client, chatRoomNo);  //클라이언트를 채팅방 멤버 목록에 추가
 //				}
-//				log.debug("사용자 접속! 현재 {}명", clients.size());
-//				
-//				//접속자 명단 전송
-//				sendMessageList(client);
-//				sendRoomMembersList(client.getChatRoomNo()); //채팅 멤버 명단 전송			
 //			}
+//			log.debug("사용자 접속! 현재 {}명", clients.size());
+//			
+//			sendMessageList(client); //접속자 명단 전송
+//			sendRoomMembersList(client.getChatRoomNo()); //채팅 멤버 명단 전송
+//			sendRoomList(client.getChatRoomNo(), session); //이 사용자가 접속 가능한 방 목록을 전달(방 번호들)
+//		}
 	
 	//접속 성공
-		@Override
-		public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-			ClientVO client = new ClientVO(session);
+	@Override
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+		ClientVO client = new ClientVO(session);
+		
+		if(client.isMember()) {
+			clients.add(client);
 			
-			if(client.isMember()) {
-				clients.add(client);
-				Integer chatRoomNo = client.getChatRoomNo();
-				if(chatRoomNo != null) {
-					addRoomMember(client, chatRoomNo);  //클라이언트를 채팅방 멤버 목록에 추가
+			//사용자가 속해있는 모든 룸번호를 조회
+			List<Integer> chatRooms = chatRoomDao.selectRoomNoByMemberId(client.getMemberId());
+			
+			 log.debug("사용자가 속한 룸 번호 개수: {}", chatRooms.size()); // 로그로 개수 출력
+			
+			if(chatRooms != null) {
+				for(Integer chatRoomNo : chatRooms) {
+				addRoomMember(client, chatRoomNo);	
+					}
 				}
 			}
-			log.debug("사용자 접속! 현재 {}명", clients.size());
-			//접속자 명단 전송
-			sendMessageList(client);
-			sendRoomMembersList(client.getChatRoomNo()); //채팅 멤버 명단 전송		
-		}
+			
+		log.debug("사용자 접속! 현재 {}명", clients.size());
+		
+		sendMessageList(client); //접속자 명단 전송
+		sendRoomMembersList(client.getChatRoomNo()); //채팅 멤버 명단 전송
+		sendRoomList(client.getChatRoomNo(), session); //이 사용자가 접속 가능한 방 목록을 전달(방 번호들)
+	}
 		
 	//접속 종료
 	@Override
@@ -127,26 +133,46 @@ public class WebSocketServer extends TextWebSocketHandler{
 	    }
 	}
 	
-		// 채팅방 멤버 명단을 전송하는 메소드
-		public void sendRoomMembersList(Integer chatRoomNo) throws IOException {
-		    // 1. 채팅방 멤버 명단을 전송 가능한 형태(JSON 문자열)로 변환한다
-		    ObjectMapper mapper = new ObjectMapper();
+	//채팅방 목록을 전송하는 메소드(룸번호 조회)
+	public void sendRoomList(Integer chatRoomNo, WebSocketSession session) throws IOException {
+		ClientVO client = new ClientVO(session);
+		//1. 채팅방 목록 조회
+		List<ChatRoomDto> chatRooms = chatRoomDao.chatRoomList(client.getMemberId());
+		log.debug("chatRooms : {}", chatRooms);
+		
+		//2. 채팅방 목록 JSON 문자열로 변환
+	   ObjectMapper mapper = new ObjectMapper();
+	   if(chatRooms != null) {
+		   Map<String, Object> data = new HashMap<>();
+		   data.put("chatRooms", chatRooms);
+		   String chatRoomJson = mapper.writeValueAsString(data);
+		   
+		 //3. 해당 멤버에게 전송
+		 TextMessage message = new TextMessage(chatRoomJson);
+		 session.sendMessage(message);		 
+	   }	   	   
+	}
+	
+	// 채팅방 멤버 명단을 전송하는 메소드
+	public void sendRoomMembersList(Integer chatRoomNo) throws IOException {
+	    // 1. 채팅방 멤버 명단을 전송 가능한 형태(JSON 문자열)로 변환한다
+	    ObjectMapper mapper = new ObjectMapper();
 
-		    Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo); // 채팅방 번호에 해당하 멤버 명단 가져오기
+	    Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo); // 채팅방 번호에 해당하는 멤버 명단 가져오기
 
-		    if (roomMembers != null) {
-		        Map<String, Object> data = new HashMap<>();
-		        data.put("roomMembers", roomMembers);
-		        String roomMembersJson = mapper.writeValueAsString(data);
+	    if (roomMembers != null) {
+	        Map<String, Object> data = new HashMap<>();
+	        data.put("roomMembers", roomMembers);
+	        String roomMembersJson = mapper.writeValueAsString(data);
 
-		        // 2. 동호회 멤버에게 전송
-		        TextMessage message = new TextMessage(roomMembersJson);
+	        // 2. 동호회 멤버에게 전송
+	        TextMessage message = new TextMessage(roomMembersJson);
 
-		        for (ClientVO roomMember : roomMembers) {
-		            roomMember.send(message);
-		        }
-		    }
-		}
+	        for (ClientVO roomMember : roomMembers) {
+	            roomMember.send(message);
+	        }
+	    }
+	}
 
 	//접속한 사용자에게 메세지 이력을 전송하는 메소드
 	public void sendMessageList(ClientVO client) throws IOException {

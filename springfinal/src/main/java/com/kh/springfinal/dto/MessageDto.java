@@ -1,21 +1,20 @@
 package com.kh.springfinal.dto;
 
-import java.sql.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data @NoArgsConstructor @AllArgsConstructor @Builder
-public class ChatDto {
+@Data @AllArgsConstructor @NoArgsConstructor @Builder
+public class MessageDto {
+
+	public enum MessageType{
+		join, message, dm
+	}
 	
-	private int chatNo;
+	private MessageType messageType;
 	private int chatRoomNo;
 	private String chatSender;
 	private String chatReceiver;
-	private String chatContent;
-	private Date chatTime;
-	private int attachNo;
-	
+	private String chat_content;
 }
