@@ -1,6 +1,8 @@
 package com.kh.springfinal.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,13 @@ public class ChatUserDaoImpl implements ChatUserDao{
 	@Override
 	public void insert(ChatUserDto chatUserDto) {
 		sqlSession.insert("chatUser.add", chatUserDto);
+	}
+	
+	public void insert(int chatRoomNo, String clubMemberId) {
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("chatRoomNo", chatRoomNo);
+	    params.put("clubMemberId", clubMemberId);
+	    sqlSession.insert("chatUser.add", params);
 	}
 	
 	@Override

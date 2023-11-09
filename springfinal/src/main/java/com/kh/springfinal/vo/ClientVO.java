@@ -22,6 +22,7 @@ public class ClientVO {
 	private WebSocketSession session;
 	private String memberId, memberLevel;
 	private Integer chatRoomNo;
+//	private Integer clubNo;
 	
 	public ClientVO(WebSocketSession session) {
 		this.session = session;
@@ -29,6 +30,7 @@ public class ClientVO {
 		this.memberId = (String) attr.get("name");
 		this.memberLevel = (String) attr.get("level");
 		this.chatRoomNo = (Integer) attr.get("chatRoomNo");
+//		this.clubNo = (Integer) attr.get("clubNo");
 	}
 	
 	public boolean isMember() {
