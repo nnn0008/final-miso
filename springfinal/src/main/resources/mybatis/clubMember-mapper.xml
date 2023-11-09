@@ -6,6 +6,19 @@
     
     <mapper namespace="clubMember">
     
+    	<insert id="add">
+    			
+    	insert into club_member(club_member_no,club_member_id,
+    	club_no,club_member_rank) 
+    	values(#{clubMemberNo},#{clubMemberId},#{clubNo},#{clubMemberRank})
+
+    	</insert>
+    	
+    	<select id="detail">
+    		
+    		select * from club_member where club_member_no=#{clubMemberNo}
+    		
+    	</select>
     
     	
     
