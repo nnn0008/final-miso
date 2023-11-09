@@ -1,8 +1,6 @@
 package com.kh.springfinal.dao;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +26,27 @@ public class ChatRoomDaoImpl implements ChatRoomDao{
 	}
 	
 	@Override
+	public List<ChatRoomDto> chatRoomList(String memberId) {
+		// 채팅방 목록을 가져오는 쿼리 실행
+	    List<ChatRoomDto> chatRooms = sqlSession.selectList("chatRoom.find", memberId);
+	    return chatRooms;
+	}
+	
+	@Override
 	public ChatRoomDto selectOne(String memberId) {
 		return sqlSession.selectOne("chatRoom.find", memberId);
 	}
 	
 	@Override
-	public List<ClubMemberDto> chatRoomClubMembers(int clubNo, int chatRoomNo) {
-		   Map<String, Object> params = new HashMap<>();
-		    params.put("clubNo", clubNo);
-		    params.put("chatRoomNo", chatRoomNo);
-		    return sqlSession.selectList("chatRoomClubMembers", params);
+	public List<Integer> selectRoomNoByMemberId(String memberId) {
+		return sqlSession.selectList("chatRoom.find2", memberId);
 	}
+	
+	@Override
+	public List<ClubMemberDto> chatRoomClubMembers(int clubNo, int chatRoomNo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 }

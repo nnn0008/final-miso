@@ -24,5 +24,13 @@
 	INNER JOIN club_member cm ON c.club_no = cm.club_no
 	WHERE cm.club_member_id = #{memberId}
 	</select>
+	
+	<select id="find2" resultType="int">
+	SELECT cr.chat_room_no
+	FROM chat_room cr
+	INNER JOIN club c ON c.chat_room_no = cr.chat_room_no
+	INNER JOIN club_member cm ON c.club_no = cm.club_no
+	WHERE cm.club_member_id = #{memberId}
+</select>
 
 </mapper>
