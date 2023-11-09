@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
 public class ClubBoardDto {
 	private int clubBoardNo;
+	private String clubBoardName;
 	private String clubBoardTitle;
 	private String clubBoardContent;
 	private String clubBoardCategory;
@@ -15,5 +16,4 @@ public class ClubBoardDto {
 	private String clubBoardDate;
 	private int clubMemberNo;
 	private int clubNo;
-	private String clubBoardName;
 }
