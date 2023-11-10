@@ -24,9 +24,16 @@ $(function(){
     		method: "post", 
             data: { memberId: inputId }, 
    			success: function(response){
-   				$('.d-id-feedback').hide();
-   	          $("[name=memberId]").addClass("is-valid");
-   	          $(".id-feedback").addClass("is-valid")
+   				if(response==="Y"){
+   					$('.d-id-feedback').hide();
+  	   	          $("[name=memberId]").addClass("is-invalid");
+  	   	          $(".id-feedback").addClass("is-invalid")
+   				}
+   				else{
+	   				$('.d-id-feedback').hide();
+	   	          $("[name=memberId]").addClass("is-valid");
+	   	          $(".id-feedback").addClass("is-valid")
+   				}
    			}
     	});
         }
@@ -160,7 +167,7 @@ $(function(){
         <div class="row mt-2"><div class="col">
           <div class="input-group has-validation">
             <div class="form-floating">
-              <input type="text" class="form-control" name="memberContect" id="memberContect" placeholder="연락처" required>
+              <input type="text" class="form-control" name="memberContact" id="memberContect" placeholder="연락처" required>
               <label for="memberContect">연락처</label>
             </div>
           </div>

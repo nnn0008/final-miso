@@ -1,5 +1,7 @@
 package com.kh.springfinal.controller;
 
+import java.util.List;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -98,4 +100,12 @@ public class MemberController {
 	public String loginFinish() {
 		return "member/loginFinish";
 	}
+	
+	//아이디 찾기
+	@GetMapping("/searchId")
+	public String searchId() {
+		return "member/searchId";
+	}
+	
+	
 }
