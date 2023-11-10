@@ -26,65 +26,58 @@ public class ZipInsertTest {
 
     @Test
     public void test() throws FileNotFoundException {
-        File target = new File("C:\\Users\\l08il\\zipcode_DB\\경기도.txt");
+        File target = new File("C:\\Users\\l08il\\zipcode_DB\\서울특별시.txt");
         Scanner sc = new Scanner(target);
 
-        String patternStr = "(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)";
+        String patternStr = "(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)";
         Pattern pattern = Pattern.compile(patternStr);
 
-        List<AddressDto> list = new ArrayList<>();
-
         while (sc.hasNextLine()) {
-            String line = sc.nextLine();// 한줄 읽고
-            Matcher matcher = pattern.matcher(line);// 패턴으로 분석
-            if (matcher.find()) {// 패턴을 찾았으면
+            String line = sc.nextLine();
+            Matcher matcher = pattern.matcher(line);
+            if (matcher.find()) {
                 AddressDto addressDto = AddressDto.builder()
                         .sido(matcher.group(2))
                         .sigungu(matcher.group(4))
                         .eupmyun(matcher.group(6))
-                        .dongName(matcher.group(18))
                         .hdongName(matcher.group(20))
                         .build();
-               
-              
+        
+                log.debug("Inserted ZipCodeDto: {}", addressDto);
+                
                 
 
-                // 중복 체크
-                if (!isDuplicate(addressDto.getSido(),
-                		addressDto.getHdongName(),
-                		addressDto.getSigungu(),
-                		addressDto.getEupmyun(),
-                		addressDto.getDongName())){
-                	
-                    list.add(addressDto);
-
+                try {
                     zipCodeDao.insert(ZipCodeDto.builder()
                             .sido(matcher.group(2))
                             .sigungu(matcher.group(4))
                             .eupmyun(matcher.group(6))
-                            .dongName(matcher.group(18))
                             .hdongName(matcher.group(20))
                             .build());
+                } catch (Exception e) {
                 }
-                
-               
-                
             }
-        }
+            }
+        
 
         sc.close();
     }
 
-    private boolean isDuplicate(String sido,String hdong,String sigungu,String eupmyun,String dongName) {
-    	
-    	
-    	
-    	
-        List<ZipCodeDto> list = zipCodeDao.selectList(sido,hdong,sigungu,eupmyun,dongName);
-        
-        
-        return list.size()>=1;
-    }
+//    private boolean empty(String sido, String hdong, String sigungu, String eupmyun) {
+//        try {
+//            List<ZipCodeDto> list = zipCodeDao.selectList(sido, hdong, sigungu, eupmyun);
+//            
+//            log.debug("list: {}", list);
+//            
+//            return list.size() == 0;
+//        } catch (Exception e) {
+//            // 예외가 발생하면 로그에 출력
+//            log.error("Exception while checking if data is empty", e.fillInStackTrace());
+//            return false; // 또는 예외 발생 시 처리할 방식을 결정
+//        }
+//    }
+
     
 }
+
 

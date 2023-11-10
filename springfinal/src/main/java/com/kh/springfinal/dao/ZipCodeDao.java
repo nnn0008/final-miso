@@ -12,6 +12,6 @@ public interface ZipCodeDao {
 	List<ZipCodeDto> list(String keyword);
 	
 	List<ZipCodeDto> selectList(String sido,String hdong,
-			String sigungu,String eupmyun,String dongName);
+			String sigungu,String eupmyun);
 
 }
