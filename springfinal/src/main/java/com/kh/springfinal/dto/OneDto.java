@@ -18,7 +18,6 @@ public class OneDto {
 	private String oneCategory;
 	private int oneGroup,oneDepth;
 	private Integer oneParent;
-	private int page;
 	private String type,keyword;
 	
 

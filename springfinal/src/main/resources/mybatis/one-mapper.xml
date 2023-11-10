@@ -37,39 +37,41 @@
 	 	</update>
 	 	
 	 	<!-- 게시글 목록 -->
-	 	<!-- <select id="list" resultType="OneDto">
-	 		select * from one order by one_no desc
-	 	</select>
-	 	 -->
+	 	<!--
 	 	<select id="list" resultType="OneDto">
 	    select * from one
 	    start with one_parent is null
 	    connect by prior one_no = one_parent
 	    order siblings by one_group desc, one_no asc
 		</select>
+		 -->
+		<!-- 페이지네이션 -->
+		<select id="selectListByPage" resultType="OneDto" parameterType="map">
+			    select *
+			    from (
+			        select rownum rn, TMP.*
+			        from (
+			            select *
+			            from one
+			            start with one_parent is null
+			            connect by prior one_no = one_parent
+			            order siblings by one_group desc, one_no asc
+			        ) TMP
+			    )
+			    where rn between #{begin} and #{end}
+		</select>
+
+	 	<!-- 카운트 -->
+	 	<select id="countListByPage" resultType="int">
+	 		select count(*) from one
+	 	</select>
 	 	
 	 	<!-- 게시글 상세 -->
 	 	<select id="find" resultType="OneDto">
 	 		select * from one where one_no = #{oneNo}
 	 	</select>
 	 	
-	 	<!-- 게시글 제목 검색 -->
-	 	<select id="findByOneTitle" resultType="OneDto">
-	 		select * from one where instr(one_title,#{oneTitle})>0
-	 	</select>
 	 	
-	 	<!-- 게시글 아이디 검색 -->
-	 	<select id="findByOneMember" resultType="OneDto">
-	 		select * from one where instr(one_member,#{oneMember})>0
-	 	</select>
 	 	
-	 	<!-- 페이지네이션 -->
-	 	<select id="countList" resultType="OneDto">
-	 	select * from (
-          select rownum rn, TMP.* from(
-            select * from one order by one_no desc
-          )TMP
-       )where rn between #{begin} and #{end}
-	 	</select>
     </mapper>
     
