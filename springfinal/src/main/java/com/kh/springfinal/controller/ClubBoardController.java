@@ -1,10 +1,8 @@
 package com.kh.springfinal.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,18 +15,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.kh.springfinal.configuration.FileUploadProperties;
 import com.kh.springfinal.dao.AttachDao;
 import com.kh.springfinal.dao.ClubBoardDao;
 import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dao.ClubMemberDao;
 import com.kh.springfinal.dao.MemberDao;
-import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.ClubBoardAllDto;
 import com.kh.springfinal.dto.ClubBoardDto;
+import com.kh.springfinal.dto.ClubBoardImage2Dto;
+import com.kh.springfinal.dto.ClubBoardImage3Dto;
 import com.kh.springfinal.dto.ClubBoardImageDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MemberDto;
+import com.kh.springfinal.vo.FileLoadVO;
 
 @Controller
 @RequestMapping("/clubBoard")
@@ -55,19 +54,13 @@ public class ClubBoardController {
 	}
 	
 	@Autowired
-	private FileUploadProperties props;
-	
-	private File dir;
-	
-	@PostConstruct
-	public void init() {
-		dir = new File(props.getHome());
-		dir.mkdirs();
-	}
+	private FileLoadVO fileLoadVO;
 	
 	@PostMapping("/write")
 	public String write(@ModelAttribute ClubBoardDto clubBoardDto, @ModelAttribute MemberDto memberDto, @ModelAttribute ClubMemberDto clubMemberDto, 
-			HttpSession session, @RequestParam int clubNo, @ModelAttribute ClubBoardImageDto clubBoardImageDto, @RequestParam MultipartFile attach) throws Exception, IOException{
+			HttpSession session, @RequestParam int clubNo, @ModelAttribute ClubBoardImageDto clubBoardImageDto, @ModelAttribute ClubBoardImage2Dto clubBoardImage2Dto,
+			@ModelAttribute ClubBoardImage3Dto clubBoardImage3Dto, @RequestParam MultipartFile attach,
+			@RequestParam MultipartFile attachSecond, @RequestParam MultipartFile attachThird) throws Exception, IOException{
 //		memberDto = memberDao.loginId((String)session.getAttribute("name")); //여기서 회원 이름을 얻어야함
 //		memberDto = memberDao.loginId("testuser1"); //여기서 회원 이름을 얻어야함
 		
@@ -86,19 +79,7 @@ public class ClubBoardController {
 		
 		//사진 첨부
 		if(!attach.isEmpty()) {
-			int attachNo = attachDao.sequence();
-			clubBoardImageDto.setAttachNo(attachNo);
-			clubBoardImageDto.setClubBoardNo(clubBoardNo);
-			
-			File target = new File(dir, String.valueOf(attachNo));
-			attach.transferTo(target);
-			
-			AttachDto attachDto = new AttachDto();
-			attachDto.setAttachNo(attachNo);
-			attachDto.setAttachName(attach.getOriginalFilename());
-			attachDto.setAttachSize(attach.getSize());
-			attachDto.setAttachType(attach.getContentType());
-			attachDao.insert(attachDto);	
+			fileLoadVO.upload(clubBoardImageDto, clubBoardImage2Dto, clubBoardImage3Dto, clubBoardNo, attach, attachSecond, attachThird);
 		}
 
 		clubBoardDao.insert(clubBoardDto);

@@ -13,12 +13,12 @@
 		insert into club_board
 		(
 			club_board_no, club_board_title, club_board_content, club_board_category,
-			club_member_no, club_no, club_board_name, club_board_fix
+			club_member_no, club_no, club_board_name
 		) 
 		values
 		(
 			club_board_no_seq.nextval, #{clubBoardTitle}, #{clubBoardContent}, #{clubBoardCategory},
-			#{clubMemberNo}, #{clubNo}, #{clubBoardName}, #{clubBoardFix}
+			#{clubMemberNo}, #{clubNo}, #{clubBoardName}
 		)
 	</insert>
 	
@@ -76,5 +76,9 @@
 	<select id="find" resultType="clubBoardDto">
 		select * from club_board where club_board_no = #{clubBoardNo}
 	</select>
+	
+	<delete id="remove">
+		delete club_board where club_board_no = #{clubBoardNo}
+	</delete>
 	
 	</mapper>

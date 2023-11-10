@@ -12,4 +12,5 @@ public interface ClubBoardDao {
 	ClubMemberDto selectOneClubMemberNo(String memberId, int clubNo);
 	List<ClubBoardAllDto> selectListByPage(int page, int size, int clubNo);
 	ClubBoardDto selectOne(int clubBoardNo);
+	boolean delete(int clubBoardNo);
 }

@@ -45,5 +45,9 @@ public class ClubBoardDaoImpl implements ClubBoardDao{
 		return sqlSession.selectOne("clubBoard.find", clubBoardNo);
 	}
 	
+	@Override
+	public boolean delete(int clubBoardNo) {
+		return sqlSession.selectOne("clubBoard.remove", clubBoardNo);
+	}
 	
 }

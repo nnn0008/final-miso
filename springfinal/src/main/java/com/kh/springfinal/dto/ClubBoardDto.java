@@ -12,7 +12,6 @@ public class ClubBoardDto {
 	private String clubBoardTitle;
 	private String clubBoardContent;
 	private String clubBoardCategory;
-	private String clubBoardFix;
 	private String clubBoardDate;
 	private int clubMemberNo;
 	private int clubNo;
