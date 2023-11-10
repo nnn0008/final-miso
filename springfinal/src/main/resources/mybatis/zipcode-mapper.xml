@@ -26,6 +26,18 @@
 	#{hdongName}
 	)
 	</insert>
+	
+	<select id="addrSeachList" resultType="ZipcodeDto">
+		SELECT * FROM zip_code
+    WHERE sido LIKE '%' || #{searchVal} || '%' 
+    OR sigungu LIKE '%' || #{searchVal} || '%' 
+    OR eupmyun LIKE '%' || #{searchVal} || '%' 
+    OR doro LIKE '%' || #{searchVal} || '%' 
+    OR build_name LIKE '%' || #{searchVal} || '%' 
+    OR dong_name LIKE '%' || #{searchVal} || '%' 
+    ORDER BY sido ASC
+    LIMIT 5
+	</select>
 
 
 </mapper>
