@@ -41,7 +41,7 @@ public class ClubBoardDaoImpl implements ClubBoardDao{
 	}
 	
 	@Override
-	public ClubBoardDto selectOne(int clubBoardNo) {
+	public ClubBoardAllDto selectOne(int clubBoardNo) {
 		return sqlSession.selectOne("clubBoard.find", clubBoardNo);
 	}
 	

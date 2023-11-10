@@ -47,14 +47,15 @@ public class ClubBoardController {
 	@Autowired
 	private AttachDao attachDao;
 	
+	@Autowired
+	private FileLoadVO fileLoadVO;
+	
 	@GetMapping("/write")
 	public String write(@RequestParam int clubNo, Model model) {
 		model.addAttribute("clubNo", clubNo);
 		return "clubBoard/write";
 	}
 	
-	@Autowired
-	private FileLoadVO fileLoadVO;
 	
 	@PostMapping("/write")
 	public String write(@ModelAttribute ClubBoardDto clubBoardDto, @ModelAttribute MemberDto memberDto, @ModelAttribute ClubMemberDto clubMemberDto, 
@@ -96,12 +97,8 @@ public class ClubBoardController {
 	
 	@RequestMapping("/detail")
 	public String detail(Model model, @RequestParam int clubBoardNo) {
-		ClubBoardDto clubBoardDto = clubBoardDao.selectOne(clubBoardNo);
-		
-		
-		
-		
-		model.addAttribute("clubBoardDto", clubBoardDto);
+		ClubBoardAllDto clubBoardAllDto = clubBoardDao.selectOne(clubBoardNo);		
+		model.addAttribute("clubBoardAllDto", clubBoardAllDto);
 		return "clubBoard/detail";
 	}
 	

@@ -33,6 +33,7 @@ public class FileLoadVO {
 		dir.mkdirs();
 	}
 	
+	//insert시
 	public void upload(ClubBoardImageDto clubBoardImageDto, ClubBoardImage2Dto clubBoardImage2Dto, ClubBoardImage3Dto clubBoardImage3Dto, 
 			int clubBoardNo, MultipartFile attach, MultipartFile attachSecond, MultipartFile attachThird) throws IllegalStateException, IOException {
 		//파일이 있다면 실행시켜주는 메소드
@@ -82,4 +83,7 @@ public class FileLoadVO {
 			}
 		}
 	}
+	
+	//edit시
+	
 }
