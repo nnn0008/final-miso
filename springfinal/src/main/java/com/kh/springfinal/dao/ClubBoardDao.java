@@ -11,6 +11,6 @@ public interface ClubBoardDao {
 	void insert(ClubBoardDto clubBoardDto);
 	ClubMemberDto selectOneClubMemberNo(String memberId, int clubNo);
 	List<ClubBoardAllDto> selectListByPage(int page, int size, int clubNo);
-	ClubBoardDto selectOne(int clubBoardNo);
+	ClubBoardAllDto selectOne(int clubBoardNo);
 	boolean delete(int clubBoardNo);
 }
