@@ -12,18 +12,14 @@
 	chat_room_no,
 	chat_sender,
 	chat_receiver,
-	chat_content,
-	chat_time,
-	attach_no
+	chat_content
 	) 
 	values(
 	chat_seq.nextval,
 	#{chatRoomNo},
 	#{chatSender},
 	#{chatReceiver},
-	#{chatContent},
-	#{chatTime},
-	#{attachNo}
+	#{chatContent}
 	)
 	</insert>
 	
@@ -31,5 +27,11 @@
 		select * from chat order by chat_no asc
 	</select>
 	
+	<select id="getChatHistory" resultType="ChatDto">
+    SELECT *
+    FROM chat
+    WHERE chat_room_no = #{chatRoomNo}
+    ORDER BY chat_time asc
+</select>
 
 </mapper>

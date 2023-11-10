@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.kh.springfinal.dao.ChatRoomDao;
 import com.kh.springfinal.dao.MemberDao;
+import com.kh.springfinal.dto.ChatRoomDto;
 import com.kh.springfinal.dto.MemberDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +25,13 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("/member")
 public class MemberController {
+	
+
 	@Autowired
 	private MemberDao memberDao;
+	
+	@Autowired
+	private ChatRoomDao chatRoomDao;
 	
 	@GetMapping("/join")
 	public String join() {
@@ -41,6 +48,7 @@ public class MemberController {
 	public String login() {
 		return "member/login";
 	}
+
 	@PostMapping("/login")
 	public String login(HttpServletResponse httpServletResponse,
 						@RequestParam String memberId, @RequestParam String memberPw,
@@ -67,17 +75,14 @@ public class MemberController {
 		//db Pw 와 입력값Pw 검사 후 session입력
 		if(userPw.equals(memberPw)) {
 			session.setAttribute("name", userDto.getMemberId());
-			session.setAttribute("level", userDto.getMemberLevel());
-			if(saveId != null) {
-				Cookie cookie = new Cookie("saveId", memberId);
-				cookie.setMaxAge(4*7*24*60*60);//4주
-				httpServletResponse.addCookie(cookie);
-			}
-			else {
-				Cookie cookie = new Cookie("saveId", memberId);
-				cookie.setMaxAge(0);//4주
-				httpServletResponse.addCookie(cookie);
-			}
+			session.setAttribute("level", userDto.getMemberLevel());			
+			
+//			ChatRoomDto chatRoomDto = chatRoomDao.selectOne(userDto.getMemberId());
+//			log.debug("chatRoomDto: {}", chatRoomDto);
+//			
+//			if(chatRoomDto != null ) { //채팅방 번호가 있다면
+//				session.setAttribute("chatRoomNo", chatRoomDto.getChatRoomNo()); //채팅방 번호를 넣어라
+//			}		
 		}
 		else {
 			if(saveId != null) {
@@ -93,8 +98,10 @@ public class MemberController {
 			return "redirect:login?error";
 		}
 		//로그인 완료창으로 보내기
-		return "redirect:./loginFinish";	
+		return "/home";	
 	}
+	
+	
 	//로그인 완료창
 	@RequestMapping("/loginFinish")
 	public String loginFinish() {

@@ -11,7 +11,7 @@
 	</select>
 	
 	<insert id="add">
-		insert ino attach(attach_no, attach_name, attach_size, attach_type)
+		insert into attach(attach_no, attach_name, attach_size, attach_type)
 		values(attach_seq.nextval, #{attachName}, #{attachSize}, #{attachType})
 	</insert>
 	

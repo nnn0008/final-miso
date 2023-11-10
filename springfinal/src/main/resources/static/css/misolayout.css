@@ -63,6 +63,7 @@ section > article {
     box-sizing: border-box; /* 여백을 포함하여 전체 너비 유지 */
 }
 
+
     a.link,
     a.link:visited {
         text-decoration: none;
@@ -95,4 +96,79 @@ section > article {
     pre{
         font-size: 10px;
     }
+    
+    
+
+/* 오른쪽 사이드바 초기에 표시 */
+.right-sidebar {
+    display: block;
+}
+
+.iconContainer {
+    display: none; /* 초기에 아이콘 숨김 */
+}
+
+.categoryAlert >  .category-list{
+    display: none;
+}
+
+/* 780px 이하 화면 크기에 대한 스타일 추가 */
+@media (max-width: 820px) {
+    .right-sidebar {
+        display: none; /* 화면 폭이 780px 이하일 때 숨김 */
+    }
+    .iconContainer {
+    display: block; 
+}
+    .categoryAlert {
+    display: none; 
+}
+    section {
+        width:100%; /* 섹션 전체 너비로 설정 */
+    }
+
+}
+
+ .categoryAlert {
+    display: none;
+    position: absolute;
+    top: 1.2em;
+    right: 100;
+    width: 250px;
+    height: 400px;
+    background-color: #ffffff;
+    z-index: 1;
+}
+
+
+
+/*@media (max-width: 820px) {*/
+/*    .left-sidebar strong {*/
+/*        display: none;  
+/*    }*/
+/*        .left-sidebar .link img {*/
+/*        width: 30%;  
+/*        display: block;  
+/*        margin: 0 auto;  
+/*    }*/
+	    
+/*	    .left-sidebar {*/
+/*	    width: 100px;*/
+/*	}*/
+/*	.left-sidebar .btn-miso{*/
+/*		 display: none;*/
+/*	}*/
+	
+/*	.left-sidebar .login{*/
+/*		 display: none;*/
+/*	}*/
+	
+/*	section > article {*/
+/*    flex-grow: 1;*/
+/*    padding-left: 100px;  
+/*    padding-right: 0px; 
+/*    box-sizing: border-box;  
+/*}*/
+/*}*/
+
 

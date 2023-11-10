@@ -23,4 +23,10 @@ public class ChatDaoImpl implements ChatDao{
 	public List<ChatDto> list() {
 		return sqlSession.selectList("chat.allList");
 	}
+
+	@Override
+	public List<ChatDto> getChatHistory(int chatRoomNo) {
+		return sqlSession.selectList("chat.getChatHistory", chatRoomNo);
+	}
+	
 }

@@ -8,8 +8,10 @@ import com.kh.springfinal.vo.ZipCodeSearchVO;
 public interface ZipCodeDao {
 
 	void insert(ZipCodeDto zipCodeDto);
-	List<ZipCodeDto> selectList(String searchVal);
 	
-		
+	List<ZipCodeDto> list(String keyword);
 	
+	List<ZipCodeDto> selectList(String sido,String hdong,
+			String sigungu,String eupmyun,String dongName);
+
 }

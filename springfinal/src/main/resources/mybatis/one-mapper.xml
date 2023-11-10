@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="one">
+	 <!-- 시퀀스 생성 -->
+	 	<select id="sequence" resultType="int">
+	 		select one_seq.nextval from dual
+	 	</select>
+	 
+	 <!-- 게시글 등록 -->
+	 <insert id="insert">
+	 	insert into one(
+	 	one_no,one_member,one_level,one_title,one_content,one_status,
+	 	one_category,one_group,one_depth,one_parent
+	 	)
+	 	values(
+	 	#{oneNo},#{oneMember},#{oneLevel},#{oneTitle},#{oneContent}, 
+	 	#{oneStatus},#{oneCategory},#{oneGroup},#{oneDepth},#{oneParent}
+	 	)
+	 </insert>
+	 
+	 <!-- 게시글 삭제 -->
+	 	<delete id="delete">
+	 		delete one where one_no = #{oneNo}
+	 	</delete>
+	 	
+	 	<!-- 게시글 수정 -->
+	 	<update id="edit">
+	 		update one
+	 		set
+	 		one_title = #{oneDto.oneTitle},
+	 		one_content = #{oneDto.oneContent}	
+	 		where one_no = #{oneNo} 		
+	 	</update>
+	 	
+	 	<!-- 게시글 목록 -->
+	 	<!--
+	 	<select id="list" resultType="OneDto">
+	    select * from one
+	    start with one_parent is null
+	    connect by prior one_no = one_parent
+	    order siblings by one_group desc, one_no asc
+		</select>
+		 -->
+		<!-- 페이지네이션 -->
+		<select id="selectListByPage" resultType="OneDto" parameterType="map">
+			    select *
+			    from (
+			        select rownum rn, TMP.*
+			        from (
+			            select *
+			            from one
+			            start with one_parent is null
+			            connect by prior one_no = one_parent
+			            order siblings by one_group desc, one_no asc
+			        ) TMP
+			    )
+			    where rn between #{begin} and #{end}
+		</select>
+
+	 	<!-- 카운트 -->
+	 	<select id="countListByPage" resultType="int">
+	 		select count(*) from one
+	 	</select>
+	 	
+	 	<!-- 게시글 상세 -->
+	 	<select id="find" resultType="OneDto">
+	 		select * from one where one_no = #{oneNo}
+	 	</select>
+	 	
+	 	
+	 	
+    </mapper>
+    

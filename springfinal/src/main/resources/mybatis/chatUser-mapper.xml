@@ -8,15 +8,16 @@
 	<insert id="add">
 	insert into chat_user(
 		chat_room_no,
-		member_id
+		club_member_id
 	) values(
 		#{chatRoomNo},
-		#{memberId}
+		#{clubMemberId}
 	)
 	</insert>
 	
 	<select id="allList" resultType="ChatUserDto">
 		select * from chat_user order by chat_room_no asc
 	</select>
+
 
 </mapper>

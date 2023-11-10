@@ -8,14 +8,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
-public class ClubBoardAll {
-	private String memberName;
-	private int mpAttachNo;
+public class ClubBoardAllDto {
+	private String memberId;
+	private int attachNoMp;
 	private String clubMemberRank;
+	private int clubNo;
 	private String clubBoardTitle;
 	private String clubBoardContent;
 	private String clubBoardCategory;
 	private Date clubBoardDate;
-	private String clubBoardFix;
-	private int cbiAttachNo;
+	private int clubBoardLikecount;
+	private String clubBoardName;
+	private int attachNoCbi;
 }

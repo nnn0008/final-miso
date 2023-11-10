@@ -20,9 +20,5 @@ public class ZipCodeSearchRestController {
 	@Autowired
 	private ZipCodeDao codeDao;
 	
-	@PostMapping("search")
-	public List<ZipCodeDto> search(@RequestParam String searchVal) {
-		return codeDao.selectList(searchVal);
-	}
 	
 }

@@ -2,6 +2,7 @@ package com.kh.springfinal.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
@@ -21,6 +22,6 @@ public class WebSocketServerConfiguration implements WebSocketConfigurer{
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		registry.addHandler(websocketServer, "/ws/chat")
 		.addInterceptors(new HttpSessionHandshakeInterceptor())
-		.withSockJS();
+		.withSockJS(); //spring 표준
 	}
 }
