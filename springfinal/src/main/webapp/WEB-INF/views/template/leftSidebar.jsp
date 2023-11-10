@@ -26,7 +26,7 @@
 
                     <div class="row mt-3 p-2">
                         <div class="col">
-                            <a href="#" class="link">
+                            <a href="/" class="link">
                                 <img src="${pageContext.request.contextPath}/images/Vector-3.png" width="20%">
                                 <strong class="ms-2">홈</strong> 
                             </a>
@@ -44,7 +44,7 @@
 
                     <div class="row p-2">
                         <div class="col">
-                            <a href="#" class="link">
+                            <a href="${pageContext.request.contextPath}/chat/roomList" class="link">
                                 <img src="${pageContext.request.contextPath}/images/Vector-1.png" width="20%">
                                 <strong class="ms-2">채팅</strong> 
                             </a>
@@ -70,7 +70,7 @@
 
                     <div class="row mt-4">
                         <div class="col text-center d-flex align-items-center justify-content-center login">
-                            <a href="#" class="link">
+                            <a href="${pageContext.request.contextPath}/member/login" class="link">
                                 <img src="${pageContext.request.contextPath}/images/Vector-4.png" width="20%">
                                 <strong class="ms-2">로그인</strong> 
                             </a>

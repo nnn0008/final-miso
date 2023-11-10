@@ -16,5 +16,5 @@ public class MessageDto {
 	private int chatRoomNo;
 	private String chatSender;
 	private String chatReceiver;
-	private String chat_content;
+	private String chatContent;
 }

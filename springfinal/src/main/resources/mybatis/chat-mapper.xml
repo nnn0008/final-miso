@@ -27,5 +27,11 @@
 		select * from chat order by chat_no asc
 	</select>
 	
+	<select id="getChatHistory" resultType="ChatDto">
+    SELECT *
+    FROM chat
+    WHERE chat_room_no = #{chatRoomNo}
+    ORDER BY chat_time asc
+</select>
 
 </mapper>

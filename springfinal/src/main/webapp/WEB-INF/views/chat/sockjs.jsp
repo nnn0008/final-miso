@@ -3,7 +3,7 @@
 
 <!doctype html>
 <html lang="ko">
-
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -179,7 +179,7 @@
 								</div>
 							</div>
 						</div>
-						
+						<div id="chatRoomNo" th:text="${chatRoomNo}" style="display:none"></div>
 					</div>
 				</div>
 				
@@ -195,12 +195,36 @@
 	//연결 생성
 	//연결 후 해야할 일들을 콜백함수로 지정(onopen, onclose, onerror, onmessage)
 	
-	window.socket = new SockJS("${pageContext.request.contextPath}/ws/chat"); //http로 시작하는 주소
+	// 클라이언트에서 SockJS로 서버에 접속하는 부분
+	var chatRoomNo = getRoomNoFromURL();  // 채팅방 번호를 얻어옴
 	
+	window.socket = new SockJS("${pageContext.request.contextPath}/ws/chat");
 	
-	window.socket.onopen = function(e){
-		console.log('Info: connection opened.');
+	window.socket.onopen = function (e) {
+	    console.log('Info: connection opened.');
+	    console.log("chatRoomNo:", chatRoomNo); // 디버그용 로그 추가
+	
+	    // 서버에 join 메시지 전송
+	    var joinMessage = {
+	        messageType: "join",
+	        chatRoomNo: ${chatRoomNo}
+	    };
+	
+	    window.socket.send(JSON.stringify(joinMessage));
+	};
+
+
+	// 방 이동 시
+	function moveToRoom(selectedRoomNo) {
+	    window.location.href = "/chat/enterRoom/" + selectedRoomNo;
 	}
+
+	// JavaScript에서 룸번호 읽어오기
+	function getRoomNoFromURL() {
+	    var url = window.location.href;
+	    var match = url.match(/\/chat\/enterRoom\/(\d+)/);
+	    return match ? parseInt(match[1]) : null;
+	}	
 	
 		window.socket.onmessage = function(e){
 		
@@ -395,32 +419,46 @@
 		    sendMessage();
 		});
 		
-		function sendMessage() {
-		    var text = $(".message-input").val();
-		    if (text.length === 0) return;
-		
-		    if (text.startsWith("@")) {
-		        var space = text.indexOf(" ");
-		        if (space === -1) return;
-		
-		        var obj = {
-		            target: text.substring(1, space),
-		            content: text.substring(space + 1)
-		        };
-		        var str = JSON.stringify(obj);
-		        window.socket.send(str);
-		        $(".message-input").val("");
-		    } else {
-		        var obj = {
-		            content: text
-		        };
-		        var str = JSON.stringify(obj);
-		        window.socket.send(str);
-		        $(".message-input").val("");
+	    var sessionName = "${sessionScope.name}";
+	    var chatRoomNo = ${chatRoomNo};
+	    
+		// 메시지 전송 함수
+		function sendMessage(content) {
+	    // content가 빈 문자열이 아닌 경우에만 전송
+	    if (content.trim() !== "") {
+	        var message = {
+	            messageType: "message",
+	            chatSender: sessionName,
+	            chatContent: content,
+	            chatRoomNo: chatRoomNo
+	        };	
+	        console.log("Sending message from client:", message); // 로그 추가
+	
+	        window.socket.send(JSON.stringify(message));
+	    } else {
+	        console.log("Content is empty. Message not sent.");
+	    }
+	}
+
+
+		// 메시지 전송 이벤트 처리
+		function handleSendMessage() {
+		    var inputElement = document.querySelector(".message-input");
+		    var messageContent = inputElement.value;
+
+		    // 메시지가 비어있지 않은 경우에만 전송
+		    if (messageContent.trim() !== "") {
+		        sendMessage(messageContent);
+
+		        // 전송 후 입력창 비우기
+		        inputElement.value = "";
 		    }
 		}
 
-		
+		// 이벤트 리스너 등록
+		document.querySelector(".send-btn").addEventListener("click", handleSendMessage);
+
+
 		// 메세지 헤더 생성
 		var headerContent = $("<div>").addClass("d-flex bd-highlight justify-content-between");
 		var imageContainer = $("<div>").addClass("img_cont");
