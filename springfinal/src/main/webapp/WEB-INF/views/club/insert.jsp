@@ -29,7 +29,6 @@
             for (var i = 0; i < response.length; i++) {
              select2
              .append($("<option>")
-            		 .attr("name", "minorCategoryNo")
             		 .val(response[i].minorCategoryNo)
             		 .text(response[i].minorCategoryName));
                 }    
@@ -92,7 +91,6 @@
 
     	                    zipList.append($("<li>")
     	                        .addClass("list-group-item zip")
-    	                        .attr("name", "zipCodeNo")
     	                        .val(response[i].zipCodeNo)
     	                        .text(text));
     	                }
@@ -105,12 +103,12 @@
         	    	
         	    	var form = $('.add');
         	    	
-        	    	form.append($("<input>")
+        	    	 form.append($("<input>")
         	    			.addClass("newInput")
         	    		    .prop("type", "hidden")
         	    		    .attr("name", "zipCodeNo")
         	    		    .val($(this).val())
-        	    		);
+        	    		); 
         	    			
         	    	
         	    	
@@ -138,7 +136,7 @@
     
     <div class="row mt-4">
           <div class="col">
-    <form class="form-control form-control-lg add" method="post" action="insert">
+    <form action="insert" class="form-control form-control-lg add" method="post">
     	
     	상위 카테고리
     	<select class="form-select select1">
@@ -147,7 +145,7 @@
     		</c:forEach>
     	</select>
     	하위 카테고리
-    	<select class="form-select select2" name="minorCategoryNo" value=?>
+    	<select class="form-select select2" name="clubCategory">
     	</select>
     		
     	

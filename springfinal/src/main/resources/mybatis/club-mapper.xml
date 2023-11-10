@@ -11,7 +11,7 @@
     insert into club(club_no,club_owner,club_category,zip_code_no,
     chat_room_no,club_name,club_explain,club_personnel) 
     values(#{clubNo},#{clubOwner},#{clubCategory},#{zipCodeNo},
-    #{chatRoomNo},#{clubName},#{clubExplain}#{clubPersonnel})
+    #{chatRoomNo},#{clubName},#{clubExplain},#{clubPersonnel})
     
     </insert>
     
