@@ -29,7 +29,7 @@ public class ZipCodeDaoImpl implements ZipCodeDao{
 
 	@Override
 	public List<ZipCodeDto> selectList(String sido,String hdong,
-			String sigungu,String eupmyun,String dongName) {
+			String sigungu,String eupmyun) {
 		
 		Map<String,Object> params = new HashMap<>();
 		
@@ -37,11 +37,12 @@ public class ZipCodeDaoImpl implements ZipCodeDao{
 		params.put("hdong", hdong);
 		params.put("sigungu", sigungu);
 		params.put("eupmyun", eupmyun);
-		params.put("dongName", dongName);
 		
 		
 		return sqlSession.selectList("zipcode.selectOne",params);
 	}
+
+
 	
 	
 

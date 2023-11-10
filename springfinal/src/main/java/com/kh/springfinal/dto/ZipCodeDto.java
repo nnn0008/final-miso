@@ -11,6 +11,5 @@ public class ZipCodeDto {
 	private String sido;
 	private String sigungu;
 	private String eupmyun;
-	private String dongName;
 	private String hdongName;
 }
