@@ -73,7 +73,7 @@ public class MemberController {
 			return "redirect:login?error";
 		}
 		//로그인 완료창으로 보내기
-		return "redirect:./loginFinish";	
+		return "/home";	
 	}
 	
 	

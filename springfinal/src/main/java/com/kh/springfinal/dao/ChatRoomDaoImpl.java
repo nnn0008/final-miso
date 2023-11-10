@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.springfinal.dto.ChatRoomDto;
 import com.kh.springfinal.dto.ClubMemberDto;
+import com.kh.springfinal.vo.ChatListVO;
 
 @Repository
 public class ChatRoomDaoImpl implements ChatRoomDao{
@@ -43,10 +44,17 @@ public class ChatRoomDaoImpl implements ChatRoomDao{
 	}
 	
 	@Override
-	public List<ClubMemberDto> chatRoomClubMembers(int clubNo, int chatRoomNo) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ChatListVO> chatRoomLIst(int chatRoomNo) {
+		return sqlSession.selectList("chatRoom.roomList", chatRoomNo);
 	}
 
+	public ChatListVO selectOne(int chatRoomNo) {
+		return sqlSession.selectOne("chatRoom.roomList", chatRoomNo);
+	}
+	
+	@Override
+	public int sequence() {
+		return sqlSession.selectOne("chatRoom.sequence");
+	}
 
 }
