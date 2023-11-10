@@ -1,5 +1,7 @@
 package com.kh.springfinal.controller;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,13 +40,24 @@ public class MemberController {
 		return "member/login";
 	}
 	@PostMapping("/login")
-	public String login(@RequestParam String memberId, @RequestParam String memberPw,
+	public String login(HttpServletResponse httpServletResponse,
+						@RequestParam String memberId, @RequestParam String memberPw,
+						@RequestParam(required = false) String saveId,
 								HttpSession session) {
 		//db 유저 정보
 		MemberDto userDto = memberDao.loginId(memberId);
-		//틀리면 되돌림
+		// id 틀리면 되돌림
 		if(userDto==null) {
-			log.debug("아이디");
+			if(saveId != null) {
+				Cookie cookie = new Cookie("saveId", memberId);
+				cookie.setMaxAge(4*7*24*60*60);//4주
+				httpServletResponse.addCookie(cookie);
+			}
+			else {
+				Cookie cookie = new Cookie("saveId", memberId);
+				cookie.setMaxAge(0);//4주
+				httpServletResponse.addCookie(cookie);
+			}
 			return "redirect:login?error";
 		}
 		//db Pw
@@ -53,8 +66,28 @@ public class MemberController {
 		if(userPw.equals(memberPw)) {
 			session.setAttribute("name", userDto.getMemberId());
 			session.setAttribute("level", userDto.getMemberLevel());
+			if(saveId != null) {
+				Cookie cookie = new Cookie("saveId", memberId);
+				cookie.setMaxAge(4*7*24*60*60);//4주
+				httpServletResponse.addCookie(cookie);
+			}
+			else {
+				Cookie cookie = new Cookie("saveId", memberId);
+				cookie.setMaxAge(0);//4주
+				httpServletResponse.addCookie(cookie);
+			}
 		}
 		else {
+			if(saveId != null) {
+				Cookie cookie = new Cookie("saveId", memberId);
+				cookie.setMaxAge(4*7*24*60*60);//4주
+				httpServletResponse.addCookie(cookie);
+			}
+			else {
+				Cookie cookie = new Cookie("saveId", memberId);
+				cookie.setMaxAge(0);//4주
+				httpServletResponse.addCookie(cookie);
+			}
 			return "redirect:login?error";
 		}
 		//로그인 완료창으로 보내기
