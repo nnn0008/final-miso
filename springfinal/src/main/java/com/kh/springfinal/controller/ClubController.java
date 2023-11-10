@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.kh.springfinal.dao.CategoryDao;
+import com.kh.springfinal.dao.ChatRoomDao;
 import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dao.ZipCodeDao;
 import com.kh.springfinal.dto.ClubDto;
@@ -32,6 +33,9 @@ public class ClubController {
 	@Autowired
 	private ZipCodeDao zipDao;
 	
+	@Autowired
+	private ChatRoomDao chatRoomDao;
+	
 	@GetMapping("/insert")
 	public String insert(Model model) {
 		
@@ -49,6 +53,7 @@ public class ClubController {
 	@PostMapping("/insert")
 	public String insert(@ModelAttribute ClubDto clubDto,
 			HttpSession session) {
+		
 		
 		String memberId = (String) session.getAttribute("name");
 		int clubNo = clubDao.sequence();

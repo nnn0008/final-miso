@@ -27,29 +27,47 @@
              select2.empty(); 
               
             for (var i = 0; i < response.length; i++) {
-             select2.append($("<option>").text(response[i].minorCategoryName));
+             select2
+             .append($("<option>")
+            		 .attr("name", "minorCategoryNo")
+            		 .val(response[i].minorCategoryNo)
+            		 .text(response[i].minorCategoryName));
                 }    
             },
         });
     	});
+    	
+    	$(".select2").change(function(){
+    		
+    		var no = $(this).find(":selected").val();
+    		
+    		$(this).val(no);
+    		
+    		console.log($(this).val());
+    		
+    	})
+    	
+    	
+    	
     });
     </script>
     
     	<script>
-    $(function(){
-    	
+    	$(function () {
     	    // [1] 모든 .zip 엘리먼트 숨기기
 
     	    // [2] 검색어 입력 처리
-    	    $(".search-input").change(function() {
-    	    	console.log("검색중")
-    	    	if(/^[가-힣]/.test($(this).val())){
-    	    		
+    	    $(".search-input").on('input', function () {
+    	        console.log("검색중");
+
+    	        if (!/^[가-힣]/.test($(this).val())) {
+    	            return;
+    	        }
+
     	        var keyword = $(this).val();
-    	    	
-    	    	console.log(keyword);
-    	        
-    	        if (keyword.length == 0) {
+    	        console.log(keyword);
+
+    	        if (keyword.length === 0) {
     	            $(".zip").hide();
     	            return;
     	        }
@@ -57,48 +75,60 @@
     	        $.ajax({
     	            url: "http://localhost:8080/rest/zip",
     	            method: "get",
-    	            data: {keyword: keyword},
+    	            data: { keyword: keyword },
     	            success: function (response) {
-    	                console.log(response);
-    	                console.log("통신시작");
-
     	                // 검색 결과를 처리
     	                var zipList = $('.addr-list');
     	                // 이전 검색 결과 지우기
     	                zipList.empty();
 
-    	                for (var i = 0; i < 5; i++) {
+    	                for (var i = 0; i < response.length; i++) {
     	                    var text = (response[i].sido != null ? response[i].sido + ' ' : '') +
-    	                    (response[i].sigungu != null ? response[i].sigungu + ' ' : '') +
-    	                    (response[i].eupmyun != null ? response[i].eupmyun + ' ' : '') +
-    	                    (response[i].doro != null ? response[i].doro + ' ' : '') +
-    	                    (response[i].buildName != null ? response[i].buildName + ' ' : '') +
-    	                    (response[i].dongName != null ? response[i].dongName + ' ' : '') +
-    	                    (response[i].hdongName != null ? response[i].hdongName + ' ' : '')
-;
+    	                        (response[i].sigungu != null ? response[i].sigungu + ' ' : '') +
+    	                        (response[i].eupmyun != null ? response[i].eupmyun + ' ' : '') +
+    	                        (response[i].hdongName != null ? response[i].hdongName + ' ' : '');
 
     	                    console.log(text);
 
     	                    zipList.append($("<li>")
     	                        .addClass("list-group-item zip")
+    	                        .attr("name", "zipCodeNo")
+    	                        .val(response[i].zipCodeNo)
     	                        .text(text));
     	                }
-
-    	                console.log("통신끝");
+    	   
     	            }
     	        });
-
-
-    	    // [3] 목록을 클릭하면 입력창에 채우고 .zip 엘리먼트 숨기기
-    	    $(".addr-list").on("click", ".zip", function() {
-    	        var selectedAddress = $(this).text();
-    	        $(".search-input").val(selectedAddress);
-    	        $(".zip").hide();
-    	    });
-    };
     	        
-    });
-    });
+    	        // [3] 목록을 클릭하면 입력창에 채우고 .zip 엘리먼트 숨기기
+        	    $(".addr-list").on("click", ".zip", function () {
+        	    	
+        	    	var form = $('.add');
+        	    	
+        	    	form.append($("<input>")
+        	    			.addClass("newInput")
+        	    		    .prop("type", "hidden")
+        	    		    .attr("name", "zipCodeNo")
+        	    		    .val($(this).val())
+        	    		);
+        	    			
+        	    	
+        	    	
+
+        	        var selectedAddress = $(this).text();
+        	        $(".search-input").val(selectedAddress);
+        	        $(".zip").hide();
+        	        
+        	        //console.log($('.newInput').val())
+        	    });
+    	        
+    	        
+    	    });
+    	    
+    	   
+
+    	});
+
 
 	</script>
     
@@ -108,7 +138,7 @@
     
     <div class="row mt-4">
           <div class="col">
-    <form class="form-control form-control-lg" method="post" action="insert">
+    <form class="form-control form-control-lg add" method="post" action="insert">
     	
     	상위 카테고리
     	<select class="form-select select1">
@@ -117,7 +147,7 @@
     		</c:forEach>
     	</select>
     	하위 카테고리
-    	<select class="form-select select2">
+    	<select class="form-select select2" name="minorCategoryNo" value=?>
     	</select>
     		
     	
@@ -127,18 +157,18 @@
     	
     	<div class="row">
     		<div class="col">
-    	모임 이름<input class="form-control" type="text" >
+    	모임 이름<input class="form-control" type="text" name="clubName">
     	</div>
     	</div>
     	<div class="row">
     		<div class="col">
-    	모임 설명<input class="form-control" type="text">
+    	모임 설명<input class="form-control" type="text" name="clubExplain">
     	</div>
     	</div>
     	
     	<div class="row">
     		<div class="col">
-    	정원<input class="form-control" type="number">
+    	정원<input class="form-control" type="number" name="clubPersonnel">
     	</div>
     	</div>
     	<div class="row mt-3">
