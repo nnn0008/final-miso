@@ -17,7 +17,6 @@ public class ClubBoardAllDto {
 	private String clubBoardContent;
 	private String clubBoardCategory;
 	private Date clubBoardDate;
-	private String clubBoardFix;
 	private int clubBoardLikecount;
 	private String clubBoardName;
 	private int attachNoCbi;
