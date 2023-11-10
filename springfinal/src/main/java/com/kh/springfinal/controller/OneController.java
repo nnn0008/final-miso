@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dao.OneDao;
-import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.dto.OneDto;
+import com.kh.springfinal.vo.PaginationVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -85,12 +85,40 @@ public class OneController {
 	}
 	
 //목록
+//	@RequestMapping("/list")
+//	public String list(Model model) {
+//		List<OneDto>list = oneDao.selectList();
+//		model.addAttribute("list",list);
+//		return "one/list";
+//	}
+//	@RequestMapping("/list")
+//	public String list(Model model, @RequestParam(defaultValue = "1") int page) {
+//	    int size = 20; // 페이지당 보여줄 아이템 수를 설정합니다.
+//
+//	    PaginationVO paginationVO = new PaginationVO();
+//	    paginationVO.setPage(page);
+//	    paginationVO.setSize(size);
+//
+//	    List<OneDto> list = oneDao.selectListByPage(paginationVO);
+//
+//	    model.addAttribute("list", list);
+//	    model.addAttribute("pagination", paginationVO);
+//
+//	    return "one/list";
+//	}
 	@RequestMapping("/list")
-	public String list(Model model) {
-		List<OneDto>list = oneDao.selectList();
-		model.addAttribute("list",list);
-		return "one/list";
+	public String list(@ModelAttribute(name ="vo")  PaginationVO vo, Model model) {
+		int count = oneDao.countList(vo);
+		vo.setCount(count);
+		
+		List<OneDto> list = oneDao.selectListByPage(vo);
+	    model.addAttribute("list", list);
+	   
+	    return "one/list";
 	}
+	
+	
+
 	
 	//삭제
 	@RequestMapping("/delete")
