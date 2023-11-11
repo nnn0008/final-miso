@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 public class MessageDto {
 
 	public enum MessageType{
-		join, message, dm
+		join, message, dm, leave
 	}
 	
 	private MessageType messageType;

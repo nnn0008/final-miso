@@ -16,5 +16,7 @@ public interface ChatRoomDao {
 	List<ChatListVO> chatRoomLIst(int chatRoomNo);
 	ChatListVO selectOne(int chatRoomNo);
 	
+	List<ChatRoomDto> chatRoomMemberList(int chatRoomNo);
+	
 	int sequence();
 }

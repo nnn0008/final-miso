@@ -56,5 +56,10 @@ public class ChatRoomDaoImpl implements ChatRoomDao{
 	public int sequence() {
 		return sqlSession.selectOne("chatRoom.sequence");
 	}
+	
+	@Override
+	public List<ChatRoomDto> chatRoomMemberList(int chatRoomNo) {
+		return sqlSession.selectList("chatRoom.roomMemberList", chatRoomNo);
+	}
 
 }

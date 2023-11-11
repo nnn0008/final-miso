@@ -24,6 +24,7 @@ import com.kh.springfinal.dao.ChatRoomDao;
 import com.kh.springfinal.dto.ChatDto;
 import com.kh.springfinal.dto.MessageDto;
 import com.kh.springfinal.dto.MessageDto.MessageType;
+import com.kh.springfinal.service.ClientService;
 import com.kh.springfinal.vo.ClientVO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,9 @@ public class WebSocketServer extends TextWebSocketHandler{
 	
 	@Autowired
 	private ChatRoomDao chatRoomDao;
+	
+	@Autowired
+	private ClientService clientService;
 	
 		
 	//저장소
@@ -71,68 +75,53 @@ public class WebSocketServer extends TextWebSocketHandler{
 //			sendRoomList(client.getChatRoomNo(), session); //이 사용자가 접속 가능한 방 목록을 전달(방 번호들)
 //		}
 	
-	//접속 성공
+	// 접속 성공
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		ClientVO client = new ClientVO(session);
-		
-		if(client.isMember()) {
-			clients.add(client);
-			
-			//사용자가 속해있는 모든 룸번호를 조회
-			List<Integer> chatRooms = chatRoomDao.selectRoomNoByMemberId(client.getMemberId());
-			
-			 log.debug("사용자가 속한 룸 번호 개수: {}", chatRooms.size()); // 로그로 개수 출력
-			 log.debug("사용자가 속한 룸 번호: {}", chatRooms); // 사용자가 속한 룸 번호를 로그로 출력
+	    ClientVO client = clientService.createClientVO(session);
 
-			if(chatRooms != null) {
-				for(Integer chatRoomNo : chatRooms) {
-				addRoomMember(client, chatRoomNo);	//멤버 추가
-				
-					}
-				}
-			}
-			
-		log.debug("사용자 접속! 현재 {}명", clients.size());
-		
-//		sendMessageList(client); //접속자 명단 전송
-//		sendRoomMembersList(client.getChatRoomNo()); //채팅 멤버 명단 전송
-//		sendRoomList(client.getChatRoomNo(), session); //이 사용자가 접속 가능한 방 목록을 전달(방 번호들)
-	}
-		
-	//접속 종료
-	@Override
-	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		ClientVO client = new ClientVO(session);
-		clients.remove(client);
-		
-		if(client.isMember()) {
-			
-			clients.remove(client);
-			Integer chatRoomNo = client.getChatRoomNo(); 
-			if(chatRoomNo != null) {
-				removeRoomMember(client, chatRoomNo);
-			}
-		}
-		log.debug("사용자 종료! 현재 {}명", clients.size());	
-		
-		//접속자 명단 전송
-//		sendMessageList(client);
-//		sendRoomMembersList(client.getChatRoomNo()); //채팅 멤버 명단 전송	
+	    if (client.isMember()) {
+	        clients.add(client);
+
+	        for (Integer chatRoomNo : client.getChatRoomNos()) {
+	            addRoomMember(client, chatRoomNo);
+	        }
+	    }
+
+	    log.debug("사용자 접속! 현재 {}명", clients.size());
 	}
 	
-	//채팅방 멤버 추가
+		
+	// 접속 종료
+	@Override
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+		  ClientVO client = clientService.createClientVO(session);
+
+		    if (client.isMember()) {
+		        clients.remove(client);
+
+		        for (Integer chatRoomNo : client.getChatRoomNos()) {
+		        	removeRoomMember(client, chatRoomNo);
+		        }
+		    }
+
+	    log.debug("사용자 종료! 현재 {}명", clients.size());
+	    // 다른 로직 추가
+	}
+	
+	// 채팅방 멤버 추가
 	public void addRoomMember(ClientVO client, Integer chatRoomNo) {
 	    Set<ClientVO> roomMembers = roomMembersMap.computeIfAbsent(chatRoomNo, k -> new HashSet<>());
 	    roomMembers.add(client);
-	    log.debug("채팅방 멤버 = {}", roomMembers.size());
+	    log.debug("채팅방 멤버 추가 - 채팅방 번호: {}, 멤버 수: {}", chatRoomNo, roomMembers.size());
 	}
-	
-	//제거
+
+	// 채팅방 멤버 제거
 	public void removeRoomMember(ClientVO client, Integer chatRoomNo) {
 	    Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
 	    if (roomMembers != null) {
 	        roomMembers.remove(client);
+	        log.debug("채팅방 멤버 제거 - 채팅방 번호: {}, 멤버 수: {}", chatRoomNo, roomMembers.size());
 	    }
 	}
 	
@@ -156,26 +145,27 @@ public class WebSocketServer extends TextWebSocketHandler{
 //	   }	   	   
 //	}
 //	
-	// 채팅방 멤버 명단을 전송하는 메소드
-	public void sendRoomMembersList(Integer chatRoomNo) throws IOException {
-	    // 1. 채팅방 멤버 명단을 전송 가능한 형태(JSON 문자열)로 변환한다
-	    ObjectMapper mapper = new ObjectMapper();
-
-	    Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo); // 채팅방 번호에 해당하는 멤버 명단 가져오기
-
-	    if (roomMembers != null) {
-	        Map<String, Object> data = new HashMap<>();
-	        data.put("roomMembers", roomMembers);
-	        String roomMembersJson = mapper.writeValueAsString(data);
-
-	        // 2. 동호회 멤버에게 전송
-	        TextMessage message = new TextMessage(roomMembersJson);
-
-	        for (ClientVO roomMember : roomMembers) {
-	            roomMember.send(message);
-	        }
-	    }
-	}
+	
+//	// 채팅방 멤버 명단을 전송하는 메소드
+//	public void sendRoomMembersList(Integer chatRoomNo) throws IOException {
+//	    // 1. 채팅방 멤버 명단을 전송 가능한 형태(JSON 문자열)로 변환한다
+//	    ObjectMapper mapper = new ObjectMapper();
+//
+//	    List<ChatRoomDto> roomMembers = chatRoomDao.chatRoomMemberList(chatRoomNo); // 채팅방 번호에 해당하는 멤버 명단 가져오기
+//
+//	    if (roomMembers != null) {
+//	        Map<String, Object> data = new HashMap<>();
+//	        data.put("roomMembers", roomMembers);
+//	        String roomMembersJson = mapper.writeValueAsString(data);
+//
+//	        // 2. 동호회 멤버에게 전송
+//	        TextMessage message = new TextMessage(roomMembersJson);
+//
+//	            ((ClientVO) roomMembers).send(message);
+//
+//	    }
+//	}
+	
 //
 //	//접속한 사용자에게 메세지 이력을 전송하는 메소드
 //	public void sendMessageList(ClientVO client) throws IOException {
@@ -263,8 +253,8 @@ public class WebSocketServer extends TextWebSocketHandler{
 	
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-		ClientVO client = new ClientVO(session);
-		
+	    ClientVO client = clientService.createClientVO(session);
+	    
 	    // 메시지를 JSON으로 파싱
 	    ObjectMapper mapper = new ObjectMapper();
 	    MessageDto messageDto = mapper.readValue(message.getPayload(), MessageDto.class);
@@ -277,40 +267,61 @@ public class WebSocketServer extends TextWebSocketHandler{
 	    //입장 메세지인 경우
 	    if (MessageType.join.equals(messageType)) {
 	        Integer chatRoomNo = messageDto.getChatRoomNo();
+	        
 	        // 여기에서 chatRoomNo를 활용하여 처리
 	        sendChatHistory(chatRoomNo, session);
+	        
+	     // sender 정보와 추가 정보(예: 입장하는 사용자의 ID 목록)를 map에 추가하여 전송
+	        Map<String, Object> data = new HashMap<>();
+	        data.put("messageType", MessageType.join);
+	        data.put("chatSender", client.getMemberId());
+	        
+	        String joinMessageJson = mapper.writeValueAsString(data);
+	        TextMessage tm = new TextMessage(joinMessageJson);
+
+	        client.send(tm);
 	    }
 	    
 	 // 채팅 메시지인 경우
 	    else if (MessageType.message.equals(messageType)) {
-	    	LocalDateTime chatTime = LocalDateTime.now();
-	    	
-	    	Integer chatRoomNo = messageDto.getChatRoomNo();
+	        LocalDateTime chatTime = LocalDateTime.now();
+	        
+	        Integer chatRoomNo = messageDto.getChatRoomNo();
 	        String chatContent = messageDto.getChatContent();
 	        String chatSender = messageDto.getChatSender();
 	        
-//	         정보를 Map에 담아서 변환 후 전송
-            Map<String, Object> map = new HashMap<>();
-            map.put("chatSender", chatSender);
-            map.put("content", chatContent);
-            map.put("chatTime", chatTime.toString());
-            map.put("chatRoomNo", chatRoomNo);
-            
-            String messageJson = mapper.writeValueAsString(map);
-            TextMessage tm = new TextMessage(messageJson);
+	        Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
+	        log.debug("roomMembers for chatRoomNo {}: {}", chatRoomNo, roomMembers);
+	        
+	        if (roomMembers != null) {
+	            // 정보를 Map에 담아서 변환 후 전송
+	            Map<String, Object> data = new HashMap<>();
+	            data.put("messageType", MessageType.message);
+	            data.put("memberId", client.getMemberId());
+	            data.put("content", chatContent);
+	            data.put("chatTime", chatTime.toString());
+	            data.put("chatRoomNo", chatRoomNo);
+	            data.put("memberLevel", client.getMemberLevel());
+	            
+	            String messageJson = mapper.writeValueAsString(data);
+	            TextMessage tm = new TextMessage(messageJson);
 
-            client.send(tm);
-           
-            //DB
-            chatDao.insert(ChatDto.builder()
-            		.chatContent(chatContent)
-            		.chatSender(chatSender)
-            		.chatRoomNo(chatRoomNo)
-            		.build());
-            
-            
+	            for (ClientVO c : roomMembers) {
+	                c.send(tm);
+	            }
+	           
+	            // DB
+	            chatDao.insert(ChatDto.builder()
+	                    .chatContent(chatContent)
+	                    .chatSender(chatSender)
+	                    .chatRoomNo(chatRoomNo)
+	                    .build());
+	        } else {
+	            log.warn("roomMembers is null for chatRoomNo {}", chatRoomNo);
+	        }
 	    }
 	}
+
 
 	
 //	@Override

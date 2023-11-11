@@ -15,116 +15,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.2/zephyr/bootstrap.min.css" rel="stylesheet">
     <link href="test.css" rel="stylesheet">
+    
+    <link href="${pageContext.request.contextPath}/css/chat.css" rel="stylesheet">
  
  <style>
- .bg-gray{
- 	background: #FCFCFD;
- 	 color: #2d3436;
- }
- 	.bg-miso {
-    color: #2d3436;
-    background-color: #ACCEFF;
-
-}
-.btn-outline-secondary{
-	width: 60px;
-	height: 50px;
-	margin-top: 0.5em;
-	margin-left: 1em;
-} 
- 	
- 	.message-list{
- 		height: 70vh;
- 		overflow-y: scroll;
- 		 width: 600PX;
-		border-radius: 15px !important;
-		background-color: #ACCEFF !important;
- 	}
- 	
- 	::-webkit-scrollbar {
-    	width: 0px; /* 스크롤바 너비 */
-	}
-	.alert-success,.btn-success{
-	   color: #2d3436;
-   	 background-color: #ACCEFF;
-   	 border-color:  #ACCEFF;
-	--bs-btn-color: #fff;
-    --bs-btn-bg: ##ACCEFF;;
-    --bs-btn-border-color: #ACCEFF;
-    --bs-btn-hover-color: #fff;
-    --bs-btn-hover-bg: #99BCED;
-    --bs-btn-hover-border-color: #99BCED;
-    --bs-btn-focus-shadow-rgb: 78,190,147;
-    --bs-btn-active-color: #fff;
-    --bs-btn-active-bg: #99BCED;
-    --bs-btn-active-border-color: #99BCED;
-    --bs-btn-active-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    --bs-btn-disabled-color: #fff;
-    --bs-btn-disabled-bg: #ACCEFF;
-    --bs-btn-disabled-border-color: #ACCEFF;
-	}
-
- 	.msg_cotainer{
-		margin-top: auto;
-		margin-bottom: auto;
-		margin-left: 10px;
-		border-radius: 25px;
-		background-color: #FFBCF0;
-		padding: 10px;
-		position: relative;
-	}
-	.msg_cotainer_send{
-		margin-top: auto;
-		margin-bottom: auto;
-		margin-right: 10px;
-		border-radius: 25px;
-		background-color: #66DFD2;
-		padding: 10px;
-		position: relative;
-	}
-
-.dm_style {
-    background-color:#FCFCFD;;
-}
-	.msg_nickname{
-	margin-left: 1em;
-	font-size: 13px;
-	}
-	.time-right{
-	margin-top: 2.5em;
-	margin-right: 0.5em;
-	font-size: 12px;
-	}
-	
-	.time-left{
-	margin-top: 4em;
-	margin-left: 0.5em;
-	font-size: 12px;
-	}
-
-	.circle-name{
-	margin: 1em;
-	font-size: 17px;
-	text-align: center;
-	font-weight: bold;
-	}
-	.user_info{
-	display: flex; 
-    justify-content: center; 
-	}
-
-	.list-group-item, .list-group{
-	width: 300px;
-	}
-
-	#offcanvasExample{
-	width: 340px;
-	}
-	
-	.container-fluid{
-	width: 600px;
-	}
-	
 
  </style>   
     
@@ -179,12 +73,11 @@
 								</div>
 							</div>
 						</div>
-						<div id="chatRoomNo" th:text="${chatRoomNo}" style="display:none"></div>
+
 					</div>
 				</div>
 				
             </div>
- 
    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
       <!-- 웹소켓 서버가 SockJS일 경우 페이지에서도 SockJS를 사용해야 한다 -->
@@ -200,19 +93,40 @@
 	
 	window.socket = new SockJS("${pageContext.request.contextPath}/ws/chat");
 	
+	var chatSender = "${sessionScope.name}";
+	
+	var prevMessageDate = null;
+	
+
+	// 사용자 목록을 저장할 배열
+	
 	window.socket.onopen = function (e) {
 	    console.log('Info: connection opened.');
 	    console.log("chatRoomNo:", chatRoomNo); // 디버그용 로그 추가
-	
+	    console.log("chatSender:", chatSender); // 디버그용 로그 추가
+
 	    // 서버에 join 메시지 전송
 	    var joinMessage = {
 	        messageType: "join",
-	        chatRoomNo: ${chatRoomNo}
+	        chatRoomNo: ${chatRoomNo},
+	        chatSender: chatSender
 	    };
-	
-	    window.socket.send(JSON.stringify(joinMessage));
-	};
 
+	    window.socket.send(JSON.stringify(joinMessage));
+	  
+	};
+	
+
+	window.socket.onclose = function (e) {
+	    console.log('Info: connection closed.');
+	    // 연결이 종료될 때 사용자를 목록에서 제거
+	    var leaveMessage = {
+	        messageType: "leave",
+	        chatRoomNo: ${chatRoomNo},
+	        chatSender: chatSender
+	    };
+	    window.socket.send(JSON.stringify(leaveMessage));
+	};
 
 	// 방 이동 시
 	function moveToRoom(selectedRoomNo) {
@@ -226,46 +140,45 @@
 	    return match ? parseInt(match[1]) : null;
 	}	
 	
+	
+	
+	//메세지 처리
 		window.socket.onmessage = function(e){
 		
 		var data = JSON.parse(e.data);
 		console.log(data);
 		
+		// 시간을 표시할 패턴 설정
+		var dateOptions = {
+		    year: "numeric",
+		    month: "long",
+		    day: "numeric",
+		    weekday: "long",
+		};
+
 		var chatTimeAsString = data.chatTime; // JSON에서 문자열로 가져온 chatTime
 		var chatTime = new Date(chatTimeAsString); // 문자열을 Date 객체로 변환
-		
+
+		// 날짜를 원하는 형식으로 포맷팅
+		var formattedDate = chatTime.toLocaleDateString("ko-KR", dateOptions);
+
+		// 시간을 원하는 형식으로 포맷팅
 		var options = {
-				  hour: "numeric",
-				  minute: "numeric",
-				  hour12: true // 오전/오후 표시를 사용
-				};
-	
+		    hour: "numeric",
+		    minute: "numeric",
+		    hour12: true // 오전/오후 표시를 사용
+		};
+
 		var formattedTime = chatTime.toLocaleTimeString("ko-KR", options);
-		
-		if (data.chatRooms) { // 방 목록
-		    $(".chatRoom-list").empty();
 
-		    var ul = $("<ul>").addClass("list-group");
-
-		    for (var i = 0; i < data.chatRooms.length; i++) {
-		        var chatRoomNo = data.chatRooms[i].chatRoomNo;
-		        console.log("chatRoomNo : " + chatRoomNo);
-
-		        var listItem = $("<li>")
-		            .addClass("list-group-item chatRoomNo")
-		            .text(chatRoomNo+"번방");
-
-		        ul.append(listItem);
-		    }
-		    // 목록을 chatRoom-list에 표시 
-		    ul.appendTo(".chatRoom-list");
-		}
+		// 메시지를 구성할 때 날짜와 시간을 함께 사용
+		var fullMessage = formattedDate + " " + formattedTime + " " + data.content;
 		
 		
 		//사용자가 접속하거나 종료했을 때 서버에서 오는 데이터로 목록을 갱신
 		//사용자가 메세지를 보냈을 때 서버에서 이를 전체에게 전달한다
 		//data.roomMember에 채팅방 멤버 목록이 있다
-		else if (data.roomMembers) { // 목록 처리
+		if (data.roomMembers) { // 목록 처리
 		    $(".client-list").empty();
 	
 		    var ul = $("<ul>").addClass("list-group");
@@ -275,6 +188,7 @@
 		    var chatRoomNo = "${sessionScope.chatRoomNo}";
 		    console.log("chatRoomNo: " + chatRoomNo);
 
+		    
 		    for (var i = 0; i < data.roomMembers.length; i++) {
 		        var memberId = data.roomMembers[i].memberId;
 		        var roomNo = data.roomMembers[i].chatRoomNo;
@@ -319,90 +233,108 @@
 		    // 목록이 client-list에 표시됩니다.
 		    ul.appendTo(".client-list");
 		}
+		    	
+		
+		else if (data.content) { // 메세지 처리   
+		    var memberId = "${sessionScope.name}";
+		    console.log(memberId);
+		    var chatSender = data.memberId;
+		    console.log("sender",chatSender);
+		    var memberNickname = data.memberNickname;
 		    
-		
-		
-		else if(data.content){ //메세지 처리   
-			
-			var memberId = "${sessionScope.name}";
-			var memberNickname = data.memberNickname;
-					
-			   var content = $("<div>").text(data.content);
-				var memberLevel = $("<span>").text(data.memberLevel).addClass("badge rounded-pill ms-2");
+		 // 새로운 메시지의 날짜 정보 가져오기
+		    var chatTimeAsString = data.chatTime; // JSON에서 문자열로 가져온 chatTime
+		    var chatTime = new Date(chatTimeAsString); // 문자열을 Date 객체로 변환
+		    var messageDate = chatTime.toDateString(); // 날짜 정보만 추출
 
-			    // 메세지 레벨에 따라 배지 스타일 변경
-			    if (data.memberLevel == "일반") {
-			        memberLevel.addClass("bg-gray");
-			    } else if (data.memberLevel == "관리자") {
-			        memberLevel.addClass("bg-danger");
-			    } else if (data.memberLevel == "VIP") {
-			        memberLevel.addClass("bg-warning");
-			    }
-			   
-			   var isDM = data.dm == true;
-			   
-			   if (isDM) {
-				    // 디엠 메시지 (귓속말 표시)
-				    memberNickname = data.memberNickname + "(귓속말)";
-				}
-			   				   
-				if (data.memberId === memberId) {			
-					    
-					
-				    // 본인 메시지 (오른쪽에 표시)
-				    var messageDiv = $("<div>").addClass("d-flex justify-content-end mb-4 mt-2");
+		 // 날짜가 변경된 경우에만 표시
+		    if (messageDate !== prevMessageDate) {
+		        // 날짜 표시 부분 스타일 추가
+		        var dateDiv = $("<div>")
+		            .addClass("date-divider")
+		            .text(formattedDate)
+		             .css({
+            'font-weight': 'bold',
+            'margin-top': '10px',
+            'margin-bottom': '10px',
+            'text-align': 'center',
+        });
+		        $(".message-list").append(dateDiv);
+		        prevMessageDate = messageDate; // 이전 날짜 갱신
+		    }
+		            
+		    var content = $("<div>").text(data.content);
+		    var memberLevel = $("<span>").text(data.memberLevel).addClass("badge rounded-pill ms-2");
 
-				    var messageContainer = $("<div>").addClass("msg_cotainer_send")
-				        .append(content);
-				       
-				    var imageContainer = $("<div>").addClass("img_cont_msg")
-				        .append($("<img>").attr("src", "images/profile.jpg").css("width", "45px").addClass("rounded-circle user_img_msg"));
+		    // 메세지 레벨에 따라 배지 스타일 변경
+		    if (data.memberLevel == "일반") {
+		        memberLevel.addClass("bg-gray");
+		    } else if (data.memberLevel == "관리자") {
+		        memberLevel.addClass("bg-danger");
+		    } else if (data.memberLevel == "VIP") {
+		        memberLevel.addClass("bg-warning");
+		    }
+		   
+		    var isDM = data.dm == true;
+		   
+		    if (isDM) {
+		        // 디엠 메시지 (귓속말 표시)
+		        memberNickname = data.memberNickname + "(귓속말)";
+		    }
+		                   
+		    if (memberId === chatSender) {         
+		        // 본인 메시지 (오른쪽에 표시)
+		        var messageDiv = $("<div>").addClass("d-flex justify-content-end mb-4 mt-2");
 
-				    var timeSpan = $("<div>").addClass("time-right")
-				     .append($("<span>").addClass("msg_time_send").text(formattedTime));
-				    
-				    messageDiv.append(timeSpan).append(messageContainer).append(imageContainer);
-				    $(".message-list").append(messageDiv);
-			        
-				    if (isDM) {
-				        messageContainer.css("background-color", "black"); // 배경색 블랙
-				        messageContainer.css("color", "white"); // 문자색상 화이트
-				    }
+		        var messageContainer = $("<div>").addClass("msg_cotainer_send")
+		            .append(content);
+		           
+		        var imageContainer = $("<div>").addClass("img_cont_msg")
+		            .append($("<img>").attr("src", "images/profile.jpg").css("width", "45px").addClass("rounded-circle user_img_msg"));
 
-				} else {
-					
-				    // 상대방 메시지 (왼쪽에 표시)
-				    var messageDiv = $("<div>").addClass("d-flex mb-4 align-items-start mt-2");
+		        var timeSpan = $("<div>").addClass("time-right")
+		         .append($("<span>").addClass("msg_time_send").text(formattedTime));
+		        
+		        messageDiv.append(timeSpan).append(messageContainer).append(imageContainer);
+		        $(".message-list").append(messageDiv);
+		        
+		        if (isDM) {
+		            messageContainer.css("background-color", "black"); // 배경색 블랙
+		            messageContainer.css("color", "white"); // 문자색상 화이트
+		        }
 
-				    var imageContainer = $("<div>").addClass("img_cont_msg")
-				        .append($("<img>").attr("src", "images/profile2.jpg").css("width", "45px").addClass("rounded-circle user_img_msg"));
+		    } else {
+		        // 상대방 메시지 (왼쪽에 표시)
+		        var messageDiv = $("<div>").addClass("d-flex mb-4 align-items-start mt-2");
 
-				    var contentDiv = $("<div>").addClass("d-flex flex-column");
-				    
-				    var nicknameDiv = $("<div>").addClass("msg_nickname")
-				        .text(memberNickname); // 닉네임을 표시
+		        var imageContainer = $("<div>").addClass("img_cont_msg")
+		            .append($("<img>").attr("src", "images/profile2.jpg").css("width", "45px").addClass("rounded-circle user_img_msg"));
 
-				    var messageContainer = $("<div>").addClass("msg_cotainer")
-				        .append(content);
+		        var contentDiv = $("<div>").addClass("d-flex flex-column");
+		        
+		        var nicknameDiv = $("<div>").addClass("msg_nickname")
+		            .text(memberNickname); // 닉네임을 표시
 
-				    var timeSpan = $("<div>").addClass("time-left")
-				        .append($("<span>").addClass("msg_time").text(formattedTime));
+		        var messageContainer = $("<div>").addClass("msg_cotainer")
+		            .append(content);
 
-				    contentDiv.append(nicknameDiv).append(messageContainer);
-				    messageDiv.append(imageContainer).append(contentDiv).append(timeSpan);
-				    $(".message-list").append(messageDiv);
-				    
-				    if (isDM) {
-				        messageContainer.css("background-color", "black"); // 배경색 블랙
-				        messageContainer.css("color", "white"); // 문자색상 화이트
-				    }
-				}
-			}
-				
-			//스크롤바 이동
-			$(".message-list").scrollTop($(".message-list")[0].scrollHeight);
-	
-	};
+		        var timeSpan = $("<div>").addClass("time-left")
+		            .append($("<span>").addClass("msg_time").text(formattedTime));
+
+		        contentDiv.append(nicknameDiv).append(messageContainer);
+		        messageDiv.append(imageContainer).append(contentDiv).append(timeSpan);
+		        $(".message-list").append(messageDiv);
+		        
+		        if (isDM) {
+		            messageContainer.css("background-color", "black"); // 배경색 블랙
+		            messageContainer.css("color", "white"); // 문자색상 화이트
+		        }
+		    }
+		}
+
+		// 스크롤바 이동
+		$(".message-list").scrollTop($(".message-list")[0].scrollHeight);
+	}
 
 	
 		//메세지를 전송하는 코드
@@ -419,26 +351,35 @@
 		    sendMessage();
 		});
 		
-	    var sessionName = "${sessionScope.name}";
-	    var chatRoomNo = ${chatRoomNo};
-	    
+	 
+		
 		// 메시지 전송 함수
-		function sendMessage(content) {
-	    // content가 빈 문자열이 아닌 경우에만 전송
-	    if (content.trim() !== "") {
-	        var message = {
-	            messageType: "message",
-	            chatSender: sessionName,
-	            chatContent: content,
-	            chatRoomNo: chatRoomNo
-	        };	
-	        console.log("Sending message from client:", message); // 로그 추가
-	
-	        window.socket.send(JSON.stringify(message));
-	    } else {
-	        console.log("Content is empty. Message not sent.");
-	    }
-	}
+		function sendMessage() {
+		    var chatContent = $(".message-input").val().trim(); // 값이 없을 경우 공백으로 처리
+		    var messageType = "message";
+		    var sessionName = "${sessionScope.name}";
+		    var chatRoomNo = ${chatRoomNo};
+		    
+		    // 메시지 내용이 비어있으면 전송하지 않음
+		    if (!chatContent) {
+		        console.log("Content is empty. Message not sent.");
+		        return;
+		    }
+
+		    var message = {
+		        messageType: messageType,
+		        chatSender: sessionName,
+		        chatContent: chatContent,
+		        chatRoomNo: chatRoomNo
+		    };
+
+		    // 서버로 메시지 전송
+		    window.socket.send(JSON.stringify(message));
+
+		    // 메시지 입력창 초기화
+		    $(".message-input").val("");
+		}
+
 
 
 		// 메시지 전송 이벤트 처리

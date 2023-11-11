@@ -49,4 +49,11 @@
         WHERE cr.chat_room_no = #{chatRoomNo}
 	</select>
 
+<select id="roomMemberList" resultType="ChatRoomDto">
+SELECT cm.club_member_id
+FROM club c
+JOIN club_member cm ON c.club_no = cm.club_no
+WHERE c.chat_room_no = #{chatRoomNo}
+</select>
+
 </mapper>
