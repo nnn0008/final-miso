@@ -16,10 +16,13 @@ import com.kh.springfinal.dao.CategoryDao;
 import com.kh.springfinal.dao.ChatRoomDao;
 import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dao.ZipCodeDao;
+import com.kh.springfinal.dto.ChatRoomDto;
 import com.kh.springfinal.dto.ClubDto;
 import com.kh.springfinal.dto.MajorCategoryDto;
-import com.kh.springfinal.dto.ZipCodeDto;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
 @RequestMapping("/club")
 public class ClubController {
@@ -55,11 +58,27 @@ public class ClubController {
 			HttpSession session) {
 		
 		
-		String memberId = (String) session.getAttribute("name");
+		
+//		String memberId = (String) session.getAttribute("name");	//session 생긴 후 풀 주석
+		
+		ChatRoomDto chatRoomDto = new ChatRoomDto();
+		String memberId = "testuser1";
 		int clubNo = clubDao.sequence();
+		int chatRoomNo = 1;
+		
+//		chatRoomDto.setChatRoomNo(chatRoomNo);
+//		
+//		chatRoomDao.insert(chatRoomDto);
 
+		clubDto.setChatRoomNo(chatRoomNo);
 		clubDto.setClubNo(clubNo);
 		clubDto.setClubOwner(memberId);
+		
+		log.debug("clubDto={}",clubDto);
+		
+		clubDao.insert(clubDto);
+		
+		
 
 		return "redirect:/";
 		
