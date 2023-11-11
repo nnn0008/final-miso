@@ -53,7 +53,7 @@
                             </div>
                         </div>
                     </form>
-                    <div class="row">
+                    <div class="row mt-3">
                         <div class="col-sm-6 offset-sm-3  col-lg-10 offset-lg-1">
                             <a href="./searchId"><button class="btn">아이디 찾기</button></a>
                             <a href="#"><button class="btn">비밀번호 찾기</button></a>

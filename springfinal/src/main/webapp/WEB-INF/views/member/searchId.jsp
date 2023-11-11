@@ -56,6 +56,11 @@
 						</div>
                     </div>
                 </div>
+			<div class="row mt-4">
+                <div class="col">
+					<a href="./login">로그인</a>
+				</div>
+            </div>
 </script>
 			<div class="contain-fluid">
 				<div class="row">
