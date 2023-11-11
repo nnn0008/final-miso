@@ -54,8 +54,7 @@ public class ClubBoardController {
 	public String write(@RequestParam int clubNo, Model model) {
 		model.addAttribute("clubNo", clubNo);
 		return "clubBoard/write";
-	}
-	
+	}	
 	
 	@PostMapping("/write")
 	public String write(@ModelAttribute ClubBoardDto clubBoardDto, @ModelAttribute MemberDto memberDto, @ModelAttribute ClubMemberDto clubMemberDto, 
@@ -78,12 +77,12 @@ public class ClubBoardController {
 		clubBoardDto.setClubMemberNo(clubMemberNo);
 		clubBoardDto.setClubNo(clubNo);
 		
+		clubBoardDao.insert(clubBoardDto);
+
 		//사진 첨부
 		if(!attach.isEmpty()) {
 			fileLoadVO.upload(clubBoardImageDto, clubBoardImage2Dto, clubBoardImage3Dto, clubBoardNo, attach, attachSecond, attachThird);
 		}
-
-		clubBoardDao.insert(clubBoardDto);
 		
 		return "redirect:/clubBoard/list?clubNo="+clubNo;
 	}

@@ -7,20 +7,34 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.springfinal.configuration.FileUploadProperties;
 import com.kh.springfinal.dao.AttachDao;
+import com.kh.springfinal.dao.ClubBoardDao;
+import com.kh.springfinal.dao.ClubBoardImage2Dao;
+import com.kh.springfinal.dao.ClubBoardImage3Dao;
+import com.kh.springfinal.dao.ClubBoardImageDao;
 import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.ClubBoardImage2Dto;
 import com.kh.springfinal.dto.ClubBoardImage3Dto;
 import com.kh.springfinal.dto.ClubBoardImageDto;
 
-@Component
+import lombok.Data;
+
+@Repository
 public class FileLoadVO {
 	
 	@Autowired
 	private AttachDao attachDao;
+	
+	@Autowired
+	private ClubBoardImageDao clubBoardImageDao;
+	@Autowired
+	private ClubBoardImage2Dao clubBoardImage2Dao;
+	@Autowired
+	private ClubBoardImage3Dao clubBoardImage3Dao;
 	
 	@Autowired
 	private FileUploadProperties props;
@@ -50,6 +64,11 @@ public class FileLoadVO {
 		attachDto.setAttachSize(attach.getSize());
 		attachDto.setAttachType(attach.getContentType());
 		attachDao.insert(attachDto);
+		
+//		clubBoardImageDao.insert(clubBoardImageDto.builder()
+//												.attachNo(attachNo)
+//												.clubBoardNo(clubBoardNo)
+//												.build());
 		
 		if(!attachSecond.isEmpty()) {
 			int attachSecondNo = attachDao.sequence();
@@ -82,6 +101,9 @@ public class FileLoadVO {
 				attachDao.insert(attachThirdDto);
 			}
 		}
+		clubBoardImageDao.insert(clubBoardImageDto);
+		clubBoardImage2Dao.insert(clubBoardImage2Dto);
+		clubBoardImage3Dao.insert(clubBoardImage3Dto);
 	}
 	
 	//edit시
