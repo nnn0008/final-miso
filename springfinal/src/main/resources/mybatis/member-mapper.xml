@@ -6,14 +6,15 @@
     <mapper namespace="member">
     	
     	<insert id="join">
-    		insert into member(member_id, member_pw, member_name, member_addr, member_level)
-    		values(#{memberId}, #{memberPw}, #{memberName} , '서울 뭐시기', #{memberLevel})
+    		insert into member(member_id, member_pw, member_name, member_email, member_addr, member_level)
+    		values(#{memberId}, #{memberPw}, #{memberName}, #{memberEmail}, '서울 뭐시기', #{memberLevel})
     	</insert>
     	
     	<select id="loginId" resultType="MemberDto">
     		select * from member where member_id=#{memberId}
     	</select>
-    	<select id="loginPw" resultType="MemberDto">
-    		select * from member where member_pw=#{memberPw}
+    	
+    	<select id="memberIdListByEmail" resultType="String">
+    		select member_id from member where member_name=#{memberName} and member_email=#{memberEmail}
     	</select>
     </mapper>

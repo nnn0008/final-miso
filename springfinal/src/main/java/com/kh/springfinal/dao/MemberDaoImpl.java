@@ -1,5 +1,9 @@
 package com.kh.springfinal.dao;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -21,5 +25,15 @@ public class MemberDaoImpl implements MemberDao{
 		MemberDto memberDto = sqlSession.selectOne("member.loginId", memberId);
 		return memberDto;
 	}
-
+	
+	@Override
+	public List<MemberDto> memberIdListByEmail(String memberName, String memberEmail) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("memberName", memberName);
+		params.put("memberEmail", memberEmail);
+	
+		List<MemberDto> idList = sqlSession.selectList("member.memberIdListByEmail", params);
+		return idList;
+		
+	}
 }
