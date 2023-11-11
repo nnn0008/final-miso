@@ -56,4 +56,13 @@ JOIN club_member cm ON c.club_no = cm.club_no
 WHERE c.chat_room_no = #{chatRoomNo}
 </select>
 
+
+<select id="roomMemberName" resultType="ChatVO">
+SELECT cm.CLUB_MEMBER_ID, m.member_name
+FROM club c
+JOIN club_member cm ON c.club_no = cm.club_no
+JOIN member m ON cm.club_member_id = m.member_id
+WHERE c.chat_room_no = #{chatRoomNo}
+</select>
+
 </mapper>

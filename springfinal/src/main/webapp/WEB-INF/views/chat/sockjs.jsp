@@ -94,6 +94,8 @@
 	window.socket = new SockJS("${pageContext.request.contextPath}/ws/chat");
 	
 	var chatSender = "${sessionScope.name}";
+	var memberName = null;
+	console.log(memberName);
 	
 	var prevMessageDate = null;
 	
@@ -109,24 +111,14 @@
 	    var joinMessage = {
 	        messageType: "join",
 	        chatRoomNo: ${chatRoomNo},
-	        chatSender: chatSender
+	        chatSender: chatSender,
+	        memberName: memberName
 	    };
 
 	    window.socket.send(JSON.stringify(joinMessage));
 	  
 	};
 	
-
-	window.socket.onclose = function (e) {
-	    console.log('Info: connection closed.');
-	    // 연결이 종료될 때 사용자를 목록에서 제거
-	    var leaveMessage = {
-	        messageType: "leave",
-	        chatRoomNo: ${chatRoomNo},
-	        chatSender: chatSender
-	    };
-	    window.socket.send(JSON.stringify(leaveMessage));
-	};
 
 	// 방 이동 시
 	function moveToRoom(selectedRoomNo) {
@@ -177,70 +169,74 @@
 		
 		//사용자가 접속하거나 종료했을 때 서버에서 오는 데이터로 목록을 갱신
 		//사용자가 메세지를 보냈을 때 서버에서 이를 전체에게 전달한다
-		//data.roomMember에 채팅방 멤버 목록이 있다
 		if (data.roomMembers) { // 목록 처리
-		    $(".client-list").empty();
-	
-		    var ul = $("<ul>").addClass("list-group");
-		    var loggedInUserId = "${sessionScope.name}";
-		    var loggedInUserItem = null;
-		    
-		    var chatRoomNo = "${sessionScope.chatRoomNo}";
-		    console.log("chatRoomNo: " + chatRoomNo);
+   	 $(".client-list").empty();
 
-		    
-		    for (var i = 0; i < data.roomMembers.length; i++) {
-		        var memberId = data.roomMembers[i].memberId;
-		        var roomNo = data.roomMembers[i].chatRoomNo;
-		        console.log("chatRoomNo: " + chatRoomNo);
-		        
-		        var memberLevel = "${sessionScope.memberLevel}";
+    var ul = $("<ul>").addClass("list-group");
+    var loggedInUserId = "${sessionScope.name}";
+    var loggedInUserItem = null;
 
-		        // 레벨에 따라 배지 스타일 변경
-		     	     var badgeClass = "bg-miso";
-			        if (memberLevel === "관리자") {
-			            badgeClass = "bg-danger";
-			        } else if (memberLevel === "VIP") {
-			            badgeClass = "bg-warning";
-			        }
-			        
-			        var listItem = $("<li>")
-			            .addClass("list-group-item d-flex justify-content-between align-items-center")
-			            .append(
-			                $("<img>").addClass("rounded-circle user_img").attr("src", "images/member.png").css("width", "50px")
-			            )
-			            .append(
-			                $("<span>").text(memberId)
-			            )
-			            .append(
-			                $("<span>").addClass("badge rounded-pill").addClass(badgeClass)
-			                    .text(memberLevel)
-			            );
-		        
-		        
-				        if (memberId === loggedInUserId) {
-				            // 본인의 아이디를 찾았을 때 별도로 저장
-				            loggedInUserItem = listItem;
-				            listItem.append($("<span>").addClass("badge rounded-pill bg-warning").text("나"));
-				        } else {
-				            ul.append(listItem);
-				        }	        
-				}
-			    if (loggedInUserItem) {
-			        // 본인의 아이디를 목록의 맨 위에 추가
-			        ul.prepend(loggedInUserItem);
-		    } 
-		    // 목록이 client-list에 표시됩니다.
-		    ul.appendTo(".client-list");
-		}
-		    	
+    console.log("chatRoomNo: " + chatRoomNo);
+
+    for (var i = 0; i < data.roomMembers.length; i++) {
+        var memberId = data.roomMembers[i].memberId;
+        var roomNo = data.roomMembers[i].chatRoomNo;
+        var memberLevel = data.roomMembers[i].memberLevel;
+        var memberName = data.roomMembers[i].memberName;
+        console.log("memberName2: " + memberName);
+        
+        // 레벨에 따라 배지 스타일 변경
+        badgeClass = "bg-warning";
+        if (memberLevel === "관리자") {
+            badgeClass = "bg-danger";
+        } else if (memberLevel === "일반유저") {
+            var badgeClass = "bg-miso";
+        }
+
+        var listItem = $("<li>")
+            .addClass("list-group-item d-flex justify-content-between align-items-center")
+            .append(
+                $("<img>").addClass("rounded-circle user_img").attr("src", "images/member.png").css("width", "50px")
+            )
+            .append(
+                $("<span>").text(memberName)
+            )
+            .append(
+                $("<span>").addClass("badge rounded-pill").addClass(badgeClass)
+                    .text(memberLevel)
+            );
+
+        if (memberId === loggedInUserId) {
+            // 본인의 아이디를 찾았을 때 별도로 저장
+            loggedInUserItem = listItem;
+            listItem.append($("<span>").addClass("badge rounded-pill bg-warning").text("나"));
+        } else {
+            // "나" 라벨을 추가하지 않고 공백을 추가하여 크기를 맞춤
+            listItem.append($("<span>").addClass("badge rounded-pil bg-null").text(" "));
+            ul.append(listItem);
+        }
+    }
+
+    if (loggedInUserItem) {
+        // 본인의 아이디를 목록의 맨 위에 추가
+        ul.prepend(loggedInUserItem);
+    }
+
+    // 목록이 client-list에 표시됩니다.
+    ul.appendTo(".client-list");
+}
+
 		
-		else if (data.content) { // 메세지 처리   
+		else if (data.content) { // 메세지 처리 
+		
 		    var memberId = "${sessionScope.name}";
 		    console.log(memberId);
 		    var chatSender = data.memberId;
-		    console.log("sender",chatSender);
-		    var memberNickname = data.memberNickname;
+		    console.log("sender",chatSender)
+		    
+		    var memberName = data.memberName;
+		   
+		    console.log(memberName);
 		    
 		 // 새로운 메시지의 날짜 정보 가져오기
 		    var chatTimeAsString = data.chatTime; // JSON에서 문자열로 가져온 chatTime
@@ -253,12 +249,12 @@
 		        var dateDiv = $("<div>")
 		            .addClass("date-divider")
 		            .text(formattedDate)
-		             .css({
-            'font-weight': 'bold',
-            'margin-top': '10px',
-            'margin-bottom': '10px',
-            'text-align': 'center',
-        });
+				             .css({
+		            'font-weight': 'bold',
+		            'margin-top': '10px',
+		            'margin-bottom': '10px',
+		            'text-align': 'center',
+		        });
 		        $(".message-list").append(dateDiv);
 		        prevMessageDate = messageDate; // 이전 날짜 갱신
 		    }
@@ -279,10 +275,11 @@
 		   
 		    if (isDM) {
 		        // 디엠 메시지 (귓속말 표시)
-		        memberNickname = data.memberNickname + "(귓속말)";
+		        memberName = data.memberName + "(귓속말)";
 		    }
 		                   
 		    if (memberId === chatSender) {         
+		    	
 		        // 본인 메시지 (오른쪽에 표시)
 		        var messageDiv = $("<div>").addClass("d-flex justify-content-end mb-4 mt-2");
 
@@ -304,6 +301,7 @@
 		        }
 
 		    } else {
+		    	
 		        // 상대방 메시지 (왼쪽에 표시)
 		        var messageDiv = $("<div>").addClass("d-flex mb-4 align-items-start mt-2");
 
@@ -313,7 +311,7 @@
 		        var contentDiv = $("<div>").addClass("d-flex flex-column");
 		        
 		        var nicknameDiv = $("<div>").addClass("msg_nickname")
-		            .text(memberNickname); // 닉네임을 표시
+		            .text(memberName); // 닉네임을 표시
 
 		        var messageContainer = $("<div>").addClass("msg_cotainer")
 		            .append(content);

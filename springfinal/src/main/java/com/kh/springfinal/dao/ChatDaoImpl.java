@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kh.springfinal.dto.ChatDto;
+import com.kh.springfinal.vo.ChatVO;
 
 @Repository
 public class ChatDaoImpl implements ChatDao{

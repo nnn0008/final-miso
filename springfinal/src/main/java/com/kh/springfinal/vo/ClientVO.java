@@ -19,11 +19,11 @@ import lombok.ToString;
 //웹소켓 통신에서 사용자를 조금 더 편하게 관리하기 위한 클래스
 @Data 
 @EqualsAndHashCode(of = "session") //session이라는 필드가 같으면 같은 객체라고 생각해라
-@ToString(of = {"memberId", "memberLevel", "chatRoomNos"}) //출력할 때 작성한 항목만 출력해라
+@ToString(of = {"memberId", "memberLevel", "chatRoomNos", "memberName"}) //출력할 때 작성한 항목만 출력해라
 public class ClientVO {
 	@JsonIgnore //Json으로 변환하는 과정에서 이 필드는 제외한다
 	private WebSocketSession session;
-	private String memberId, memberLevel;
+	private String memberId, memberLevel, memberName;
 	 private Set<Integer> chatRoomNos;
 //	private Integer clubNo;
 
@@ -33,6 +33,8 @@ public class ClientVO {
 		this.memberId = (String) attr.get("name");
 		this.memberLevel = (String) attr.get("level");
 		this.chatRoomNos = new HashSet<>(); // 초기화
+		this.memberName = (String) attr.get("memberName");
+		
 //		this.clubNo = (Integer) attr.get("clubNo");
 	}
 
@@ -58,6 +60,7 @@ public class ClientVO {
 	                "session=" + session +
 	                ", memberId='" + memberId + '\'' +
 	                ", memberLevel='" + memberLevel + '\'' +
+	                 ", memberName='" + memberName + '\'' +
 	                ", chatRoomNos=" + chatRoomNos +
 	                '}';
 	    }

@@ -21,6 +21,7 @@ import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dto.ChatDto;
 import com.kh.springfinal.dto.ChatRoomDto;
 import com.kh.springfinal.vo.ChatListVO;
+import com.kh.springfinal.vo.ChatVO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

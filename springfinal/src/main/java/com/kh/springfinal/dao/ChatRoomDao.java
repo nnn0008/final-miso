@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.kh.springfinal.dto.ChatRoomDto;
 import com.kh.springfinal.vo.ChatListVO;
+import com.kh.springfinal.vo.ChatVO;
 
 public interface ChatRoomDao {
 
@@ -17,6 +18,7 @@ public interface ChatRoomDao {
 	ChatListVO selectOne(int chatRoomNo);
 	
 	List<ChatRoomDto> chatRoomMemberList(int chatRoomNo);
+	List<ChatVO> chatRoomMemberName(int chatRoomNo);
 	
 	int sequence();
 }

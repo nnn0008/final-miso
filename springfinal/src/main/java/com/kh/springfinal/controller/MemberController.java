@@ -75,7 +75,8 @@ public class MemberController {
 		//db Pw 와 입력값Pw 검사 후 session입력
 		if(userPw.equals(memberPw)) {
 			session.setAttribute("name", userDto.getMemberId());
-			session.setAttribute("level", userDto.getMemberLevel());			
+			session.setAttribute("level", userDto.getMemberLevel());	
+			session.setAttribute("memberName", userDto.getMemberName());	
 			
 //			ChatRoomDto chatRoomDto = chatRoomDao.selectOne(userDto.getMemberId());
 //			log.debug("chatRoomDto: {}", chatRoomDto);

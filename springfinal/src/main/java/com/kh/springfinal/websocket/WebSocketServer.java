@@ -2,6 +2,7 @@ package com.kh.springfinal.websocket;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +26,7 @@ import com.kh.springfinal.dto.ChatDto;
 import com.kh.springfinal.dto.MessageDto;
 import com.kh.springfinal.dto.MessageDto.MessageType;
 import com.kh.springfinal.service.ClientService;
+import com.kh.springfinal.vo.ChatVO;
 import com.kh.springfinal.vo.ClientVO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -87,9 +89,9 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            addRoomMember(client, chatRoomNo);
 	        }
 	    }
-
 	    log.debug("사용자 접속! 현재 {}명", clients.size());
 	}
+
 	
 		
 	// 접속 종료
@@ -145,6 +147,24 @@ public class WebSocketServer extends TextWebSocketHandler{
 //	   }	   	   
 //	}
 //	
+	
+//	//접속자 명단(clients)을 모든 접속자에게 전송하는 메소드
+//		public void sendClientList() throws IOException {
+//			//1. clients를 전송 가능한 형태(JSON 문자열)로 변환한다
+//			ObjectMapper mapper = new ObjectMapper();
+//
+//			Map<String, Object> data = new HashMap<>();
+//			//data.put("clients", clients);//전체회원 명단(null이 문제가됨)
+//			data.put("roomMembers", roomMembersMap);//로그인한 회원명단
+//			String clientJson = mapper.writeValueAsString(data);
+//			log.debug("data {}",data);
+//			
+//			//2. 모든 사용자에게 전송
+//			TextMessage message = new TextMessage(clientJson);
+//			for(ClientVO client : clients) {
+//				client.send(message);
+//			}
+//		}
 	
 //	// 채팅방 멤버 명단을 전송하는 메소드
 //	public void sendRoomMembersList(Integer chatRoomNo) throws IOException {
@@ -203,6 +223,18 @@ public class WebSocketServer extends TextWebSocketHandler{
 	        map.put("content", chatDto.getChatContent());
 	        map.put("chatTime", chatTime.toString());
 	        map.put("chatRoomNo", chatRoomNo);
+	        
+	        // 각 채팅의 닉네임 가져오기
+	        List<ChatVO> roomMembers = chatRoomDao.chatRoomMemberName(chatRoomNo);
+	        // chatVO의 clubMemberId와 chatDto의 memberId 비교
+	        String chatSenderNickname = roomMembers.stream()
+	                .filter(member -> member.getClubMemberId().equals(chatDto.getChatSender()))
+	                .findFirst()
+	                .map(ChatVO::getMemberName)
+	                .orElse(chatDto.getChatSender()); // 닉네임이 없을 경우 memberId 사용
+
+	        map.put("memberName", chatSenderNickname); // 닉네임 추가
+
 
 	        String messageJson = mapper.writeValueAsString(map);
 	        TextMessage tm = new TextMessage(messageJson);
@@ -268,6 +300,9 @@ public class WebSocketServer extends TextWebSocketHandler{
 	    if (MessageType.join.equals(messageType)) {
 	        Integer chatRoomNo = messageDto.getChatRoomNo();
 	        
+	        Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
+	        log.debug("roomMembers for chatRoomNo {}: {}", chatRoomNo, roomMembers);
+	        
 	        // 여기에서 chatRoomNo를 활용하여 처리
 	        sendChatHistory(chatRoomNo, session);
 	        
@@ -275,6 +310,18 @@ public class WebSocketServer extends TextWebSocketHandler{
 	        Map<String, Object> data = new HashMap<>();
 	        data.put("messageType", MessageType.join);
 	        data.put("chatSender", client.getMemberId());
+	        data.put("memberName", client.getMemberName());
+	        
+	        // roomMembers에 있는 각 ClientVO의 memberId와 memberName을 전송
+	        List<Map<String, Object>> membersList = new ArrayList<>();
+	        for (ClientVO roomMember : roomMembers) {
+	            Map<String, Object> memberData = new HashMap<>();
+	            memberData.put("memberId", roomMember.getMemberId());
+	            memberData.put("memberName", roomMember.getMemberName());
+	            memberData.put("memberLevel", roomMember.getMemberLevel());
+	            membersList.add(memberData);
+	        }
+	        data.put("roomMembers", membersList);
 	        
 	        String joinMessageJson = mapper.writeValueAsString(data);
 	        TextMessage tm = new TextMessage(joinMessageJson);
@@ -302,6 +349,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            data.put("chatTime", chatTime.toString());
 	            data.put("chatRoomNo", chatRoomNo);
 	            data.put("memberLevel", client.getMemberLevel());
+	            data.put("memberName", client.getMemberName());
 	            
 	            String messageJson = mapper.writeValueAsString(data);
 	            TextMessage tm = new TextMessage(messageJson);
