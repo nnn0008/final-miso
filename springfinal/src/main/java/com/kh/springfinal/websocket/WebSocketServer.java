@@ -244,8 +244,8 @@ public class WebSocketServer extends TextWebSocketHandler{
 	                .orElse(chatDto.getChatSender()); // 닉네임이 없을 경우 memberId 사용
 
 	        map.put("memberName", chatSenderNickname); // 닉네임 추가
-
-
+	        
+	       
 	        String messageJson = mapper.writeValueAsString(map);
 	        TextMessage tm = new TextMessage(messageJson);
 	        session.sendMessage(tm);
@@ -306,45 +306,69 @@ public class WebSocketServer extends TextWebSocketHandler{
 
 	    // messageType에 따라 처리
 	    
-	    //입장 메세지인 경우
 	    if (MessageType.join.equals(messageType)) {
 	        Integer chatRoomNo = messageDto.getChatRoomNo();
-	        
+
+	        // 여기에서 chatRoomNo를 활용하여 처리
+            sendChatHistory(chatRoomNo, session);
+            
 	        Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
 	        log.debug("roomMembers for chatRoomNo {}: {}", chatRoomNo, roomMembers);
 	        
-	        List<ChatListVO> chatList = chatRoomDao.chatRoomLIst(chatRoomNo);
-	        ChatListVO firstChat = chatList.get(0);
-	        String clubName = firstChat.getClubName();
-	        String clubExplain = firstChat.getClubExplain();
-	        
-	        // 여기에서 chatRoomNo를 활용하여 처리
-	        sendChatHistory(chatRoomNo, session);
-	        
-	     // sender 정보와 추가 정보(예: 입장하는 사용자의 ID 목록)를 map에 추가하여 전송
-	        Map<String, Object> data = new HashMap<>();
-	        data.put("messageType", MessageType.join);
-	        data.put("chatSender", client.getMemberId());
-	        data.put("memberName", client.getMemberName());
-	        data.put("clubName", clubName);
-	        
-	        // roomMembers에 있는 각 ClientVO의 memberId와 memberName을 전송
-	        List<Map<String, Object>> membersList = new ArrayList<>();
-	        for (ClientVO roomMember : roomMembers) {
-	            Map<String, Object> memberData = new HashMap<>();
-	            memberData.put("memberId", roomMember.getMemberId());
-	            memberData.put("memberName", roomMember.getMemberName());
-	            memberData.put("memberLevel", roomMember.getMemberLevel());
-	            membersList.add(memberData);
-	        }
-	        data.put("roomMembers", membersList);
-	        
-	        String joinMessageJson = mapper.writeValueAsString(data);
-	        TextMessage tm = new TextMessage(joinMessageJson);
 
-	        client.send(tm);
+	        List<ChatListVO> chatList = chatRoomDao.chatRoomLIst(chatRoomNo);
+	        if (!chatList.isEmpty()) {
+	            ChatListVO firstChat = chatList.get(0);
+	            String clubName = firstChat.getClubName();
+	            String clubExplain = firstChat.getClubExplain();
+
+	            // 여기에서 chatRoomNo를 활용하여 처리
+	            sendChatHistory(chatRoomNo, session);
+
+	            // sender 정보와 추가 정보(예: 입장하는 사용자의 ID 목록)를 map에 추가하여 전송
+	            Map<String, Object> data = new HashMap<>();
+	            data.put("messageType", MessageType.join);
+	            data.put("chatSender", client.getMemberId());
+	            data.put("memberName", client.getMemberName());
+	            data.put("clubName", clubName);
+
+	            // roomMembers에 있는 각 ClientVO의 memberId와 memberName을 전송
+	            List<Map<String, Object>> membersList = new ArrayList<>();
+	            for (ClientVO roomMember : roomMembers) {
+	                Map<String, Object> memberData = new HashMap<>();
+	                memberData.put("memberId", roomMember.getMemberId());
+	                memberData.put("memberName", roomMember.getMemberName());
+	                memberData.put("memberLevel", roomMember.getMemberLevel());
+	                membersList.add(memberData);
+	            }
+	            data.put("roomMembers", membersList);
+
+	            String joinMessageJson = mapper.writeValueAsString(data);
+	            TextMessage tm = new TextMessage(joinMessageJson);
+
+	            client.send(tm);
+	        } else {
+	            log.warn("chatList is empty for chatRoomNo {}", chatRoomNo);
+	        }
 	    }
-	    
+
+//	    if (MessageType.join.equals(messageType)) {
+//	        Integer chatRoomNo = messageDto.getChatRoomNo();
+//	        
+//	        // 여기에서 chatRoomNo를 활용하여 처리
+//	        sendChatHistory(chatRoomNo, session);
+//	        
+//	     // sender 정보와 추가 정보(예: 입장하는 사용자의 ID 목록)를 map에 추가하여 전송
+//	        Map<String, Object> data = new HashMap<>();
+//	        data.put("messageType", MessageType.join);
+//	        data.put("chatSender", client.getMemberId());
+//	        
+//	        String joinMessageJson = mapper.writeValueAsString(data);
+//	        TextMessage tm = new TextMessage(joinMessageJson);
+//
+//	        client.send(tm);
+//	    }
+//	    
 	    // 채팅 메시지인 경우
 	    else if (MessageType.message.equals(messageType)) {
 	        LocalDateTime chatTime = LocalDateTime.now();
