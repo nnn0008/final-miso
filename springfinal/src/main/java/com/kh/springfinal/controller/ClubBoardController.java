@@ -84,7 +84,7 @@ public class ClubBoardController {
 			fileLoadVO.upload(clubBoardImageDto, clubBoardImage2Dto, clubBoardImage3Dto, clubBoardNo, attach, attachSecond, attachThird);
 		}
 		
-		return "redirect:/clubBoard/list?clubNo="+clubNo;
+		return "redirect:/clubBoard/detail?clubBoardNo="+clubBoardNo;
 	}
 	
 	@RequestMapping("/list")
