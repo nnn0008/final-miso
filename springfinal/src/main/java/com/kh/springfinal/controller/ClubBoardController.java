@@ -76,6 +76,7 @@ public class ClubBoardController {
 		clubBoardDto.setClubBoardNo(clubBoardNo);
 		clubBoardDto.setClubMemberNo(clubMemberNo);
 		clubBoardDto.setClubNo(clubNo);
+		clubBoardDao.insert(clubBoardDto);
 		
 		clubBoardDao.insert(clubBoardDto);
 
@@ -83,6 +84,7 @@ public class ClubBoardController {
 		if(!attach.isEmpty()) {
 			fileLoadVO.upload(clubBoardImageDto, clubBoardImage2Dto, clubBoardImage3Dto, clubBoardNo, attach, attachSecond, attachThird);
 		}
+
 		
 		return "redirect:/clubBoard/list?clubNo="+clubNo;
 	}
