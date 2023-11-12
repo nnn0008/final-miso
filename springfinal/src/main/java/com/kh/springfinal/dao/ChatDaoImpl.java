@@ -30,4 +30,5 @@ public class ChatDaoImpl implements ChatDao{
 		return sqlSession.selectList("chat.getChatHistory", chatRoomNo);
 	}
 	
+	
 }

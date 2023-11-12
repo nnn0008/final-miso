@@ -76,7 +76,55 @@
 
 					</div>
 				</div>
-				
+
+
+<!-- 모달 -->
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="profileModalLabel">프로필</h5> 
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+      </div>
+      <div class="modal-body">
+        <!-- 프로필 카드 내용 -->
+        <div class="card" style="border-radius: 15px;">
+          <div class="card-body text-center">
+            <div class="mt-3 mb-4">
+              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
+                class="rounded-circle img-fluid modal-profile-image" style="width: 100px;" />
+            </div>
+            <h4 class="mb-2 modal-profile-name">줄리 L. 아르소노</h4>
+            <p class="text-muted mb-4 modal-profile-id"></p>
+            <div class="mb-4 pb-2">
+             <button type="button" class="btn btn-success bg-miso dm-send">메세지 보내기</button>
+<!--               <button type="button" class="btn btn-outline-primary btn-floating"> -->
+<!--                 <i class="fab fa-facebook-f fa-lg"></i> -->
+<!--               </button> -->
+<!--               <button type="button" class="btn btn-outline-primary btn-floating"> -->
+<!--                 <i class="fab fa-twitter fa-lg"></i> -->
+<!--               </button> -->
+<!--               <button type="button" class="btn btn-outline-primary btn-floating"> -->
+<!--                 <i class="fab fa-skype fa-lg"></i> -->
+<!--               </button> -->
+            </div>
+            <!-- ... (기존의 프로필 카드 내용) ... -->
+          </div>
+        </div>
+        <!-- 프로필 카드 내용 -->
+      </div>
+      
+      <!-- 
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">변경 사항 저장</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+      </div>
+      -->
+    </div>
+  </div>
+</div>
+
+
             </div>
    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -95,10 +143,11 @@
 	
 	var chatSender = "${sessionScope.name}";
 	var memberName = null;
-	console.log(memberName);
+	//console.log(memberName);
 	
 	var prevMessageDate = null;
-	
+	var clubName;
+
 
 	// 사용자 목록을 저장할 배열
 	
@@ -106,7 +155,8 @@
 	    console.log('Info: connection opened.');
 	    console.log("chatRoomNo:", chatRoomNo); // 디버그용 로그 추가
 	    console.log("chatSender:", chatSender); // 디버그용 로그 추가
-
+	    
+	   
 	    // 서버에 join 메시지 전송
 	    var joinMessage = {
 	        messageType: "join",
@@ -132,14 +182,47 @@
 	    return match ? parseInt(match[1]) : null;
 	}	
 	
-	
+
 	
 	//메세지 처리
 		window.socket.onmessage = function(e){
+	
 		
 		var data = JSON.parse(e.data);
-		console.log(data);
+		//console.log(data);
 		
+		clubName = data.clubName;
+		//console.log(data.clubName);
+		
+		$(".circle-name").text(clubName);
+
+		 // 만약 메세지 타입이 dm이면서 receiver가 있는 경우
+	    if (data.messageType === "dm" && data.chatReceiver) {
+	    	 console.log("Before moveToRoom: ", data); // 이 줄 추가
+	        // 방 이동 처리
+	        moveToRoom(data.chatRoomNo);
+	        
+	        var chatContent = $(".message-input").val().trim(); // 값이 없을 경우 공백으로 처리
+
+	        // 메시지 내용이 비어있으면 전송하지 않음
+		    if (!chatContent) {
+		        console.log("Content is empty. Message not sent.");
+		        return;
+		    }
+	        
+	        // 메세지 전송 처리
+	        var sendMessage = {
+	            messageType: "dm",
+	            memberId: data.memberId,
+	            chatRoomNo: data.chatRoomNo,
+	            content: chatContent, 
+	        };
+	        
+	        console.log("Before sending message: ", sendMessage); // 이 줄 추가
+
+	        window.socket.send(JSON.stringify(sendMessage));
+	    }
+		 
 		// 시간을 표시할 패턴 설정
 		var dateOptions = {
 		    year: "numeric",
@@ -165,7 +248,8 @@
 
 		// 메시지를 구성할 때 날짜와 시간을 함께 사용
 		var fullMessage = formattedDate + " " + formattedTime + " " + data.content;
-		
+	
+	
 		
 		//사용자가 접속하거나 종료했을 때 서버에서 오는 데이터로 목록을 갱신
 		//사용자가 메세지를 보냈을 때 서버에서 이를 전체에게 전달한다
@@ -176,14 +260,14 @@
     var loggedInUserId = "${sessionScope.name}";
     var loggedInUserItem = null;
 
-    console.log("chatRoomNo: " + chatRoomNo);
+    //console.log("chatRoomNo: " + chatRoomNo);
 
     for (var i = 0; i < data.roomMembers.length; i++) {
         var memberId = data.roomMembers[i].memberId;
         var roomNo = data.roomMembers[i].chatRoomNo;
         var memberLevel = data.roomMembers[i].memberLevel;
         var memberName = data.roomMembers[i].memberName;
-        console.log("memberName2: " + memberName);
+        //console.log("memberName2: " + memberName);
         
         // 레벨에 따라 배지 스타일 변경
         badgeClass = "bg-warning";
@@ -196,7 +280,7 @@
         var listItem = $("<li>")
             .addClass("list-group-item d-flex justify-content-between align-items-center")
             .append(
-                $("<img>").addClass("rounded-circle user_img").attr("src", "images/member.png").css("width", "50px")
+                $("<img>").addClass("rounded-circle user_img").attr("src", "${pageContext.request.contextPath}/images/member.png").css("width", "50px")
             )
             .append(
                 $("<span>").text(memberName)
@@ -228,15 +312,17 @@
 
 		
 		else if (data.content) { // 메세지 처리 
+			
+			
 		
 		    var memberId = "${sessionScope.name}";
-		    console.log(memberId);
+		   // console.log(memberId);
 		    var chatSender = data.memberId;
-		    console.log("sender",chatSender)
+		   // console.log("sender",chatSender)
 		    
 		    var memberName = data.memberName;
 		   
-		    console.log(memberName);
+		   // console.log(memberName);
 		    
 		 // 새로운 메시지의 날짜 정보 가져오기
 		    var chatTimeAsString = data.chatTime; // JSON에서 문자열로 가져온 chatTime
@@ -271,12 +357,6 @@
 		        memberLevel.addClass("bg-warning");
 		    }
 		   
-		    var isDM = data.dm == true;
-		   
-		    if (isDM) {
-		        // 디엠 메시지 (귓속말 표시)
-		        memberName = data.memberName + "(귓속말)";
-		    }
 		                   
 		    if (memberId === chatSender) {         
 		    	
@@ -287,7 +367,7 @@
 		            .append(content);
 		           
 		        var imageContainer = $("<div>").addClass("img_cont_msg")
-		            .append($("<img>").attr("src", "images/profile.jpg").css("width", "45px").addClass("rounded-circle user_img_msg"));
+		            .append($("<img>").attr("src", "${pageContext.request.contextPath}/images/profile.jpg").css("width", "45px").addClass("rounded-circle user_img_msg"));
 
 		        var timeSpan = $("<div>").addClass("time-right")
 		         .append($("<span>").addClass("msg_time_send").text(formattedTime));
@@ -295,45 +375,76 @@
 		        messageDiv.append(timeSpan).append(messageContainer).append(imageContainer);
 		        $(".message-list").append(messageDiv);
 		        
-		        if (isDM) {
-		            messageContainer.css("background-color", "black"); // 배경색 블랙
-		            messageContainer.css("color", "white"); // 문자색상 화이트
-		        }
 
 		    } else {
 		    	
-		        // 상대방 메시지 (왼쪽에 표시)
-		        var messageDiv = $("<div>").addClass("d-flex mb-4 align-items-start mt-2");
+		    	// 상대방 메시지 (왼쪽에 표시)
+		    	var messageDiv = $("<div>").addClass("d-flex mb-4 align-items-start mt-2");
 
-		        var imageContainer = $("<div>").addClass("img_cont_msg")
-		            .append($("<img>").attr("src", "images/profile2.jpg").css("width", "45px").addClass("rounded-circle user_img_msg"));
+		    	var imageContainer = $("<div>").addClass("img_cont_msg")
+		    	    .append($("<img>").attr("src", "${pageContext.request.contextPath}/images/profile2.jpg").css("width", "45px").addClass("rounded-circle user_img_msg"));
 
-		        var contentDiv = $("<div>").addClass("d-flex flex-column");
-		        
-		        var nicknameDiv = $("<div>").addClass("msg_nickname")
-		            .text(memberName); // 닉네임을 표시
+		    	// 클릭 이벤트 추가
+		    	imageContainer.on("click", function() {
+		    	    $.ajax({
+		    	        url: 'http://localhost:8080/getProfile',
+		    	        type: 'GET',
+		    	        dataType: 'json',
+		    	        success: function(data) {
+		    	            // 성공적으로 데이터를 받아왔을 때 처리
+		    	            console.log(data); // 여기서 data는 List<MemberDto> 형태로 예상됩니다.
 
-		        var messageContainer = $("<div>").addClass("msg_cotainer")
-		            .append(content);
+		    	            // data 배열에서 클릭된 멤버의 정보 찾기
+		    	            var selectedMember = data.find(function(member) {
+		    	                // nicknameDiv에서 텍스트 정보 가져오기
+		    	                var nicknameText = $(".msg_nickname", messageDiv).text();
+		    	                return nicknameText === member.memberName;
+		    	            });
 
-		        var timeSpan = $("<div>").addClass("time-left")
-		            .append($("<span>").addClass("msg_time").text(formattedTime));
+		    	            // selectedMember가 존재할 때만 모달을 업데이트
+		    	            if (selectedMember) {
+		    	                // 모달 내용 업데이트
+		    	                $("#profileModalLabel").text(selectedMember.memberName+" 님의 프로필"); // 모달 제목 업데이트
+		    	                var modalBody = $("#profileModal .modal-body");
+		    	                modalBody.find(".modal-profile-image").attr("src", "${pageContext.request.contextPath}/images/profile2.jpg"); // 이미지 업데이트
+		    	                modalBody.find(".modal-profile-name").text(selectedMember.memberName); // 이름 업데이트
+		    	                modalBody.find(".modal-profile-id").text("@" + selectedMember.memberId); // 아이디 업데이트
 
-		        contentDiv.append(nicknameDiv).append(messageContainer);
-		        messageDiv.append(imageContainer).append(contentDiv).append(timeSpan);
-		        $(".message-list").append(messageDiv);
-		        
-		        if (isDM) {
-		            messageContainer.css("background-color", "black"); // 배경색 블랙
-		            messageContainer.css("color", "white"); // 문자색상 화이트
-		        }
+		    	                // 모달 표시
+		    	                $("#profileModal").modal("show");
+		    	            }
+		    	        },
+		    	        error: function(error) {
+		    	            // 오류 발생 시 처리
+		    	            console.error(error);
+		    	        }
+		    	    });
+		    	});
+
+
+		    	var contentDiv = $("<div>").addClass("d-flex flex-column");
+		    	        
+		    	var nicknameDiv = $("<div>").addClass("msg_nickname")
+		    	    .text(memberName); // 닉네임을 표시
+
+		    	var messageContainer = $("<div>").addClass("msg_cotainer")
+		    	    .append(content);
+
+		    	var timeSpan = $("<div>").addClass("time-left")
+		    	    .append($("<span>").addClass("msg_time").text(formattedTime));
+
+		    	contentDiv.append(nicknameDiv).append(messageContainer);
+		    	messageDiv.append(imageContainer).append(contentDiv).append(timeSpan);
+		    	$(".message-list").append(messageDiv);
+
+		    	
 		    }
 		}
+		
 
 		// 스크롤바 이동
 		$(".message-list").scrollTop($(".message-list")[0].scrollHeight);
 	}
-
 	
 		//메세지를 전송하는 코드
 		//-메세지가 @로 시작하면 DM으로 처리(아이디 유무 검사정도 하면 좋음)
@@ -350,6 +461,29 @@
 		});
 		
 	 
+		// dm 요청 함수
+		$(".dm-send").on("click", function () {
+		    // 모달에서 상대방 정보 가져오기
+		    var chatReceiver = $("#profileModal .modal-profile-id").text().trim();
+
+		    // "@" 이후의 문자열 추출
+		    var atSymbolIndex = chatReceiver.indexOf("@");
+		    var relativeUserId = atSymbolIndex !== -1 ? chatReceiver.slice(atSymbolIndex + 1) : null;
+
+		    // 채팅 메시지 객체 생성
+		    var dm = {
+		        messageType: "dm",
+		        chatSender: "${sessionScope.name}", // 사용자 이름 또는 아이디 등
+		        chatReceiver: relativeUserId, // "@" 이후의 문자열을 상대방 아이디로 사용
+		    };
+
+		    // WebSocket을 통해 서버로 메시지 전송
+		    window.socket.send(JSON.stringify(dm));
+
+		    console.log("DM 메시지 전송 완료");
+		    console.log(dm);
+		});
+
 		
 		// 메시지 전송 함수
 		function sendMessage() {
@@ -377,8 +511,7 @@
 		    // 메시지 입력창 초기화
 		    $(".message-input").val("");
 		}
-
-
+		
 
 		// 메시지 전송 이벤트 처리
 		function handleSendMessage() {
@@ -403,7 +536,7 @@
 		var imageContainer = $("<div>").addClass("img_cont");
 		var userImage = $("<img>").attr("src", "/images/circle.jpg").css("width", "60px").addClass("rounded-circle user_img");
 		var userInfo = $("<div>").addClass("user_info");
-		var roomName = $("<span>").addClass("circle-name").text("java 개발자 스터디");
+		var roomName = $("<span>").addClass("circle-name").text(clubName);
 
 		// 버튼 엘리먼트 생성
 		var button = $("<button>").addClass("btn btn-outline-secondary");
@@ -427,6 +560,7 @@
 		$(".btn-userlist").click(function(){
 			$(".client-list").toggleClass("active");
 		});
+		
 		
 	</script>
 </body>

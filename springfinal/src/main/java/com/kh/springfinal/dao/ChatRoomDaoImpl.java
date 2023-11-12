@@ -1,13 +1,15 @@
 package com.kh.springfinal.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.springfinal.dto.ChatDto;
 import com.kh.springfinal.dto.ChatRoomDto;
-import com.kh.springfinal.dto.ClubMemberDto;
+import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.vo.ChatListVO;
 import com.kh.springfinal.vo.ChatVO;
 
@@ -67,5 +69,18 @@ public class ChatRoomDaoImpl implements ChatRoomDao{
 	public List<ChatVO> chatRoomMemberName(int chatRoomNo) {
 		return sqlSession.selectList("chatRoom.roomMemberName", chatRoomNo);
 	}
+	
+	@Override
+	public List<MemberDto> selectMemberProfile() {
+		return sqlSession.selectList("chatRoom.roomMemberProfile");
+	}
+	
 
+	@Override
+	public List<ChatDto> getExistingChatRoom(String chatSender, String chatReceiver) {
+		
+		Map params = Map.of("chatSender", chatSender, "chatReceiver", chatReceiver);
+		return sqlSession.selectList("chatRoom.getExistingChatRoom", params);
+
+	}
 }

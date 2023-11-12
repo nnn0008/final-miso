@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="chatOne">
+	
+	<insert id="add">
+		insert into chat_one(
+		chat_room_no,
+		chat_sender,
+		chat_receiver
+		) values(
+		#{chatRoomNo},
+		#{chatSender},
+		#{chatReceiver}
+		)
+	</insert>
+	
+		 <!-- 이미 존재하는 1:1 채팅 룸 조회 -->
+    <select id="getExistingChatRoom" resultType="int">
+        SELECT chat_room_no
+        FROM chat_one
+        WHERE (chat_sender = #{chatSender} AND chat_receiver = #{chatReceiver})
+        OR (chat_sender = #{chatReceiver} AND chat_receiver = #{chatSender})
+    </select>
+    
+    <select id="roomList" resultType="ChatOneDto">
+   SELECT * FROM chat_one WHERE chat_sender = #{chatSender} OR chat_receiver = #{chatReceiver}
+    </select>
+
+</mapper>
