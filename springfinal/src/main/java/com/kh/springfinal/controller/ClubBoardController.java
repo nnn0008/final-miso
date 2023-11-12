@@ -86,7 +86,7 @@ public class ClubBoardController {
 		}
 
 		
-		return "redirect:/clubBoard/list?clubNo="+clubNo;
+		return "redirect:/clubBoard/detail?clubBoardNo="+clubBoardNo;
 	}
 	
 	@RequestMapping("/list")

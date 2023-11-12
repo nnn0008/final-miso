@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 <jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
 
@@ -12,22 +13,22 @@
 				<div class="col-3">
 					프로필사진
 				</div>
-				<div class="col-4">
-					${clubBoardAllDto.clubBoardName};
+				<div class="col-3">
+					${clubBoardAllDto.clubBoardName}
 				</div>
-				<div class="col-5 text-end">
+				<div class="col-6 text-end">
 					${clubBoardAllDto.clubBoardCategory}
-					${clubBoardAllDto.clubBoardDate}
+					<fmt:formatDate value="${clubBoardAllDto.clubBoardDate}" pattern="M월 d일 a h시 m분"/>
 				</div>
 			</div>
 			
-			<div class="row">
+			<div class="row mt-4">
 				<div class="col">
 					${clubBoardAllDto.clubBoardTitle}
 				</div>
 			</div>
-			<div class="row">
-				<div class="col">
+			<div class="row mt-4">
+				<div class="col" style="min-height: 200px;">
 					${clubBoardAllDto.clubBoardContent}
 				</div>
 			</div>
@@ -49,8 +50,7 @@
 					댓글 목록 쭉
 				</div>
 			</div>
-			
-			
+		
 			
 		</div>
 	</div>
