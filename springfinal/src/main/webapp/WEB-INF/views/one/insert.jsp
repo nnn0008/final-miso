@@ -26,7 +26,7 @@
 		
 		<div class="row mt-4">
 			<div class="col">
-				<select name="oneCategory" required class="form-control">
+				<select name="oneCategory" required class="form-select">
 					<option  disabled selected hidden>종류를 선택해주세요.</option>
 					<option>회원</option>
 					<option>동호회</option>
@@ -54,6 +54,23 @@
 		<div class="row mt-4">
 			<div class="col">
 				<textarea name="oneContent" class="form-control" placeholder="내용" rows="10" cols="80"></textarea>
+			</div>
+		</div>
+		
+		<div class="row mt-4">
+			<div class="col">
+				<input type="file">
+			</div>
+		</div>
+		
+		<div class="row mt-4">
+			<div class="col">
+				<label>
+					<input type="file" class="profile-chooser" accept="image/*" style="display:none;">
+				<br>
+					<i class="fa-regular fa-image blue fa-2x"></i>
+				</label>
+				<i class="fa-regular fa-trash-can red fa-2x profile-delete"></i>
 			</div>
 		</div>
 		

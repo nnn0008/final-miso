@@ -32,7 +32,7 @@
 	 		update one
 	 		set
 	 		one_title = #{oneDto.oneTitle},
-	 		one_content = #{oneDto.oneContent}	
+	 		one_content = #{oneDto.oneContent}
 	 		where one_no = #{oneNo} 		
 	 	</update>
 	 	
@@ -46,7 +46,25 @@
 		</select>
 		 -->
 		<!-- 페이지네이션 -->
-		<select id="selectListByPage" resultType="OneDto" parameterType="map">
+		<select id="selectListByPage" resultType="OneDto">
+			<!-- 검색 -->
+			<choose>
+			<when test="search">
+				<![CDATA[
+			    select * from (
+			        select rownum rn, TMP.* from (
+			        select * from one
+			        where instr(${type},#{keyword})>0
+			        start with one_parent is null
+			        connect by prior one_no = one_parent
+			        order siblings by one_group desc, one_no asc
+			        ) TMP
+			    )
+			    where rn between #{startRow} and #{finishRow}
+			    ]]>
+			    </when>
+			    <!-- 검색 없이 목록 -->
+			    <otherwise>
 			    select *
 			    from (
 			        select rownum rn, TMP.*
@@ -58,18 +76,51 @@
 			            order siblings by one_group desc, one_no asc
 			        ) TMP
 			    )
-			    where rn between #{begin} and #{end}
+			    where rn between #{startRow} and #{finishRow}
+			    </otherwise>
+			</choose>
 		</select>
 
 	 	<!-- 카운트 -->
 	 	<select id="countListByPage" resultType="int">
+	 		<!-- 검색일 떄 -->
+	 		<choose>
+	 			<when test="keyword != null">
+	 			<![CDATA[
+	 				select count(*) from one
+	 				where instr(${type},#{keyword})>0
+	 			 ]]>
+	 			</when>
+	 		<!-- 검색이 아닐 떄 -->
+	 		<otherwise>
 	 		select count(*) from one
+	 		</otherwise>
+	 		</choose>
 	 	</select>
+	 	
+	 	
 	 	
 	 	<!-- 게시글 상세 -->
 	 	<select id="find" resultType="OneDto">
 	 		select * from one where one_no = #{oneNo}
 	 	</select>
+	 	
+	 	<!-- 이미지 등록 -->
+	 	<insert id="insertImage">
+	 		insert into one_image
+	 		values(${oneNo},${attachNo})
+	 	</insert>
+	 	
+	 	<!-- 이미지 삭제 -->
+	 	<delete id="deleteImage">
+	 		delete one_image where one_no=${oneNo}
+	 	</delete>
+	 	
+	 	<!-- 이미지 찾기 -->
+	 	<update id="findImage">
+	 		select attach_no from one_image where one_no=${oneNo}
+	 	</update>
+	 	
 	 	
 	 	
 	 	

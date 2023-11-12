@@ -4,12 +4,35 @@
     <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 <jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
 
+<script>
+    function goToDetail(oneNo) {
+        window.location = 'detail?oneNo=' + oneNo;
+    }
+</script>
+    <style>
+.pagination .page-link {
+    background-color: #ACCEFF;
+}
+
+/* 활성화된 페이지 버튼에 대한 배경색을 변경합니다. */
+.pagination .page-item.active .page-link {
+    background-color:#ACCEFF;
+}
+    </style>
 	<div class="container">
 		<div class="row mt-4">
 			<div class="col">
 				<h2>1대1 문의</h2>			
 			</div>		
 		</div>
+		
+		<c:if test="${vo.search}">
+	<div class="row mt-4">
+	<div class="col">
+		&quot;${vo.keyword}&quot;에 대한 검색 결과
+		</div>
+	</div>
+	</c:if>
 		
 		<div class="row mt-4">
 			<div class="col">
@@ -25,7 +48,7 @@
 					</thead>
 					<tbody>
 					<c:forEach var="OneDto" items="${list}">
-						<tr class="table-secondary">
+						<tr class="table-secondary" onclick="goToDetail(${OneDto.oneNo})" style="cursor: pointer;">
 							<td>${OneDto.oneCategory}</td>
 							<td>${OneDto.oneNo}</td>
 							<td class="text-left">
@@ -38,7 +61,7 @@
 							<c:if test="${OneDto.oneDepth > 0}">
 								<i class="fa-solid fa-reply fa-rotate-180"></i>
 							</c:if>
-							<a href="detail?oneNo=${OneDto.oneNo}">${OneDto.oneTitle}</a>
+							${OneDto.oneTitle}
 							</td>
 							<td>${OneDto.oneDate}</td>
 							<td>${OneDto.oneMember}</td>
@@ -51,7 +74,7 @@
 		<!-- 페이지네이션 -->
 		<div class="row mt-4">
    		 <div class="col">
-			       <ul class="pagination pagination-lg">
+			       <ul class="pagination pagination-lg justify-content-center">
 			   			<!-- 이전 버튼 -->
 		<c:if test="${!vo.first}">
 			<li class="page-item">
@@ -76,8 +99,33 @@
 			  			</ul>
     		</div>
 		</div>
+		<!-- 검색창 -->
+	<form action="list" method="get">
+	<div class="row mt-4 justify-content-center">
+	<div class="col input-group">
+		<c:choose>
+			<c:when test="${param.type == 'one_member'}">
+				<select name="type" required class="form-select">
+					<option value="one_title">제목</option>
+					<option value="one_member" selected>작성자</option>
+				</select>
+			</c:when>
+			<c:otherwise>
+				<select name="type" required class="form-select">
+					<option value="one_title">제목</option>
+					<option value="one_member">작성자</option>
+				</select>
+			</c:otherwise>
+		</c:choose>
 		
-		
+		<input type="search" name="keyword" class="form-control"
+					placeholder="검색어 입력" value="${param.keyword}">
+		<button type="submit" name="search" class="btn btn-outline-primary rounded-pill">
+			<i class="fa-solid fa-magnifying-glass"></i>
+		</button>
+	</div>	
+	</div>
+	</form>
 		
 	</div>
 	
