@@ -15,7 +15,7 @@ public class ClubBoardImage3DaoImpl implements ClubBoardImage3Dao {
 	
 	@Override
 	public void insert(ClubBoardImage3Dto clubBoardImage3Dto) {
-		sqlSession.insert("clubBoardImage.add", clubBoardImage3Dto);
+		sqlSession.insert("clubBoardImage3.add", clubBoardImage3Dto);
 	}
 	
 	@Override

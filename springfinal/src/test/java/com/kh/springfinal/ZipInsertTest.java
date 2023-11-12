@@ -26,7 +26,7 @@ public class ZipInsertTest {
 
     @Test
     public void test() throws FileNotFoundException {
-        File target = new File("C:\\Users\\l08il\\zipcode_DB\\서울특별시.txt");
+        File target = new File("C:\\Users\\l08il\\zipcode_DB\\경기도.txt");
         Scanner sc = new Scanner(target);
 
         String patternStr = "(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)\\|(.*?)";

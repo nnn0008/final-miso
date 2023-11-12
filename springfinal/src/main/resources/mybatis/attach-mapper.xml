@@ -12,7 +12,7 @@
 	
 	<insert id="add">
 		insert into attach(attach_no, attach_name, attach_size, attach_type)
-		values(attach_seq.nextval, #{attachName}, #{attachSize}, #{attachType})
+		values(#{attachNo}, #{attachName}, #{attachSize}, #{attachType})
 	</insert>
 	
 	<select id="find" resultType="AttachDto">

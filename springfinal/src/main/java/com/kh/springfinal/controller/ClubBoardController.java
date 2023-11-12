@@ -77,13 +77,13 @@ public class ClubBoardController {
 		clubBoardDto.setClubBoardNo(clubBoardNo);
 		clubBoardDto.setClubMemberNo(clubMemberNo);
 		clubBoardDto.setClubNo(clubNo);
+		clubBoardDao.insert(clubBoardDto);
 		
 		//사진 첨부
 		if(!attach.isEmpty()) {
 			fileLoadVO.upload(clubBoardImageDto, clubBoardImage2Dto, clubBoardImage3Dto, clubBoardNo, attach, attachSecond, attachThird);
 		}
 
-		clubBoardDao.insert(clubBoardDto);
 		
 		return "redirect:/clubBoard/list?clubNo="+clubNo;
 	}
