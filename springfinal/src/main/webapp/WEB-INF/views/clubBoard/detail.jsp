@@ -13,28 +13,28 @@
 					프로필사진
 				</div>
 				<div class="col-4">
-					이름
-					작성시간
+					${clubBoardAllDto.clubBoardName};
 				</div>
 				<div class="col-5 text-end">
-					카테고리
+					${clubBoardAllDto.clubBoardCategory}
+					${clubBoardAllDto.clubBoardDate}
 				</div>
 			</div>
 			
 			<div class="row">
 				<div class="col">
-					제목
+					${clubBoardAllDto.clubBoardTitle}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col">
-					내용
+					${clubBoardAllDto.clubBoardContent}
 				</div>
 			</div>
 			
 			<div class="row">
 				<div class="col">
-					좋아요 + 좋아요 숫자	
+					좋아요 하트버튼 + ${clubBoardAllDto.clubBoardLikecount}	
 				</div>
 			</div>
 			

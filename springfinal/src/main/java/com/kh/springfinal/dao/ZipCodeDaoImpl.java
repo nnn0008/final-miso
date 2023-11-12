@@ -9,7 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kh.springfinal.dto.ZipCodeDto;
+import com.kh.springfinal.vo.ZipCodeSearchVO;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Repository
 public class ZipCodeDaoImpl implements ZipCodeDao{
 	

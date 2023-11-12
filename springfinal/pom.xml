@@ -139,11 +139,14 @@
 		</dependency>
 
 
-		<!-- <dependency>
+
+		<dependency>
 			<groupId>com.kh</groupId>
 			<artifactId>spring20websocket</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-		</dependency> -->
+		</dependency> 
+
+
 	</dependencies>
 
 	<build>

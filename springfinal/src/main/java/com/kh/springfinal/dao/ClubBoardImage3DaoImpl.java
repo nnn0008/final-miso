@@ -20,12 +20,12 @@ public class ClubBoardImage3DaoImpl implements ClubBoardImage3Dao {
 	
 	@Override
 	public boolean delete(int clubBoardNo) {
-		return sqlSession.delete("clubBoradImage.remove", clubBoardNo) > 0;
+		return sqlSession.delete("clubBoradImage3.remove", clubBoardNo) > 0;
 	}
 	
 	@Override
 	public ClubBoardImage3Dto selectOne(int clubBoardNo) {
-		return sqlSession.selectOne("clubBoardImage.find", clubBoardNo);
+		return sqlSession.selectOne("clubBoardImage3.find", clubBoardNo);
 	}
 	
 	@Override
