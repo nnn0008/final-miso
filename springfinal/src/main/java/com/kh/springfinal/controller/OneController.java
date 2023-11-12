@@ -107,12 +107,13 @@ public class OneController {
 //	    return "one/list";
 //	}
 	@RequestMapping("/list")
-	public String list(@ModelAttribute(name ="vo")  PaginationVO vo, Model model) {
+	public String list( @ModelAttribute(name ="vo") PaginationVO vo, Model model) {
 		int count = oneDao.countList(vo);
 		vo.setCount(count);
 		
 		List<OneDto> list = oneDao.selectListByPage(vo);
 	    model.addAttribute("list", list);
+	   
 	   
 	    return "one/list";
 	}
