@@ -129,18 +129,20 @@ public class ClubController {
 		
 		ZipCodeDto zipCodeDto = zipDao.findZip(clubNo);
 		
+		log.debug("zipCodeDto={}",zipCodeDto);
+		
 		
 		int minorNo = clubDto.getClubCategory();
 		MajorCategoryDto majorCategoryDto = categoryDao.findMajor(minorNo);
 		
-		log.debug("minorNo={}",minorNo);
-		log.debug("majorNo={}",majorCategoryDto.getMajorCategoryNo());
-		log.debug("majorNo={}",majorCategoryDto.getMajorCategoryName());
 		
 		model.addAttribute("majorList",majorList);
 		model.addAttribute("majorDto",majorCategoryDto);
 		model.addAttribute("clubDto",clubDto);
 		model.addAttribute("zipDto",zipCodeDto);
+		
+		
+		
 		
 	
 		
@@ -159,22 +161,36 @@ public class ClubController {
 		int clubNo = clubDto.getClubNo();
 		
 		if(!attach.isEmpty()) {
-			int attachNo = attachDao.sequence();
 			
-			//첨부파일 등록(파일이 있을 때만)
+			//파일이 있으면
+			//파일 삭제 - 기존 파일이 있을 경우에만 처리
+			AttachDto attachDto = clubDao.findImage(clubNo);
 			String home = System.getProperty("user.home");
 			File dir = new File(home,"upload");
-			dir.mkdirs();
-			File target = new File(dir,String.valueOf(attachNo));
-			attach.transferTo(target);
-			AttachDto attachDto = new AttachDto();
-			attachDto.setAttachNo(attachNo);
-			attachDto.setAttachName(attach.getOriginalFilename());
-			attachDto.setAttachSize(attach.getSize());
-			attachDto.setAttachType(attach.getContentType());
-			attachDao.insert(attachDto);
 			
-			//연결(파일이 있을 때만)
+			
+			
+			if(attachDto != null) {
+				
+				attachDao.delete(attachDto.getAttachNo());
+			File target = new File(dir,String.valueOf(attachDto.getAttachNo()));
+			target.delete();
+			}
+			
+			//파일 추가 및 연결
+			int attachNo = attachDao.sequence();
+			
+			
+			File insertTarget = new File(dir,String.valueOf(attachNo));
+			attach.transferTo(insertTarget);
+			
+			AttachDto insertDto = new AttachDto();
+			insertDto.setAttachNo(attachNo);
+			insertDto.setAttachName(attach.getOriginalFilename());
+			insertDto.setAttachSize(attach.getSize());
+			insertDto.setAttachType(attach.getContentType());
+			attachDao.insert(insertDto);
+			
 			clubDao.connect(clubNo, attachNo);
 		}
 

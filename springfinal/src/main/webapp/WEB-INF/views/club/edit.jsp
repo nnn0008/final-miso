@@ -79,13 +79,24 @@ i want to go home
 
 <script>
 	$(function() {
-		// [1] 모든 .zip 엘리먼트 숨기기
+
+		var form = $('.add');
+
+		form.append(
+		    $("<input>")
+		        .addClass("newInput")
+		        .prop("type", "hidden")
+		        .attr("name", "zipCodeNo")
+		        .val($(".search-input").data("no"))
+		);
+		
+		console.log("zipNo:"+$(".newInput").val());
+		console.log("zipNo:"+$(".search-input").data("no"));
+		
+		
 
 		// [2] 검색어 입력 처리
-		$(".search-input")
-				.on(
-						'input',
-						function() {
+		$(".search-input").on('input',function() {
 							console.log("검색중");
 
 							if (!/^[가-힣]/.test($(this).val())) {
@@ -100,13 +111,11 @@ i want to go home
 								return;
 							}
 
-							$
-									.ajax({
+							$.ajax({
 										url : "http://localhost:8080/rest/zip",
 										method : "get",
 										data : {
-											keyword : keyword
-										},
+											keyword : keyword},
 										success : function(response) {
 											// 검색 결과를 처리
 											var zipList = $('.addr-list');
@@ -134,13 +143,9 @@ i want to go home
 							$(".addr-list")
 									.on("click",".zip",function() {
 
-												var form = $('.add');
 
-												form.append($("<input>")
-														.addClass("newInput")
-														.prop("type", "hidden")
-														.attr("name","zipCodeNo")
-														.val($(this).val()));
+														
+											$(".newInput").val($(this).val());
 
 												var selectedAddress = $(this).text();
 												$(".search-input").val(selectedAddress);
@@ -198,7 +203,7 @@ $(function(){
 	<select class="form-select select2" name="clubCategory">
 	</select> 
 	지역 <input class="form-control search-input" type="text"
-		value="${zipDto.sigungu}">
+		value="${zipDto.sigungu}" data-no="${zipDto.zipCodeNo}">
 	<div class="row">
 		<div class="col">
 			<ul class="list-group addr-list">
