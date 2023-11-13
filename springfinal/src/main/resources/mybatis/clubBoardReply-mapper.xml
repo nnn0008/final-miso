@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="clubBoardReply">
+	
+	<select id="sequence" resultType="int">
+		select club_board_reply_seq.nextval from dual
+	</select>
+	
+	<insert id="add">
+		insert into club_board_reply(
+			club_board_reply_no, club_board_reply_content, club_board_reply_writer, club_member_no, 
+			club_board_no, club_board_reply_group, club_board_reply_parent, club_board_reply_depth
+		)
+		values(
+			#{clubBoardReplyNo}, #{clubBoardReplyContent}, #{clubBoardReplyWriter}, #{clubMemberNo}, 
+			#{clubBoardNo}, #{clubBoardReplyGroup}, #{clubBoardReplyParent}, #{clubBoardReplyDepth}
+		)
+	</insert>
+	
+	<select id="findAll" resultType="ClubBoardDto">
+		select * from club_board_reply where club_board_no = #{clubBoardNo} order by club_board_reply_no asc
+	</select>
+	
+	<select id="find" resultType="ClubBoardDto">
+		select * from club_board_reply where club_board_reply_no = #{clubBoardReplyNo}
+	</select>
+	
+	<delete id="remove">
+		delete club_board_reply where club_board_reply_no = #{clubBoardReplyNo}
+	</delete>
+	
+	<update id="edit">
+		update club_board_reply set club_board_reply_content = #{clubBoardReplyContent} where club_board_reply_no = #{clubBoardReplyNo}
+	</update>
+	
+	<!-- clubMemberNo 찾기 -->
+	<select id="findClubMemberNo" resultType="ClubMemberDto">
+		select * from club_member where club_no = #{clubNo} and club_member_id = #{clubMemberId}
+	</select>
+	
+	
+</mapper>  

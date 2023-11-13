@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.springfinal.dao.AttachDao;
 import com.kh.springfinal.dao.ClubBoardDao;
+import com.kh.springfinal.dao.ClubBoardReplyDao;
 import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dao.ClubMemberDao;
 import com.kh.springfinal.dao.MemberDao;
@@ -25,6 +26,7 @@ import com.kh.springfinal.dto.ClubBoardDto;
 import com.kh.springfinal.dto.ClubBoardImage2Dto;
 import com.kh.springfinal.dto.ClubBoardImage3Dto;
 import com.kh.springfinal.dto.ClubBoardImageDto;
+import com.kh.springfinal.dto.ClubBoardReplyDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.vo.FileLoadVO;
@@ -49,6 +51,9 @@ public class ClubBoardController {
 	
 	@Autowired
 	private FileLoadVO fileLoadVO;
+	
+	@Autowired
+	private ClubBoardReplyDao clubBoardReplyDao;
 	
 	@GetMapping("/write")
 	public String write(@RequestParam int clubNo, Model model) {
@@ -95,9 +100,11 @@ public class ClubBoardController {
 	}
 	
 	@RequestMapping("/detail")
-	public String detail(Model model, @RequestParam int clubBoardNo) {
-		ClubBoardAllDto clubBoardAllDto = clubBoardDao.selectOne(clubBoardNo);		
+	public String detail(Model model, @RequestParam int clubBoardNo, HttpSession session) {
+		ClubBoardAllDto clubBoardAllDto = clubBoardDao.selectOne(clubBoardNo);
+		List<ClubBoardReplyDto> replyList = clubBoardReplyDao.selectList(clubBoardNo);
 		model.addAttribute("clubBoardAllDto", clubBoardAllDto);
+		model.addAttribute("replyList", replyList);
 		return "clubBoard/detail";
 	}
 	
