@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.springfinal.dao.ChatDao;
+import com.kh.springfinal.dao.ChatOneDao;
 import com.kh.springfinal.dao.ChatRoomDao;
 import com.kh.springfinal.dao.ChatUserDao;
 import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dto.ChatDto;
+import com.kh.springfinal.dto.ChatOneDto;
 import com.kh.springfinal.dto.ChatRoomDto;
 import com.kh.springfinal.vo.ChatListVO;
 
@@ -43,6 +45,9 @@ public class WebsocketController {
 	@Autowired
 	private ChatDao chatDao;
 	
+	@Autowired
+	private ChatOneDao chatOneDao;
+	
 	private int chatRoomNo = 0;
 	
 	@RequestMapping("/chat")
@@ -57,7 +62,10 @@ public class WebsocketController {
 
 	    // 해당 사용자가 가지고 있는 동호회 목록 조회
 	    List<ChatRoomDto> chatRoomList = chatRoomDao.chatRoomList(memberId);
-
+	    List<ChatOneDto> oneChatRoomList = chatOneDao.oneChatRoomList(memberId, memberId);
+	    log.debug("oneChatRoomList={}",oneChatRoomList);
+	    
+	    
 	    // 해당 동호회의 번호, 이름, 내용 조회
 	    List<ChatListVO> roomList = new ArrayList<>();
 	    for (ChatRoomDto chatRoom : chatRoomList) {
@@ -68,6 +76,7 @@ public class WebsocketController {
 
 	    model.addAttribute("list", chatRoomList);
 	    model.addAttribute("roomList", roomList);
+	    model.addAttribute("oneChatRoomList", oneChatRoomList);
 
 	    return "chat/roomList";
 	}

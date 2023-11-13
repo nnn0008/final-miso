@@ -1,0 +1,114 @@
+ .bg-gray{
+ 	background: #FCFCFD;
+ 	 color: #2d3436;
+ }
+ 	.bg-miso {
+    color: #2d3436;
+    background-color: #ACCEFF;
+
+}
+.btn-outline-secondary{
+	width: 60px;
+	height: 50px;
+	margin-top: 0.5em;
+	margin-left: 1em;
+} 
+ 	
+ 	.message-list{
+ 		height: 70vh;
+ 		overflow-y: scroll;
+ 		 width: 600PX;
+		border-radius: 15px !important;
+		background-color: #ACCEFF !important;
+ 	}
+ 	
+ 	::-webkit-scrollbar {
+    	width: 0px; /* 스크롤바 너비 */
+	}
+	.alert-success,.btn-success{
+	   color: #2d3436;
+   	 background-color: #ACCEFF;
+   	 border-color:  #ACCEFF;
+	--bs-btn-color: #fff;
+    --bs-btn-bg: ##ACCEFF;;
+    --bs-btn-border-color: #ACCEFF;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #99BCED;
+    --bs-btn-hover-border-color: #99BCED;
+    --bs-btn-focus-shadow-rgb: 78,190,147;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #99BCED;
+    --bs-btn-active-border-color: #99BCED;
+    --bs-btn-active-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: #ACCEFF;
+    --bs-btn-disabled-border-color: #ACCEFF;
+	}
+
+ 	.msg_cotainer{
+		margin-top: auto;
+		margin-bottom: auto;
+		margin-left: 10px;
+		border-radius: 25px;
+		background-color: #FFBCF0;
+		padding: 10px;
+		position: relative;
+	}
+	.msg_cotainer_send{
+		margin-top: auto;
+		margin-bottom: auto;
+		margin-right: 10px;
+		border-radius: 25px;
+		background-color: #66DFD2;
+		padding: 10px;
+		position: relative;
+	}
+	
+
+
+.dm_style {
+    background-color:#FCFCFD;;
+}
+	.msg_nickname{
+	margin-left: 1em;
+	font-size: 13px;
+	}
+	.time-right{
+	margin-top: 2.5em;
+	margin-right: 0.5em;
+	font-size: 12px;
+	}
+	
+	.time-left{
+	margin-top: 2.3em;
+	margin-left: 0.5em;
+	font-size: 12px;
+	}
+
+	.circle-name{
+	margin: 1em;
+	font-size: 17px;
+	text-align: center;
+	font-weight: bold;
+	}
+	.user_info{
+	display: flex; 
+    justify-content: center; 
+	}
+
+	.list-group-item, .list-group{
+	width: 300px;
+	}
+
+	#offcanvasExample{
+	width: 340px;
+	}
+	
+	.container-fluid{
+	width: 600px;
+	}
+	
+	.bg-null{
+		margin-left:1.1em;
+	}
+	
