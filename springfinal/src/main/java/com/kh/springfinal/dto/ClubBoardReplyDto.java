@@ -13,9 +13,15 @@ public class ClubBoardReplyDto {
 	private String clubBoardReplyContent;
 	private Date clubBoardReplyDate;
 	private int clubBoardReplyGroup;
-	private int clubBoardReplyParent;
+	private Integer clubBoardReplyParent;
 	private int clubBoardReplyDepth;
 	private String clubBoardReplyWriter;
 	private int clubMemberNo;
 	private int clubBoardNo;
+	
+	//댓글 작성자 출력용 메소드
+	public String getClubBoardReplyWriter() {
+		if(clubBoardReplyWriter == null) return "탈퇴한 유저";
+		else return clubBoardReplyWriter;
+	}
 }

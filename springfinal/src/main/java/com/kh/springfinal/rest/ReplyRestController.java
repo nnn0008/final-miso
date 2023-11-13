@@ -35,6 +35,16 @@ public class ReplyRestController {
 		clubBoardReplyDto.setClubBoardReplyNo(clubBoardReplyNo);
 		clubBoardReplyDto.setClubBoardReplyWriter(clubBoardReplyWriter);
 		
+		if(clubBoardReplyDto.getClubBoardReplyParent() == null) { //댓글인 경우
+			clubBoardReplyDto.setClubBoardReplyGroup(clubBoardReplyNo);
+		}
+		else { //대댓글인 경우
+			ClubBoardReplyDto originClubBoardReplyDto = clubBoardReplyDao.selectOne(clubBoardReplyDto.getClubBoardReplyParent());
+			clubBoardReplyDto.setClubBoardReplyGroup(originClubBoardReplyDto.getClubBoardReplyGroup());
+			clubBoardReplyDto.setClubBoardReplyDepth(originClubBoardReplyDto.getClubBoardReplyDepth() + 1);
+		}
+		
+		
 		clubBoardReplyDao.insert(clubBoardReplyDto);
 	}
 	

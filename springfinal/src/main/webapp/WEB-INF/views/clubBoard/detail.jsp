@@ -50,9 +50,9 @@
 						$(htmlTemplate).find(".clubBoardReplyContent").text(clubBoardReply.clubBoardReplyContent || "삭제된 댓글입니다");
 						
 						//로그인 한 유저가 작성한 댓글이 아니라면
-						if(){
+						/* if(){
 							$(htmlTemplate).find(".edit-delete").empty();
-						}
+						} */
 						
 						//삭제 버튼을 찾아서 클릭하면
 						$(htmlTemplate).find(".btn-reply-delete").attr("data-board-reply-no", clubBoardReply.clubBoardReplyNo)
