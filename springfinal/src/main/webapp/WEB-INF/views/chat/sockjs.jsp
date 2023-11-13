@@ -62,6 +62,11 @@
 						<div class="row mt-4">
 							<div class="col p-0">
 								<div class="input-group">
+									
+								<label for="fileInput" class="fa-regular fa-image fa-xl">
+							  <input type="file" id="fileInput" style="display: none;">
+							</label>
+								
 									<input type="text" class="form-control message-input" placeholder="메세지를 입력하세요">
 									<button type="button" class="btn send-btn btn-success bg-miso">
 										<i class="fa-regular fa-paper-plane"></i>
