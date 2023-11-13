@@ -12,5 +12,5 @@ public interface ZipCodeDao {
 	
 	List<ZipCodeDto> selectList(String sido,String hdong,
 			String sigungu,String eupmyun);
-
+	ZipCodeDto findZip(int zipCodeNo);
 }

@@ -14,7 +14,7 @@
 		insert into chat_room(
 		chat_room_no
 		) values(
-		chat_room_seq.nextval
+		#{chatRoomNo}
 		)
 	</insert>
 	

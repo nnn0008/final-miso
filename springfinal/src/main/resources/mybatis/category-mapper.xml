@@ -19,6 +19,14 @@
    	 order by minor_category_name asc
    
    </select>
+   
+   <select id="majorFind" resultType="majorCategoryDto">
+    	
+    	SELECT Ma.* FROM MAJOR_CATEGORY ma JOIN MINOR_CATEGORY mi 
+		ON mi.Major_CATEGORY_NO = ma.MAJOR_CATEGORY_no 
+			WHERE mi.MINOR_CATEGORY_NO  = #{minorNo}
+    </select>
+    
     
     
     
