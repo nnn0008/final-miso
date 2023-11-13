@@ -17,7 +17,7 @@
  	.message-list{
  		height: 70vh;
  		overflow-y: scroll;
- 		 width: 600PX;
+ 		width: 600px;
 		border-radius: 15px !important;
 		background-color: #ACCEFF !important;
  	}
@@ -64,8 +64,6 @@
 		position: relative;
 	}
 	
-
-
 .dm_style {
     background-color:#FCFCFD;;
 }

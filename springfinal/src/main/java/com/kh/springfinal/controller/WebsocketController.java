@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.kh.springfinal.dao.ChatDao;
 import com.kh.springfinal.dao.ChatOneDao;
 import com.kh.springfinal.dao.ChatRoomDao;
-import com.kh.springfinal.dao.ChatUserDao;
 import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dto.ChatDto;
 import com.kh.springfinal.dto.ChatOneDto;
@@ -35,9 +34,6 @@ public class WebsocketController {
 	
 	@Autowired
 	private ChatRoomDao chatRoomDao;	
-	
-	@Autowired
-	private ChatUserDao chatUserDao;
 		
 	@Autowired
 	private ClubDao clubDao;
@@ -55,6 +51,7 @@ public class WebsocketController {
 		return "chat/sockjs";
 	}
 	
+	//채팅방 리스트
 	@RequestMapping("/roomList")
 	public String getRoomList(Model model, HttpSession session) {
 	    // 세션에서 로그인한 사용자의 아이디를 가져옴
@@ -62,6 +59,7 @@ public class WebsocketController {
 
 	    // 해당 사용자가 가지고 있는 동호회 목록 조회
 	    List<ChatRoomDto> chatRoomList = chatRoomDao.chatRoomList(memberId);
+	    //해당 사용자가 가지고 있는 1:1룸 목록 조회
 	    List<ChatOneDto> oneChatRoomList = chatOneDao.oneChatRoomList(memberId, memberId);
 	    log.debug("oneChatRoomList={}",oneChatRoomList);
 	    
@@ -80,7 +78,8 @@ public class WebsocketController {
 
 	    return "chat/roomList";
 	}
-
+	
+	//채팅방
 	@RequestMapping("/enterRoom/{chatRoomNo}")
 	public String enterRoom(@PathVariable int chatRoomNo, Model model) {
 	    // 특정 채팅방으로 이동하는 로직을 추가
@@ -92,7 +91,7 @@ public class WebsocketController {
 	    model.addAttribute("chatRoomNo", chatRoomNo);
 	    model.addAttribute("chatRoomInfo", chatRoomInfo);
 	    
-	 // 여기서 해당 채팅방의 메세지 이력을 조회하도록 추가
+	    //해당 채팅방의 메세지 이력을 조회
 	    List<ChatDto> chatHistory = chatDao.getChatHistory(chatRoomNo);
 	    model.addAttribute("chatHistory", chatHistory);
 

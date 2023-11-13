@@ -11,8 +11,8 @@ import com.kh.springfinal.vo.ChatVO;
 public interface ChatRoomDao {
 
 	void insert(ChatRoomDto chatRoomDto);
-	List<ChatRoomDto> list();
-	ChatRoomDto selectOne(String memberId);
+	List<ChatRoomDto> list(); 
+	ChatRoomDto selectOne(String memberId); 
 	List<ChatRoomDto> chatRoomList(String memberId);
 	List<Integer> selectRoomNoByMemberId(String memberId);
 	

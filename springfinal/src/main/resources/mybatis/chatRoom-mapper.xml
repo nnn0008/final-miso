@@ -71,7 +71,7 @@
 	</select>
 	
 	 <!-- 이미 존재하는 1:1 채팅 룸 조회 -->
-    <select id="getExistingChatRoom" resultType="int">
+    <select id="getExistingChatRoom" resultType="ChatDto">
         SELECT chat_room_no
         FROM chat
         WHERE (chat_sender = #{chatSender} AND chat_receiver = #{chatReceiver})

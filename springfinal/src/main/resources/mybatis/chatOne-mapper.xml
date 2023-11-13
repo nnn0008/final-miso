@@ -18,8 +18,7 @@
 		)
 	</insert>
 	
-		 <!-- 이미 존재하는 1:1 채팅 룸 조회 -->
-    <select id="getExistingChatRoom" resultType="int">
+    <select id="getExistingChatRoom" resultType="ChatOneDto">
         SELECT chat_room_no
         FROM chat_one
         WHERE (chat_sender = #{chatSender} AND chat_receiver = #{chatReceiver})
@@ -29,5 +28,26 @@
     <select id="roomList" resultType="ChatOneDto">
    SELECT * FROM chat_one WHERE chat_sender = #{chatSender} OR chat_receiver = #{chatReceiver}
     </select>
+    
+    <select id="oneChatMemberInfo" resultType="ChatOneDto">
+    SELECT c.*, m.member_name, m.member_level
+	FROM chat_one c
+	JOIN member m ON (c.chat_sender = m.member_id OR c.chat_receiver = m.member_id)
+	WHERE c.chat_sender = #{chatSender} OR c.chat_receiver = #{chatReceiver}
+    </select>
+
+	<select id="oneChatMemberList" resultType="ChatOneVO">
+	SELECT c.*, m.member_name, m.member_level
+	FROM chat_one c
+	JOIN member m ON (c.chat_sender = m.member_id OR c.chat_receiver = m.member_id)
+	WHERE c.CHAT_ROOM_NO = #{chatRoomNo}
+	</select>
+	
+	<select id="oneChatMemberName" resultType="ChatOneVO">
+	SELECT m.member_id, m.member_name, m.member_level
+	FROM chat_one c
+	JOIN member m ON (c.chat_sender = m.member_id OR c.chat_receiver = m.member_id)
+	WHERE c.CHAT_ROOM_NO = #{chatRoomNo}
+	</select>
 
 </mapper>

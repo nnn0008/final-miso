@@ -54,12 +54,12 @@ section > aside:first-child {
 section > aside:last-child {
     right: 0;
     left: auto;
-}
+    }
 
 section > article {
     flex-grow: 1;
     padding-left: 200px; /* 왼쪽 aside 너비보다 큰 여백 추가 */
-    padding-right: 200px; /* 오른쪽 aside 너비보다 큰 여백 추가 */
+    padding-right: 220px; /* 오른쪽 aside 너비보다 큰 여백 추가 */
     box-sizing: border-box; /* 여백을 포함하여 전체 너비 유지 */
 }
 
