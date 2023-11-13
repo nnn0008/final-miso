@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
+    <jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
+
 
 <!doctype html>
 <html lang="ko">
@@ -29,16 +32,10 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col">
-				
-				<div class="row mt-4">
-					<div class="col">
-
-					</div>
-				</div>
 			
 						
 						<!-- 메세지 헤더 -->
-						<div class="row card-header msg_head m-2">
+						<div class="row card-header msg_head">
 
 
 						    <div class="col">					    	
@@ -65,8 +62,13 @@
 						<div class="row mt-4">
 							<div class="col p-0">
 								<div class="input-group">
+									
+								<label for="fileInput" class="fa-regular fa-image fa-xl">
+							  <input type="file" id="fileInput" style="display: none;">
+							</label>
+								
 									<input type="text" class="form-control message-input" placeholder="메세지를 입력하세요">
-									<button type="button" class="btn btn-success send-btn">
+									<button type="button" class="btn send-btn btn-success bg-miso">
 										<i class="fa-regular fa-paper-plane"></i>
 										보내기
 									</button>
@@ -79,7 +81,7 @@
 
 
 <!-- 모달 -->
-<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true"  data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -88,8 +90,8 @@
       </div>
       <div class="modal-body">
         <!-- 프로필 카드 내용 -->
-        <div class="card" style="border-radius: 15px;">
-          <div class="card-body text-center">
+        <div class="modal-card" style="border-radius: 15px;">
+          <div class="modal-card-body text-center">
             <div class="mt-3 mb-4">
               <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
                 class="rounded-circle img-fluid modal-profile-image" style="width: 100px;" />
@@ -98,34 +100,16 @@
             <p class="text-muted mb-4 modal-profile-id"></p>
             <div class="mb-4 pb-2">
              <button type="button" class="btn btn-success bg-miso dm-send">메세지 보내기</button>
-<!--               <button type="button" class="btn btn-outline-primary btn-floating"> -->
-<!--                 <i class="fab fa-facebook-f fa-lg"></i> -->
-<!--               </button> -->
-<!--               <button type="button" class="btn btn-outline-primary btn-floating"> -->
-<!--                 <i class="fab fa-twitter fa-lg"></i> -->
-<!--               </button> -->
-<!--               <button type="button" class="btn btn-outline-primary btn-floating"> -->
-<!--                 <i class="fab fa-skype fa-lg"></i> -->
-<!--               </button> -->
             </div>
-            <!-- ... (기존의 프로필 카드 내용) ... -->
           </div>
         </div>
-        <!-- 프로필 카드 내용 -->
       </div>
-      
-      <!-- 
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary">변경 사항 저장</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-      </div>
-      -->
     </div>
   </div>
 </div>
 
 
-            </div>
+</div>
    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
       <!-- 웹소켓 서버가 SockJS일 경우 페이지에서도 SockJS를 사용해야 한다 -->
@@ -141,16 +125,15 @@
 	
 	window.socket = new SockJS("${pageContext.request.contextPath}/ws/chat");
 	
-	var chatSender = "${sessionScope.name}";
+	var chatSender = "${sessionScope.name}"; //발신자
 	var memberName = null;
 	//console.log(memberName);
+	
+	var oneChatMemberName = null;
 	
 	var prevMessageDate = null;
 	var clubName;
 
-
-	// 사용자 목록을 저장할 배열
-	
 	window.socket.onopen = function (e) {
 	    console.log('Info: connection opened.');
 	    console.log("chatRoomNo:", chatRoomNo); // 디버그용 로그 추가
@@ -189,13 +172,17 @@
 	
 		
 		var data = JSON.parse(e.data);
-		//console.log(data);
+		console.log(data);
 		
 		clubName = data.clubName;
 		//console.log(data.clubName);
 		
 		$(".circle-name").text(clubName);
 
+		if(data.messageType === "dm" && data.chatRoomNo){
+			moveToRoom(data.chatRoomNo);
+		}
+		
 		 // 만약 메세지 타입이 dm이면서 receiver가 있는 경우
 	    if (data.messageType === "dm" && data.chatReceiver) {
 	    	 console.log("Before moveToRoom: ", data); // 이 줄 추가
@@ -254,52 +241,52 @@
 		//사용자가 접속하거나 종료했을 때 서버에서 오는 데이터로 목록을 갱신
 		//사용자가 메세지를 보냈을 때 서버에서 이를 전체에게 전달한다
 		if (data.roomMembers) { // 목록 처리
-   	 $(".client-list").empty();
-
-    var ul = $("<ul>").addClass("list-group");
-    var loggedInUserId = "${sessionScope.name}";
-    var loggedInUserItem = null;
-
-    //console.log("chatRoomNo: " + chatRoomNo);
-
-    for (var i = 0; i < data.roomMembers.length; i++) {
-        var memberId = data.roomMembers[i].memberId;
-        var roomNo = data.roomMembers[i].chatRoomNo;
-        var memberLevel = data.roomMembers[i].memberLevel;
-        var memberName = data.roomMembers[i].memberName;
-        //console.log("memberName2: " + memberName);
-        
-        // 레벨에 따라 배지 스타일 변경
-        badgeClass = "bg-warning";
-        if (memberLevel === "관리자") {
-            badgeClass = "bg-danger";
-        } else if (memberLevel === "일반유저") {
-            var badgeClass = "bg-miso";
-        }
-
-        var listItem = $("<li>")
-            .addClass("list-group-item d-flex justify-content-between align-items-center")
-            .append(
-                $("<img>").addClass("rounded-circle user_img").attr("src", "${pageContext.request.contextPath}/images/member.png").css("width", "50px")
-            )
-            .append(
-                $("<span>").text(memberName)
-            )
-            .append(
-                $("<span>").addClass("badge rounded-pill").addClass(badgeClass)
-                    .text(memberLevel)
-            );
-
-        if (memberId === loggedInUserId) {
-            // 본인의 아이디를 찾았을 때 별도로 저장
-            loggedInUserItem = listItem;
-            listItem.append($("<span>").addClass("badge rounded-pill bg-warning").text("나"));
-        } else {
-            // "나" 라벨을 추가하지 않고 공백을 추가하여 크기를 맞춤
-            listItem.append($("<span>").addClass("badge rounded-pil bg-null").text(" "));
-            ul.append(listItem);
-        }
-    }
+	   	 $(".client-list").empty();
+	
+	    var ul = $("<ul>").addClass("list-group");
+	    var loggedInUserId = "${sessionScope.name}";
+	    var loggedInUserItem = null;
+	
+	    //console.log("chatRoomNo: " + chatRoomNo);
+	
+	    for (var i = 0; i < data.roomMembers.length; i++) {
+	        var memberId = data.roomMembers[i].memberId;
+	        var roomNo = data.roomMembers[i].chatRoomNo;
+	        var memberLevel = data.roomMembers[i].memberLevel;
+	        var memberName = data.roomMembers[i].memberName;
+	        //console.log("memberName2: " + memberName);
+	        
+	        // 레벨에 따라 배지 스타일 변경
+	        badgeClass = "bg-warning";
+	        if (memberLevel === "관리자") {
+	            badgeClass = "bg-danger";
+	        } else if (memberLevel === "일반유저") {
+	            var badgeClass = "bg-miso";
+	        }
+	
+	        var listItem = $("<li>")
+	            .addClass("list-group-item d-flex justify-content-between align-items-center")
+	            .append(
+	                $("<img>").addClass("rounded-circle user_img").attr("src", "${pageContext.request.contextPath}/images/member.png").css("width", "50px")
+	            )
+	            .append(
+	                $("<span>").text(memberName)
+	            )
+	            .append(
+	                $("<span>").addClass("badge rounded-pill").addClass(badgeClass)
+	                    .text(memberLevel)
+	            );
+	
+	        if (memberId === loggedInUserId) {
+	            // 본인의 아이디를 찾았을 때 별도로 저장
+	            loggedInUserItem = listItem;
+	            listItem.append($("<span>").addClass("badge rounded-pill bg-warning").text("나"));
+	        } else {
+	            // "나" 라벨을 추가하지 않고 공백을 추가하여 크기를 맞춤
+	            listItem.append($("<span>").addClass("badge rounded-pil bg-null").text(" "));
+	            ul.append(listItem);
+	        }
+	    }
 
     if (loggedInUserItem) {
         // 본인의 아이디를 목록의 맨 위에 추가
@@ -321,6 +308,8 @@
 		   // console.log("sender",chatSender)
 		    
 		    var memberName = data.memberName;
+		    var oneChatMemberName = data.oneChatMemberName;
+			console.log("oneChatMemberName",oneChatMemberName);
 		   
 		   // console.log(memberName);
 		    
@@ -392,7 +381,7 @@
 		    	        dataType: 'json',
 		    	        success: function(data) {
 		    	            // 성공적으로 데이터를 받아왔을 때 처리
-		    	            console.log(data); // 여기서 data는 List<MemberDto> 형태로 예상됩니다.
+		    	            console.log(data); // 여기서 data는 List<MemberDto> 형태
 
 		    	            // data 배열에서 클릭된 멤버의 정보 찾기
 		    	            var selectedMember = data.find(function(member) {
@@ -420,13 +409,15 @@
 		    	        }
 		    	    });
 		    	});
-
-
+		    	
+				   console.log(data.memberId); 
+				   console.log(data.memberName);
+				
 		    	var contentDiv = $("<div>").addClass("d-flex flex-column");
-		    	        
+		    	
 		    	var nicknameDiv = $("<div>").addClass("msg_nickname")
-		    	    .text(memberName); // 닉네임을 표시
-
+		        .text(data.memberId === data.memberName ? oneChatMemberName : memberName);
+		    	
 		    	var messageContainer = $("<div>").addClass("msg_cotainer")
 		    	    .append(content);
 
@@ -564,5 +555,6 @@
 		
 	</script>
 </body>
-
 </html>
+
+<jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>

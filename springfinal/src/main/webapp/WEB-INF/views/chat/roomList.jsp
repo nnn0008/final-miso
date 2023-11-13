@@ -14,7 +14,8 @@
     <h5>${sessionScope.name}</h5>
     <h2>Chat Room List</h2>
 
-
+<hr>
+ <h2>동호회 채팅</h2>
     <c:forEach var="roomList" items="${roomList}">
         ${roomList.chatRoomNo} ${roomList.clubName} ${roomList.clubExplain} 
         <a href="/chat/enterRoom/${roomList.chatRoomNo}">
@@ -23,7 +24,8 @@
         <br/>
     </c:forEach>
     
-
+<hr>
+ <h2>개인 채팅</h2>
  <c:forEach var="oneChatRoom" items="${oneChatRoomList}">
     ${oneChatRoom.chatRoomNo} 
 
