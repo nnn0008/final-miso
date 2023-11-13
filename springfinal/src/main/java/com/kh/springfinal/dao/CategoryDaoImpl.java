@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.springfinal.dto.MajorCategoryDto;
 import com.kh.springfinal.dto.MinorCategoryDto;
+import com.kh.springfinal.dto.ZipCodeDto;
 
 @Repository
 public class CategoryDaoImpl implements CategoryDao{
@@ -26,6 +27,13 @@ public class CategoryDaoImpl implements CategoryDao{
 		
 		return sqlSession.selectList("category.minorCategory",majorCategoryNo);
 	}
+
+	@Override
+	public MajorCategoryDto findMajor(int majorCategoryNo) {
+		return sqlSession.selectOne("category.majorFind",majorCategoryNo);
+	}
+
+	
 	
 	
 

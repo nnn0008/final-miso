@@ -10,6 +10,29 @@
  
     $(function(){
     	
+    	var no = $(this).find(":selected").val()
+		
+    	console.log(no);
+    		
+    	$.ajax({
+            url:"http://localhost:8080/rest/category",
+            method:"get",
+            data: {majorCategoryNo:no},
+            success:function(response){
+            	console.log(response)
+            	
+            var select2 = $('.select2');
+             select2.empty(); 
+              
+            for (var i = 0; i < response.length; i++) {
+             select2
+             .append($("<option>")
+            		 .val(response[i].minorCategoryNo)
+            		 .text(response[i].minorCategoryName));
+                }    
+            },
+        });
+    	
     	$(".select1").change(function(){
     		
     		var no = $(this).find(":selected").val()

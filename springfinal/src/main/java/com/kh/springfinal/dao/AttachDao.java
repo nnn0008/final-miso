@@ -6,4 +6,5 @@ public interface AttachDao {
 	int sequence();
 	void insert(AttachDto attachDto);
 	AttachDto selectOne(int attachNo);
+	boolean delete(int attachNo);
 }

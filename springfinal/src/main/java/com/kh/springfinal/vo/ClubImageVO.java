@@ -1,4 +1,6 @@
-package com.kh.springfinal.dto;
+package com.kh.springfinal.vo;
+
+import com.kh.springfinal.dto.ClubMemberDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
-public class ClubDto {
+public class ClubImageVO {
 	
 	private int clubNo;
 	private String clubOwner;
@@ -18,6 +20,6 @@ public class ClubDto {
 	private int clubPersonnel;
 	private String clubPremium;
 	private String clubDate;
-	
+	private int attachNo;
 
 }
