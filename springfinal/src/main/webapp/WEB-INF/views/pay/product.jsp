@@ -108,7 +108,7 @@ $(function(){
          return;
       }
       
-      var form = $("<form>").attr("action", "pay/purchase").attr("method", "get");
+      var form = $("<form>").attr("action", "purchase").attr("method", "get");
       
       var count = 0;
       
@@ -141,11 +141,3 @@ $(function(){
 
 
 <jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>
-
-	
-	
-
-
-
-
-

@@ -6,4 +6,5 @@ import lombok.Data;
 @Data
 public class PurchaseVO {
 	private int productNo;
+	private int qty;
 }

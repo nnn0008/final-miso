@@ -11,6 +11,7 @@
     	${confirmVO.productDto.productName}
     	-
     	${confirmVO.productDto.productPrice}원
+    	(구매수량 : ${confirmVO.purchaseVO.qty}개)
     	-
     	총 ${confirmVO.total}원
     </div>
