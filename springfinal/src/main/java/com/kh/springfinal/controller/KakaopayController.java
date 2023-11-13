@@ -22,6 +22,8 @@ import com.kh.springfinal.dto.ProductDto;
 import com.kh.springfinal.service.KakaoPayService;
 import com.kh.springfinal.vo.KakaoPayApproveRequestVO;
 import com.kh.springfinal.vo.KakaoPayApproveResponseVO;
+import com.kh.springfinal.vo.KakaoPayCancelRequestVO;
+import com.kh.springfinal.vo.KakaoPayCancelResponseVO;
 import com.kh.springfinal.vo.KakaoPayReadyRequestVO;
 import com.kh.springfinal.vo.KakaoPayReadyResponseVO;
 import com.kh.springfinal.vo.PurchaseConfirmVO;
@@ -53,6 +55,9 @@ public class KakaopayController {
 	@GetMapping("/purchase")
 	public String purchase(@ModelAttribute PurchaseListVO listVO, Model model) {
 		List<PurchaseVO> purchaseList = listVO.getProduct();
+		if (purchaseList == null) {
+		    purchaseList = new ArrayList<>();
+		}
 		
 		List<PurchaseConfirmVO> confirmList = new ArrayList<>();//옮겨닮을 리스트
 		int total = 0;
@@ -93,7 +98,7 @@ public class KakaopayController {
 	}
 	
 	@GetMapping("purchase/success")
-	public String success(HttpSession session,@RequestParam String pg_token) throws URISyntaxException {
+	public String success(HttpSession session,@RequestParam String pg_token, @ModelAttribute ProductDto productDto) throws URISyntaxException {
 		//session에 저장한 flash value 추출 및 삭제
 				KakaoPayApproveRequestVO request=
 						(KakaoPayApproveRequestVO)session.getAttribute("approve");
@@ -105,6 +110,8 @@ public class KakaopayController {
 				request.setPgToken(pg_token);//토큰 설정
 				KakaoPayApproveResponseVO response = kakaoPayService.approve(request);//승인요청
 				
+
+			
 				//[1] 결제번호 생성
 				int paymentNo = Integer.parseInt(response.getPartnerOrderId());
 				
@@ -114,20 +121,12 @@ public class KakaopayController {
 						.paymentMember(response.getPartnerUserId())//결제자ID
 						.paymentTid(response.getTid())//PG사 거래번호
 						.paymentName(response.getItemName())//PG사 결제상품명
+						.paymentProduct(productDto.getProductNo())
+						.paymentProduct(productDto.getProductNo())
 						.paymentPrice(response.getAmount().getTotal())//총 결제액
 						.paymentRemain(response.getAmount().getTotal())//총 취소가능액
 						.build());
-				//[3] 상품 상세정보를 등록
-				List<PurchaseVO> list = listVO.getProduct();
-				for(PurchaseVO vo : list) {
-					ProductDto productDto = productDao.selectOne(vo.getProductNo());//상품정보 조회
-					paymentDao.insert(PaymentDto.builder()
-							.paymentNo(paymentNo)
-							.paymentProduct(vo.getProductNo())
-							.paymentName(productDto.getProductName())
-							.paymentPrice(productDto.getProductPrice())
-							.build());
-				}
+			
 				
 		return "redirect:pay/successResult";
 	}
@@ -144,5 +143,38 @@ public class KakaopayController {
 		model.addAttribute("list",paymentDao.selectTotalListByMember(memberId));
 		
 		return"pay/list";
+	}
+	
+	@RequestMapping("/cancel")
+	public String cancel(@RequestParam int paymentNo) throws URISyntaxException {
+		PaymentDto paymentDto = paymentDao.selectOne(paymentNo);
+		if(paymentDto == null || paymentDto.getPaymentRemain() == 0) {
+//			throw new NoTargetException("이미 취소된 결제 입니다");
+			 return "errorPage";
+		}
+		KakaoPayCancelRequestVO request = KakaoPayCancelRequestVO.builder()
+                .tid(paymentDto.getPaymentTid()) //거래번호
+                .cancelAmount(paymentDto.getPaymentRemain()) //잔여금액
+                .build();
+       KakaoPayCancelResponseVO response = kakaoPayService.cancel(request);
+       
+       paymentDao.cancel(paymentDto.builder()
+    		   .paymentNo(paymentNo).paymentRemain(0)
+    		   .build());
+		
+       return "redirect:list";
+	}
+	
+	@RequestMapping("purchase/cancel")
+	public String cancel(HttpSession session) {
+		session.removeAttribute("approve");
+		session.removeAttribute("listVO");
+		return"cancelErrorPage";
+	}
+	@RequestMapping("purchase/fail")
+	public String fail(HttpSession session) {
+		session.removeAttribute("approve");
+		session.removeAttribute("listVO");
+		return "failErrorPage";
 	}
 }

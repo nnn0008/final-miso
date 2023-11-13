@@ -10,15 +10,13 @@
     	</select>
     	
     	<insert id="insert">
-    		insert into payement(
+    		insert into payment(
     			payment_no,payment_member,payment_product,payment_tid,
-    			payment_name,payment_price,payment_remain,payment_time,
-    			payment_status
+    			payment_name,payment_price,payment_remain,payment_status
     		)
     		values(
     			#{paymentNo},#{paymentMember},#{paymentProduct},#{paymentTid},
-    			#{payementName},#{paymentPrice},#{paymentReamin},#{paymentTime},
-    			'완료'
+    			#{paymentName},#{paymentPrice},#{paymentRemain},'완료'
     		)
     	</insert>
     	

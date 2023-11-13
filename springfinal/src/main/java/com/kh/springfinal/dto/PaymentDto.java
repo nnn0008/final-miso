@@ -18,4 +18,8 @@ public class PaymentDto {
 	private int paymentRemain;//잔여 결제 금액(취소 가능 금액)
 	private Date paymentTime;//결제시간
 	private String paymentStatus;//결재상태(완료,취소)
+	
+	public boolean isCanceled() {
+		return paymentStatus.equals("취소");
+	}
 }
