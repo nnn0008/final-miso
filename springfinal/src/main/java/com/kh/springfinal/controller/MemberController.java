@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dto.MemberDto;
-//import com.kh.springhome.dto.MemberBlockDto;
-//import com.kh.springhome.error.AuthorityException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,14 +50,27 @@ public class MemberController {
 	public String login() {
 		return "member/login";
 	}
+	//임시 로그인(아이디 새로 만든거 쓰실분은 아래 코드 주석풀어서 이용해주세요)
+	  @PostMapping("/login")
+	   public String login(@RequestParam String memberId, @RequestParam String memberPw, HttpSession session) {
+		  	MemberDto memberDto = memberDao.loginId(memberId);
+	         //세션에 아이디 저장+등급 저장
+	         session.setAttribute("name", memberId);
+	         session.setAttribute("level", memberDto.getMemberLevel());
+	         session.setAttribute("memberName", memberDto.getMemberName());
+
+	         //메인페이지로 이동
+	         return "redirect:/"; 
+	      };
+	
 //	@PostMapping("/login")
 //	public String login(HttpServletResponse httpServletResponse,
 //						@RequestParam String memberId, @RequestParam String memberPw,
 //						@RequestParam(required = false) String saveId,
 //								HttpSession session) {
-//		//db 유저 정보
+		//db 유저 정보
 //		MemberDto userDto = memberDao.selectOne(memberId, memberPw);
-//		// id 틀리면 되돌림
+		// id 틀리면 되돌림
 //		if(userDto==null) {
 //			if(saveId != null) {
 //				Cookie cookie = new Cookie("saveId", memberId);
@@ -73,9 +84,9 @@ public class MemberController {
 //			}
 //			return "redirect:login?error";
 //		}
-//		//db Pw
+		//db Pw
 //		String userPw = userDto.getMemberPw();
-//		//db Pw 와 입력값Pw 검사 후 session입력
+		//db Pw 와 입력값Pw 검사 후 session입력
 //		if(userPw.equals(memberPw)) {
 //			session.setAttribute("name", userDto.getMemberId());
 //			session.setAttribute("level", userDto.getMemberLevel());
@@ -90,7 +101,7 @@ public class MemberController {
 //				cookie.setMaxAge(0);//4주
 //				httpServletResponse.addCookie(cookie);
 //			}
-//			
+			
 //		}
 //		else {
 //			if(saveId != null) {
@@ -105,22 +116,18 @@ public class MemberController {
 //			}
 //			return "redirect:login?error";
 //		}
-//		//로그인 완료창으로 보내기
+		//로그인 완료창으로 보내기
 //		return "redirect:../";	
 //	}
 	
-
-	@PostMapping("/login")
-	public String login(@RequestParam String memberId, @RequestParam String memberPw, HttpSession session) {
-
-			//세션에 아이디 저장+등급 저장
-			session.setAttribute("name", memberId);
-			session.setAttribute("level", memberPw);
-
-			//메인페이지로 이동
-			return "redirect:/"; 
-		}
-	
+			//ChatRoomDto chatRoomDto = chatRoomDao.selectOne(userDto.getMemberId());
+			//log.debug("chatRoomDto: {}", chatRoomDto);
+			//
+			//if(chatRoomDto != null ) { //채팅방 번호가 있다면
+			//	session.setAttribute("chatRoomNo", chatRoomDto.getChatRoomNo()); //채팅방 번호를 넣어라
+			//}		
+			
+			
 		
 	
 	//아이디 찾기

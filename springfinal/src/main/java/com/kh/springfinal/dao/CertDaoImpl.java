@@ -26,7 +26,7 @@ public class CertDaoImpl implements CertDao{
 
 	@Override
 	public CertDto selectOne(String certEmail) {
-		CertDto certDto = sqlSession.selectOne(certEmail);
+		CertDto certDto = sqlSession.selectOne("cert.selectOne",certEmail);
 		return certDto;
 	}
 }

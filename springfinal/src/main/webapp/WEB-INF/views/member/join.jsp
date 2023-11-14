@@ -40,7 +40,7 @@
                     display: none;
                 }
 
-                .btn-join {
+                .btn-join, .email-check {
                     pointer-events: none;
                     opacity: 0.5;
                     /* 또는 다른 값을 사용하여 투명도 조절 가능 */
@@ -146,6 +146,7 @@
                                 $("[name=checkPw]").blur(function () {
                                     $(this).removeClass("is-invalid is-valid");
                                     $(".checkPw-feed").removeClass("is-invalid");
+                                    if($("[name=memberPw]").val()=="")return;
                                     if ($("[name=memberPw]").val() == $(this).val()) {
                                         $("[name=check2]").prop("checked", true);
                                         $(this).addClass("is-valid");
@@ -185,15 +186,25 @@
                                                 "text-danger");
                                             $("[name=check4]").prop("checked",
                                                 false);
-                                        } else {
+                                            $(".email-check").css({
+                                                "pointer-events": "none",
+                                                "opacity": "0.5" 
+                                            });
+                                        } 
+                                        else {
                                             $(this).addClass("is-valid");
                                             $("[name=check4]")
                                                 .prop("checked", true);
+                                            $(".email-check").css({
+                                                "pointer-events": "auto",
+                                                "opacity": "1" // 투명도를 1로 설정하여 다시 원래 상태로 만듭니다.
+                                            });
                                         }
                                     });
 
                                 //생년월일 형식 검사 코드
                                 $("[name=memberBirth]").blur(function () {
+                                	if($(this).val()=="") return;
                                     var inputContent = $(this).val();
                                     var regex = /^\d{8}$/;
                                     var isValid = regex.test(inputContent)
@@ -210,6 +221,7 @@
                                 //연락처 형식 검사 코드
                                 $("[name=memberContact]").blur(
                                     function () {
+                                    	if($(this).val()=="") return;
                                         var inputContent = $(this).val();
                                         var regex = /^\d{10,11}$/;
                                         var isValid = regex.test(inputContent)
@@ -218,43 +230,87 @@
                                             "text-danger");
                                         if (isValid) {
                                             $(this).addClass("is-valid");
-                                        } else {
+                                        } 
+                                        else {
                                             $(this).addClass("is-invalid");
                                             $(".d-content-feedback").addClass(
                                                 "text-danger");
                                         }
                                     });
-
-                                $(".check")
-                                    .change(
-                                        function () {
+                                $(".check").change(function () {
                                             if ($(".check").length == $(".check:checked").length) {
                                                 $(".btn-join").css({
                                                     "pointer-events": "auto",
                                                     "opacity": "1" // 투명도를 1로 설정하여 다시 원래 상태로 만듭니다.
                                                 });
-                                            } else {
+                                            } 
+                                            else {
                                                 (".btn-join").css({
                                                     "pointer-events": "none",
                                                     "opacity": "0.5" // 투명도를 1로 설정하여 다시 원래 상태로 만듭니다.
                                                 });
                                             }
                                         })
-                                //이메일 인증번호 발송		
+                                
+                                 //이메일 인증번호 발송		
                                 $(".email-check").click(function (e) {
                                     e.preventDefault();
+                                	$(".email-feedback").addClass("is-valid");
+                                	$(this)
+                                    .text("다시 전송하기")
+                                    .css({
+                                      "pointer-events": "none",
+                                      "opacity": "0.5" // 투명도를 0.5로 설정하여 흐려지는 효과
+                                    })
+                                    .delay(5000)
+                                    .queue(function (next) {
+                                      // 애니메이션이 완료된 후에 실행될 코드
+                                      $(this).css({
+                                        "pointer-events": "auto",
+                                        "opacity": "1" // 투명도를 1로 설정하여 다시 원래 상태로 만듭니다.
+                                      });
+                                      next(); // 다음 큐 아이템으로 진행
+                                    });
+
                                     var memberEmail = $("[name=memberEmail]").val();
-                                    if (certEmail.length == 0) return;
+                                    if (memberEmail.length == 0) return;
                                     $.ajax({
                                         url: "http://localhost:8080/cert/send",
                                         method: "post",
                                         data: { certEmail: memberEmail },
                                         success: function (response) {
-                                            console.log("잠시 대기중");
+                                        	
                                         }
                                     });
                                 });
-
+								//이메일 인증번호 검사
+								$("#checkNumber").blur(function(e) {
+									e.preventDefault();
+									var certNumber = $(this).val();
+									var certEmail = $("[name=memberEmail]").val();
+									$(".checkNumber-feed").removeClass("is-invalid");
+									$("#checkNumber").removeClass("is-invalid is-valid");
+									$.ajax({
+										url:"http://localhost:8080/cert/check",
+										method:"post",
+										data:{
+											certEmail:certEmail,
+											certNumber:certNumber
+										},
+										 success: function(response) {
+											if(response=="Y"){
+												$("#checkNumber").addClass("is-valid");
+												$(".check-number").prop("checked", true);
+											}
+											else{
+												$(".checkNumber-feed").addClass("is-invalid");
+												$("#checkNumber").addClass("is-invalid");
+												$(".check-number").prop("checked", false);
+											}
+										}
+									});
+								});
+                                
                             });
                         </script>
 
@@ -354,20 +410,25 @@
                                                             class="btn btn-primary justify-content-end email-check">인증번호
                                                             발송</button>
                                                         <div class="invalid-feedback">이메일 형식의 맞게 적어주세요.</div>
+                                                        <div class="valid-feedback">이메일을 발송하였습니다</div>
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            <div class="input-group has-validation">
-                                                <div class="form-floating">
-                                                    <input type="text" class="form-control" id="checkNumber"
-                                                        placeholder="인증번호" required>
-                                                    <label for="checkNumber">인증번호</label>
-                                                </div>
-                                                <div class="invalid-feedback">
-                                                    인증번호가 틀렸습니다. 다시 한번 확인해주십세요.
-                                                </div>
-                                            </div>
+											<div class="row mt-3">
+												<div class="col">
+		                                            <div class="input-group has-validation">
+		                                                <div class="form-floating checkNumber-feed">
+		                                                    <input type="text" class="form-control" id="checkNumber"
+		                                                        placeholder="인증번호" required>
+		                                                        <input type="text" class="check check-number">
+		                                                    <label for="checkNumber">인증번호</label>
+		                                                </div>
+		                                                <div class="invalid-feedback">
+		                                                    인증번호가 틀렸습니다. 다시 한번 확인해주십세요.
+		                                                </div>
+		                                            </div>
+												</div>
+											</div>
 
 
                                             <div class="row mt-3">
