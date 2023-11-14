@@ -30,4 +30,3 @@ public class CertDaoImpl implements CertDao{
 		return certDto;
 	}
 
-}

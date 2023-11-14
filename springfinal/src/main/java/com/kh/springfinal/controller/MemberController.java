@@ -77,7 +77,18 @@ public class MemberController {
 		if(userPw.equals(memberPw)) {
 			session.setAttribute("name", userDto.getMemberId());
 			session.setAttribute("level", userDto.getMemberLevel());
-			session.setAttribute("memberName", userDto.getMemberName());	
+      session.setAttribute("memberName", userDto.getMemberName());	
+			if(saveId != null) {
+				Cookie cookie = new Cookie("saveId", memberId);
+				cookie.setMaxAge(4*7*24*60*60);//4주
+				httpServletResponse.addCookie(cookie);
+			}
+			else {
+				Cookie cookie = new Cookie("saveId", memberId);
+				cookie.setMaxAge(0);//4주
+				httpServletResponse.addCookie(cookie);
+			}
+			
 		}
 		else {
 			if(saveId != null) {

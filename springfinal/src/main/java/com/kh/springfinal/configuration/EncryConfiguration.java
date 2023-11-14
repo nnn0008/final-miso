@@ -12,4 +12,3 @@ public class EncryConfiguration {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		return encoder;
 	}
-}

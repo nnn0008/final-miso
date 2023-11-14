@@ -56,6 +56,7 @@ public class MemberDaoImpl implements MemberDao{
 		List<MemberDto> idList = sqlSession.selectList("member.memberIdListByEmail", params);
 		return idList;
 	}
+  
 	@Override
 	public MemberDto changePw(String memberId) {
 		MemberDto memberDto = sqlSession.selectOne("member.loginId", memberId);

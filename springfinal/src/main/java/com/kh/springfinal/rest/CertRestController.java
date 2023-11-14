@@ -28,7 +28,7 @@ public class CertRestController {
 	private JavaMailSender sender;
 	
 	@PostMapping("/send")
-	public void send(@RequestParam String certEmail) throws MessagingException{
+	public void send(@RequestParam String certEmail) throws MessagingException, javax.mail.MessagingException{
 		//인증번호 생성
 		Random r = new Random();
 		int number = r.nextInt(1000000);
@@ -36,10 +36,10 @@ public class CertRestController {
 		String certNumber = fm.format(number);
 		//이메일 발송
 		MimeMessage message=sender.createMimeMessage();
-//		MimeMessageHelper helper = new MimeMessageHelper(message, false, "UTF-8");
-//		
-//		helper.setTo("hahanul987@gmail.com");
-//		helper.setSubject(certNumber);
+		MimeMessageHelper helper = new MimeMessageHelper(message, false, "UTF-8");
+		
+		helper.setTo("hahanul987@gmail.com");
+		helper.setSubject("[miso] 인증번호를 확인해주세요");
 		//DB 저장
 		certDao.delete(certEmail);
 		CertDto certDto = new CertDto();

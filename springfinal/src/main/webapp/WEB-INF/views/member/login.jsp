@@ -107,8 +107,6 @@
                             <a href="./join"><button class="btn">회원가입</button></a>
                         </div>
                     </div>
-                
-
                 </div>
             </div>
         </div>
