@@ -62,17 +62,19 @@
 						<div class="row mt-4">
 							<div class="col p-0">
 								<div class="input-group">
-									
-								<label for="fileInput" class="fa-regular fa-image fa-xl">
-							  <input type="file" id="fileInput" style="display: none;">
-							</label>
-								
+									<div class="col">
+									<input type="file" id="fileInput"  onchange="uploadFile()">
+
+</div>
+								<div class="col">
 									<input type="text" class="form-control message-input" placeholder="메세지를 입력하세요">
 									<button type="button" class="btn send-btn btn-success bg-miso">
 										<i class="fa-regular fa-paper-plane"></i>
 										보내기
 									</button>
+									</div>
 								</div>
+								
 							</div>
 						</div>
 
@@ -124,7 +126,8 @@
 	var chatRoomNo = getRoomNoFromURL();  // 채팅방 번호를 얻어옴
 	
 	window.socket = new SockJS("${pageContext.request.contextPath}/ws/chat");
-	
+	window.fileUploadSocket = new SockJS("${pageContext.request.contextPath}/ws/file-upload");
+
 	var chatSender = "${sessionScope.name}"; //발신자
 	var memberName = null;
 	//console.log(memberName);
@@ -135,7 +138,8 @@
 	var clubName;
 
 	window.socket.onopen = function (e) {
-	    console.log('Info: connection opened.');
+	     console.log('Info: connection opened.');
+	    
 	    console.log("chatRoomNo:", chatRoomNo); // 디버그용 로그 추가
 	    console.log("chatSender:", chatSender); // 디버그용 로그 추가
 	    
@@ -165,6 +169,62 @@
 	    return match ? parseInt(match[1]) : null;
 	}	
 	
+	function uploadFile() {
+	    console.log("File upload started.");
+
+	    var fileInput = document.getElementById('fileInput');
+	    var file = fileInput.files[0];
+	    var messageInput = document.querySelector('.message-input');
+	    var chatRoomNo = getRoomNoFromURL();
+
+	    // FileReader를 사용하여 파일을 읽음
+	    var reader = new FileReader();
+	    reader.onloadstart = function () {
+	        console.log("FileReader loading started.");
+	    };
+	    reader.onloadend = function () {
+	        console.log("FileReader loading completed.");
+
+	        var fileData = {
+	            name: file.name,
+	            size: file.size,
+	            type: file.type,
+	            data: reader.result
+	        };
+
+	        // 파일 정보와 함께 JSON 데이터를 웹소켓으로 전송
+	        window.fileUploadSocket.send(JSON.stringify({
+	            type: 'file',
+	            chatRoomNo: chatRoomNo,
+	            file: fileData,
+	            message: messageInput.value
+	        }));
+
+	        console.log("File upload successful.");
+	    };
+
+	    // 파일을 읽어서 base64로 변환
+	    reader.onerror = function (error) {
+	        console.error("FileReader error:", error);
+	    };
+
+	    // 파일을 읽어서 base64로 변환
+	    reader.readAsDataURL(file);
+	}
+	
+	window.fileUploadSocket.onmessage = function (event) {
+	    var response = JSON.parse(event.data);
+	    console.log("Received response from server:", response);
+	    
+	    // 서버로부터 받은 응답을 처리하는 로직 추가
+	    if (response.type === 'fileUploadResponse') {
+	        if (response.success) {
+	            console.log("File upload successful on the server.");
+	        } else {
+	            console.error("File upload failed on the server:", response.error);
+	        }
+	    }
+	};
 
 	
 	//메세지 처리

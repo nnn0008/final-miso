@@ -68,21 +68,6 @@ public class WebSocketServer extends TextWebSocketHandler{
 	@Autowired
 	private ChatOneDao chatOneDao;
 	
-	@Autowired
-	private AttachDao attachDao;
-	
-	//초기 디렉터리 설정
-	@Autowired
-	private FileUploadProperties props;
-	
-	private File dir;
-	
-	@PostConstruct
-	public void init() {
-		dir = new File(props.getHome());
-		dir.mkdirs();
-	}
-		
 	//저장소
 	private Set<ClientVO> clients = new CopyOnWriteArraySet<>(); //전체 회원(로그인)
 	private Map<Integer, Set<ClientVO>> roomMembersMap = new ConcurrentHashMap<>(); // 채팅방 멤버, 채팅방 번호를 키로 사용
@@ -211,14 +196,14 @@ public class WebSocketServer extends TextWebSocketHandler{
 	    
 	    //입장 메세지인 경우
 	    if (MessageType.join.equals(messageType)) {
-	        Integer chatRoomNo = messageDto.getChatRoomNo();
-
-	        // 여기에서 chatRoomNo를 활용하여 처리
-            sendChatHistory(chatRoomNo, session);
-            
-	        Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
-	        log.debug("roomMembers for chatRoomNo {}: {}", chatRoomNo, roomMembers);
 	        
+	    	Integer chatRoomNo = messageDto.getChatRoomNo();
+	    	
+//	    	// 여기에서 chatRoomNo를 활용하여 처리
+//	    	sendChatHistory(chatRoomNo, session);
+	    	
+	    	Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
+	    	log.debug("roomMembers for chatRoomNo {}: {}", chatRoomNo, roomMembers);
 
 	        List<ChatListVO> chatList = chatRoomDao.chatRoomLIst(chatRoomNo);
 	        if (!chatList.isEmpty()) {
@@ -251,10 +236,17 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            TextMessage tm = new TextMessage(joinMessageJson);
 
 	            client.send(tm);
-	        } else {
-	            log.warn("chatList is empty for chatRoomNo {}", chatRoomNo);
 	        }
-	    }
+	            else {
+
+	    	        // 여기에서 chatRoomNo를 활용하여 처리
+	                sendChatHistory(chatRoomNo, session);
+	            	
+	            	log.warn("chatList is empty for chatRoomNo {}", chatRoomNo);
+	            	
+	            }
+	        } 
+	   
 
 
 	    // 채팅 메시지인 경우
@@ -370,49 +362,49 @@ public class WebSocketServer extends TextWebSocketHandler{
 	       }
 	}
 	 
-	//파일
-	@Override
-	// WebSocketServer 클래스의 handleBinaryMessage 메소드
-	protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) {
-	    try {
-	    	 // BinaryMessage에서 ByteBuffer를 얻어옴
-	        ByteBuffer byteBuffer = message.getPayload();
-
-	        // ByteBuffer를 InputStream으로 변환
-	        InputStream inputStream = new ByteArrayInputStream(byteBuffer.array());
-
-	        // 여기에서 파일 업로드 및 관련 로직을 수행
-	        // ...
-
-	        // 파일 업로드가 성공했을 때 클라이언트에게 성공 메시지를 보냄
-	        Map<String, Object> response = new HashMap<>();
-	        response.put("status", "success");
-	        response.put("message", "File uploaded successfully!");
-
-	        // Map을 JSON 형태로 변환
-	        ObjectMapper objectMapper = new ObjectMapper();
-	        String jsonResponse = objectMapper.writeValueAsString(response);
-
-	        // 성공 메시지 전송
-	        session.sendMessage(new TextMessage(jsonResponse));
-	    } catch (Exception e) {
-	        // 파일 업로드 중에 오류가 발생했을 때 클라이언트에게 에러 메시지를 보냄
-	        Map<String, Object> response = new HashMap<>();
-	        response.put("status", "error");
-	        response.put("message", "Failed to upload file.");
-
-	        // Map을 JSON 형태로 변환
-	        ObjectMapper objectMapper = new ObjectMapper();
-	        try {
-	            String jsonResponse = objectMapper.writeValueAsString(response);
-
-	            // 에러 메시지 전송
-	            session.sendMessage(new TextMessage(jsonResponse));
-	        } catch (IOException ioException) {
-	            ioException.printStackTrace();
-	        }
-	    }
-	}
+//	//파일
+//	@Override
+//	// WebSocketServer 클래스의 handleBinaryMessage 메소드
+//	protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) {
+//	    try {
+//	    	 // BinaryMessage에서 ByteBuffer를 얻어옴
+//	        ByteBuffer byteBuffer = message.getPayload();
+//
+//	        // ByteBuffer를 InputStream으로 변환
+//	        InputStream inputStream = new ByteArrayInputStream(byteBuffer.array());
+//
+//	        // 여기에서 파일 업로드 및 관련 로직을 수행
+//	        // ...
+//
+//	        // 파일 업로드가 성공했을 때 클라이언트에게 성공 메시지를 보냄
+//	        Map<String, Object> response = new HashMap<>();
+//	        response.put("status", "success");
+//	        response.put("message", "File uploaded successfully!");
+//
+//	        // Map을 JSON 형태로 변환
+//	        ObjectMapper objectMapper = new ObjectMapper();
+//	        String jsonResponse = objectMapper.writeValueAsString(response);
+//
+//	        // 성공 메시지 전송
+//	        session.sendMessage(new TextMessage(jsonResponse));
+//	    } catch (Exception e) {
+//	        // 파일 업로드 중에 오류가 발생했을 때 클라이언트에게 에러 메시지를 보냄
+//	        Map<String, Object> response = new HashMap<>();
+//	        response.put("status", "error");
+//	        response.put("message", "Failed to upload file.");
+//
+//	        // Map을 JSON 형태로 변환
+//	        ObjectMapper objectMapper = new ObjectMapper();
+//	        try {
+//	            String jsonResponse = objectMapper.writeValueAsString(response);
+//
+//	            // 에러 메시지 전송
+//	            session.sendMessage(new TextMessage(jsonResponse));
+//	        } catch (IOException ioException) {
+//	            ioException.printStackTrace();
+//	        }
+//	    }
+//	}
 
 
 	private void sendChatRoomNumberToClient(Integer chatRoomNo, WebSocketSession session) throws IOException {
