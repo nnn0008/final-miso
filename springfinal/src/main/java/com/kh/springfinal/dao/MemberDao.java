@@ -8,4 +8,7 @@ public interface MemberDao {
 	void join(MemberDto memberDto);
 	MemberDto loginId(String memberId);
 	List<MemberDto> memberIdListByEmail(String memberName, String memberEmail);
+	MemberDto changePw(String memberId);
+	MemberDto selectOne(String memberId, String memberPw);
+	
 }

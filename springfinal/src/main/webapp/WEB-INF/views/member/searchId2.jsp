@@ -52,45 +52,40 @@
             <!-- 헤더 -->
 <article class="main-content">
 
-<!-- 아이디를 찾았을 때 띄울 템플렛 -->
-
+<script>
+	$(function() {
+	});
+</script>
 <div class="contain-fluid">
 	<div class="row">
 		<div class="col">
 
+
 			<div class="row mt-5 pt-5">
 				<div class="col">
-					<h1>아이디 찾기</h1>
+					<h1>아이디를 찾았습니다</h1>
 				</div>
 			</div>
 
-			<form action="searchId" method="post">
-				<div class="row">
-					<div class="col">
-						<div class="form-group">
-							<label class="col-form-label mt-4" for="memberName">이름</label> <input
-								type="text" class="form-control" name="memberName"
-								id="memberName">
+
+			<div class="row mt-4">
+				<div class="col">
+					<div class="card border-primary border border-2 mb-3 w-100 h-100">
+						<div class="card-header">아이디</div>
+						<div class="card-body">
+							<h4 class="card-text">${memberName}님의 아이디의 개수는 ${idCount}개 입니다</h4>
+							<div class="card-text mt-2 fs-4">${idList}</div>
 						</div>
 					</div>
+			</div>
+			<div class="row mt-4">
+				<div class="col">
+					<a href="./login"><button class="btn fs-4">로그인</button></a>
 				</div>
-				<div class="row">
-					<div class="col">
-						<div class="form-group">
-							<label class="col-form-label mt-4" for="inputDefault">이메일</label>
-							<input type="text" class="form-control" name="memberEmail"
-								id="inputDefault">
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col text-end">
-						<button class="btn btn-primary btn-search">찾기</button>
-					</div>
-				</div>
-			</form>
+			</div>
 		</div>
 	</div>
+</div>
 </div>
 
 </article>

@@ -146,17 +146,12 @@
 
 
 		<dependency>
-			<groupId>com.kh</groupId>
-			<artifactId>spring20websocket</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-core</artifactId>
+		    <version>6.1.5</version>
 		</dependency>
 
 
-		<dependency>
-			<groupId>com.kh</groupId>
-			<artifactId>spring21pay</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 
 	<build>
@@ -171,6 +166,9 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+					<image>
+						<builder>paketobuildpacks/builder-jammy-base:latest</builder>
+					</image>
 				</configuration>
 			</plugin>
 		</plugins>
