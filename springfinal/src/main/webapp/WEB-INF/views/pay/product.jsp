@@ -9,6 +9,10 @@
   <div class="container-fluid mb-5 pb-5">
         <div class="row">
             <div class="col-md-10 offset-md-1">
+<div class="container-fluid mb-5 pb-5">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+
 <div class="mt-4 p-4 text-light bg-dark rounded">
    <h1>가장 일반적인 결제</h1>
    <p>
@@ -119,11 +123,14 @@ $(function(){
          
          var productNo = $(this).find("[name=productNo]").val();
          var qty = $(this).find("[name=qty]").val();
-         //console.log(productNo, qty);
          
          $("<input>").attr("name", "product["+count+"].productNo")
                         .attr("type", "hidden")
                         .val(productNo)
+                        .appendTo(form);
+         $("<input>").attr("name", "product["+count+"].qty")
+                        .attr("type", "hidden")
+                        .val(qty)
                         .appendTo(form);
          count++;
       });
@@ -133,11 +140,5 @@ $(function(){
    });
 });
 </script>
-
-
-
-
-
-
 
 <jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>

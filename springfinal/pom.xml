@@ -137,26 +137,25 @@
 		    <groupId>org.apache.tomcat.embed</groupId>
 		    <artifactId>tomcat-embed-jasper</artifactId>
 		</dependency>
-
-
 <dependency>
-    <groupId>com.google.code.gson</groupId>
-    <artifactId>gson</artifactId>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-core</artifactId>
 </dependency>
 
-
+ 	<!-- websocket 관련 -->
 		<dependency>
-			<groupId>com.kh</groupId>
-			<artifactId>spring20websocket</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-core</artifactId>
+		    <version>6.1.5</version>
+		</dependency>
+		
+				<dependency>
+		    <groupId>commons-io</groupId>
+		    <artifactId>commons-io</artifactId>
+		    <version>2.15.0</version>
 		</dependency>
 
 
-		<dependency>
-			<groupId>com.kh</groupId>
-			<artifactId>spring21pay</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 
 	<build>
@@ -171,6 +170,9 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+					<image>
+						<builder>paketobuildpacks/builder-jammy-base:latest</builder>
+					</image>
 				</configuration>
 			</plugin>
 		</plugins>

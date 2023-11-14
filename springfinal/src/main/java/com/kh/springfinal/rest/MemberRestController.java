@@ -1,9 +1,7 @@
 package com.kh.springfinal.rest;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,11 +29,4 @@ public class MemberRestController {
 			return "N";
 		}
 	}
-	
-	@PostMapping("/restSearchId")
-	public List<MemberDto> restSearchId(@RequestParam String memberName, @RequestParam String memberEmail) {
-		List<MemberDto> idList = memberDao.memberIdListByEmail(memberName, memberEmail);
-		return idList;
-	}
-	
 }

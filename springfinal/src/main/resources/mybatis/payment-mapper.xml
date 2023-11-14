@@ -9,46 +9,132 @@
     		select payment_seq.nextval from dual
     	</select>
     	
+    	<!-- 결제 등록 -->
     	<insert id="insert">
     		insert into payment(
-    			payment_no,payment_member,payment_product,payment_tid,
-    			payment_name,payment_price,payment_remain,payment_status
+    			payment_no,payment_member,payment_tid,
+    			payment_name,payment_price,payment_remain
     		)
     		values(
-    			#{paymentNo},#{paymentMember},#{paymentProduct},#{paymentTid},
-    			#{paymentName},#{paymentPrice},#{paymentRemain},'완료'
+    			#{paymentNo},#{paymentMember},#{paymentTid},
+    			#{paymentName},#{paymentPrice},#{paymentRemain}
     		)
     	</insert>
     	
-    	<!-- 목록 -->
+    	<!-- 결제 상세등록 -->
+    	<insert id="insertDetail">
+    		insert into payment_detail (
+			payment_detail_no, payment_detail_origin, payment_detail_product,
+			payment_detail_product_name, payment_detail_product_price, payment_detail_status
+    		)
+    		values(
+    		payment_detail_seq.nextval, 
+			#{paymentDetailOrigin}, #{paymentDetailProduct}, #{paymentDetailProductName},
+			#{paymentDetailProductPrice}, '완료'
+    		)
+    	
+    	</insert>
+    	
+    	<!-- 결제 대표 목록 -->
     	<select id="list" resultType="PaymentDto">
     		select * from payment order by payment_no asc
     	</select>
     	
-    	<!-- 상세조회 -->
+    	<!-- 
+    	상세조회 
     	<select id="find" resultType="PaymentDto">
     		select * from payment where payment_no = #{paymentNo}
     	 </select>
+    	 -->
     	 
-    	 <!-- payment 잔여금액처리 -->
-    	 <update id="cancel">
-    	 	update payment
-    	 	set payment_status = '취소'
-    	 	where payment_no = #{paymentNo}
-    	 </update>
+    	 <!-- 회원전체조회 -->
+    	 <select id="listAll" resultMap="paymentListVO">
+    	select * from payment
     	
+    	<if test="paymentMember != null">
+    	where payment_member = #{paymentMember}
+    	</if>
+    	order by payment_no asc
+    	</select>
+    	
+    	<!-- 결제 상세정보를 조회(결제 대표번호별)  -->
+    	<select id="listDetail" resultType="PaymentDetailDto">
+    		select * from payment_detail
+    		where payment_detail_origin = #{paymentDetailOrigin}
+    		order by payment_detail_no asc
+    	</select>
+    	
+    	<!-- payment 상세조회 -->
+    	<select id="find" resultType="PaymentDto">
+    		select * from payment where payment_no = #{paymentNo}
+    	</select>
+    	
+    	<!-- payment_detail 상세조회 -->
+    	<select id="selectDetail" resultType="PaymentDetailDto">
+    		select * from payment_detail where payment_detail_no = #{paymentDetailNo}
+    	</select>
+    	
+    	<!-- payment 잔여금액처리 -->
+    	<update id="cancel">
+    		update payment
+    		 set payment_remain = #{paymentRemain}
+    		where payment_no = #{paymentNo}
+    	</update>
+    	
+    	<!-- payment_detail 취소처리 -->
+    	<update id="cancelDetail">
+    		update payment_detail
+    		set payment_detail_status='취소'
+    		where payment_detail_no = #{paymentDetailNo}
+    	</update>
+    	
+    	<!-- 특정 payment_no에 속한 payment_detail에 대한 취소처리 -->
+    	<update id="cancelDetailGroup">
+    		update payment_detail
+    		set payment_detail_status = '취소'
+    		where payment_detail_origin = #{paymentDetailOrigin}
+    	</update>
+   		 <!-- 
+    	결제 대표정보와 상세정보를 계층형으로 조회 
+    	-resultType은 필드명으로 데이터베이스 조회 결과를 매핑하여 처리한다
+    	-지금과 같이 복잡한 구조는 처리가 불가능하다
+    	-resultMap 항목을 선언하여 수동으로 매핑하도록 처리한다
+    		-association 은 객체를 의미
+    		-collection 은 리스트를 의미
+    		-property는 항목명
+    		-column은 DB의 조회결과 열명을 의미
+    	-->
     	<resultMap type="PaymentListVO" id="paymentListVO">
     		<!-- 일단 조회 결과는 내가 지정한 객체에 필드에 맞게 배치해라! -->
     		<association property="paymentDto">
     			<result column="payment_no" property="paymentNo"/>
     			<result column="payment_member" property="paymentMember"/>
-    			<result column="payment_Product" property="paymentProduct"/>
     			<result column="payment_tid" property="paymentTid"/>
     			<result column="payment_name" property="paymentName"/>
     			<result column="payment_price" property="paymentPrice"/>
     			<result column="payment_remain" property="paymentRemain"/>
     			<result column="payment_time" property="paymentTime"/>
-    			<result column="payment_status" property="paymentStatus"/>
     		</association>
-    		</resultMap>
+    		
+    		<!--
+    		 List가 하나 있는데 구문 알려줄테니까 니가 알아서 조회해서 채워라! 
+    		 -select에 적힌 구문을 부르면 내용을 채울 수 있을거야!
+    		 -구문을 실행하는 데 필요한 값은 column에 적혀있는 항목이야!
+    		 -이 저장소는 javaType에 적혀 있는 형태야!
+    		 - 이 저장소에 들어갈 수 있는 데이터는 ofType에 적혀 있는 형태야!
+    		 -->
+    		 
+    		<collection property="paymentDetailList" select="listDetail" column="payment_no"
+    			javaType="java.util.List" ofType="PaymentDto">
+    			<result column="payment_detail_no" property="paymentDetailNo"/>
+    			<result column="payment_detail_origin" property="paymentDetailOrigin"/>
+    			<result column="payment_detail_product" property="paymentDetailProduct"/>
+    			<result column="payment_detail_product_name" property="paymentDetailProductName"/>
+    			<result column="payment_detail_product_price" property="paymentDetailProductPrice"/>
+    			<result column="payment_detail_product_qty" property="paymentDetailProductQty"/>
+    			<result column="payment_detail_status" property="paymentDetailStatus"/>
+    			</collection>
+    	</resultMap>
+    	
+    	
     </mapper>

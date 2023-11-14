@@ -1,16 +1,20 @@
 package com.kh.springfinal.websocket;
 
-import java.io.ByteArrayInputStream;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.socket.WebSocketSession;
+
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.Map;
+
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,20 +23,20 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import javax.annotation.PostConstruct;
 
 import org.apache.ibatis.session.SqlSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.BinaryMessage;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.springfinal.configuration.FileUploadProperties;
 import com.kh.springfinal.dao.AttachDao;
 import com.kh.springfinal.dao.ChatDao;
 import com.kh.springfinal.dao.ChatOneDao;
 import com.kh.springfinal.dao.ChatRoomDao;
+import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.ChatDto;
 import com.kh.springfinal.dto.ChatOneDto;
 import com.kh.springfinal.dto.ChatRoomDto;
@@ -44,6 +48,7 @@ import com.kh.springfinal.vo.ChatOneVO;
 import com.kh.springfinal.vo.ChatVO;
 import com.kh.springfinal.vo.ClientVO;
 
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -68,13 +73,27 @@ public class WebSocketServer extends TextWebSocketHandler{
 	@Autowired
 	private ChatOneDao chatOneDao;
 	
+	@Autowired
+	private AttachDao attachDao;
+
+    // 초기 디렉터리 설정
+    @Autowired
+    private FileUploadProperties props;
+
+    private File dir;
+
+    @PostConstruct
+    public void init() {
+        dir = new File(props.getHome());
+        dir.mkdirs();
+    }
+
 	//저장소
 	private Set<ClientVO> clients = new CopyOnWriteArraySet<>(); //전체 회원(로그인)
 	private Map<Integer, Set<ClientVO>> roomMembersMap = new ConcurrentHashMap<>(); // 채팅방 멤버, 채팅방 번호를 키로 사용
 	
 	
 	// 접속 성공
-	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 	    ClientVO client = clientService.createClientVO(session);
 
@@ -88,7 +107,6 @@ public class WebSocketServer extends TextWebSocketHandler{
 	    log.debug("사용자 접속! 현재 {}명", clients.size());
 	}
 
-	
 		
 	// 접속 종료
 	@Override
@@ -111,7 +129,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	public void addRoomMember(ClientVO client, Integer chatRoomNo) {
 	    Set<ClientVO> roomMembers = roomMembersMap.computeIfAbsent(chatRoomNo, k -> new HashSet<>());
 	    roomMembers.add(client);
-	    log.debug("채팅방 멤버 추가 - 채팅방 번호: {}, 멤버 수: {}", chatRoomNo, roomMembers.size());
+//	    log.debug("채팅방 멤버 추가 - 채팅방 번호: {}, 멤버 수: {}", chatRoomNo, roomMembers.size());
 	}
 
 	// 채팅방 멤버 제거
@@ -119,7 +137,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	    Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
 	    if (roomMembers != null) {
 	        roomMembers.remove(client);
-	        log.debug("채팅방 멤버 제거 - 채팅방 번호: {}, 멤버 수: {}", chatRoomNo, roomMembers.size());
+//	        log.debug("채팅방 멤버 제거 - 채팅방 번호: {}, 멤버 수: {}", chatRoomNo, roomMembers.size());
 	    }
 	}
 
@@ -188,6 +206,8 @@ public class WebSocketServer extends TextWebSocketHandler{
 	    // 메시지를 JSON으로 파싱
 	    ObjectMapper mapper = new ObjectMapper();
 	    MessageDto messageDto = mapper.readValue(message.getPayload(), MessageDto.class);
+	    
+	    log.debug("메세지 유형 = {}", messageDto.getMessageType());
 
 	    // messageType 추출
 	    MessageType messageType = messageDto.getMessageType();
@@ -246,8 +266,6 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            	
 	            }
 	        } 
-	   
-
 
 	    // 채팅 메시지인 경우
 	    else if (MessageType.message.equals(messageType)) {
@@ -359,54 +377,91 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            log.debug("Inserted chat data into DB for chat room: {}", chatRoomNo); // 로그 추가
 	            
 	        }
-	       }
-	}
-	 
-//	//파일
-//	@Override
-//	// WebSocketServer 클래스의 handleBinaryMessage 메소드
-//	protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) {
-//	    try {
-//	    	 // BinaryMessage에서 ByteBuffer를 얻어옴
-//	        ByteBuffer byteBuffer = message.getPayload();
-//
-//	        // ByteBuffer를 InputStream으로 변환
-//	        InputStream inputStream = new ByteArrayInputStream(byteBuffer.array());
-//
-//	        // 여기에서 파일 업로드 및 관련 로직을 수행
-//	        // ...
-//
-//	        // 파일 업로드가 성공했을 때 클라이언트에게 성공 메시지를 보냄
-//	        Map<String, Object> response = new HashMap<>();
-//	        response.put("status", "success");
-//	        response.put("message", "File uploaded successfully!");
-//
-//	        // Map을 JSON 형태로 변환
-//	        ObjectMapper objectMapper = new ObjectMapper();
-//	        String jsonResponse = objectMapper.writeValueAsString(response);
-//
-//	        // 성공 메시지 전송
-//	        session.sendMessage(new TextMessage(jsonResponse));
-//	    } catch (Exception e) {
-//	        // 파일 업로드 중에 오류가 발생했을 때 클라이언트에게 에러 메시지를 보냄
-//	        Map<String, Object> response = new HashMap<>();
-//	        response.put("status", "error");
-//	        response.put("message", "Failed to upload file.");
-//
-//	        // Map을 JSON 형태로 변환
-//	        ObjectMapper objectMapper = new ObjectMapper();
-//	        try {
-//	            String jsonResponse = objectMapper.writeValueAsString(response);
-//
-//	            // 에러 메시지 전송
-//	            session.sendMessage(new TextMessage(jsonResponse));
-//	        } catch (IOException ioException) {
-//	            ioException.printStackTrace();
-//	        }
-//	    }
-//	}
+	    }
+	    
+	    //메세지 타입이 파일일 경우
+	    else if (MessageType.file.equals(messageType)) { 
+	        log.debug("Entering the file processing block");
+	        
+//			TextMessage newMessage = new TextMessage(mapper.writeValueAsString(messageDto));
+//			for(ClientVO c : clients) {
+//				c.send(newMessage);
+//			}
+	        Integer chatRoomNo = messageDto.getChatRoomNo();
+	        String chatContent = messageDto.getChatContent();
+	        String chatSender = messageDto.getChatSender();
+	        String fileName = messageDto.getFileName();
+	        long fileSize = messageDto.getFileSize();
+	        String fileType = messageDto.getFileType(); 
+	        
+	        log.debug("chatRoomNo: {}, chatContent: {}, chatSender: {}, fileName: {}, fileSize: {}, fileType: {}", 
+	                chatRoomNo, chatContent, chatSender, fileName, fileSize, fileType);
+				       
+            //뒷부분이 실제 이미지 파일내용이므로 제거한 다음 분석하도록 처리
+            String[] slice = messageDto.getChatContent().split(",");
+            byte[] data = Base64Utils.decodeFromString(slice[1]);
+            LocalDateTime chatTime = LocalDateTime.now();
+                           
+            //분석한 내용을 저장
+			//- 이 부분에 데이터베이스 저장 및 시퀀스 생성을 통한 파일명 설정 코드가 있어야 함
+            int attachNo = attachDao.sequence(); // 시퀀스 번호 생성
+            
+            //시퀀스 번호를 파일명으로 하여 실제 파일 저장
+            File target = new File(dir, String.valueOf(attachNo));
+            try(FileOutputStream out = new FileOutputStream(target)) {
+				out.write(data);
+			}
+            
+            //DB에 저장한 파일 정보 모아서 insert
+            AttachDto attachDto = new AttachDto();
+            attachDto.setAttachNo(attachNo); //실제 저장된 이름
+            attachDto.setAttachName(fileName); //사용자가 저장한 이름
+            attachDto.setAttachSize(fileSize);
+            attachDto.setAttachType(fileType);
+            attachDao.insert(attachDto);
+            
+            //파일 업로드 완료 후 룸번호와 파일번호 연결
+            
+            
+            //사용자에게 다운로드 경로 제공
+//            String json = mapper.writeValueAsString(MessageDto.builder()
+//            		.messageType("file").chatContent(
+//            				"http://localhost:8080/download?attachNo="+attachNo)
+//            		.build());
+            
+            
+            
+			TextMessage newMessage = new TextMessage(mapper.writeValueAsString(messageDto));
+			for(ClientVO c : clients) {
+				c.send(newMessage);
+			}
+                       
+            Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
+            log.debug("roomMembers for chatRoomNo {}: {}", chatRoomNo, roomMembers);
+            
+            Map<String, Object> FileChat = new HashMap<>();
+            FileChat.put("memberType", MessageType.file);
+            FileChat.put("memberId", client.getMemberId());
+            FileChat.put("content", chatContent);
+            FileChat.put("chatTime", chatTime.toString());
+            FileChat.put("chatRoomNo", chatRoomNo);
+            FileChat.put("memberLevel", client.getMemberLevel());
+            FileChat.put("memberName", client.getMemberName());
+            
+            String messageJson = mapper.writeValueAsString(FileChat);
+            TextMessage tm = new TextMessage(messageJson);
+                
+                
+                
+//                for (ClientVO c : roomMembers) {
+//                    c.send(tm);
+//                }
 
+	    }	
+   }
+	
 
+	
 	private void sendChatRoomNumberToClient(Integer chatRoomNo, WebSocketSession session) throws IOException {
 		Map<String, Object> data = new HashMap<>();
 		data.put("messageType", MessageType.dm);

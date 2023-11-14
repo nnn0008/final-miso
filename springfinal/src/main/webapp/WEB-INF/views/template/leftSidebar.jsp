@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
      <!-- 부트스트랩 CDN -->
    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.2/zephyr/bootstrap.min.css" rel="stylesheet">
@@ -53,9 +53,9 @@
 
                     <div class="row p-2">
                         <div class="col">
-                            <a href="#" class="link">
+                            <a href="/member/mypage" class="link">
                                 <img src="${pageContext.request.contextPath}/images/Vector-2.png" width="20%">
-                                <strong class="ms-2">프로필</strong> 
+                                <strong class="ms-2">프로필</strong>
                             </a>
                         </div>
                     </div>
@@ -72,7 +72,14 @@
                         <div class="col text-center d-flex align-items-center justify-content-center login">
                             <a href="${pageContext.request.contextPath}/member/login" class="link">
                                 <img src="${pageContext.request.contextPath}/images/Vector-4.png" width="20%">
-                                <strong class="ms-2">로그인</strong> 
+                                <c:choose>
+                                	<c:when test="${sessionScope.name!=null}">
+										<strong class="ms-2">로그아웃</strong>
+                                	</c:when>
+                                	<c:otherwise>
+		                                <strong class="ms-2">로그인</strong>  
+                                	</c:otherwise>
+                                </c:choose>
                             </a>
                         </div>
                     </div>

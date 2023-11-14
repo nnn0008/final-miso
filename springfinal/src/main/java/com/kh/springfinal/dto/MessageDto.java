@@ -18,4 +18,8 @@ public class MessageDto {
 	private String chatReceiver;
 	private String chatContent;
 	private String memberName;
+	
+	private String fileName;
+	private long fileSize;
+	private String fileType;
 }
