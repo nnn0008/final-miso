@@ -45,6 +45,15 @@ public class ZipCodeDaoImpl implements ZipCodeDao{
 		
 		return sqlSession.selectList("zipcode.selectOne",params);
 	}
+	
+	@Override
+	public ZipCodeDto findZip(int zipCodeNo) {
+		
+		return sqlSession.selectOne("zipcode.selectByMember",zipCodeNo);
+		
+	}
+	
+	
 
 
 	
