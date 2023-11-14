@@ -24,7 +24,7 @@ public class ClientVO {
 	@JsonIgnore //Json으로 변환하는 과정에서 이 필드는 제외한다
 	private WebSocketSession session;
 	private String memberId, memberLevel, memberName;
-	 private Set<Integer> chatRoomNos;
+	private Set<Integer> chatRoomNos;
 //	private Integer clubNo;
 
 	public ClientVO(WebSocketSession session) {

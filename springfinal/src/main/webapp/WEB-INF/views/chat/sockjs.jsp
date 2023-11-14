@@ -1,133 +1,144 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
-    <jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
+	pageEncoding="UTF-8"%>
+<jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
 
 
 <!doctype html>
 <html lang="ko">
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bootstrap demo</title>
 
-    <!-- 아이콘 사용을 위한 Font Awesome 6 CDN -->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.2/zephyr/bootstrap.min.css" rel="stylesheet">
-    <link href="test.css" rel="stylesheet">
-    
-    <link href="${pageContext.request.contextPath}/css/chat.css" rel="stylesheet">
- 
- <style>
+<!-- 아이콘 사용을 위한 Font Awesome 6 CDN -->
+<link rel="stylesheet" type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
- </style>   
-    
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.2/zephyr/bootstrap.min.css"
+	rel="stylesheet">
+<link href="test.css" rel="stylesheet">
+
+<link href="${pageContext.request.contextPath}/css/chat.css"
+	rel="stylesheet">
+
+<style>
+</style>
+
 </head>
 
 
-  <body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col">
-			
-						
-						<!-- 메세지 헤더 -->
-						<div class="row card-header msg_head">
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col">
 
 
-						    <div class="col">					    	
-									<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-									  <div class="offcanvas-header">
-									    <h5 class="offcanvas-title" id="offcanvasExampleLabel"></h5>
-									    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-									  </div>
-									  <div class="offcanvas-body">
-									      <div class="col-md-4 client-list"></div>
-									      <div class="col-md-4 chatRoom-list"></div>
-									    <div>
-									    </div>
-									  </div>
-									</div>
-						    </div>
-						</div>
-						
-						<!-- 메세지 표시 영역 -->
-						<div class="row">
-							<div class="col message-list"></div>
-						</div>
-						
-						<div class="row mt-4">
-							<div class="col p-0">
-								<div class="input-group">
-									<div class="col">
-									<input type="file" id="fileInput"  onchange="uploadFile()">
+				<!-- 메세지 헤더 -->
+				<div class="row card-header msg_head">
 
-</div>
-								<div class="col">
-									<input type="text" class="form-control message-input" placeholder="메세지를 입력하세요">
-									<button type="button" class="btn send-btn btn-success bg-miso">
-										<i class="fa-regular fa-paper-plane"></i>
-										보내기
-									</button>
-									</div>
-								</div>
-								
+
+					<div class="col">
+						<div class="offcanvas offcanvas-end" tabindex="-1"
+							id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+							<div class="offcanvas-header">
+								<h5 class="offcanvas-title" id="offcanvasExampleLabel"></h5>
+								<button type="button" class="btn-close text-reset"
+									data-bs-dismiss="offcanvas" aria-label="Close"></button>
+							</div>
+							<div class="offcanvas-body">
+								<div class="col-md-4 client-list"></div>
+								<div class="col-md-4 chatRoom-list"></div>
+								<div></div>
 							</div>
 						</div>
+					</div>
+				</div>
+
+				<!-- 메세지 표시 영역 -->
+				<div class="row">
+					<div class="col message-list"></div>
+				</div>
+
+				<div class="row mt-4">
+					<div class="col p-0">
+						<div class="input-group">
+						<input type="file" name="attach" multiple>
+						<button class="send-file-btn">전송</button>
+
+								<input type="text" class="form-control message-input"
+									placeholder="메세지를 입력하세요">
+								<button type="button" class="btn send-btn btn-success bg-miso">
+									<i class="fa-regular fa-paper-plane"></i> 보내기
+								</button>
+							</div>
 
 					</div>
 				</div>
 
-
-<!-- 모달 -->
-<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true"  data-bs-backdrop="static">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="profileModalLabel">프로필</h5> 
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
-      </div>
-      <div class="modal-body">
-        <!-- 프로필 카드 내용 -->
-        <div class="modal-card" style="border-radius: 15px;">
-          <div class="modal-card-body text-center">
-            <div class="mt-3 mb-4">
-              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
-                class="rounded-circle img-fluid modal-profile-image" style="width: 100px;" />
-            </div>
-            <h4 class="mb-2 modal-profile-name">줄리 L. 아르소노</h4>
-            <p class="text-muted mb-4 modal-profile-id"></p>
-            <div class="mb-4 pb-2">
-             <button type="button" class="btn btn-success bg-miso dm-send">메세지 보내기</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+			</div>
+		</div>
 
 
-</div>
-   
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-      <!-- 웹소켓 서버가 SockJS일 경우 페이지에서도 SockJS를 사용해야 한다 -->
+		<!-- 모달 -->
+		<div class="modal fade" id="profileModal" tabindex="-1"
+			aria-labelledby="profileModalLabel" aria-hidden="true"
+			data-bs-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="profileModalLabel">프로필</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="닫기"></button>
+					</div>
+					<div class="modal-body">
+						<!-- 프로필 카드 내용 -->
+						<div class="modal-card" style="border-radius: 15px;">
+							<div class="modal-card-body text-center">
+								<div class="mt-3 mb-4">
+									<img
+										src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
+										class="rounded-circle img-fluid modal-profile-image"
+										style="width: 100px;" />
+								</div>
+								<h4 class="mb-2 modal-profile-name">줄리 L. 아르소노</h4>
+								<p class="text-muted mb-4 modal-profile-id"></p>
+								<div class="mb-4 pb-2">
+									<button type="button" class="btn btn-success bg-miso dm-send">메세지
+										보내기</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	<!-- 웹소켓 서버가 SockJS일 경우 페이지에서도 SockJS를 사용해야 한다 -->
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
 	<script>
 	
 	//연결 생성
 	//연결 후 해야할 일들을 콜백함수로 지정(onopen, onclose, onerror, onmessage)
 	
 	// 클라이언트에서 SockJS로 서버에 접속하는 부분
+
 	var chatRoomNo = getRoomNoFromURL();  // 채팅방 번호를 얻어옴
 	
 	window.socket = new SockJS("${pageContext.request.contextPath}/ws/chat");
-	window.fileUploadSocket = new SockJS("${pageContext.request.contextPath}/ws/file-upload");
-
+	
 	var chatSender = "${sessionScope.name}"; //발신자
 	var memberName = null;
 	//console.log(memberName);
@@ -140,10 +151,9 @@
 	window.socket.onopen = function (e) {
 	     console.log('Info: connection opened.');
 	    
-	    console.log("chatRoomNo:", chatRoomNo); // 디버그용 로그 추가
-	    console.log("chatSender:", chatSender); // 디버그용 로그 추가
-	    
-	   
+// 	    console.log("chatRoomNo:", chatRoomNo); // 디버그용 로그 추가
+// 	    console.log("chatSender:", chatSender); // 디버그용 로그 추가
+	    	   
 	    // 서버에 join 메시지 전송
 	    var joinMessage = {
 	        messageType: "join",
@@ -155,7 +165,6 @@
 	    window.socket.send(JSON.stringify(joinMessage));
 	  
 	};
-	
 
 	// 방 이동 시
 	function moveToRoom(selectedRoomNo) {
@@ -169,63 +178,32 @@
 	    return match ? parseInt(match[1]) : null;
 	}	
 	
-	function uploadFile() {
-	    console.log("File upload started.");
-
-	    var fileInput = document.getElementById('fileInput');
-	    var file = fileInput.files[0];
-	    var messageInput = document.querySelector('.message-input');
-	    var chatRoomNo = getRoomNoFromURL();
-
-	    // FileReader를 사용하여 파일을 읽음
-	    var reader = new FileReader();
-	    reader.onloadstart = function () {
-	        console.log("FileReader loading started.");
-	    };
-	    reader.onloadend = function () {
-	        console.log("FileReader loading completed.");
-
-	        var fileData = {
-	            name: file.name,
-	            size: file.size,
-	            type: file.type,
-	            data: reader.result
-	        };
-
-	        // 파일 정보와 함께 JSON 데이터를 웹소켓으로 전송
-	        window.fileUploadSocket.send(JSON.stringify({
-	            type: 'file',
-	            chatRoomNo: chatRoomNo,
-	            file: fileData,
-	            message: messageInput.value
-	        }));
-
-	        console.log("File upload successful.");
-	    };
-
-	    // 파일을 읽어서 base64로 변환
-	    reader.onerror = function (error) {
-	        console.error("FileReader error:", error);
-	    };
-
-	    // 파일을 읽어서 base64로 변환
-	    reader.readAsDataURL(file);
-	}
+	$(".send-file-btn").click(function(){
+			var files = $("[name=attach]")[0].files;
+			if(files.length === 0) return;
+			
+			for(let i=0; i < files.length; i++) {
+				var reader = new FileReader();
+				reader.onload = (e)=>{
+					var data = e.target.result;
+					var fileName = files[i].name; // 파일 이름 가져오기
+					var fileSize = files[i].size; // 파일 크기 가져오기
+					var fileType = files[i].type; // 파일 타입 가져오기
+					var json = JSON.stringify({
+						messageType : "file",
+						chatSender: "${sessionScope.name}",
+						chatRoomNo : ${chatRoomNo},
+						chatContent : data,
+						fileName: fileName, // 파일 이름 추가
+						fileSize : fileSize,
+						fileType : fileType, 
+					});
+					socket.send(json);
+				};
+				reader.readAsDataURL(files[i]);
+			}
+		});
 	
-	window.fileUploadSocket.onmessage = function (event) {
-	    var response = JSON.parse(event.data);
-	    console.log("Received response from server:", response);
-	    
-	    // 서버로부터 받은 응답을 처리하는 로직 추가
-	    if (response.type === 'fileUploadResponse') {
-	        if (response.success) {
-	            console.log("File upload successful on the server.");
-	        } else {
-	            console.error("File upload failed on the server:", response.error);
-	        }
-	    }
-	};
-
 	
 	//메세지 처리
 		window.socket.onmessage = function(e){
@@ -233,19 +211,29 @@
 		
 		var data = JSON.parse(e.data);
 		console.log(data);
-		
+	
 		clubName = data.clubName;
 		//console.log(data.clubName);
 		
 		$(".circle-name").text(clubName);
+		
+		//메세지타입이 file이라면 수신처리
+		if(data.messageType === "file"){
+			console.log("file data: ", data); // 이 줄 추가
+			$("<img>").attr("src", data.chatContent)
+			.css("max-width", "200px")
+			.appendTo(".message-list");
+		}
 
+		//메세지 타입이 디엠이라면 해당 룸번호로 이동
 		if(data.messageType === "dm" && data.chatRoomNo){
 			moveToRoom(data.chatRoomNo);
 		}
 		
 		 // 만약 메세지 타입이 dm이면서 receiver가 있는 경우
-	    if (data.messageType === "dm" && data.chatReceiver) {
+	    if (data.messageType === "dm" && data.chatReceiver) {    	
 	    	 console.log("Before moveToRoom: ", data); // 이 줄 추가
+	    	 
 	        // 방 이동 처리
 	        moveToRoom(data.chatRoomNo);
 	        
@@ -612,7 +600,7 @@
 			$(".client-list").toggleClass("active");
 		});
 		
-		
+
 	</script>
 </body>
 </html>
