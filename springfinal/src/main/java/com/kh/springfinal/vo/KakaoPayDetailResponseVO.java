@@ -24,7 +24,6 @@ public class KakaoPayDetailResponseVO {
 	private int quantity;
 	private Date createdAt, approvedAt, canceledAt;
 	private KakaoPaySelectedCardInfo selectedCardInfo;
-//	private KakaoPaymentActionDetail[] paymentActionDetails;
 	private List<KakaoPaymentActionDetailVO> paymentActionDetails;//List를 선호
 	
 }

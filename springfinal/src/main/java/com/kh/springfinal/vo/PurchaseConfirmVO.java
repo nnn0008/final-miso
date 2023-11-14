@@ -14,6 +14,6 @@ public class PurchaseConfirmVO {
 	private ProductDto productDto;
 	
 	public int getTotal() {
-		return productDto.getProductPrice();
+		return purchaseVO.getQty() * productDto.getProductPrice();
 	}
 }
