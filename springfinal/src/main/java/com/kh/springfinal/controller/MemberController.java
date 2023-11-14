@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dto.MemberDto;
+//import com.kh.springhome.dto.MemberBlockDto;
+//import com.kh.springhome.error.AuthorityException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,71 +52,75 @@ public class MemberController {
 	public String login() {
 		return "member/login";
 	}
-	@PostMapping("/login")
-	public String login(HttpServletResponse httpServletResponse,
-						@RequestParam String memberId, @RequestParam String memberPw,
-						@RequestParam(required = false) String saveId,
-								HttpSession session) {
-		//db 유저 정보
-		MemberDto userDto = memberDao.selectOne(memberId, memberPw);
-		// id 틀리면 되돌림
-		if(userDto==null) {
-			if(saveId != null) {
-				Cookie cookie = new Cookie("saveId", memberId);
-				cookie.setMaxAge(4*7*24*60*60);//4주
-				httpServletResponse.addCookie(cookie);
-			}
-			else {
-				Cookie cookie = new Cookie("saveId", memberId);
-				cookie.setMaxAge(0);
-				httpServletResponse.addCookie(cookie);
-			}
-			return "redirect:login?error";
-		}
-		//db Pw
-		String userPw = userDto.getMemberPw();
-		//db Pw 와 입력값Pw 검사 후 session입력
-		if(userPw.equals(memberPw)) {
-			session.setAttribute("name", userDto.getMemberId());
-			session.setAttribute("level", userDto.getMemberLevel());
-      session.setAttribute("memberName", userDto.getMemberName());	
-			if(saveId != null) {
-				Cookie cookie = new Cookie("saveId", memberId);
-				cookie.setMaxAge(4*7*24*60*60);//4주
-				httpServletResponse.addCookie(cookie);
-			}
-			else {
-				Cookie cookie = new Cookie("saveId", memberId);
-				cookie.setMaxAge(0);//4주
-				httpServletResponse.addCookie(cookie);
-			}
-			
-		}
-		else {
-			if(saveId != null) {
-				Cookie cookie = new Cookie("saveId", memberId);
-				cookie.setMaxAge(4*7*24*60*60);//4주
-				httpServletResponse.addCookie(cookie);
-			}
-			else {
-				Cookie cookie = new Cookie("saveId", memberId);
-				cookie.setMaxAge(0);
-				httpServletResponse.addCookie(cookie);
-			}
-			return "redirect:login?error";
-		}
-		//로그인 완료창으로 보내기
-		return "redirect:../";	
-	}
+//	@PostMapping("/login")
+//	public String login(HttpServletResponse httpServletResponse,
+//						@RequestParam String memberId, @RequestParam String memberPw,
+//						@RequestParam(required = false) String saveId,
+//								HttpSession session) {
+//		//db 유저 정보
+//		MemberDto userDto = memberDao.selectOne(memberId, memberPw);
+//		// id 틀리면 되돌림
+//		if(userDto==null) {
+//			if(saveId != null) {
+//				Cookie cookie = new Cookie("saveId", memberId);
+//				cookie.setMaxAge(4*7*24*60*60);//4주
+//				httpServletResponse.addCookie(cookie);
+//			}
+//			else {
+//				Cookie cookie = new Cookie("saveId", memberId);
+//				cookie.setMaxAge(0);
+//				httpServletResponse.addCookie(cookie);
+//			}
+//			return "redirect:login?error";
+//		}
+//		//db Pw
+//		String userPw = userDto.getMemberPw();
+//		//db Pw 와 입력값Pw 검사 후 session입력
+//		if(userPw.equals(memberPw)) {
+//			session.setAttribute("name", userDto.getMemberId());
+//			session.setAttribute("level", userDto.getMemberLevel());
+//      session.setAttribute("memberName", userDto.getMemberName());	
+//			if(saveId != null) {
+//				Cookie cookie = new Cookie("saveId", memberId);
+//				cookie.setMaxAge(4*7*24*60*60);//4주
+//				httpServletResponse.addCookie(cookie);
+//			}
+//			else {
+//				Cookie cookie = new Cookie("saveId", memberId);
+//				cookie.setMaxAge(0);//4주
+//				httpServletResponse.addCookie(cookie);
+//			}
+//			
+//		}
+//		else {
+//			if(saveId != null) {
+//				Cookie cookie = new Cookie("saveId", memberId);
+//				cookie.setMaxAge(4*7*24*60*60);//4주
+//				httpServletResponse.addCookie(cookie);
+//			}
+//			else {
+//				Cookie cookie = new Cookie("saveId", memberId);
+//				cookie.setMaxAge(0);
+//				httpServletResponse.addCookie(cookie);
+//			}
+//			return "redirect:login?error";
+//		}
+//		//로그인 완료창으로 보내기
+//		return "redirect:../";	
+//	}
 	
-			//ChatRoomDto chatRoomDto = chatRoomDao.selectOne(userDto.getMemberId());
-			//log.debug("chatRoomDto: {}", chatRoomDto);
-			//
-			//if(chatRoomDto != null ) { //채팅방 번호가 있다면
-			//	session.setAttribute("chatRoomNo", chatRoomDto.getChatRoomNo()); //채팅방 번호를 넣어라
-			//}		
-			
-			
+
+	@PostMapping("/login")
+	public String login(@RequestParam String memberId, @RequestParam String memberPw, HttpSession session) {
+
+			//세션에 아이디 저장+등급 저장
+			session.setAttribute("name", memberId);
+			session.setAttribute("level", memberPw);
+
+			//메인페이지로 이동
+			return "redirect:/"; 
+		}
+	
 		
 	
 	//아이디 찾기

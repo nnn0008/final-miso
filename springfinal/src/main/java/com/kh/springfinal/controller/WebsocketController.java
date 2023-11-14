@@ -91,9 +91,9 @@ public class WebsocketController {
 //	    model.addAttribute("chatRoomNo", chatRoomNo);
 //	    model.addAttribute("chatRoomInfo", chatRoomInfo);
 	    
-	    //해당 채팅방의 메세지 이력을 조회
-	    List<ChatDto> chatHistory = chatDao.getChatHistory(chatRoomNo);
-	    model.addAttribute("chatHistory", chatHistory);
+//	    //해당 채팅방의 메세지 이력을 조회
+//	    List<ChatDto> chatHistory = chatDao.getChatHistory(chatRoomNo);
+//	    model.addAttribute("chatHistory", chatHistory);
 
 	    return "chat/sockjs";
 	}

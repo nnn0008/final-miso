@@ -29,4 +29,4 @@ public class CertDaoImpl implements CertDao{
 		CertDto certDto = sqlSession.selectOne(certEmail);
 		return certDto;
 	}
-
+}

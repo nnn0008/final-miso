@@ -1,20 +1,14 @@
 package com.kh.springfinal.websocket;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.web.socket.WebSocketSession;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.Map;
-
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,14 +17,15 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import javax.annotation.PostConstruct;
 
 import org.apache.ibatis.session.SqlSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.springfinal.configuration.FileUploadProperties;
 import com.kh.springfinal.dao.AttachDao;
 import com.kh.springfinal.dao.ChatDao;
@@ -48,7 +43,6 @@ import com.kh.springfinal.vo.ChatOneVO;
 import com.kh.springfinal.vo.ChatVO;
 import com.kh.springfinal.vo.ClientVO;
 
-import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -145,6 +139,10 @@ public class WebSocketServer extends TextWebSocketHandler{
 	// 특정 채팅방 입장 시 이전 메시지 조회 및 전송
 	public void sendChatHistory(Integer chatRoomNo, WebSocketSession session) throws IOException {
 
+		MessageDto messageDto = new MessageDto();
+	    // messageType 추출
+	    MessageType messageType = messageDto.getMessageType();
+		
 	    List<ChatDto> chatHistory = chatDao.getChatHistory(chatRoomNo);
 	    
 	    for (ChatDto chatDto : chatHistory) {
@@ -152,9 +150,16 @@ public class WebSocketServer extends TextWebSocketHandler{
 
 	        Map<String, Object> map = new HashMap<>();
 	        map.put("memberId", chatDto.getChatSender());
-	        map.put("content", chatDto.getChatContent());
 	        map.put("chatTime", chatTime.toString());
 	        map.put("chatRoomNo", chatRoomNo);
+	        
+	        if (chatDto.getAttachNo() != 0) {
+	        	map.put("messageType", "file");
+	            map.put("content", "/download?attachNo=" + chatDto.getAttachNo());
+	        } else {
+	            map.put("content", chatDto.getChatContent());
+	        }
+
 	        
 	     // 기존 채팅방 멤버의 닉네임 가져오기
 	        List<ChatVO> roomMembers = chatRoomDao.chatRoomMemberName(chatRoomNo);
@@ -383,10 +388,6 @@ public class WebSocketServer extends TextWebSocketHandler{
 	    else if (MessageType.file.equals(messageType)) { 
 	        log.debug("Entering the file processing block");
 	        
-//			TextMessage newMessage = new TextMessage(mapper.writeValueAsString(messageDto));
-//			for(ClientVO c : clients) {
-//				c.send(newMessage);
-//			}
 	        Integer chatRoomNo = messageDto.getChatRoomNo();
 	        String chatContent = messageDto.getChatContent();
 	        String chatSender = messageDto.getChatSender();
@@ -394,8 +395,8 @@ public class WebSocketServer extends TextWebSocketHandler{
 	        long fileSize = messageDto.getFileSize();
 	        String fileType = messageDto.getFileType(); 
 	        
-	        log.debug("chatRoomNo: {}, chatContent: {}, chatSender: {}, fileName: {}, fileSize: {}, fileType: {}", 
-	                chatRoomNo, chatContent, chatSender, fileName, fileSize, fileType);
+//	        log.debug("chatRoomNo: {}, chatContent: {}, chatSender: {}, fileName: {}, fileSize: {}, fileType: {}", 
+//	                chatRoomNo, chatContent, chatSender, fileName, fileSize, fileType);
 				       
             //뒷부분이 실제 이미지 파일내용이므로 제거한 다음 분석하도록 처리
             String[] slice = messageDto.getChatContent().split(",");
@@ -419,44 +420,36 @@ public class WebSocketServer extends TextWebSocketHandler{
             attachDto.setAttachSize(fileSize);
             attachDto.setAttachType(fileType);
             attachDao.insert(attachDto);
-            
-            //파일 업로드 완료 후 룸번호와 파일번호 연결
-            
-            
-            //사용자에게 다운로드 경로 제공
-//            String json = mapper.writeValueAsString(MessageDto.builder()
-//            		.messageType("file").chatContent(
-//            				"http://localhost:8080/download?attachNo="+attachNo)
-//            		.build());
-            
-            
-            
-			TextMessage newMessage = new TextMessage(mapper.writeValueAsString(messageDto));
-			for(ClientVO c : clients) {
-				c.send(newMessage);
-			}
-                       
+                            
             Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
             log.debug("roomMembers for chatRoomNo {}: {}", chatRoomNo, roomMembers);
             
+            if (roomMembers != null) {
             Map<String, Object> FileChat = new HashMap<>();
-            FileChat.put("memberType", MessageType.file);
+            FileChat.put("messageType", MessageType.file);
             FileChat.put("memberId", client.getMemberId());
-            FileChat.put("content", chatContent);
+            FileChat.put("content", "/download?attachNo=" + attachNo); // 파일 다운로드를 알리는 채팅 내용
             FileChat.put("chatTime", chatTime.toString());
             FileChat.put("chatRoomNo", chatRoomNo);
             FileChat.put("memberLevel", client.getMemberLevel());
             FileChat.put("memberName", client.getMemberName());
-            
+                           
             String messageJson = mapper.writeValueAsString(FileChat);
             TextMessage tm = new TextMessage(messageJson);
+            
+            for (ClientVO c : roomMembers) {
+                c.send(tm);
+            }
+         }
+            
+            // DB
+ 	        chatDao.insert(ChatDto.builder()
+//	        		.chatContent(chatContent)
+ 	        		.chatSender(chatSender)
+ 	        		.chatRoomNo(chatRoomNo)
+ 	        		.attachNo(attachNo)
+ 	        		.build());
                 
-                
-                
-//                for (ClientVO c : roomMembers) {
-//                    c.send(tm);
-//                }
-
 	    }	
    }
 	
