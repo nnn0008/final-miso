@@ -49,4 +49,11 @@ public class ClubBoardReplyDaoImpl implements ClubBoardReplyDao{
 		Map params = Map.of("clubNo", clubNo, "clubMemberId", clubMemberId);
 		return sqlSession.selectOne("clubBoardReply.findClubMemberNo", params);
 	}
+	
+	@Override
+	public List<ClubBoardReplyDto> selectListByReply(int clubBoardNo) {
+		return sqlSession.selectList("clubBoardReply.findByReply", clubBoardNo);
+	}
+	
+	
 }

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class ClubBoardAllDto {
 	private int clubBoardNo;
 	private String memberId;
-	private int attachNoMp;
+	private Integer attachNoMp;
 	private String clubMemberRank;
 	private int clubNo;
 	private String clubBoardTitle;
@@ -19,6 +19,7 @@ public class ClubBoardAllDto {
 	private String clubBoardCategory;
 	private Date clubBoardDate;
 	private int clubBoardLikecount;
+	private int clubBoardReplyCount;
 	private String clubBoardName;
-	private int attachNoCbi;
+	private Integer attachNoCbi;
 }

@@ -24,12 +24,11 @@ public class AttachDaoImpl implements AttachDao{
 	
 	@Override
 	public AttachDto selectOne(int attachNo) {
-		return sqlSession.selectOne("attatch.find", attachNo);
+		return sqlSession.selectOne("attach.find", attachNo);
 	}
 
 	@Override
 	public boolean delete(int attachNo) {
-		
-		return sqlSession.delete("attach.delete",attachNo)>0;
+		return sqlSession.delete("attach.delete",attachNo) > 0;
 	}
 }

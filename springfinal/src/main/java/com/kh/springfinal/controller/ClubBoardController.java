@@ -1,11 +1,14 @@
 package com.kh.springfinal.controller;
 
+import java.io.Console;
 import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +34,8 @@ import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.vo.FileLoadVO;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Controller
 @RequestMapping("/clubBoard")
 public class ClubBoardController {
@@ -66,9 +71,9 @@ public class ClubBoardController {
 			HttpSession session, @RequestParam int clubNo, @ModelAttribute ClubBoardImageDto clubBoardImageDto, @ModelAttribute ClubBoardImage2Dto clubBoardImage2Dto,
 			@ModelAttribute ClubBoardImage3Dto clubBoardImage3Dto, @RequestParam MultipartFile attach,
 			@RequestParam MultipartFile attachSecond, @RequestParam MultipartFile attachThird) throws Exception, IOException{
-//		memberDto = memberDao.loginId((String)session.getAttribute("name")); //여기서 회원 이름을 얻어야함
-		
-		
+
+		//		memberDto = memberDao.loginId((String)session.getAttribute("name")); //여기서 회원 이름을 얻어야함
+		//memberDto.setMemberId((String)session.getAttribute("name"));
 		memberDto.setMemberId("testuser1");
 		String clubMemberId = memberDto.getMemberId();
 		
@@ -94,8 +99,9 @@ public class ClubBoardController {
 	
 	@RequestMapping("/list")
 	public String list(Model model, @RequestParam int clubNo) {
-		List<ClubBoardAllDto> list = clubBoardDao.selectListByPage(1, 999, clubNo);
+		List<ClubBoardAllDto> list = clubBoardDao.selectListByPage(1, 10, clubNo);
 		model.addAttribute("list", list);
+//		log.debug("list = {}", list);
 		return "clubBoard/list";
 	}
 	
@@ -106,6 +112,13 @@ public class ClubBoardController {
 		model.addAttribute("clubBoardAllDto", clubBoardAllDto);
 		model.addAttribute("replyList", replyList);
 		return "clubBoard/detail";
+	}
+	
+	//파일 다운로드
+	@RequestMapping("/download")
+	public ResponseEntity<ByteArrayResource> download(@RequestParam int attachNo) throws IOException{
+//		log.debug("fileLoadVO = {}", fileLoadVO);
+		return fileLoadVO.download(attachNo);
 	}
 	
 	

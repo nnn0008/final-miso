@@ -81,4 +81,10 @@
 		delete club_board where club_board_no = #{clubBoardNo}
 	</delete>
 	
+	<update id="replyCount">
+		update club_board set club_board_reply_count = 
+		(select count(*) from club_board_reply where club_board_no = #{clubBoardNo}) 
+		where club_board_no = #{clubBoardNo} 
+	</update>
+	
 	</mapper>
