@@ -109,6 +109,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 		body.add("cid", kakaoPayProperties.getCid());
 		body.add("tid",request.getTid() );//거래번호
 		
+		
 		HttpEntity entity = new HttpEntity(body,headers);//요청 객체
 		
 		KakaoPayDetailResponseVO response = template.postForObject(uri, entity, KakaoPayDetailResponseVO.class);
@@ -147,7 +148,11 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 			if(name ==null) {//이름이 없을때만 이름을 넣어라(최초 이름만 들어감)
 				name=dto.getProductName();
 			}
-			total += dto.getProductPrice();//상품가격dmf ejgofk!
+			total += dto.getProductPrice() *  vo.getQty();;
+		}
+		
+		if(list.size() >= 2) {
+			name += " 외"+(list.size()-1)+"건";
 		}
 		
 		
@@ -156,7 +161,6 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 		int paymentNo = paymentDao.sequence();
 		
 		return KakaoPayReadyRequestVO.builder()
-				//.partnerOrderId(UUID.randomUUID().toString())
 				.partnerOrderId(String.valueOf(paymentNo))
 				.itemName(name)
 				.itemPrice(total)
