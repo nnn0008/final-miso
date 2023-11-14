@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class CertDto {
 	private String certEmail;
-	private int certNumber;
+	private String certNumber;
 	private Date certTime;
 }
