@@ -12,6 +12,7 @@
 		//댓글 작성
 		$(".reply-insert-form").submit(function(e){
 			e.preventDefault();
+			if($(".reply-write").val().length == 0) return;
 			var clubBoardReplyContent = $(".reply-write").val();
 			var params = new URLSearchParams(location.search);
 			var clubBoardNo = params.get("clubBoardNo");
@@ -36,6 +37,30 @@
 			});
 		});
 		
+		//대댓글 작성
+		$(".update-success-subReply").click(function(){
+			e.preventDefault();
+			if(("[name=clubBoardSubReplyContent]").val().length == 0) return;
+			var clubBoardSubReplyContent = $("[name=clubBoardSubReplyContent]").val();
+			var params = new URLSearchParams(location.search);
+			var clubBoardNo = params.get("clubBoardNo");
+			
+			$.ajax({
+				url:window.contextPath+"/rest/reply/insert",
+				method:"post",
+				data:	
+				{
+					//$(e.target).serialize(),
+					clubBoardReplyContent : clubBoardReplyContent,
+					clubBoardNo : clubBoardNo,
+					clubBoardReplyParent : 1,
+				},	
+				success:function(response){
+					$("[name=clubBoardSubReplyContent]").val("");
+					loadList();
+				}
+			});
+		});
 		//화면이 로딩되거나 댓글이 작성되었을경우 댓글목록을 다시 찍어주는 비동기처리
 		function loadList(){
 			var params = new URLSearchParams(location.search);
@@ -48,13 +73,13 @@
 				//response를 댓글 목록으로 받아옴
 				success:function(response){
 					$(".reply-list").empty();
-					console.log(response);
+					//console.log(response);
 					for(var i = 0; i < response.length; i++){
 						var reply = response[i];
 						
 						var template = $("#reply-template").html();
 						var htmlTemplate = $.parseHTML(template);
-						console.log(response);
+						
 						//작성자는 사이트를 탈퇴했다면 탈퇴한 유저 아니라면 작성자
 						$(htmlTemplate).find(".clubBoardReplyWriter").text(response[i].clubBoardReplyWriter || "탈퇴한 유저");
 						$(htmlTemplate).find(".clubBoardReplyDate").text(response[i].clubBoardReplyDate);
@@ -91,15 +116,19 @@
 							$("[name=clubBoardReplyNo]").val(clubBoardReplyNo); //히든으로 날려보낼 번호
 							
 							//Modal의 저장 버튼을 클릭했을 때, modal의 input에 있는 내용으로 바꾸기
-							$(".update-success-reply").click(function(e){
+							$(".update-success-reply").click(function(){
 								$.ajax({
 									url:window.contextPath + "/rest/reply/edit",
 									method:"post",
-									data: $(e.target).serialize(),
+									data: {
+										clubBoardReplyNo : clubBoardReplyNo,
+										clubBoardReplyContent : $("[name=clubBoardReplyContent]").val()
+									},
 									//내용을 바꾸는게 성공했다면
 									success:function(response){
+										console.log("성공");
 										loadList(); //목록을 갱신
-										$("#replyEditModal").hide(); //내용 변경 후 목록을 갱신하고 modal을 닫는다
+										$("#replyEditModal").hide(); //내용 변경 후 modal을 닫는다
 									}
 								});
 							});
@@ -108,7 +137,6 @@
 								$("#replyEditModal").hide(); //내용 변경 없이 Modal을 닫으면 된다
 							});
 						});
-						
 						$(".reply-list").append(htmlTemplate);
 					}
 				}
@@ -117,8 +145,11 @@
 		
 	});
 </script>
+<script>
+	//좋아요 관련 처리
+</script>
 <script id="reply-template" type="text/template">
- <div class="col for-reply-edit">
+ <div class="col-12 for-reply-edit mt-2">
 	<div class="row">
 		<div class="col">
 			<h6 class="clubBoardReplyWriter">작성자</h6>
@@ -133,26 +164,26 @@
 	</div>
 	<div class="row mt-2">
 		<div class="col">
-			<pre class="clubBoardReplyContent">내용</pre>
+			<pre class="clubBoardReplyContent fs-6">내용</pre>
 		</div>
 	</div>
+<hr>
 	<div class="row mt-2">
 		<div class="col">
-			좋아요 | 답글 달기 
-		</div>
+			<i class="fa-regular fa-thumbs-up"></i> 좋아요 | <button type="button" class="subReplyModal" data-bs-toggle="modal" data-bs-target="#subReplyModal"><i class="fa-solid fa-pen-to-square"></i>답글 달기</button>
 	</div>
  </div>
 </script>
 <script>
 </script>
 
-<div class="row mt-2">
+<!-- <div class="row mt-2">
 	<div class="col">
 		이름 오늘이라면 오전/오후 00:00// 날짜 바뀌었다면 ~~월 ~일 오전/오후 00:00
 		댓글 내용 // 여기까지 말풍선
 		좋아요 | 답글 달기
 	</div>
-</div>
+</div> -->
 
 
 
@@ -164,7 +195,12 @@
 			
 			<div class="row">
 				<div class="col-3">
-					프로필사진
+					<c:if test="${clubBoardAllDto.attachNoMp == null }">
+						<img src="${pageContext.request.contextPath}/images/user.png" style="max-width: 25px;" alt="User Image">				
+					</c:if>
+					<c:if test="${clubBoardAllDto.attachNoMp != null}">
+						<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardAllDto.attachNoMp}">
+					</c:if>
 				</div>
 				<div class="col-3">
 					${clubBoardAllDto.clubBoardName}
@@ -240,7 +276,38 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">댓글 수정</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+        <input type="hidden" name="clubBoardReplyNo">	
+        	
+        <div class="row">
+        	<div class="col">   		
+        		<input type="text" class="form-control" name="clubBoardSubReplyContent">
+        	</div>
+        </div>      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary update-cancel-reply" data-bs-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-primary update-success-reply" data-bs-dismiss="modal">저장</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%-- 답글을 위한 Modal --%>
+<!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Launch demo modal
+</button> -->
+<!-- Modal -->
+<div class="modal fade" id="subReplyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">답글 작성</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -249,16 +316,13 @@
         	
         <div class="row">
         	<div class="col">
-        		
         		<input type="text" class="form-control" name="clubBoardReplyContent">
         	</div>
-        </div>
-        
-        
+        </div>      
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary update-cancel-reply" data-bs-dismiss="modal">취소</button>
-        <button type="button" class="btn btn-primary update-success-reply">저장</button>
+        <button type="button" class="btn btn-secondary update-cancel-subReply" data-bs-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-primary update-success-subReply" data-bs-dismiss="modal">저장</button>
       </div>
     </div>
   </div>

@@ -13,4 +13,6 @@ public interface ClubBoardReplyDao {
 	boolean delete(int clubBoardReplyNo);
 	boolean edit(int clubBoardReplyNo, String clubBoardReplyContent);
 	ClubMemberDto selectOne(int clubNo, String clubMemberId);
+	//답글까지 생각해서 만들기
+	List<ClubBoardReplyDto> selectListByReply(int clubBoardNo);
 }

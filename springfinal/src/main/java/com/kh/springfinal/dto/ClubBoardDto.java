@@ -13,6 +13,7 @@ public class ClubBoardDto {
 	private String clubBoardContent;
 	private String clubBoardCategory;
 	private String clubBoardDate;
+	private int clubBoardReplyCount;
 	private int clubMemberNo;
 	private int clubNo;
 }

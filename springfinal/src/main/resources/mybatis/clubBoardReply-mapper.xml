@@ -13,11 +13,11 @@
 	<insert id="add">
 		insert into club_board_reply(
 			club_board_reply_no, club_board_reply_content, club_board_reply_writer, club_member_no, 
-			club_board_no, club_board_reply_group, club_board_reply_parent, club_board_reply_depth
+			club_board_no, club_board_reply_group, club_board_reply_depth, club_board_reply_parent
 		)
 		values(
 			#{clubBoardReplyNo}, #{clubBoardReplyContent}, #{clubBoardReplyWriter}, #{clubMemberNo}, 
-			#{clubBoardNo}, #{clubBoardReplyGroup}, #{clubBoardReplyParent}, #{clubBoardReplyDepth}
+			#{clubBoardNo}, #{clubBoardReplyGroup}, #{clubBoardReplyDepth}, #{clubBoardReplyParent}
 		)
 	</insert>
 	
@@ -41,6 +41,12 @@
 	<select id="findClubMemberNo" resultType="ClubMemberDto">
 		select * from club_member where club_no = #{clubNo} and club_member_id = #{clubMemberId}
 	</select>
+	
+	<select id="findByReply" resultType="ClubBoardReplyDto">
+		select * from club_board_reply connect by prior club_board_reply_no = club_board_reply_parent
+		start with club_board_reply_parent is null order siblings by club_board_reply_group asc, club_board_reply_no asc
+	</select>
+	
 	
 	
 </mapper>  

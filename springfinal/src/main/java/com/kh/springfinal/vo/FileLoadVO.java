@@ -2,12 +2,17 @@ package com.kh.springfinal.vo;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.springfinal.configuration.FileUploadProperties;
@@ -25,13 +30,6 @@ public class FileLoadVO {
 	
 	@Autowired
 	private AttachDao attachDao;
-	
-//	@Autowired
-//	private ClubBoardImageDao clubBoardImageDao;
-	@Autowired
-	private ClubBoardImage2Dao clubBoardImage2Dao;
-	@Autowired
-	private ClubBoardImage3Dao clubBoardImage3Dao;
 	
 	@Autowired
 	private FileUploadProperties props;
@@ -72,11 +70,6 @@ public class FileLoadVO {
 		attachDao.insert(attachDto);
 		clubBoardImageDao.insert(clubBoardImageDto);
 		
-//		clubBoardImageDao.insert(clubBoardImageDto.builder()
-//												.attachNo(attachNo)
-//												.clubBoardNo(clubBoardNo)
-//												.build());
-		
 		if(!attachSecond.isEmpty()) {
 			int attachSecondNo = attachDao.sequence();
 			clubBoardImage2Dto.setAttachNo(attachSecondNo);
@@ -111,10 +104,32 @@ public class FileLoadVO {
 			}
 		}
 
-//		clubBoardImageDao.insert(clubBoardImageDto);
-//		clubBoardImage2Dao.insert(clubBoardImage2Dto);
-//		clubBoardImage3Dao.insert(clubBoardImage3Dto);
-
+	}
+	
+	//파일 다운로드 관련처리
+	public ResponseEntity<ByteArrayResource> download(int attachNo) throws IOException{
+		AttachDto attachDto = attachDao.selectOne(attachNo);
+		
+		if(attachDto == null) {
+			//throw new NoTargetException("파일 없음");//내가만든 예외로 통합
+			return ResponseEntity.notFound().build();//404 반환
+		}
+		
+		File target = new File(dir, String.valueOf(attachDto.getAttachNo()));
+		
+		byte[] data = FileUtils.readFileToByteArray(target);
+		ByteArrayResource resource = new ByteArrayResource(data);
+		
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_ENCODING, StandardCharsets.UTF_8.name())
+				.contentLength(attachDto.getAttachSize())
+				.header(HttpHeaders.CONTENT_TYPE, attachDto.getAttachType())
+				.header(HttpHeaders.CONTENT_DISPOSITION, 
+					ContentDisposition.attachment()
+					.filename(attachDto.getAttachName(), StandardCharsets.UTF_8)
+					.build().toString()
+				)
+			.body(resource);
 	}
 	
 	//edit시

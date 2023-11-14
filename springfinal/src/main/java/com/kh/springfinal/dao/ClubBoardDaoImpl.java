@@ -50,4 +50,8 @@ public class ClubBoardDaoImpl implements ClubBoardDao{
 		return sqlSession.selectOne("clubBoard.remove", clubBoardNo);
 	}
 	
+	@Override
+	public boolean updateReplyCount(int clubBoardNo) {
+		return sqlSession.update("clubBoard.replyCount", clubBoardNo) > 0;
+	}
 }

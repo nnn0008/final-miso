@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,24 +64,26 @@ public class ReplyRestController {
 		}
 		clubBoardReplyDao.insert(clubBoardReplyDto);
 		//댓글 개수 업데이트 필요함
+		clubBoardDao.updateReplyCount(clubBoardNo);
 	}
 	
 	@PostMapping("/list")
 	public List<ClubBoardReplyDto> list(@RequestParam int clubBoardNo){
 		List<ClubBoardReplyDto> list = clubBoardReplyDao.selectList(clubBoardNo);
 		
-		//댓글 개수 업데이트 필요함
 		return list;
 	}
 	
 	@PostMapping("/delete")
 	public void delete(@RequestParam int clubBoardReplyNo) {
+		ClubBoardReplyDto clubBoardReplyDto = clubBoardReplyDao.selectOne(clubBoardReplyNo);
 		clubBoardReplyDao.delete(clubBoardReplyNo);
 		//댓글 개수 업데이트 필요함
+		clubBoardDao.updateReplyCount(clubBoardReplyDto.getClubBoardNo());
 	}
 	
 	@PostMapping("/edit")
-	public void edit(@ModelAttribute ClubBoardReplyDto clubBoardReplyDto) {
-		
+	public void edit(@RequestParam int clubBoardReplyNo, @RequestParam String clubBoardReplyContent) {
+		clubBoardReplyDao.edit(clubBoardReplyNo, clubBoardReplyContent);
 	}
 }
