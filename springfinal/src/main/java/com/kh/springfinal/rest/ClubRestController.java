@@ -98,7 +98,7 @@ public class ClubRestController {
 				existMember(clubNo, 
 						memberId);
 		
-		if(!exist) {
+		if(exist) {
 		
 		return true;
 		

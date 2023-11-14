@@ -7,77 +7,42 @@
 <script src="https://unpkg.com/hangul-js" type="text/javascript"></script>
 
 <script>
-	$(function(){
-		
-			$(".join").click(function(e){
-				
-				var clubNo = $(".clubNo").data("no");
-				var memberId = $(".memberId").data("id");
-				
-				$.ajax({
-    	            url: "http://localhost:8080/rest/existMember",
-    	            method: "get",
-    	            data: { clubNo: clubNo,
-    	            		clubMemberId:memberId},
-    	            success: function (response) {
-    	            	
-    	            	if(response==true){
-    	            		
-    	            	}
-    	            	else{
-    	            		
-    	            		alert('이미 가입한 모임입니다')
-    	            		
-    	            	}
-    	   
-    	            }
-    	        });
-				
-			})
-		
-	
-			$(".commit").click(function(){
-				
-				var clubNo = $(".clubNo").data("no");
-				var memberId = $(".memberId").data("id");
-				var joinMessage = $(".joinMessage").val();
-				
-				
-				
-				$.ajax({
-    	            url: "http://localhost:8080/rest/clubMember",
-    	            method: "post",
-    	            data: { clubNo: clubNo,
-    	            		clubMemberId:memberId,
-    	            		joinMessage:joinMessage},
-    	            success: function (response) {
-    	            	
-    	            	if(response==true){
-    	            	
-    	            	$(".btn-secondary").click();    	            	
-    	            	
-    	            	alert('가입완료');}
-    	            	else{
-    	            		
-    	            		alert('이미 가입한 모임입니다')
-    	            		
-    	            	}
-    	   
-    	            }
-    	        });
-			
-				
-				
-				
-			})
-			
-			
-		
-		
-		
-		
-		
-	})
+$(function(){
+    $(".join").click(function(e){
+        var clubNo = $(".clubNo").data("no");
+        var memberId = $(".memberId").data("id");
+
+        $.ajax({
+            url: "http://localhost:8080/rest/existMember",
+            method: "get",
+            data: { clubNo: clubNo, memberId: memberId },
+            success: function (response) {
+                if (response == true){
+                    alert('이미 가입한 모임입니다');
+                } else {
+                    $(".exampleModal").modal('show');
+                }
+            }
+        });
+    });
+
+    $(".commit").click(function(){
+        var clubNo = $(".clubNo").data("no");
+        var memberId = $(".memberId").data("id");
+        var joinMessage = $(".joinMessage").val();
+
+        $.ajax({
+            url: "http://localhost:8080/rest/clubMember",
+            method: "post",
+            data: { clubNo: clubNo, clubMemberId: memberId, joinMessage: joinMessage },
+            success: function (response) {
+                $(".btn-secondary").click();
+                alert('가입완료');
+            }
+        });
+    });
+});
+
 	
 	
 
@@ -115,7 +80,7 @@
             <p>클럽 설명: ${clubDto.clubExplain} 설명</p>
         </div>
     </div>
-   <button type="button" class="btn btn-secondary mt-4 join" data-bs-toggle="modal" data-bs-target=".exampleModal">가입하기</button>
+   <button type="button" class="btn btn-secondary mt-4 join" data-bs-toggle="modal">가입하기</button>
 
     
 </div>
