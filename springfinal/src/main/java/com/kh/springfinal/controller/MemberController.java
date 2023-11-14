@@ -1,13 +1,19 @@
 package com.kh.springfinal.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.message.SimpleMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +31,9 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberController {
 	@Autowired
 	private MemberDao memberDao;
+	
+	@Autowired
+	private JavaMailSender sender;
 	
 	@GetMapping("/join")
 	public String join() {
@@ -57,7 +66,7 @@ public class MemberController {
 			}
 			else {
 				Cookie cookie = new Cookie("saveId", memberId);
-				cookie.setMaxAge(0);//4주
+				cookie.setMaxAge(0);
 				httpServletResponse.addCookie(cookie);
 			}
 			return "redirect:login?error";
@@ -93,12 +102,7 @@ public class MemberController {
 			return "redirect:login?error";
 		}
 		//로그인 완료창으로 보내기
-		return "redirect:./loginFinish";	
-	}
-	//로그인 완료창
-	@RequestMapping("/loginFinish")
-	public String loginFinish() {
-		return "member/loginFinish";
+		return "redirect:../";	
 	}
 	
 	//아이디 찾기
@@ -107,5 +111,68 @@ public class MemberController {
 		return "member/searchId";
 	}
 	
+	//아이디 찾기
+	// 데이터를 searchId2로 넘기는 코드
+	@PostMapping("/searchId")
+	public String searchId2(@RequestParam String memberName, @RequestParam String memberEmail) {
+	    try {
+	        memberName = URLEncoder.encode(memberName, "UTF-8");
+	    } catch (UnsupportedEncodingException e) {
+	        e.printStackTrace(); // 예외 처리 필요
+	    }
+
+	    return "redirect:./searchId2?memberName=" + memberName + "&memberEmail=" + memberEmail;
+	}
+
+	@RequestMapping("/searchId2")
+	public String searchId2(Model model, @RequestParam String memberName, @RequestParam String memberEmail) {
+	    try {
+	        // 디코딩 추가
+	        memberName = URLDecoder.decode(memberName, "UTF-8");
+	    } catch (UnsupportedEncodingException e) {
+	        e.printStackTrace(); // 예외 처리 필요
+	    }
+
+	    List<MemberDto> idList = memberDao.memberIdListByEmail(memberName, memberEmail);
+	   if(idList!=null) {
+		   
+	    // 문자열 제거
+	    String idListString = idList.toString().replaceAll("[\\[\\]]", "");
+	    // 데이터 Model에 담기
+	    model.addAttribute("idList", idListString);
+	    model.addAttribute("idCount", idList.size());
+	    model.addAttribute("memberName", memberName);
+	    Cookie cookie = new Cookie("searchId", null);
+	    return "member/searchId2";
+	   }
+	   return "./searchId?error";
+	}
+	
+	@GetMapping("/searchPw")
+	public String searchPw() {
+		return "member/searchPw";
+	}
+	@PostMapping("/searchPw")
+	public String searchPw(@RequestParam String memberId, @RequestParam String memberEmail) {
+		MemberDto findDto  = memberDao.selectOne(memberId);
+		//아이디, 이메일 검사
+		if(findDto.getMemberEmail().equals(memberEmail)) {
+			SimpleMessage message = new SimpleMessage();
+//			message.setTo();
+			return "redirect:./searchPwFinish";
+		}
+		else {
+			return"redirect:./searchPw?error";
+		}
+	}
+	
+	@RequestMapping("/mypage")
+	public String mypage(HttpSession session, Model model) {
+		String memberId=(String) session.getAttribute("name");
+		MemberDto memberDto = memberDao.selectOne(memberId);
+		model.addAttribute("memberDto", memberDto);
+		return "member/mypage";
+	}
+
 	
 }

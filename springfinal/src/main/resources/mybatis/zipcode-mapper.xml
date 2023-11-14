@@ -47,8 +47,6 @@
 		sigungu=#{sigungu} and
 		eupmyun=#{eupmyun}
 		
-		
-	
 	</select> 
 		
 

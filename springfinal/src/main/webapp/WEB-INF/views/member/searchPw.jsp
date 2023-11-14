@@ -52,6 +52,7 @@
             <!-- 헤더 -->
 <article class="main-content">
 
+
 <!-- 아이디를 찾았을 때 띄울 템플렛 -->
 
 <div class="contain-fluid">
@@ -60,17 +61,17 @@
 
 			<div class="row mt-5 pt-5">
 				<div class="col">
-					<h1>아이디 찾기</h1>
+					<h1>비밀번호 찾기</h1>
 				</div>
 			</div>
 
-			<form action="searchId" method="post">
+			<form action="searchPw" method="post">
 				<div class="row">
 					<div class="col">
 						<div class="form-group">
-							<label class="col-form-label mt-4" for="memberName">이름</label> <input
-								type="text" class="form-control" name="memberName"
-								id="memberName">
+							<label class="col-form-label mt-4" for="memberId">아이디</label> <input
+								type="text" class="form-control" name="memberId"
+								id="memberId">
 						</div>
 					</div>
 				</div>

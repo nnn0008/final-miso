@@ -45,7 +45,6 @@ public class MemberDaoImpl implements MemberDao{
 				return memberDto;
 			}
 		}
-		memberDto.setMemberPw(memberId);
 		return null;
 	}
 	
@@ -54,9 +53,17 @@ public class MemberDaoImpl implements MemberDao{
 		Map<String, Object> params = new HashMap<>();
 		params.put("memberName", memberName);
 		params.put("memberEmail", memberEmail);
-	
 		List<MemberDto> idList = sqlSession.selectList("member.memberIdListByEmail", params);
 		return idList;
-		
+	}
+	@Override
+	public MemberDto changePw(String memberId) {
+		MemberDto memberDto = sqlSession.selectOne("member.loginId", memberId);
+		String originPw = memberDto.getMemberPw();
+		if(memberDto != null) {
+				memberDto.setMemberPw(originPw);
+				return memberDto;
+			}
+		return null;
 	}
 }
