@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
 public class ClubBoardAllDto {
+	private int clubBoardNo;
 	private String memberId;
 	private int attachNoMp;
 	private String clubMemberRank;

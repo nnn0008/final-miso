@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kh.springfinal.dto.ClubBoardReplyDto;
+import com.kh.springfinal.dto.ClubMemberDto;
 
 @Repository
 public class ClubBoardReplyDaoImpl implements ClubBoardReplyDao{
@@ -41,5 +42,11 @@ public class ClubBoardReplyDaoImpl implements ClubBoardReplyDao{
 	public boolean edit(int clubBoardReplyNo, String clubBoardReplyContent) {
 		Map params = Map.of("clubBoardReplyNo", clubBoardReplyNo, "clubBoardReplyContent", clubBoardReplyContent);
 		return sqlSession.update("clubBoardReply.edit", params) > 0;
+	}
+	
+	@Override
+	public ClubMemberDto selectOne(int clubNo, String clubMemberId) {
+		Map params = Map.of("clubNo", clubNo, "clubMemberId", clubMemberId);
+		return sqlSession.selectOne("clubBoardReply.findClubMemberNo", params);
 	}
 }
