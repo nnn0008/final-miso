@@ -12,6 +12,7 @@ public class ClubMemberDto {
 	private String clubMemberId;
 	private int clubNo;
 	private String clubMemberRank;
+	private String joinMessage;
 	
 
 }

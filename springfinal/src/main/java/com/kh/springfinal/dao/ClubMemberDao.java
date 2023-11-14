@@ -7,5 +7,9 @@ public interface ClubMemberDao {
 	ClubMemberDto selectOne(int clubMemberNo);
 	
 	void insert(ClubMemberDto clubMemberDto);
+	
+	int sequence();
+	
+	boolean existMember(int clubNo,String memberId);
 
 }
