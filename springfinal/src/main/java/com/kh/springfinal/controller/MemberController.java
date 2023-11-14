@@ -50,62 +50,75 @@ public class MemberController {
 	public String login() {
 		return "member/login";
 	}
-	@PostMapping("/login")
-	public String login(HttpServletResponse httpServletResponse,
-						@RequestParam String memberId, @RequestParam String memberPw,
-						@RequestParam(required = false) String saveId,
-								HttpSession session) {
+	//임시 로그인(아이디 새로 만든거 쓰실분은 아래 코드 주석풀어서 이용해주세요)
+	  @PostMapping("/login")
+	   public String login(@RequestParam String memberId, @RequestParam String memberPw, HttpSession session) {
+		  	MemberDto memberDto = memberDao.loginId(memberId);
+	         //세션에 아이디 저장+등급 저장
+	         session.setAttribute("name", memberId);
+	         session.setAttribute("level", memberDto.getMemberLevel());
+	         session.setAttribute("memberName", memberDto.getMemberName());
+
+	         //메인페이지로 이동
+	         return "redirect:/"; 
+	      };
+	
+//	@PostMapping("/login")
+//	public String login(HttpServletResponse httpServletResponse,
+//						@RequestParam String memberId, @RequestParam String memberPw,
+//						@RequestParam(required = false) String saveId,
+//								HttpSession session) {
 		//db 유저 정보
-		MemberDto userDto = memberDao.selectOne(memberId, memberPw);
+//		MemberDto userDto = memberDao.selectOne(memberId, memberPw);
 		// id 틀리면 되돌림
-		if(userDto==null) {
-			if(saveId != null) {
-				Cookie cookie = new Cookie("saveId", memberId);
-				cookie.setMaxAge(4*7*24*60*60);//4주
-				httpServletResponse.addCookie(cookie);
-			}
-			else {
-				Cookie cookie = new Cookie("saveId", memberId);
-				cookie.setMaxAge(0);
-				httpServletResponse.addCookie(cookie);
-			}
-			return "redirect:login?error";
-		}
+//		if(userDto==null) {
+//			if(saveId != null) {
+//				Cookie cookie = new Cookie("saveId", memberId);
+//				cookie.setMaxAge(4*7*24*60*60);//4주
+//				httpServletResponse.addCookie(cookie);
+//			}
+//			else {
+//				Cookie cookie = new Cookie("saveId", memberId);
+//				cookie.setMaxAge(0);
+//				httpServletResponse.addCookie(cookie);
+//			}
+//			return "redirect:login?error";
+//		}
 		//db Pw
-		String userPw = userDto.getMemberPw();
+//		String userPw = userDto.getMemberPw();
 		//db Pw 와 입력값Pw 검사 후 session입력
-		if(userPw.equals(memberPw)) {
-			session.setAttribute("name", userDto.getMemberId());
-			session.setAttribute("level", userDto.getMemberLevel());
-      session.setAttribute("memberName", userDto.getMemberName());	
-			if(saveId != null) {
-				Cookie cookie = new Cookie("saveId", memberId);
-				cookie.setMaxAge(4*7*24*60*60);//4주
-				httpServletResponse.addCookie(cookie);
-			}
-			else {
-				Cookie cookie = new Cookie("saveId", memberId);
-				cookie.setMaxAge(0);//4주
-				httpServletResponse.addCookie(cookie);
-			}
+//		if(userPw.equals(memberPw)) {
+//			session.setAttribute("name", userDto.getMemberId());
+//			session.setAttribute("level", userDto.getMemberLevel());
+//      session.setAttribute("memberName", userDto.getMemberName());	
+//			if(saveId != null) {
+//				Cookie cookie = new Cookie("saveId", memberId);
+//				cookie.setMaxAge(4*7*24*60*60);//4주
+//				httpServletResponse.addCookie(cookie);
+//			}
+//			else {
+//				Cookie cookie = new Cookie("saveId", memberId);
+//				cookie.setMaxAge(0);//4주
+//				httpServletResponse.addCookie(cookie);
+//			}
 			
-		}
-		else {
-			if(saveId != null) {
-				Cookie cookie = new Cookie("saveId", memberId);
-				cookie.setMaxAge(4*7*24*60*60);//4주
-				httpServletResponse.addCookie(cookie);
-			}
-			else {
-				Cookie cookie = new Cookie("saveId", memberId);
-				cookie.setMaxAge(0);
-				httpServletResponse.addCookie(cookie);
-			}
-			return "redirect:login?error";
-		}
+//		}
+//		else {
+//			if(saveId != null) {
+//				Cookie cookie = new Cookie("saveId", memberId);
+//				cookie.setMaxAge(4*7*24*60*60);//4주
+//				httpServletResponse.addCookie(cookie);
+//			}
+//			else {
+//				Cookie cookie = new Cookie("saveId", memberId);
+//				cookie.setMaxAge(0);
+//				httpServletResponse.addCookie(cookie);
+//			}
+//			return "redirect:login?error";
+//		}
 		//로그인 완료창으로 보내기
-		return "redirect:../";	
-	}
+//		return "redirect:../";	
+//	}
 	
 			//ChatRoomDto chatRoomDto = chatRoomDao.selectOne(userDto.getMemberId());
 			//log.debug("chatRoomDto: {}", chatRoomDto);
