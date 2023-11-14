@@ -77,6 +77,7 @@ public class MemberController {
 		if(userPw.equals(memberPw)) {
 			session.setAttribute("name", userDto.getMemberId());
 			session.setAttribute("level", userDto.getMemberLevel());
+      session.setAttribute("memberName", userDto.getMemberName());	
 			if(saveId != null) {
 				Cookie cookie = new Cookie("saveId", memberId);
 				cookie.setMaxAge(4*7*24*60*60);//4주
@@ -87,6 +88,7 @@ public class MemberController {
 				cookie.setMaxAge(0);//4주
 				httpServletResponse.addCookie(cookie);
 			}
+			
 		}
 		else {
 			if(saveId != null) {
@@ -96,7 +98,7 @@ public class MemberController {
 			}
 			else {
 				Cookie cookie = new Cookie("saveId", memberId);
-				cookie.setMaxAge(0);//4주
+				cookie.setMaxAge(0);
 				httpServletResponse.addCookie(cookie);
 			}
 			return "redirect:login?error";
@@ -104,6 +106,16 @@ public class MemberController {
 		//로그인 완료창으로 보내기
 		return "redirect:../";	
 	}
+	
+			//ChatRoomDto chatRoomDto = chatRoomDao.selectOne(userDto.getMemberId());
+			//log.debug("chatRoomDto: {}", chatRoomDto);
+			//
+			//if(chatRoomDto != null ) { //채팅방 번호가 있다면
+			//	session.setAttribute("chatRoomNo", chatRoomDto.getChatRoomNo()); //채팅방 번호를 넣어라
+			//}		
+			
+			
+		
 	
 	//아이디 찾기
 	@GetMapping("/searchId")
@@ -173,6 +185,4 @@ public class MemberController {
 		model.addAttribute("memberDto", memberDto);
 		return "member/mypage";
 	}
-
-	
 }

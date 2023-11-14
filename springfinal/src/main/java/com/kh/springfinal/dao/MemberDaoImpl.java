@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import com.kh.springfinal.configuration.EncryConfiguration;
 import com.kh.springfinal.dto.MemberDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,6 @@ public class MemberDaoImpl implements MemberDao{
 	
 	@Autowired
 	private BCryptPasswordEncoder encoder;
-	
 	@Override
 	public void join(MemberDto memberDto) {
 		String memberPw = memberDto.getMemberPw();
@@ -56,6 +56,7 @@ public class MemberDaoImpl implements MemberDao{
 		List<MemberDto> idList = sqlSession.selectList("member.memberIdListByEmail", params);
 		return idList;
 	}
+  
 	@Override
 	public MemberDto changePw(String memberId) {
 		MemberDto memberDto = sqlSession.selectOne("member.loginId", memberId);

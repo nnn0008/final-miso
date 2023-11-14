@@ -29,7 +29,4 @@ public class MemberRestController {
 			return "N";
 		}
 	}
-	
-	
-	
 }
