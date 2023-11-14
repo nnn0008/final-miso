@@ -5,7 +5,7 @@
    <mapper namespace="cert">
    
 	   <insert id="insert">
-	   		insert into cert(cert_email, cert_number) values(#{certEmail}, #{certNumber});
+	   		insert into cert(cert_email, cert_number) values(#{certEmail}, #{certNumber})
 	   </insert>
 	   
 	   <delete id="delete">
@@ -13,6 +13,6 @@
 	   </delete>
 	   
 	   <select id="selectOne" resultType="CertDto">
-	   		select * from cert where cert_email = #{cert_email}
+	   		select * from cert where cert_email = #{certEmail}
 	   </select>
    </mapper>
