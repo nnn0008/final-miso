@@ -54,16 +54,6 @@ public class OneDaoImpl implements OneDao {
 
 
 	@Override
-	public List<OneDto> searchMember(String oneMember) {
-		return sqlSession.selectList("one.findByOneMember",oneMember);
-	}
-
-	@Override
-	public List<OneDto> searchTitle(String oneTitle) {
-		return sqlSession.selectList("one.findByOneTitle",oneTitle);
-	}
-
-	@Override
 	public List<OneDto> selectListByPage(PaginationVO vo) {
 		
 			List<OneDto>list=sqlSession.selectList("one.selectListByPage",vo);
@@ -76,15 +66,33 @@ public class OneDaoImpl implements OneDao {
 	}
 
 	@Override
-	public List<OneDto> selectByOneMember(String oneMember) {
-		return sqlSession.selectOne("one.findByOneMember",oneMember);
+	public void insertImage(int oneNo, int attachNo) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("oneNo", oneNo);
+		params.put("attachNo", attachNo);
+		sqlSession.insert("one.insertImage",params);
+		
 	}
 
 	@Override
-	public List<OneDto> selectByOneTitle(String oneTitle) {
-		return sqlSession.selectOne("one.findByOneTitle",oneTitle);
+	public boolean deleteImage(int oneNo) {
+		return sqlSession.delete("one.deleteImage",oneNo)>0;
 	}
 
+	@Override
+	public Integer findImage(int oneNo) {
+		try {
+		return sqlSession.selectOne("one.findImage",oneNo);
+		}
+		catch(Exception e) {
+			return null;
+		}
+	}
+
+
+	
+
+	
 	
 
 

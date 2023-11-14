@@ -5,8 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data @AllArgsConstructor @NoArgsConstructor @Builder
-public class ChatUserDto {
-	private int chatRoomNo;
-	private String clubMemberId;
+@Data @Builder @AllArgsConstructor @NoArgsConstructor
+public class ClubImage {
+	
+	private int clubNo;
+	private int attachNo;
+	
+
 }

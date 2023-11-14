@@ -17,7 +17,7 @@
 		) 
 		values
 		(
-			club_board_no_seq.nextval, #{clubBoardTitle}, #{clubBoardContent}, #{clubBoardCategory},
+			#{clubBoardNo}, #{clubBoardTitle}, #{clubBoardContent}, #{clubBoardCategory},
 			#{clubMemberNo}, #{clubNo}, #{clubBoardName}
 		)
 	</insert>

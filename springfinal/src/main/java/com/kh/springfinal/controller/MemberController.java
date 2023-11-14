@@ -56,7 +56,7 @@ public class MemberController {
 						@RequestParam(required = false) String saveId,
 								HttpSession session) {
 		//db 유저 정보
-		MemberDto userDto = memberDao.loginId(memberId, memberPw);
+		MemberDto userDto = memberDao.selectOne(memberId, memberPw);
 		// id 틀리면 되돌림
 		if(userDto==null) {
 			if(saveId != null) {
@@ -77,16 +77,7 @@ public class MemberController {
 		if(userPw.equals(memberPw)) {
 			session.setAttribute("name", userDto.getMemberId());
 			session.setAttribute("level", userDto.getMemberLevel());
-			if(saveId != null) {
-				Cookie cookie = new Cookie("saveId", memberId);
-				cookie.setMaxAge(4*7*24*60*60);//4주
-				httpServletResponse.addCookie(cookie);
-			}
-			else {
-				Cookie cookie = new Cookie("saveId", memberId);
-				cookie.setMaxAge(0);//4주
-				httpServletResponse.addCookie(cookie);
-			}
+			session.setAttribute("memberName", userDto.getMemberName());	
 		}
 		else {
 			if(saveId != null) {
@@ -96,7 +87,7 @@ public class MemberController {
 			}
 			else {
 				Cookie cookie = new Cookie("saveId", memberId);
-				cookie.setMaxAge(0);//4주
+				cookie.setMaxAge(0);
 				httpServletResponse.addCookie(cookie);
 			}
 			return "redirect:login?error";
@@ -104,6 +95,16 @@ public class MemberController {
 		//로그인 완료창으로 보내기
 		return "redirect:../";	
 	}
+	
+			//ChatRoomDto chatRoomDto = chatRoomDao.selectOne(userDto.getMemberId());
+			//log.debug("chatRoomDto: {}", chatRoomDto);
+			//
+			//if(chatRoomDto != null ) { //채팅방 번호가 있다면
+			//	session.setAttribute("chatRoomNo", chatRoomDto.getChatRoomNo()); //채팅방 번호를 넣어라
+			//}		
+			
+			
+		
 	
 	//아이디 찾기
 	@GetMapping("/searchId")
@@ -154,7 +155,7 @@ public class MemberController {
 	}
 	@PostMapping("/searchPw")
 	public String searchPw(@RequestParam String memberId, @RequestParam String memberEmail) {
-		MemberDto findDto  = memberDao.selectOne(memberId);
+		MemberDto findDto  = memberDao.loginId(memberId);
 		//아이디, 이메일 검사
 		if(findDto.getMemberEmail().equals(memberEmail)) {
 			SimpleMessage message = new SimpleMessage();
@@ -169,10 +170,8 @@ public class MemberController {
 	@RequestMapping("/mypage")
 	public String mypage(HttpSession session, Model model) {
 		String memberId=(String) session.getAttribute("name");
-		MemberDto memberDto = memberDao.selectOne(memberId);
+		MemberDto memberDto = memberDao.loginId(memberId);
 		model.addAttribute("memberDto", memberDto);
 		return "member/mypage";
 	}
-
-	
 }

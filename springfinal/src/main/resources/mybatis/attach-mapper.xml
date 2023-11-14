@@ -12,11 +12,15 @@
 	
 	<insert id="add">
 		insert into attach(attach_no, attach_name, attach_size, attach_type)
-		values(attach_seq.nextval, #{attachName}, #{attachSize}, #{attachType})
+		values(#{attachNo}, #{attachName}, #{attachSize}, #{attachType})
 	</insert>
 	
 	<select id="find" resultType="AttachDto">
 		select * from attach where attach_no = #{attachNo}
 	</select>
+	
+	<delete id="delete">
+		delete attach where attach_no=#{attachNo}
+	</delete>
 	
 </mapper>

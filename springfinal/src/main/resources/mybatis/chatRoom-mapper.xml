@@ -14,7 +14,7 @@
 		insert into chat_room(
 		chat_room_no
 		) values(
-		chat_room_seq.nextval
+		#{chatRoomNo}
 		)
 	</insert>
 	
@@ -48,5 +48,34 @@
         INNER JOIN club c ON c.chat_room_no = cr.chat_room_no
         WHERE cr.chat_room_no = #{chatRoomNo}
 	</select>
+
+	<select id="roomMemberList" resultType="ChatRoomDto">
+	SELECT cm.club_member_id
+	FROM club c
+	JOIN club_member cm ON c.club_no = cm.club_no
+	WHERE c.chat_room_no = #{chatRoomNo}
+	</select>
+	
+	
+	<select id="roomMemberName" resultType="ChatVO">
+	SELECT cm.CLUB_MEMBER_ID, m.member_name
+	FROM club c
+	JOIN club_member cm ON c.club_no = cm.club_no
+	JOIN member m ON cm.club_member_id = m.member_id
+	WHERE c.chat_room_no = #{chatRoomNo}
+	</select>
+	
+	<select id="roomMemberProfile" resultType="MemberDto">
+	SELECT m.member_id, m.member_name, m.member_level
+	FROM member m
+	</select>
+	
+	 <!-- 이미 존재하는 1:1 채팅 룸 조회 -->
+    <select id="getExistingChatRoom" resultType="ChatDto">
+        SELECT chat_room_no
+        FROM chat
+        WHERE (chat_sender = #{chatSender} AND chat_receiver = #{chatReceiver})
+        OR (chat_sender = #{chatReceiver} AND chat_receiver = #{chatSender})
+    </select>
 
 </mapper>

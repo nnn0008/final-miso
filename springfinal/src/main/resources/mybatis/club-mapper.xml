@@ -11,7 +11,7 @@
     insert into club(club_no,club_owner,club_category,zip_code_no,
     chat_room_no,club_name,club_explain,club_personnel) 
     values(#{clubNo},#{clubOwner},#{clubCategory},#{zipCodeNo},
-    #{chatRoomNo},#{clubName},#{clubExplain}#{clubPersonnel})
+    #{chatRoomNo},#{clubName},#{clubExplain},#{clubPersonnel})
     
     </insert>
     
@@ -29,5 +29,38 @@
 	INNER JOIN club_member cm ON c.club_no = cm.club_no
 	WHERE cm.club_member_id = #{memberId}
     </select>
+    
+    <select id="clubDetail" resultType="ClubImageVO">
+    	
+    	select c.*,ci.attach_no from club c LEFT outer join club_image ci 
+    	on c.club_no = ci.club_no LEFT OUTER join attach a
+    	on ci.attach_no=a.attach_no where c.club_no=#{clubNo}  
+    
+    </select>
+    
+    <insert id="edit">
+    
+    update club set club_category=#{clubCategory},zip_code_no=#{zipCodeNo},
+    club_name=#{clubName},club_explain=#{clubExplain},club_personnel=#{clubPersonnel},
+    club_premium=#{clubPremium} where club_no=#{clubNo}
+    
+    </insert>
+    
+    <insert id="connect">
+    	
+    	insert into club_image(club_no,attach_no) values(#{clubNo},#{attachNo})
+    
+    </insert>
+    
+    <select id="findImage" resultType="attachDto">
+    
+    select * from attach where attach_no=(
+    select attach_no from club_image where club_no=#{clubNo}
+    )
+    </select>
+    
+    
+    
+    
     
     </mapper>

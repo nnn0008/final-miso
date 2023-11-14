@@ -15,21 +15,21 @@ public class ClubBoardImage2DaoImpl implements ClubBoardImage2Dao{
 	
 	@Override
 	public void insert(ClubBoardImage2Dto clubBoardImage2Dto) {
-		sqlSession.insert("clubBoardImage.add", clubBoardImage2Dto);
+		sqlSession.insert("clubBoardImage2.add", clubBoardImage2Dto);
 	}
 	
 	@Override
 	public boolean delete(int clubBoardNo) {
-		return sqlSession.delete("clubBoradImage.remove", clubBoardNo) > 0;
+		return sqlSession.delete("clubBoradImage2.remove", clubBoardNo) > 0;
 	}
 	
 	@Override
 	public ClubBoardImage2Dto selectOne(int clubBoardNo) {
-		return sqlSession.selectOne("clubBoardImage.find", clubBoardNo);
+		return sqlSession.selectOne("clubBoardImage2.find", clubBoardNo);
 	}
 	
 	@Override
 	public List<ClubBoardImage2Dto> selectList() {
-		return sqlSession.selectList("clubBoardImage.findAll");
+		return sqlSession.selectList("clubBoardImage2.findAll");
 	}
 }

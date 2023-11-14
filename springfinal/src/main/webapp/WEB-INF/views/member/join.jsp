@@ -55,7 +55,6 @@
 </head>
 <body>
 
-
 	<main>
 		<header> </header>
 		<nav></nav>

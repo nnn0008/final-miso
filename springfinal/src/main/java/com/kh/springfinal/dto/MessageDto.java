@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 public class MessageDto {
 
 	public enum MessageType{
-		join, message, dm
+		join, message, dm, leave, file
 	}
 	
 	private MessageType messageType;
@@ -17,4 +17,5 @@ public class MessageDto {
 	private String chatSender;
 	private String chatReceiver;
 	private String chatContent;
+	private String memberName;
 }

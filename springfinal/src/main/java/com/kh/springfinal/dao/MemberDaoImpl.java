@@ -29,13 +29,13 @@ public class MemberDaoImpl implements MemberDao{
 		sqlSession.insert("member.join", memberDto);
 	}
 	@Override
-	public MemberDto selectOne(String memberId) {
+	public MemberDto loginId(String memberId) {
 		MemberDto memberDto = sqlSession.selectOne("member.memberFind", memberId);
 		return memberDto;
 	}
 
 	@Override
-	public MemberDto loginId(String memberId, String memberPw) {
+	public MemberDto selectOne(String memberId, String memberPw) {
 		MemberDto memberDto = sqlSession.selectOne("member.loginId", memberId);
 		String originPw = memberDto.getMemberPw();
 		if(memberDto != null) {

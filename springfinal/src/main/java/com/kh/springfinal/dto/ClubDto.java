@@ -10,13 +10,14 @@ public class ClubDto {
 	
 	private int clubNo;
 	private String clubOwner;
-	private	int category;
+	private	int clubCategory;
 	private int zipCodeNo;
 	private int chatRoomNo;
 	private String clubName;
 	private String clubExplain;
 	private int clubPersonnel;
 	private String clubPremium;
+	private String clubDate;
 	
 
 }

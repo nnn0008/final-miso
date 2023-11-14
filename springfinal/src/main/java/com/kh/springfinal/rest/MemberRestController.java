@@ -21,7 +21,7 @@ public class MemberRestController {
 	
 	@PostMapping("/checkId")
 	public String checkId(@RequestParam String memberId) {
-		MemberDto memberDto = memberDao.selectOne(memberId);
+		MemberDto memberDto = memberDao.loginId(memberId);
 		if(memberDto != null) {
 			return "Y";
 		}
