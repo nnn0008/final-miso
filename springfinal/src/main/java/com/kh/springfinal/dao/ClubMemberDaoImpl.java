@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kh.springfinal.dto.ClubMemberDto;
+import com.kh.springfinal.dto.MemberDto;
+import com.kh.springfinal.vo.ClubMemberVO;
 
 @Repository
 public class ClubMemberDaoImpl implements ClubMemberDao{
@@ -49,5 +51,19 @@ public class ClubMemberDaoImpl implements ClubMemberDao{
 		
 		return list.size()>0;
 	}
+
+	@Override
+	public List<ClubMemberDto> memberList(int clubNo) {
+		
+		return sqlSession.selectList("clubMember.clubMemberList",clubNo);
+	}
+
+	@Override
+	public List<ClubMemberVO> memberInfo(int clubNo) {
+		
+		return sqlSession.selectList("clubMember.memberInfo",clubNo);
+	}
+	
+	
 
 }

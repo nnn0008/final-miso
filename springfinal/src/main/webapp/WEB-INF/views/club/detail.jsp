@@ -36,8 +36,8 @@ $(function(){
             method: "post",
             data: { clubNo: clubNo, clubMemberId: memberId, joinMessage: joinMessage },
             success: function (response) {
-                $(".btn-secondary").click();
-                alert('가입완료');
+                $(".exampleModal").modal("hide");
+                location.reload();
             }
         });
     });
@@ -80,8 +80,27 @@ $(function(){
             <p>클럽 설명: ${clubDto.clubExplain} 설명</p>
         </div>
     </div>
+    <c:if test="${joinButton==true}">
    <button type="button" class="btn btn-secondary mt-4 join" data-bs-toggle="modal">가입하기</button>
-
+	</c:if>
+	
+	<hr>
+	<div class="row">
+		<div class="col">
+			<h5>모임 멤버(인원수)</h5>
+		</div>
+	</div>
+	<c:forEach var="clubMember" items="${clubMemberDto}">
+	
+	<div class="row">
+	<div class="col">
+	${clubMember.memberName}
+	${clubMember.clubMemberRank}
+	${clubMember.joinMessage}
+	</div>
+	</div>
+	</c:forEach>
+	
     
 </div>
     

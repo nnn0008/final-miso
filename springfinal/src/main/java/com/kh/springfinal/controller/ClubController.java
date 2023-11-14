@@ -34,8 +34,10 @@ import com.kh.springfinal.dto.ChatRoomDto;
 import com.kh.springfinal.dto.ClubDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MajorCategoryDto;
+import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.dto.ZipCodeDto;
 import com.kh.springfinal.vo.ClubImageVO;
+import com.kh.springfinal.vo.ClubMemberVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -121,14 +123,21 @@ public class ClubController {
 	public String detail(@RequestParam int clubNo,
 			Model model,HttpSession session) {
 		
-		
+		String memberId = (String) session.getAttribute("name");
 		ClubImageVO clubDto = clubDao.clubDetail(clubNo);
 		MajorCategoryDto major = categoryDao.findMajor(clubDto.getClubCategory());
 		ZipCodeDto zipDto = zipDao.findZip(clubNo);
 		
+		boolean joinButton = !clubMemberDao.existMember(clubNo, memberId);
+		
+		List<ClubMemberVO> clubMemberList = clubMemberDao.memberInfo(clubNo);
+		
+		
+		model.addAttribute("clubMemberDto",clubMemberList);
 		model.addAttribute("clubDto",clubDto);
 		model.addAttribute("major",major);
 		model.addAttribute("zipDto",zipDto);
+		model.addAttribute("joinButton",joinButton);
 		
 
 		return "club/detail";
