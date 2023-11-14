@@ -14,6 +14,10 @@
     		select * from member where member_id=#{memberId}
     	</select>
     	
+    	<select id="memberFind" resultType="MemberDto">
+    		select * from member where member_id=#{memberId}
+    	</select>
+    	
     	<select id="memberIdListByEmail" resultType="String">
     		select member_id from member where member_name=#{memberName} and member_email=#{memberEmail}
     	</select>

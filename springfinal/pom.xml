@@ -138,7 +138,12 @@
 		    <artifactId>tomcat-embed-jasper</artifactId>
 		</dependency>
 
-
+		<!--스프링 시큐리티 암호화 라이브러리-->
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-core</artifactId>
+		    <version>6.1.5</version>
+		</dependency>
 		
 	</dependencies>
 

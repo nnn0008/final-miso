@@ -3,11 +3,10 @@
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 <jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
-	<div class="contain-fluid w-120">
+	<div class="contain-fluid">
             <div class="row">
                 <div class="col">
 
-                   ${sessionScope.name}
                     <div class="row mt-5 pt-5">
                         <div class="col-sm-6 offset-sm-3 text-center">
                             <h1>로그인</h1>
@@ -57,7 +56,7 @@
                         <div class="col-sm-6 offset-sm-3  col-lg-10 offset-lg-1">
                             <a href="./searchId"><button class="btn">아이디 찾기</button></a>
                             <a href="#"><button class="btn">비밀번호 찾기</button></a>
-                            <a href="./join"><button class="btn btn-primary">회원가입</button></a>
+                            <a href="./join"><button class="btn">회원가입</button></a>
                         </div>
                     </div>
                 

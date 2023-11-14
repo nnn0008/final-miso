@@ -6,8 +6,10 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import com.kh.springfinal.configuration.EncryConfiguration;
 import com.kh.springfinal.dto.MemberDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -16,14 +18,35 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberDaoImpl implements MemberDao{
 	@Autowired
 	private SqlSession sqlSession;
+	
+	@Autowired
+	private BCryptPasswordEncoder encoder;
 	@Override
 	public void join(MemberDto memberDto) {
+		String memberPw = memberDto.getMemberPw();
+		String encrypt = encoder.encode(memberPw);
+		memberDto.setMemberPw(encrypt);
 		sqlSession.insert("member.join", memberDto);
 	}
 	@Override
-	public MemberDto loginId(String memberId) {
-		MemberDto memberDto = sqlSession.selectOne("member.loginId", memberId);
+	public MemberDto selectOne(String memberId) {
+		MemberDto memberDto = sqlSession.selectOne("member.memberFind", memberId);
 		return memberDto;
+	}
+
+	@Override
+	public MemberDto loginId(String memberId, String memberPw) {
+		MemberDto memberDto = sqlSession.selectOne("member.loginId", memberId);
+		String originPw = memberDto.getMemberPw();
+		if(memberDto != null) {
+			boolean result = encoder.matches(memberPw, originPw);
+			if(result == true) {
+				memberDto.setMemberPw(memberPw);
+				return memberDto;
+			}
+		}
+		memberDto.setMemberPw(memberId);
+		return null;
 	}
 	
 	@Override

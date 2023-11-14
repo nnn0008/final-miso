@@ -47,7 +47,7 @@ public class MemberController {
 						@RequestParam(required = false) String saveId,
 								HttpSession session) {
 		//db 유저 정보
-		MemberDto userDto = memberDao.loginId(memberId);
+		MemberDto userDto = memberDao.loginId(memberId, memberPw);
 		// id 틀리면 되돌림
 		if(userDto==null) {
 			if(saveId != null) {
