@@ -8,14 +8,27 @@
 <script>
 	//댓글 작성 시 비동기처리로 댓글 작성 + 댓글 목록 비동기처리
 	$(function(){
+		loadList();
 		//댓글 작성
 		$(".reply-insert-form").submit(function(e){
 			e.preventDefault();
-			console.log(e);
+			var clubBoardReplyContent = $(".reply-write").val();
+			var params = new URLSearchParams(location.search);
+			var clubBoardNo = params.get("clubBoardNo");
+			//var clubBoardReplyParent = null;
+			
+			//console.log($(".reply-write").val());
+			//console.log(clubBoardNo);
 			$.ajax({
 				url:window.contextPath+"/rest/reply/insert",
 				method:"post",
-				data: $(e.target).serialize(),
+				data:	
+				{
+					//$(e.target).serialize(),
+					clubBoardReplyContent : clubBoardReplyContent,
+					clubBoardNo : clubBoardNo,
+					//clubBoardReplyParent : clubBoardReplyParent,
+				},	
 				success:function(response){
 					$(".reply-write").val("");
 					loadList();
@@ -28,8 +41,6 @@
 			var params = new URLSearchParams(location.search);
 			var clubBoardNo = params.get("clubBoardNo");
 			
-			var memberId = "${sessionScope.name}";
-			
 			$.ajax({
 				url:window.contextPath+"/rest/reply/list",
 				method:"post",
@@ -37,31 +48,31 @@
 				//response를 댓글 목록으로 받아옴
 				success:function(response){
 					$(".reply-list").empty();
-					
+					console.log(response);
 					for(var i = 0; i < response.length; i++){
 						var reply = response[i];
 						
 						var template = $("#reply-template").html();
 						var htmlTemplate = $.parseHTML(template);
-						
+						console.log(response);
 						//작성자는 사이트를 탈퇴했다면 탈퇴한 유저 아니라면 작성자
-						$(htmlTempalte).find(".clubBoardReplyWriter").text(clubBoardReply.clubBoardReplyWriter || "탈퇴한 유저");
-						$(htmlTemplate).find(".clubBoardReplyDate").text(clubBoardReply.clubBoardReplyDate);
-						$(htmlTemplate).find(".clubBoardReplyContent").text(clubBoardReply.clubBoardReplyContent || "삭제된 댓글입니다");
+						$(htmlTemplate).find(".clubBoardReplyWriter").text(response[i].clubBoardReplyWriter || "탈퇴한 유저");
+						$(htmlTemplate).find(".clubBoardReplyDate").text(response[i].clubBoardReplyDate);
+						$(htmlTemplate).find(".clubBoardReplyContent").text(response[i].clubBoardReplyContent || "삭제된 댓글입니다");
 						
-						//로그인 한 유저가 작성한 댓글이 아니라면
-						/* if(){
+						//로그인 한 유저가 작성한 댓글이 아니라면 수정 삭제 버튼을 보여주면 안됨
+						/* if(memberId == null || ){
 							$(htmlTemplate).find(".edit-delete").empty();
 						} */
 						
 						//삭제 버튼을 찾아서 클릭하면
-						$(htmlTemplate).find(".btn-reply-delete").attr("data-board-reply-no", clubBoardReply.clubBoardReplyNo)
+						$(htmlTemplate).find(".btn-reply-delete").attr("data-board-reply-no", response[i].clubBoardReplyNo)
 						.click(function(e){
 							var clubBoardReplyNo = $(this).attr("data-board-reply-no");
 							$.ajax({
 								url: window.contextPath + "/rest/reply/delete",
 								method:"post",
-								data{clubBoardReplyNo : clubBoardReplyNo},
+								data:{clubBoardReplyNo : clubBoardReplyNo},
 								//삭제 성공하면
 								success:function(response){
 									loadList(); //목록을 갱신 
@@ -69,24 +80,22 @@
 							});
 						});
 						
-						//수정 버튼을 찾아서 클릭하면 Modal을 띄우고 기존 내용이 적혀있어야 한다
-						$(htmlTemplate).find(".btn-reply-edit").attr("data-board-reply-no", clubBoardReply.clubBoardReplyNo)
+						//수정 버튼을 클릭하면 Modal을 띄우고 기존 내용이 적혀있어야 한다
+						$(htmlTemplate).find(".btn-reply-edit").attr("data-board-reply-no", response[i].clubBoardReplyNo)
 						.click(function(){
 							$("#replyEditModal").show();
 							var clubBoardReplyNo = $(this).attr("data-board-reply-no");
-							var clubBoardReplyContent = $(this).parents(".reply-list").find.(".clubBoardReplyContent").text();
+							var clubBoardReplyContent = $(this).parents(".for-reply-edit").find(".clubBoardReplyContent").text();
 							
 							$("[name=clubBoardReplyContent]").val(clubBoardReplyContent);
-							$("[name=clubBoardReplyNo]").val(clubBoardReplyNo);
+							$("[name=clubBoardReplyNo]").val(clubBoardReplyNo); //히든으로 날려보낼 번호
 							
 							//Modal의 저장 버튼을 클릭했을 때, modal의 input에 있는 내용으로 바꾸기
-							$(".update-success-reply").click(function(){
+							$(".update-success-reply").click(function(e){
 								$.ajax({
 									url:window.contextPath + "/rest/reply/edit",
 									method:"post",
-									data:{
-										clubBoardReplyNo : clubBoardReplyNo
-									},
+									data: $(e.target).serialize(),
 									//내용을 바꾸는게 성공했다면
 									success:function(response){
 										loadList(); //목록을 갱신
@@ -98,9 +107,9 @@
 							$(".update-cancel-reply").click(function(){
 								$("#replyEditModal").hide(); //내용 변경 없이 Modal을 닫으면 된다
 							});
-						});	
+						});
 						
-						$(".reply-list").appendTo(htmlTemplate);
+						$(".reply-list").append(htmlTemplate);
 					}
 				}
 			});
@@ -109,10 +118,10 @@
 	});
 </script>
 <script id="reply-template" type="text/template">
-	//댓글 목록 템플릿
+ <div class="col for-reply-edit">
 	<div class="row">
 		<div class="col">
-			<h3 class="clubBoardReplyWriter">작성자</h3>
+			<h6 class="clubBoardReplyWriter">작성자</h6>
 		</div>
 		<div class="col">
 			<span class="clubBoardReplyDate">MM-dd E HH:mm</span>
@@ -132,6 +141,7 @@
 			좋아요 | 답글 달기 
 		</div>
 	</div>
+ </div>
 </script>
 <script>
 </script>
@@ -199,7 +209,7 @@
 			<hr>
 			
 			<form class="reply-insert-form">
-				<input type="hidden" name="clubBoardNo" value="${clubBoardDto.clubBoardNo}">
+				<input type="hidden" name="clubBoardNo" value="${clubBoardAllDto.clubBoardNo}">
 				<div class="row mt-5">
 					<div class="col-10">
 						<input type="text" class="form-control w-100 reply-write" placeholder="댓글을 달아주세요">

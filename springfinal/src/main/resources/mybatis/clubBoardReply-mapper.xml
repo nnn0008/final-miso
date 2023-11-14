@@ -21,11 +21,11 @@
 		)
 	</insert>
 	
-	<select id="findAll" resultType="ClubBoardDto">
+	<select id="findAll" resultType="ClubBoardReplyDto">
 		select * from club_board_reply where club_board_no = #{clubBoardNo} order by club_board_reply_no asc
 	</select>
 	
-	<select id="find" resultType="ClubBoardDto">
+	<select id="find" resultType="ClubBoardReplyDto">
 		select * from club_board_reply where club_board_reply_no = #{clubBoardReplyNo}
 	</select>
 	
