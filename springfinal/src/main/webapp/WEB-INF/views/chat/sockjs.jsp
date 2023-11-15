@@ -553,12 +553,11 @@
 		    	$(".message-list").append(messageDiv);
 
 		    	
-		    }
-		}
-		
 
+		}
 		// 스크롤바 이동
-		$(".message-list").scrollTop($(".message-list")[0].scrollHeight);
+		$(".message-list").scrollTop($(".message-list")[0].scrollHeight);		
+		    }
 	}
 	
 		//메세지를 전송하는 코드

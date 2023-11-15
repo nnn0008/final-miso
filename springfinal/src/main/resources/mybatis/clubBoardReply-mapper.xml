@@ -47,6 +47,24 @@
 		start with club_board_reply_parent is null order siblings by club_board_reply_group asc, club_board_reply_no asc
 	</select>
 	
-	
+	<!-- 알림 비동기 부분 사용 -->
+	<select id="clubBoardMemberAndReplyMember" resultType="ClubBoardReplyMemberVO">
+		SELECT 
+		    cm_reply.club_member_id AS reply_member_id,
+		    cm_reply.club_member_no AS reply_member_no,
+		    cm_board.club_member_id AS board_member_id,
+		    cm_board.club_member_no AS board_member_no,
+		    cb.club_board_title
+		FROM 
+		    club_member cm_reply
+		JOIN 
+		    CLUB_BOARD_REPLY cbr ON cbr.club_member_no = cm_reply.club_member_no
+		JOIN 
+		    club_board cb ON cb.club_board_no = cbr.club_board_no
+		JOIN 
+		    club_member cm_board ON cm_board.club_member_no = cb.club_member_no
+		WHERE 
+		    cbr.club_board_reply_no = #{clubBoardReplyNo}
+	</select>
 	
 </mapper>  
