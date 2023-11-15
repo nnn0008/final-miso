@@ -35,7 +35,7 @@ public class ReplyRestController {
 	
 	@PostMapping("/insert")
 	public void insert(HttpSession session, @RequestParam String clubBoardReplyContent, @RequestParam(required = false) Integer clubBoardReplyParent, 
-			@RequestParam int clubBoardNo) {
+			@RequestParam int clubBoardNo, @RequestParam(required = false) Integer clubBoardReplyGroup) {
 		ClubBoardReplyDto clubBoardReplyDto = new ClubBoardReplyDto();
 		int clubBoardReplyNo = clubBoardReplyDao.sequence();
 		String memberId = (String)session.getAttribute("name");
@@ -47,8 +47,6 @@ public class ReplyRestController {
 		
 		clubBoardReplyDto.setClubBoardReplyNo(clubBoardReplyNo);
 		clubBoardReplyDto.setClubBoardReplyContent(clubBoardReplyContent);
-		clubBoardReplyDto.setClubBoardReplyNo(clubBoardReplyNo);
-		clubBoardReplyDto.setClubBoardReplyNo(clubBoardReplyNo);
 		clubBoardReplyDto.setClubBoardReplyWriter(memberDto.getMemberName());
 		clubBoardReplyDto.setClubMemberNo(clubMemberDto.getClubMemberNo());
 		clubBoardReplyDto.setClubBoardNo(clubBoardNo);
@@ -58,7 +56,7 @@ public class ReplyRestController {
 			clubBoardReplyDto.setClubBoardReplyGroup(clubBoardReplyNo);
 		}
 		else { //대댓글인 경우
-			ClubBoardReplyDto originClubBoardReplyDto = clubBoardReplyDao.selectOne(clubBoardReplyDto.getClubBoardReplyParent());
+			ClubBoardReplyDto originClubBoardReplyDto = clubBoardReplyDao.selectOne(clubBoardReplyGroup);
 			clubBoardReplyDto.setClubBoardReplyGroup(originClubBoardReplyDto.getClubBoardReplyGroup());
 			clubBoardReplyDto.setClubBoardReplyDepth(originClubBoardReplyDto.getClubBoardReplyDepth() + 1);
 		}
