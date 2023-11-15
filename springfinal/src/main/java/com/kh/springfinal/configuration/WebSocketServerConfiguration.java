@@ -31,7 +31,8 @@ public class WebSocketServerConfiguration implements WebSocketConfigurer{
 	@Bean
 	public ServletServerContainerFactoryBean containerFactoryBean() {
 		ServletServerContainerFactoryBean bean = new ServletServerContainerFactoryBean();
-		bean.setMaxTextMessageBufferSize(Integer.MAX_VALUE);
+		bean.setMaxTextMessageBufferSize(Integer.MAX_VALUE);//허용 최대 사이즈
+//		bean.setMaxTextMessageBufferSize(8192);//자바 표준 사이즈
 		return bean;
 	}
 	

@@ -28,6 +28,17 @@
 	rel="stylesheet">
 
 <style>
+ input[type="file"] {
+    display: none;
+  }
+
+  /* 스타일을 적용할 버튼 */
+  .custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+  }
 </style>
 
 </head>
@@ -68,12 +79,22 @@
 				<div class="row mt-4">
 					<div class="col p-0">
 						<div class="input-group">
-						<input type="file" name="attach" multiple>
-						<button class="send-file-btn">전송</button>
+						
+<!-- 						<button class="send-file-btn">전송</button> -->
 
+<!-- 						<input type="file" name="attach" multiple> -->
+
+				  <!-- input file 엘리먼트 -->
+				  <input type="file" name="attach" id="fileInput" multiple>
+
+								  <!-- 대체 버튼 및 "전송" 버튼으로 통합된 버튼 -->
+								  <label for="fileInput" class="custom-file-upload">
+								    <i class="fa-solid fa-camera blue"></i> 
+								  </label>
+								  
 								<input type="text" class="form-control message-input"
 									placeholder="메세지를 입력하세요">
-								<button type="button" class="btn send-btn btn-success bg-miso">
+								<button type="button" class="btn send-btn btn-success bg-miso send-file-btn">
 									<i class="fa-regular fa-paper-plane"></i> 보내기
 								</button>
 							</div>
@@ -166,6 +187,11 @@
 	  
 	};
 
+	  document.getElementById('fileInput').addEventListener('change', function() {
+	      // 파일을 선택한 경우, 파일을 자동으로 메시지 전송
+	      document.querySelector('.send-file-btn').click();
+	    });
+	  
 	// 방 이동 시
 	function moveToRoom(selectedRoomNo) {
 	    window.location.href = "/chat/enterRoom/" + selectedRoomNo;
@@ -177,6 +203,23 @@
 	    var match = url.match(/\/chat\/enterRoom\/(\d+)/);
 	    return match ? parseInt(match[1]) : null;
 	}	
+	
+	//파일크기 경고
+	$("[name=attach]").change(function(e){
+		const files = this.files;
+		if(files.length === 0) return;
+		
+		let total = 0;
+		for(let i=0; i < files.length; i++) {
+			total += files[i].size;
+		}
+		
+		//console.log("total", total);
+		if(total > 1 * 1024 * 1024) {//1MB
+			alert("파일은 1MB를 초과할 수 없습니다");
+			$(this).val("");//선택된 파일초기화
+		}
+	});
 	
 	$(".send-file-btn").click(function(){
 			var files = $("[name=attach]")[0].files;
