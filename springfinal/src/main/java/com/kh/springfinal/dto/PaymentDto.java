@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Data@NoArgsConstructor@AllArgsConstructor@Builder
 public class PaymentDto {
-	private int paymentNo;
+	private int paymentNo;//단기결제번호
 	private String paymentMember;//구매회원ID
 	private String paymentTid;//PG사 결제 거래번호
 	private String paymentName;//PG사 결제 상품명

@@ -1,5 +1,7 @@
 package com.kh.springfinal.vo;
 
+import java.sql.Date;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -12,16 +14,7 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
-public class KakaoPayCardInfoVO {
-	private String purchaseCorp, purchaseCorpCode;
-	private String issuerCorp, issuerCorpCode;
-	private String kakaopayPurchaseCorp, kakaopayPurchaseCorpCode;
-	private String kakaopayIssuerCorp, kakopayIssuerCorpCode;
-	private String bin;
-	private String cardType;
-	private String installMonth;
-	private String approvedId;
-	private String cardMid;
-	private String interestFreeInstall;//단기결제필요
-	private String cardItemCode;//단기결제필요
+public class KakaoPayInactiveResponseVO {
+	private String cid,sid,status;
+	private Date credated_at,lastApprovedAt,InactivatedAt;
 }

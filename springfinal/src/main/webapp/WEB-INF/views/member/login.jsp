@@ -56,28 +56,34 @@
                 <div class="col">
 
                     <div class="row mt-5 pt-5">
-                        <div class="col-sm-6 offset-sm-3 text-center">
-                            <h1>로그인</h1>
+                        <div class="col-sm-6 offset-sm-3 col-lg-10 offset-lg-1 text-center">
+                     <img src="${pageContext.request.contextPath}/images/miso_logo.png" width="70%">
                         </div>
                     </div>
                     <form class="form-group" action="./login" method="post">
-                        <div class="row">
+                        <div class="row mt-4">
                             <div class="col-sm-6 offset-sm-3 col-lg-10 offset-lg-1">
-                                <div class="form-group">
-                                    <label for="memberId" class="form-label mt-4 is-valid">아이디</label>
-	                                    <input type="text" class="form-control" name="memberId" id="memberId" value="${cookie.saveId.value}" autocomplete="off">
+                                <div class="form-floating">
+                                    <input type="text" name="memberId" id="memberId" class="form-control" placeholder="이글자는안보임" value="${cookie.saveId.value}" autocomplete="off">
+                                    <label for="memberId" class="is-valid">아이디
+                                        <span class="fa-solid fa-asterisk text-danger"></span>
+                                    </label>
+<!--                                     <div class="invalid-feedback">아이디를 다시 입력하세요</div> -->
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mt-4">
                             <div class="col-sm-6 offset-sm-3  col-lg-10 offset-lg-1">
-                                <div class="form-group">
-                                    <label for="exampleInputPassword1" class="form-label mt-4">비밀번호</label>
-                                    <input type="password" class="form-control" name="memberPw" id="memberPw" autocomplete="off">
+                                 <div class="form-floating">
+                                    <input type="password" name="memberPw" class="form-control" placeholder="이글자는안보임" id="memberPw">
+                                    <label for="exampleInputPassword1" class="is-invalid">비밀번호
+                                        <span class="fa-solid fa-asterisk text-danger"></span>
+                                    </label>
+<!--                                     <div class="invalid-feedback">비밀번호를 다시 입력하세요</div> -->
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mt-3">
                             <div class="col-sm-6 offset-sm-3  col-lg-10 offset-lg-1">
                                 <div class="form-check">
                                 	<c:choose>
@@ -94,17 +100,17 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-2">
+                        <div class="row mt-3">
                             <div class="col-sm-6 offset-sm-3  col-lg-10 offset-lg-1">
-                                <button class="btn btn-primary w-100">로그인</button>
+                                <button class="btn btn-success bg-miso btn-lg w-100">로그인</button>
                             </div>
                         </div>
                     </form>
-                    <div class="row mt-3">
-                        <div class="col-sm-6 offset-sm-3  col-lg-10 offset-lg-1">
-                            <a href="./searchId"><button class="btn">아이디 찾기</button></a>
-                            <a href="./searchPw"><button class="btn">비밀번호 찾기</button></a>
-                            <a href="./join"><button class="btn">회원가입</button></a>
+                    <div class="row mt-4">
+                        <div class="col-sm-6 offset-sm-3  col-lg-10 offset-lg-1 text-center">
+                            <a href="./searchId" class="link-body-emphasis link-underline link-underline-opacity-0">아이디 찾기</a>  | 
+                            <a href="./searchPw" class="link-body-emphasis link-underline link-underline-opacity-0">비밀번호 찾기</a>  | 
+                            <a href="./join" class="link-body-emphasis link-underline link-underline-opacity-0">회원가입</a>
                         </div>
                     </div>
                 </div>

@@ -6,6 +6,8 @@
 <jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
 
 <script>
+
+
 	//댓글 작성 시 비동기처리로 댓글 작성 + 댓글 목록 비동기처리
 	$(function(){
 		loadList();
@@ -38,6 +40,57 @@
 				}
 			});
 		});
+$(function(){
+	
+	window.socket = new SockJS("${pageContext.request.contextPath}/ws/notify");
+
+	
+    loadList();
+    //댓글 작성
+    $(".reply-insert-form").submit(function(e){
+        e.preventDefault();
+        if($(".reply-write").val().length == 0) return;
+        var clubBoardReplyContent = $(".reply-write").val();
+        var params = new URLSearchParams(location.search);
+        var clubBoardNo = params.get("clubBoardNo");
+        //var clubBoardReplyParent = null;
+
+        $.ajax({
+            url: window.contextPath + "/rest/reply/insert",
+            method: "post",
+            data: {
+                clubBoardReplyContent: clubBoardReplyContent,
+                clubBoardNo: clubBoardNo,
+                //clubBoardReplyParent : clubBoardReplyParent,
+            },
+            success: function(response){
+                $(".reply-write").val("");
+                loadList();
+
+//                 소켓 전송
+                    var notifyType = "reply";
+                    var replyWriterMember = response.replyWriterMember;
+                    var boardWriterMember = response.boardWriterMember;
+                    var boardNo = response.boardNo;
+                    var boardTitle = response.boardTitle;
+                    var replyWriterName = response.replyWriterName;
+
+                    if(boardWriterMember != replyWriterMember){
+                        let socketMsg = JSON.stringify({
+                            notifyType: notifyType,
+                            replyWriterMember: replyWriterMember,
+                            boardWriterMember: boardWriterMember,
+                            boardNo: boardNo,
+                            boardTitle: boardTitle,
+                            replyWriterName : replyWriterName
+                        });
+
+                        socket.send(socketMsg);                 
+                }
+            }
+    });
+});
+
 		
 		//화면이 로딩되거나 댓글이 작성되었을경우 댓글목록을 다시 찍어주는 비동기처리
 		function loadList(){

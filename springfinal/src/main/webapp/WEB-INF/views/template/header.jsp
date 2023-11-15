@@ -27,6 +27,9 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
+<!-- websocket -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+
 <style>
 .circle {
         width: 100px;
@@ -60,6 +63,8 @@
     .card {
     width: 250px;
     }
+
+
 </style>
 
 <%-- 
@@ -73,6 +78,32 @@
 	window.contextPath = "${pageContext.request.contextPath}";
 </script>
 
+<script>
+	
+// 	window.socket = new SockJS("${pageContext.request.contextPath}/ws/notify");
+	
+// 	socket.onopen = function (e) {
+// 	     console.log('Info: connection opened.');
+// 	 };
+	 
+// 	 socket.onmessage = function (e) {
+// 		console.log("onmessage"+e.data);
+// 		let $socketAlert = $("div#socketAlert");
+// 		$socketAlert.html(e.data)
+// 		$socketAlert.css("display", "block");
+		
+// 		setTimeout(function () {
+// 			$socketAlert.css("display", "none");
+// 		}, 5000);
+// 	} 
+	 
+// 	 socket.oncolose = function (e) {
+// 		 console.log('Info: connection close.');
+// 	}
+	 
+
+</script>
+
 
 </head>
 <body>
@@ -81,9 +112,9 @@
 <main>
  <header>
             <div class="col mt-2">
-
-
-                <a href="#" class="link"><img src="${pageContext.request.contextPath}/images/miso_logo.png" width="200px"></a>
+	
+	
+		<a href="#" class="link"><img src="${pageContext.request.contextPath}/images/miso_logo.png" width="200px"></a>
 
             </div>
             <div class="title">
@@ -97,6 +128,23 @@
                    </div>  
             </div>
             <div class="etc">
+            
+            	<div class="col-4 ms-4">
+            	<a href="${pageContext.request.contextPath}/#" class="link-body-emphasis link-underline link-underline-opacity-0">
+            	<i class="fa-regular fa-bell fa-2xl"></i></i>
+            	</a>
+            	</div>
+            	
+            	<div class="col-4">
+            	<a href="${pageContext.request.contextPath}/#" class="link-body-emphasis link-underline link-underline-opacity-0">
+            	<i class="fa-regular fa-comments fa-2xl"></i>
+            	</a>
+            	</div>
+            	<div class="col-4">
+            	<a href="${pageContext.request.contextPath}/member/login" class="link-body-emphasis link-underline link-underline-opacity-0">
+            	<i class="fa-solid fa-power-off fa-2xl"></i>
+            	</a>
+            	</div>
             </div>
         </header>
         <nav>

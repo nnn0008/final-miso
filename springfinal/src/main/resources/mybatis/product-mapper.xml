@@ -5,8 +5,18 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
     
     <mapper namespace="product">
-    	<select id="list" resultType="ProductDto">
-    	select * from product order by product_no asc
+    	
+    	<!-- 단건상품목록 -->
+    	<select id="singleList" resultType="ProductDto">
+    	select * from product
+    	where product_type = '단건'
+    	 order by product_no asc
+    	</select>
+    	<!-- 정기상품목록 -->
+    	<select id="regularList" resultType="ProductDto">
+    	select * from product 
+    	where product_type = '정기'
+    	order by product_no asc
     	</select>
     	
     	<select id="find" resultType="ProductDto">

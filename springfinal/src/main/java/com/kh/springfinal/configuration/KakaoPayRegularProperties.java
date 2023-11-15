@@ -8,6 +8,6 @@ import lombok.Data;
 @Data
 @Component
 @ConfigurationProperties(prefix="custom.kakaopay")
-public class KakaoPayProperties {
-	private String cid,regularCid,key;
+public class KakaoPayRegularProperties {
+	private String regularcid,key;
 }

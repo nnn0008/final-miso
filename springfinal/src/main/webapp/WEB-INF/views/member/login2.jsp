@@ -36,7 +36,7 @@
                             <div class="col-md-6 offset-md-3 col-sm-8 offset-sm-2">
                                 <div class="form-floating">
                                     <input type="text" name="memberId" id="memberId" class="form-control" placeholder="이글자는안보임" value="${cookie.saveId.value}" autocomplete="off">
-                                    <label for="memberId">아이디
+                                    <label for="memberId" class="is-valid">아이디
                                         <span class="fa-solid fa-asterisk text-danger"></span>
                                     </label>
                                     <div class="invalid-feedback">아이디를 다시 입력하세요</div>
@@ -48,7 +48,7 @@
                             <div class="col-md-6 offset-md-3 col-sm-8 offset-sm-2">
                                 <div class="form-floating">
                                     <input type="password" name="memberPw" class="form-control" placeholder="이글자는안보임" id="memberPw">
-                                    <label for="exampleInputPassword1">비밀번호
+                                    <label for="exampleInputPassword1" class="is-invalid">비밀번호
                                         <span class="fa-solid fa-asterisk text-danger"></span>
                                     </label>
                                     <div class="invalid-feedback">비밀번호를 다시 입력하세요</div>

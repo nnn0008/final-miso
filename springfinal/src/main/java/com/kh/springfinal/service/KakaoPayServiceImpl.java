@@ -15,6 +15,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.kh.springfinal.configuration.KakaoPayProperties;
 import com.kh.springfinal.dao.PaymentDao;
+import com.kh.springfinal.dao.PaymentRegularDao;
 import com.kh.springfinal.dao.ProductDao;
 import com.kh.springfinal.dto.ProductDto;
 import com.kh.springfinal.vo.KakaoPayApproveRequestVO;
@@ -25,6 +26,12 @@ import com.kh.springfinal.vo.KakaoPayDetailRequestVO;
 import com.kh.springfinal.vo.KakaoPayDetailResponseVO;
 import com.kh.springfinal.vo.KakaoPayReadyRequestVO;
 import com.kh.springfinal.vo.KakaoPayReadyResponseVO;
+import com.kh.springfinal.vo.KakaoPayRegularApproveRequestVO;
+import com.kh.springfinal.vo.KakaoPayRegularCancelRequestVO;
+import com.kh.springfinal.vo.KakaoPayRegularCancelResponseVO;
+import com.kh.springfinal.vo.KakaoPayRegularDetailRequestVO;
+import com.kh.springfinal.vo.KakaoPayRegularDetailResponseVO;
+import com.kh.springfinal.vo.KakaoPayRegularReadyResponseVO;
 import com.kh.springfinal.vo.PurchaseListVO;
 import com.kh.springfinal.vo.PurchaseVO;
 
@@ -48,6 +55,10 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 	
 	@Autowired
 	private PaymentDao paymentDao;
+	
+	@Autowired
+	private PaymentRegularDao paymentRegularDao;
+	
 	@Override
 	public KakaoPayReadyResponseVO ready(KakaoPayReadyRequestVO request) throws URISyntaxException {
 		
@@ -166,4 +177,5 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 				.itemPrice(total)
 				.build();
 	}
+
 }

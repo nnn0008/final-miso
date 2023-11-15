@@ -2,11 +2,10 @@ package com.kh.springfinal.vo;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -38,13 +37,13 @@ public class ClientVO {
 //		this.clubNo = (Integer) attr.get("clubNo");
 	}
 
-	 public void addChatRoomNo(Integer chatRoomNo) {
-	        chatRoomNos.add(chatRoomNo);
-	    }
+	public void addChatRoomNo(Integer chatRoomNo) {
+        chatRoomNos.add(chatRoomNo);
+    }
 
-	    public void removeChatRoomNo(Integer chatRoomNo) {
-	        chatRoomNos.remove(chatRoomNo);
-	    }
+    public void removeChatRoomNo(Integer chatRoomNo) {
+        chatRoomNos.remove(chatRoomNo);
+    }
 	    
 	public boolean isMember() {
 		return memberId != null && memberLevel != null; //둘 다 null이 아니어야 회원
@@ -64,5 +63,18 @@ public class ClientVO {
 	                ", chatRoomNos=" + chatRoomNos +
 	                '}';
 	    }
-	
+
+
+	    @Override
+	    public boolean equals(Object o) {
+	        if (this == o) return true;
+	        if (o == null || getClass() != o.getClass()) return false;
+	        ClientVO clientVO = (ClientVO) o;
+	        return Objects.equals(session.getId(), clientVO.session.getId());
+	    }
+
+	    @Override
+	    public int hashCode() {
+	        return Objects.hash(session.getId());
+	    }
 }

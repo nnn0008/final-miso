@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.springfinal.dao.PaymentDao;
+import com.kh.springfinal.dao.PaymentRegularDao;
 import com.kh.springfinal.dao.ProductDao;
 import com.kh.springfinal.dto.PaymentDetailDto;
 import com.kh.springfinal.dto.PaymentDto;
@@ -46,11 +47,27 @@ public class KakaopayController {
 	@Autowired
 	private ProductDao productDao;
 	
+	@Autowired
+	private PaymentRegularDao paymentRegularDao;
+	
+	//상품 메인화면 띄울예정
 	@RequestMapping("/product")
 	public String product(Model model) {
-		List<ProductDto>list=productDao.selectList();
-		model.addAttribute("list",list);
 		return "pay/product";
+	}
+	//단건 상품화면
+	@RequestMapping("/singleList")
+	public String singleList(Model model) {
+		List<ProductDto>singleList=productDao.selectSingleProductList();
+		model.addAttribute("singleList",singleList);
+		return"pay/singleList";
+	}
+	//정기 상품화면
+	@RequestMapping("/regularList")
+	public String regularList(Model model) {
+		List<ProductDto>regularList=productDao.selectRegularProductList();
+		model.addAttribute("regularList",regularList);
+		return"pay/regularList";
 	}
 	//결제 확인화면
 	@GetMapping("/purchase")
@@ -74,7 +91,7 @@ public class KakaopayController {
 		return"pay/purchase";
 	}
 	
-	@PostMapping("purchase")
+	@PostMapping("/purchase")
 	public String purchase(HttpSession session,@ModelAttribute PurchaseListVO listVO) throws URISyntaxException {
 		log.debug("listVO={}",listVO);
 		
@@ -95,7 +112,7 @@ public class KakaopayController {
 			return "redirect:"+response.getNextRedirectPcUrl();
 	}
 	
-	@GetMapping("purchase/success")
+	@GetMapping("/purchase/success")
 	public String success(HttpSession session,@RequestParam String pg_token) throws URISyntaxException {
 		//session에 저장한 flash value 추출 및 삭제
 				KakaoPayApproveRequestVO request=
@@ -141,12 +158,12 @@ public class KakaopayController {
 		return "redirect:successResult";
 	}
 	
-	@RequestMapping("purchase/successResult")
+	@RequestMapping("/successResult")
 	public String successResult() {
 		return"pay/successResult";
 	}
 	
-	@RequestMapping("list")
+	@RequestMapping("/list")
 	public String list(HttpSession session,Model model) {
 		String memberId=(String)session.getAttribute("name");
 		
@@ -185,7 +202,7 @@ public class KakaopayController {
        return "redirect:list";
 	}
 	
-	@RequestMapping("cancelAll")
+	@RequestMapping("/cancelAll")
 	public String cancelAll(@RequestParam int paymentNo) throws URISyntaxException {
 		PaymentDto paymentDto = paymentDao.selectOne(paymentNo);
 		if(paymentDto == null || paymentDto.getPaymentRemain() == 0) {
@@ -205,18 +222,62 @@ public class KakaopayController {
 				.build());
 		paymentDao.cancelDetailGroup(paymentNo);
 		
-		return"redirect:list";
+		return"redirect:pay/list";
 	}
-	@RequestMapping("purchase/cancel")
-	public String cancel(HttpSession session) {
+	@RequestMapping("/cancelPage")
+	public String cancelPage(HttpSession session) {
 		session.removeAttribute("approve");
 		session.removeAttribute("listVO");
-		return "cancelPage";//취소했을때 보여주는 페이지
+		return "pay/cancelPage";//취소했을때 보여주는 페이지
 	}
-	@RequestMapping("purchase/fail")
+	@RequestMapping("/fail")
 	public String fail(HttpSession session) {
 		session.removeAttribute("approve");
 		session.removeAttribute("listVO");
-		return "failPage";//실패했을때 보여주는페이지
+		return "pay/failPage";//실패했을때 보여주는페이지
 	}
+//	-------------------정기결제----------------------------
+	//결제 확인화면
+		@GetMapping("/regularPurchase")
+		public String regularPurchase(@ModelAttribute PurchaseListVO listVO, Model model) {
+			List<PurchaseVO> purchaseList = listVO.getProduct();
+			
+			List<PurchaseConfirmVO> confirmList = new ArrayList<>();//옮겨닮을 리스트
+			int total = 0;
+			for(PurchaseVO vo : purchaseList) {//사용자가 선택한 번호를 반복하며
+				ProductDto productDto =  productDao.selectOne(vo.getProductNo());//상품정보
+				
+				PurchaseConfirmVO confirmVO = PurchaseConfirmVO.builder()
+						.purchaseVO(vo).productDto(productDto)
+						.build();
+			confirmList.add(confirmVO);//화면에 출력할 데이터 추가
+			total += confirmVO.getTotal();//총 구매금액 합산
+		}
+			
+			model.addAttribute("list", confirmList);//선택한번호의상품
+			model.addAttribute("total",total);
+			return"pay/regularPurchase";
+		}
+		
+		@PostMapping("/regularPurchase")
+		public String regularPurchase(HttpSession session,@ModelAttribute PurchaseListVO listVO) throws URISyntaxException {
+			log.debug("listVO={}",listVO);
+			
+			KakaoPayReadyRequestVO request = kakaoPayService.convert(listVO);
+			
+			String memberId=(String)session.getAttribute("name");
+			request.setPartnerUserId(memberId);
+			
+			KakaoPayReadyResponseVO response = kakaoPayService.ready(request);
+			
+			session.setAttribute("approve", KakaoPayApproveRequestVO.builder()
+					.partnerOrderId(request.getPartnerOrderId())
+					.partnerUserId(request.getPartnerUserId())
+					.tid(response.getTid())
+					.build());//카카오페이
+				session.setAttribute("listVO",listVO);//구매한 상품의 번호
+			
+				return "redirect:"+response.getNextRedirectPcUrl();
+		}
+	
 }
