@@ -9,5 +9,5 @@ import lombok.Data;
 @Component
 @ConfigurationProperties(prefix="custom.kakaopay")
 public class KakaoPayProperties {
-	private String cid, key;
+	private String cid,regularCid,key;
 }
