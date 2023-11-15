@@ -39,6 +39,36 @@ public class ReplyRestController {
 	private MemberDao memberDao;
 	
 	@PostMapping("/insert")
+	public void insert(HttpSession session, @RequestParam String clubBoardReplyContent, @RequestParam(required = false) Integer clubBoardReplyParent, 
+			@RequestParam int clubBoardNo, @RequestParam(required = false) Integer clubBoardReplyGroup) {
+		ClubBoardReplyDto clubBoardReplyDto = new ClubBoardReplyDto();
+		int clubBoardReplyNo = clubBoardReplyDao.sequence();
+		String memberId = (String)session.getAttribute("name");
+		
+		MemberDto memberDto = memberDao.loginId(memberId);
+		ClubBoardAllDto clubBoardAllDto = clubBoardDao.selectOne(clubBoardNo);
+		int clubNo = clubBoardAllDto.getClubNo();
+		ClubMemberDto clubMemberDto = clubBoardReplyDao.selectOne(clubNo, memberId);
+		
+		clubBoardReplyDto.setClubBoardReplyNo(clubBoardReplyNo);
+		clubBoardReplyDto.setClubBoardReplyContent(clubBoardReplyContent);
+		clubBoardReplyDto.setClubBoardReplyWriter(memberDto.getMemberName());
+		clubBoardReplyDto.setClubMemberNo(clubMemberDto.getClubMemberNo());
+		clubBoardReplyDto.setClubBoardNo(clubBoardNo);
+		clubBoardReplyDto.setClubBoardReplyParent(clubBoardReplyParent);
+		
+		if(clubBoardReplyDto.getClubBoardReplyParent() == null) { //댓글인 경우
+			clubBoardReplyDto.setClubBoardReplyGroup(clubBoardReplyNo);
+		}
+		else { //대댓글인 경우
+			ClubBoardReplyDto originClubBoardReplyDto = clubBoardReplyDao.selectOne(clubBoardReplyGroup);
+			clubBoardReplyDto.setClubBoardReplyGroup(originClubBoardReplyDto.getClubBoardReplyGroup());
+			clubBoardReplyDto.setClubBoardReplyDepth(originClubBoardReplyDto.getClubBoardReplyDepth() + 1);
+		}
+		clubBoardReplyDao.insert(clubBoardReplyDto);
+		//댓글 개수 업데이트 필요함
+		clubBoardDao.updateReplyCount(clubBoardNo);
+
 	public ResponseEntity<Map<String, Object>> insert(HttpSession session,
 	        @RequestParam String clubBoardReplyContent,
 	        @RequestParam(required = false) Integer clubBoardReplyParent,
@@ -101,6 +131,7 @@ public class ReplyRestController {
 	        responseMap.put("success", false);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMap);
 	    }
+
 	}
 
 	

@@ -82,7 +82,7 @@ public class ClubBoardController {
 		
 		int clubMemberNo = clubMemberDto.getClubMemberNo();
 		
-		clubBoardDto.setClubBoardName(clubMemberId);
+		clubBoardDto.setClubBoardName(memberDto.getMemberName());
 		clubBoardDto.setClubBoardNo(clubBoardNo);
 		clubBoardDto.setClubMemberNo(clubMemberNo);
 		clubBoardDto.setClubNo(clubNo);
@@ -108,7 +108,7 @@ public class ClubBoardController {
 	@RequestMapping("/detail")
 	public String detail(Model model, @RequestParam int clubBoardNo, HttpSession session) {
 		ClubBoardAllDto clubBoardAllDto = clubBoardDao.selectOne(clubBoardNo);
-		List<ClubBoardReplyDto> replyList = clubBoardReplyDao.selectList(clubBoardNo);
+		List<ClubBoardReplyDto> replyList = clubBoardReplyDao.selectListByReply(clubBoardNo);
 		model.addAttribute("clubBoardAllDto", clubBoardAllDto);
 		model.addAttribute("replyList", replyList);
 		return "clubBoard/detail";
