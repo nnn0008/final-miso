@@ -53,8 +53,7 @@ public class ChatRestController {
 
 	 @GetMapping("/download")
 	 public ResponseEntity<ByteArrayResource> download(
-			 @RequestParam int attachNo
-			 ) throws IOException{
+			 @RequestParam int attachNo) throws IOException{
 		 
 		 AttachDto attachDto = attachDao.selectOne(attachNo); 
 		 
