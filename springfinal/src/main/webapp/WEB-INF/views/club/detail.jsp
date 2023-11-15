@@ -94,6 +94,7 @@ $(function(){
 	
 	<div class="row">
 	<div class="col">
+	<img src="${pageContext.request.contextPath}/club/image?memberId=${clubDto.memberId}" width="200" height="200">
 	${clubMember.memberName}
 	${clubMember.clubMemberRank}
 	${clubMember.joinMessage}
