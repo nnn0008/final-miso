@@ -15,6 +15,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.kh.springfinal.configuration.KakaoPayProperties;
 import com.kh.springfinal.dao.PaymentDao;
+import com.kh.springfinal.dao.PaymentRegularDao;
 import com.kh.springfinal.dao.ProductDao;
 import com.kh.springfinal.dto.ProductDto;
 import com.kh.springfinal.vo.KakaoPayApproveRequestVO;
@@ -25,6 +26,12 @@ import com.kh.springfinal.vo.KakaoPayDetailRequestVO;
 import com.kh.springfinal.vo.KakaoPayDetailResponseVO;
 import com.kh.springfinal.vo.KakaoPayReadyRequestVO;
 import com.kh.springfinal.vo.KakaoPayReadyResponseVO;
+import com.kh.springfinal.vo.KakaoPayRegularApproveRequestVO;
+import com.kh.springfinal.vo.KakaoPayRegularCancelRequestVO;
+import com.kh.springfinal.vo.KakaoPayRegularCancelResponseVO;
+import com.kh.springfinal.vo.KakaoPayRegularDetailRequestVO;
+import com.kh.springfinal.vo.KakaoPayRegularDetailResponseVO;
+import com.kh.springfinal.vo.KakaoPayRegularReadyResponseVO;
 import com.kh.springfinal.vo.PurchaseListVO;
 import com.kh.springfinal.vo.PurchaseVO;
 
@@ -48,6 +55,10 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 	
 	@Autowired
 	private PaymentDao paymentDao;
+	
+	@Autowired
+	private PaymentRegularDao paymentRegularDao;
+	
 	@Override
 	public KakaoPayReadyResponseVO ready(KakaoPayReadyRequestVO request) throws URISyntaxException {
 		
@@ -166,4 +177,83 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 				.itemPrice(total)
 				.build();
 	}
+
+	@Override
+	public KakaoPayRegularReadyResponseVO ready2(KakaoPayReadyRequestVO request) throws URISyntaxException {
+			//주소 설정
+				URI uri = new URI("https://kapi.kakao.com/v1/payment/ready");
+				
+				//바디 설정
+				MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+				body.add("cid",kakaoPayProperties.getCid());
+				body.add("partner_order_id",request.getPartnerOrderId());
+				body.add("partner_user_id",request.getPartnerUserId());
+				body.add("item_name",request.getItemName());
+				body.add("quantity","1");
+				body.add("total_amount",String.valueOf(request.getItemPrice()));//100만원이 최대(개발자)
+				body.add("tax_free_amount","0");//비과세
+				
+				//현재 페이지 주소 계산
+				String path = ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString();
+				body.add("approval_url",path+"/success");
+				body.add("cancel_url",path+"/cancel");
+				body.add("fail_url",path+"/fail");
+				
+				//요청 발송
+				HttpEntity entity = new HttpEntity(body,headers);//요청 객체
+				
+				KakaoPayRegularReadyResponseVO response = template.postForObject(uri, entity, KakaoPayRegularReadyResponseVO.class);
+				
+				return response;
+	}
+
+	@Override
+	public KakaoPayApproveResponseVO approve2(KakaoPayRegularApproveRequestVO request) throws URISyntaxException {
+		URI uri = new URI("https://kapi.kakao.com/v1/payment/approve");
+		
+		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+		body.add("cid", kakaoPayProperties.getCid());
+		
+		
+		
+		//현재 페이지 주소 계산
+		String path = ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString();
+		body.add("approval_url",path+"/success");
+		body.add("cancel_url",path+"/cancel");
+		body.add("fail_url",path+"/fail");
+		
+		
+		
+		HttpEntity entity = new HttpEntity(body,headers);//요청 객체
+		
+		KakaoPayApproveResponseVO response = template.postForObject(uri, entity, KakaoPayApproveResponseVO.class);
+		
+		log.debug("결제 승인 완료 = {}", response.getTid());
+		
+		return response;
+	}
+
+	@Override
+	public KakaoPayRegularDetailResponseVO detail2(KakaoPayRegularDetailRequestVO request) throws URISyntaxException {
+URI uri = new URI("https://kapi.kakao.com/v1/payment/order");
+		
+		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+		body.add("cid", kakaoPayProperties.getCid());
+		body.add("tid",request.getTid() );//거래번호
+		
+		
+		HttpEntity entity = new HttpEntity(body,headers);//요청 객체
+		
+		KakaoPayRegularDetailResponseVO response = template.postForObject(uri, entity, KakaoPayRegularDetailResponseVO.class);
+		return response;
+	
+	}
+
+	@Override
+	public KakaoPayRegularCancelResponseVO cancel2(KakaoPayRegularCancelRequestVO request) throws URISyntaxException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 }
