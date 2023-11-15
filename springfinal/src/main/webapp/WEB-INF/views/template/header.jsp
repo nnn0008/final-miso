@@ -63,6 +63,8 @@
     .card {
     width: 250px;
     }
+
+
 </style>
 
 <%-- 
@@ -78,26 +80,26 @@
 
 <script>
 	
-	window.socket = new SockJS("${pageContext.request.contextPath}/ws/notify");
+// 	window.socket = new SockJS("${pageContext.request.contextPath}/ws/notify");
 	
-	socket.onopen = function (e) {
-	     console.log('Info: connection opened.');
-	 };
+// 	socket.onopen = function (e) {
+// 	     console.log('Info: connection opened.');
+// 	 };
 	 
-	 socket.onmessage = function (e) {
-		console.log("onmessage"+e.data);
-		let $socketAlert = $("div#socketAlert");
-		$socketAlert.html(e.data)
-		$socketAlert.css("display", "block");
+// 	 socket.onmessage = function (e) {
+// 		console.log("onmessage"+e.data);
+// 		let $socketAlert = $("div#socketAlert");
+// 		$socketAlert.html(e.data)
+// 		$socketAlert.css("display", "block");
 		
-		setTimeout(function () {
-			$socketAlert.css("display", "none");
-		}, 5000);
-	} 
+// 		setTimeout(function () {
+// 			$socketAlert.css("display", "none");
+// 		}, 5000);
+// 	} 
 	 
-	 socket.oncolose = function (e) {
-		 console.log('Info: connection close.');
-	}
+// 	 socket.oncolose = function (e) {
+// 		 console.log('Info: connection close.');
+// 	}
 	 
 
 </script>
@@ -110,7 +112,7 @@
 <main>
  <header>
             <div class="col mt-2">
-	<div id="socketAlert" class="alert alert-success bg-miso" role="alert" style="display:none;"></div>
+	
 	
 		<a href="#" class="link"><img src="${pageContext.request.contextPath}/images/miso_logo.png" width="200px"></a>
 
@@ -126,11 +128,13 @@
                    </div>  
             </div>
             <div class="etc">
+            
             	<div class="col-4 ms-4">
             	<a href="${pageContext.request.contextPath}/#" class="link-body-emphasis link-underline link-underline-opacity-0">
             	<i class="fa-regular fa-bell fa-2xl"></i></i>
             	</a>
             	</div>
+            	
             	<div class="col-4">
             	<a href="${pageContext.request.contextPath}/#" class="link-body-emphasis link-underline link-underline-opacity-0">
             	<i class="fa-regular fa-comments fa-2xl"></i>
