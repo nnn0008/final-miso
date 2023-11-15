@@ -29,6 +29,7 @@ public class CertRestController {
 	@Autowired
 	private JavaMailSender sender;
 	
+	//회원가입 이메일 인증
 	@PostMapping("/send")
 	public void send(@RequestParam String certEmail) throws MessagingException, javax.mail.MessagingException{
 		//인증번호 생성
@@ -55,6 +56,7 @@ public class CertRestController {
 		certDao.insert(certDto);
 	}
 	
+	//회원가입 이메일 인증 코드 확인
 	@PostMapping("/check")
 	public String check(@RequestParam String certEmail, @RequestParam String certNumber) {
 		CertDto originDto=certDao.selectOne(certEmail);
@@ -66,6 +68,12 @@ public class CertRestController {
 		else {
 			return "N";
 		}
+	}
+	
+	//비밀번호 찾기 인증번호 메일로 전송
+	@PostMapping("/searchPwSend")
+	public void searchPwSend(@RequestParam String memberEmail, @RequestParam String memberId) {
+		
 	}
 	
 }

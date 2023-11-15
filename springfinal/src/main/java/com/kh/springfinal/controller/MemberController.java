@@ -3,6 +3,7 @@ package com.kh.springfinal.controller;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.security.SecureRandom;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.message.SimpleMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,7 +60,7 @@ public class MemberController {
 	         session.setAttribute("name", memberId);
 	         session.setAttribute("level", memberDto.getMemberLevel());
 	         session.setAttribute("memberName", memberDto.getMemberName());
-
+	       
 	         //메인페이지로 이동
 	         return "redirect:/"; 
 	      };
@@ -167,7 +169,6 @@ public class MemberController {
 	    model.addAttribute("idList", idListString);
 	    model.addAttribute("idCount", idList.size());
 	    model.addAttribute("memberName", memberName);
-	    Cookie cookie = new Cookie("searchId", null);
 	    return "member/searchId2";
 	   }
 	   return "./searchId?error";
@@ -181,9 +182,27 @@ public class MemberController {
 	public String searchPw(@RequestParam String memberId, @RequestParam String memberEmail) {
 		MemberDto findDto  = memberDao.loginId(memberId);
 		//아이디, 이메일 검사
-		if(findDto.getMemberEmail().equals(memberEmail)) {
-			SimpleMessage message = new SimpleMessage();
-//			message.setTo();
+		if(findDto!=null&&findDto.getMemberEmail().equals(memberEmail)) {
+			// 알파벳 대문자, 소문자, 숫자를 조합하여 임시 비밀번호 생성
+	        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	        StringBuilder tempPassword = new StringBuilder();
+	        SecureRandom random = new SecureRandom();
+
+	        for (int i = 0; i < 8; i++) {
+	            int randomIndex = random.nextInt(characters.length());
+	            tempPassword.append(characters.charAt(randomIndex));
+	        }
+	        
+	        String temporaryPassword = tempPassword.toString();
+			SimpleMailMessage message = new SimpleMailMessage();
+			//메일 전송
+			message.setTo(memberEmail);
+			message.setSubject("[miso] 임시비밀번호가 도착하였습니다");
+			message.setText(temporaryPassword);
+			sender.send(message);
+			//DB저장
+			memberDao.changePw(memberId, temporaryPassword);
+			
 			return "redirect:./searchPwFinish";
 		}
 		else {

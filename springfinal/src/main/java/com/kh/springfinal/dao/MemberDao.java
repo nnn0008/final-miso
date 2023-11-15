@@ -9,5 +9,5 @@ public interface MemberDao {
 	public MemberDto loginId(String memberId);
 	MemberDto selectOne(String memberId, String memberPw);
 	List<MemberDto> memberIdListByEmail(String memberName, String memberEmail);
-	MemberDto changePw(String memberId);
+	boolean changePw(String memberId, String memberPw);
 }
