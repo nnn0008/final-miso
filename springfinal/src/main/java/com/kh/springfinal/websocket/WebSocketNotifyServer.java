@@ -69,8 +69,8 @@ public class WebSocketNotifyServer extends TextWebSocketHandler{
 
             if("reply".equals(notifyType) && replyWriterMemberClient != null) {
             	TextMessage tm = new TextMessage(replyWriterName + "님이 "
-						+ "<a href='/clubBoard/detail?clubBoardNo="+ boardNo +"' style=\"color: black\">"
-						+ boardTitle+" 글에 댓글을 달았습니다!</a>");
+            	        + "<a href='/clubBoard/detail?clubBoardNo=" + boardNo + "' class='link-body-emphasis link-underline link-underline-opacity-0' style='color: black'>"
+            	        + boardTitle + " 글에 댓글을 달았습니다!</a>");
             	
             	boardWriterMemberClient.sendMessage(tm);
 
@@ -83,10 +83,10 @@ public class WebSocketNotifyServer extends TextWebSocketHandler{
 		public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 			ClientVO client = new ClientVO(session);
 			clients.remove(client);
+			
 			String memberId = client.getMemberId();
-			Set<ClientVO> clientSet = new HashSet<>();
-			clientsMap.remove(memberId, clientSet);
-			 log.debug("사용자 접속! 현재 {}명", clients.size());
+			clientsMap.remove(memberId, session); //멤버 아이디랑 세션
+			 log.debug("사용자 종료! 현재 {}명", clientsMap);
 		}
 
 		
