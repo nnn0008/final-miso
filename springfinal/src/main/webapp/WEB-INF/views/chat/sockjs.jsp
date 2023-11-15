@@ -217,13 +217,13 @@
 		
 		$(".circle-name").text(clubName);
 		
-		//메세지타입이 file이라면 수신처리
-		if(data.messageType === "file"){
-			console.log("file data: ", data); // 이 줄 추가
-			$("<img>").attr("src", data.chatContent)
-			.css("max-width", "200px")
-			.appendTo(".message-list");
-		}
+// 		//메세지타입이 file이라면 수신처리
+// 		if(data.messageType === "file"){
+// 			console.log("file data: ", data); // 이 줄 추가
+// 			$("<img>").attr("src", data.chatContent)
+// 			.css("max-width", "200px")
+// 			.appendTo(".message-list");
+// 		}
 
 		//메세지 타입이 디엠이라면 해당 룸번호로 이동
 		if(data.messageType === "dm" && data.chatRoomNo){
@@ -348,8 +348,17 @@
 		
 		else if (data.content) { // 메세지 처리 
 			
+// 			//메세지타입이 file이라면 수신처리
+// 		if (data.messageType === "file") {
+// 		    console.log("file data: ", data);
+// 		    var img = $("<img>")
+// 		        .attr("src", "${pageContext.request.contextPath}"+data.content) // 이미지 소스 설정
+// 		        .css("width", "100px") // 이미지 크기 조절
+// 		        .appendTo(".message-list");
+// 		}
+
+
 			
-		
 		    var memberId = "${sessionScope.name}";
 		   // console.log(memberId);
 		    var chatSender = data.memberId;
@@ -393,7 +402,7 @@
 		    } else if (data.memberLevel == "VIP") {
 		        memberLevel.addClass("bg-warning");
 		    }
-		   
+		  
 		                   
 		    if (memberId === chatSender) {         
 		    	
@@ -401,7 +410,19 @@
 		        var messageDiv = $("<div>").addClass("d-flex justify-content-end mb-4 mt-2");
 
 		        var messageContainer = $("<div>").addClass("msg_cotainer_send")
-		            .append(content);
+// 		            .append(content);
+
+				// 파일인 경우 이미지 태그를 추가
+				if (data.messageType === "file") {
+				    console.log("file data: ", data);
+				    var img = $("<img>")
+				        .attr("src", "${pageContext.request.contextPath}"+data.content) // 이미지 소스 설정
+				        .css("width", "300px");// 이미지 크기 조절
+				        messageContainer.append(img);
+				    } else {
+				        // 텍스트인 경우 텍스트 추가
+				        messageContainer.append(content);
+				    }
 		           
 		        var imageContainer = $("<div>").addClass("img_cont_msg")
 		            .append($("<img>").attr("src", "${pageContext.request.contextPath}/images/profile.jpg").css("width", "45px").addClass("rounded-circle user_img_msg"));
@@ -467,7 +488,19 @@
 		        .text(data.memberId === data.memberName ? oneChatMemberName : memberName);
 		    	
 		    	var messageContainer = $("<div>").addClass("msg_cotainer")
-		    	    .append(content);
+// 		    	    .append(content);				
+
+				// 파일인 경우 이미지 태그를 추가
+				if (data.messageType === "file") {
+				    console.log("file data: ", data);
+				    var img = $("<img>")
+				        .attr("src", "${pageContext.request.contextPath}"+data.content) // 이미지 소스 설정
+				        .css("width", "300px");// 이미지 크기 조절
+				        messageContainer.append(img);
+				    } else {
+				        // 텍스트인 경우 텍스트 추가
+				        messageContainer.append(content);
+				    }
 
 		    	var timeSpan = $("<div>").addClass("time-left")
 		    	    .append($("<span>").addClass("msg_time").text(formattedTime));
