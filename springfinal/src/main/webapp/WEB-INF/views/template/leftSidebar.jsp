@@ -68,21 +68,21 @@
                         </div>
                     </div>
 
-                    <div class="row mt-4">
-                        <div class="col text-center d-flex align-items-center justify-content-center login">
-                            <a href="${pageContext.request.contextPath}/member/login" class="link">
-                                <img src="${pageContext.request.contextPath}/images/Vector-4.png" width="20%">
-                                <c:choose>
-                                	<c:when test="${sessionScope.name!=null}">
-										<strong class="ms-2">로그아웃</strong>
-                                	</c:when>
-                                	<c:otherwise>
-		                                <strong class="ms-2">로그인</strong>  
-                                	</c:otherwise>
-                                </c:choose>
-                            </a>
-                        </div>
-                    </div>
+<!--                     <div class="row mt-4"> -->
+<!--                         <div class="col text-center d-flex align-items-center justify-content-center login"> -->
+<%--                             <a href="${pageContext.request.contextPath}/member/login" class="link"> --%>
+<%--                                 <img src="${pageContext.request.contextPath}/images/Vector-4.png" width="20%"> --%>
+<%--                                 <c:choose> --%>
+<%--                                 	<c:when test="${sessionScope.name!=null}"> --%>
+<!-- 										<strong class="ms-2">로그아웃</strong> -->
+<%--                                 	</c:when> --%>
+<%--                                 	<c:otherwise> --%>
+<!-- 		                                <strong class="ms-2">로그인</strong>   -->
+<%--                                 	</c:otherwise> --%>
+<%--                                 </c:choose> --%>
+<!--                             </a> -->
+<!--                         </div> -->
+<!--                     </div> -->
                     
      </aside>
      

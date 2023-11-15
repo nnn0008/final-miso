@@ -9,6 +9,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
 
+import com.kh.springfinal.websocket.WebSocketNotifyServer;
 import com.kh.springfinal.websocket.WebSocketServer;
 
 
@@ -19,19 +20,26 @@ public class WebSocketServerConfiguration implements WebSocketConfigurer{
 	@Autowired
 	private WebSocketServer websocketServer;
 	
+	@Autowired
+	private WebSocketNotifyServer webSocketNotifyServer;
+	
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		registry.addHandler(websocketServer, "/ws/chat")
 		.addInterceptors(new HttpSessionHandshakeInterceptor())
 		.withSockJS(); //spring 표준
-
+		
+		registry.addHandler(webSocketNotifyServer, "/ws/notify")
+		.addInterceptors(new HttpSessionHandshakeInterceptor())
+		.withSockJS();
 	}
 	
 	//웹소켓 허용량을 늘리는 도구 추가
 	@Bean
 	public ServletServerContainerFactoryBean containerFactoryBean() {
 		ServletServerContainerFactoryBean bean = new ServletServerContainerFactoryBean();
-		bean.setMaxTextMessageBufferSize(Integer.MAX_VALUE);
+		bean.setMaxTextMessageBufferSize(Integer.MAX_VALUE);//허용 최대 사이즈
+//		bean.setMaxTextMessageBufferSize(8192);//자바 표준 사이즈
 		return bean;
 	}
 	

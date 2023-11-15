@@ -153,7 +153,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	        map.put("chatTime", chatTime.toString());
 	        map.put("chatRoomNo", chatRoomNo);
 	        
-	        if (chatDto.getAttachNo() != 0) {
+	        if (chatDto.getAttachNo() != 0) { 
 	        	map.put("messageType", "file");
 	            map.put("content", "/download?attachNo=" + chatDto.getAttachNo());
 	        } else {
@@ -421,6 +421,14 @@ public class WebSocketServer extends TextWebSocketHandler{
             attachDto.setAttachType(fileType);
             attachDao.insert(attachDto);
                             
+            // DB
+            chatDao.insert(ChatDto.builder()
+//	        		.chatContent(chatContent)
+            		.chatSender(chatSender)
+            		.chatRoomNo(chatRoomNo)
+            		.attachNo(attachNo)
+            		.build());
+            
             Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
             log.debug("roomMembers for chatRoomNo {}: {}", chatRoomNo, roomMembers);
             
@@ -442,14 +450,6 @@ public class WebSocketServer extends TextWebSocketHandler{
             }
          }
             
-            // DB
- 	        chatDao.insert(ChatDto.builder()
-//	        		.chatContent(chatContent)
- 	        		.chatSender(chatSender)
- 	        		.chatRoomNo(chatRoomNo)
- 	        		.attachNo(attachNo)
- 	        		.build());
-                
 	    }	
    }
 	

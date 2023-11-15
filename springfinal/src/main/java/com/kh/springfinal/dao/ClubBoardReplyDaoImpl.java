@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.springfinal.dto.ClubBoardReplyDto;
 import com.kh.springfinal.dto.ClubMemberDto;
+import com.kh.springfinal.vo.ClubBoardReplyMemberVO;
 
 @Repository
 public class ClubBoardReplyDaoImpl implements ClubBoardReplyDao{
@@ -53,6 +54,12 @@ public class ClubBoardReplyDaoImpl implements ClubBoardReplyDao{
 	@Override
 	public List<ClubBoardReplyDto> selectListByReply(int clubBoardNo) {
 		return sqlSession.selectList("clubBoardReply.findByReply", clubBoardNo);
+	}
+	
+	//알림 사용
+	@Override
+	public ClubBoardReplyMemberVO selectBoardReplyMember(int clubBoardReplyNo) {
+		return sqlSession.selectOne("clubBoardReply.clubBoardMemberAndReplyMember", clubBoardReplyNo);
 	}
 	
 	
