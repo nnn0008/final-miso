@@ -15,13 +15,19 @@ public class ProductDaoImpl implements ProductDao {
 	private SqlSession sqlSession;
 
 	@Override
-	public List<ProductDto> selectList() {
-		return sqlSession.selectList("product.list");
+	public List<ProductDto> selectSingleProductList() {
+		return sqlSession.selectList("product.singleList");
+	}
+	
+	@Override
+	public List<ProductDto> selectRegularProductList() {
+		return sqlSession.selectList("product.regularList");
 	}
 
 	@Override
 	public ProductDto selectOne(int productNo) {
 		return sqlSession.selectOne("product.find",productNo);
 	}
+
 
 }
