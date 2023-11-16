@@ -10,6 +10,9 @@ import com.kh.springfinal.vo.KakaoPayDetailRequestVO;
 import com.kh.springfinal.vo.KakaoPayReadyRequestVO;
 import com.kh.springfinal.vo.KakaoPayRegularApproveRequestVO;
 import com.kh.springfinal.vo.KakaoPayRegularApproveResponseVO;
+import com.kh.springfinal.vo.KakaoPayRegularCancelRequestVO;
+import com.kh.springfinal.vo.KakaoPayRegularCancelResponseVO;
+import com.kh.springfinal.vo.KakaoPayRegularDetailRequestVO;
 import com.kh.springfinal.vo.KakaoPayRegularDetailResponseVO;
 import com.kh.springfinal.vo.KakaoPayRegularOrderRequestVO;
 import com.kh.springfinal.vo.KakaoPayRegularOrderResponseVO;
@@ -22,11 +25,11 @@ import com.kh.springfinal.vo.PurchaseListVO;
 public interface KakaoPayRegularService {
 	KakaoPayRegularReadyResponseVO ready(KakaoPayRegularReadyRequestVO request)throws URISyntaxException;
 	KakaoPayRegularApproveResponseVO approve(KakaoPayRegularApproveRequestVO request)throws URISyntaxException;
-	KakaoPayRegularDetailResponseVO detail(KakaoPayDetailRequestVO request)throws URISyntaxException;
-	KakaoPayRegularRequestResponseVO request(KakaoPayRegularRequestRequestVO request)throws URISyntaxException;
-	KakaoPayCancelResponseVO cancel(KakaoPayCancelRequestVO request)throws URISyntaxException;
-	KakaoPayRegularOrderResponseVO order(KakaoPayRegularOrderRequestVO request)throws URISyntaxException;
-	KakaoPayRegularReadyResponseVO ready2(KakaoPayRegularReadyRequestVO request)throws URISyntaxException;
-	KakaoPayRegularApproveResponseVO approve2(KakaoPayRegularApproveRequestVO request)throws URISyntaxException;
-	KakaoPayReadyRequestVO convert(PurchaseListVO listVO);
+//	KakaoPayRegularRequestResponseVO request(KakaoPayRegularRequestRequestVO request)throws URISyntaxException;
+//	KakaoPayRegularCancelResponseVO cancel(KakaoPayRegularCancelRequestVO request)throws URISyntaxException;
+//	KakaoPayRegularDetailResponseVO detail(KakaoPayRegularDetailRequestVO request)throws URISyntaxException;
+//	KakaoPayRegularReadyResponseVO ready2(KakaoPayRegularReadyRequestVO request)throws URISyntaxException;
+//	KakaoPayRegularApproveResponseVO approve2(KakaoPayRegularApproveRequestVO request)throws URISyntaxException;
+	
+	KakaoPayRegularReadyRequestVO convert(PurchaseListVO listVO);
 }

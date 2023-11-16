@@ -109,7 +109,7 @@ $(function(){
          return;
       }
       
-      var form = $("<form>").attr("action", "purchase").attr("method", "get");
+      var form = $("<form>").attr("action", "regularPurchase").attr("method", "get");
       
       var count = 0;
       
