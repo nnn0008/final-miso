@@ -281,6 +281,18 @@ public class ClubController {
 				.body(resource);	
 		}
 		
+		@RequestMapping("/list")
+		public String list(HttpSession session,Model model) {
+			
+			List<MajorCategoryDto> categoryList = categoryDao.majorcategoryList();
+			
+			model.addAttribute("categoryList",categoryList);
+			
+			
+			
+			return "club/list";
+		}
+		
 		
 		
 	

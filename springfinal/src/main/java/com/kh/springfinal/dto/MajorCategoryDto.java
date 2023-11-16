@@ -10,6 +10,7 @@ public class MajorCategoryDto {
 	
 	private int majorCategoryNo;
 	private	String majorCategoryName;
+	private String imageName;
 	
 
 }
