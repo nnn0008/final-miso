@@ -7,5 +7,8 @@
 
 
   <h1> 단건, 정기 이용권 화면 이동 페이지</h1>
+  
+  <a href="singleList">단기상품</a>
+  <a href="regularList">정기상품</a>
 
 <jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>

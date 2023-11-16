@@ -16,13 +16,11 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class KakaoPayRegularDetailResponseVO {
-	private String tid,cid,sid,status;
-	private String partnerOrderId,partnerUserId;
-	private String paymentMethodType;
-	private KakaoPayAmountVO amount, canceledAmount,cancelAvailableAmount;
-	private String itemName, itemCode;
-	private int quantity;
-	private Date createdAt, approvedAt, canceledAt;
-	private KakaoPaySelectedCardInfo selectedCardInfo;
-	private List<KakaoPaymentActionDetailVO> paymentActionDetails;//List를 선호
+	private boolean available;//	사용 가능 여부
+	private String cid,sid,status;	//	가맹점 코드, 10자
+	private String paymentMethodType;//	결제 수단, CARD 또는 MONEY 중 하나
+	private String itemName; //상품 이름. 최대 100자
+	private Date createdAt;	//SID 발급 시각
+	private Date lastApprovedAt; //마지막 결제 승인 시각
+	private Date inactivatedAt; //정기결제 비활성화 시각
 }
