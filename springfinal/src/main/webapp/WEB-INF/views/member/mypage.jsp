@@ -23,6 +23,7 @@ $(function() {
 	        processData: false,
 	        success: function (response) {
 	            console.log("성공", response);
+	            
 	        }
 	    });
 	});
@@ -44,11 +45,11 @@ $(function() {
                     <div class="col-lg-4 col-md-4">
                     <c:choose>
                     	<c:when test="${attachDto==null}">
-                    		<img src="https://dummyimage.com/40x40/000/fff" class="rounded-circle">
+                    		<img src="https://dummyimage.com/40x40/000/fff" class="rounded-circle profile">
                     	</c:when>
                     	<c:otherwise>
                     	
-	                        <img src="/rest/member/profileShow?attachNo=${attachDto.attachNo}" class="rounded-circle" style="width:70px; height: 70px;">
+	                        <img src="/rest/member/profileShow?memberId=${memberDto.memberId}" class="rounded-circle profile" style="width:70px; height: 70px;">
                     	</c:otherwise>
                     </c:choose>
                     <button class="edit-p" data-bs-toggle="modal" data-bs-target="#edit-modal"><i class="fa-solid fa-pen edit-p"></i></button>
