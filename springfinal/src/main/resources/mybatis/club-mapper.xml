@@ -59,6 +59,24 @@
     )
     </select>
     
+   <select id="clubList" resultType="ClubListVO">
+   
+   SELECT *  FROM Club c 
+JOIN ZIP_CODE zc ON c.ZIP_CODE_NO =zc.ZIP_CODE_NO 
+JOIN Minor_CATEGORY mi ON c.CLUB_CATEGORY = mi.MINOR_CATEGORY_NO 
+JOIN MAJOR_CATEGORY ma ON mi.MAJOR_CATEGORY_NO = ma.MAJOR_CATEGORY_NO 
+WHERE c.ZIP_CODE_NO IN(SELECT zip_code_no FROM ZIP_CODE WHERE SIdo in
+(SELECT z.sido FROM 
+MEMBER m JOIN ZIP_CODE z ON m.MEMBER_ADDR = z.ZIP_CODE_NO WHERE m.MEMBER_ID=#{memberId})
+)
+and ma.MAJOR_CATEGORY_NAME in(
+SELECT ma.major_category_name FROM MAJOR_CATEGORY ma JOIN MINOR_CATEGORY mi ON ma.MAJOR_CATEGORY_NO =mi.MAJOR_CATEGORY_NO 
+WHERE mi.MINOR_CATEGORY_NO IN (SELECT mc.like_category FROM MEMBER_CATEGORY mc JOIN MEMBER m ON mc.member_id = m.MEMBER_ID 
+WHERE m.member_id=#{memberId})
+)
+   
+   </select>
+    
     
     
     

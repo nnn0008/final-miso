@@ -37,6 +37,7 @@ import com.kh.springfinal.dto.MajorCategoryDto;
 import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.dto.ZipCodeDto;
 import com.kh.springfinal.vo.ClubImageVO;
+import com.kh.springfinal.vo.ClubListVO;
 import com.kh.springfinal.vo.ClubMemberVO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -284,10 +285,24 @@ public class ClubController {
 		@RequestMapping("/list")
 		public String list(HttpSession session,Model model) {
 			
+			String memberId = (String) session.getAttribute("name");
+			
 			List<MajorCategoryDto> categoryList = categoryDao.majorcategoryList();
+			List<ClubListVO> clubList = clubDao.clubList(memberId);
 			
+			
+			for(ClubListVO list : clubList) {
+				
+				int memberCount = clubMemberDao.memberCount(list.getClubNo());
+				list.setMemberCount(memberCount);
+				
+			}
+			
+			log.debug("clubList2={}",clubList);
+			
+			
+			model.addAttribute("clubList",clubList);
 			model.addAttribute("categoryList",categoryList);
-			
 			
 			
 			return "club/list";

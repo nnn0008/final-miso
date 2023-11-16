@@ -57,6 +57,12 @@
     		ON m.MEMBER_ID=cm.CLUB_MEMBER_ID WHERE cm.CLUB_NO=#{clubNo}
     	
     	</select>
+    	
+    	 <select id="count" resultType="int">
+    	
+    	select count(*) from club_member where club_no=#{clubNo}
+    
+    </select>
     
     
     </mapper>
