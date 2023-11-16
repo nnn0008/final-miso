@@ -7,21 +7,8 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://unpkg.com/hangul-js" type="text/javascript"></script>
     
-    
-    
-
-	<div class="container text-center">
-  <div class="row align-items-start">
-  <c:forEach var="majorCategory" items="${categoryList}" varStatus="loopStatus">
-    <div class="col-3">
-      <a href="list2?majorCategoryNo=${majorCategory.majorCategoryNo}"><img src="../images/${majorCategory.imageName}" width="30%"></a>
-      ${majorCategory.majorCategoryName}
-    </div>
-  </c:forEach>
-    </div>
-</div>
-<hr>
-	<h1>추천 동호회 리스트</h1>
+  
+<h1>동호회 리스트</h1>
 	<c:forEach var="clubListVO" items="${clubList}">
 	<div class="row">
 		<div class="col">
@@ -29,7 +16,7 @@
 		클럽 이름 : ${clubListVO.clubName}
 		클럽 설명 : ${clubListVO.clubExplain}
 		지역 : ${clubListVO.sigungu}
-		카테고리 이름 : ${clubListVO.majorCategoryName}
+		카테고리 이름 : ${clubListVO.minorCategoryName}
 		멤버 수 : ${clubListVO.memberCount}
 		</div>
 	</div>
@@ -38,11 +25,7 @@
 
 
 
- 
+
     
     
-    
-    
-    
-    
-      <jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>
+       <jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>
