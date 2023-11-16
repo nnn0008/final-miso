@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="meeting">
+	
+	<select id="sequence" resultType="int">
+		select meeting_seq.nextval from dual
+	</select>
+	
+	<insert id="add">
+		insert into meeting(
+			meeting_no, meeting_name, meeting_date, 
+			meeting_location, meeting_price, meeting_number
+		) 
+		values(
+			#{meetingNo}, #{meetingName}, #{meetingDate},
+			#{meetingLocation}, #{meetingPrice}, #{meetingNumber}
+		)	
+	</insert>
+	<update id="edit">
+		update meeting set
+		meeting_name = #{meetingName}
+		meeting_price = #{meetingPrice}
+		meeting_number = #{meetingNumber}
+		where meeting_no = #{meetingNo}
+	</update>
+	
+	<select id="find" resultType="MeetingDto">
+		select * from meeting where meeting_no = #{meetingNo}
+	</select>
+	
+	<select id="findAll" resultType="MeetingDto">
+		select * from meeting where club_no = #{clubNo} order by meeting_no desc
+	</select>
+	
+	<delete id="remove">
+		delete meeting where meeting_no = #{meetingNo}
+	</delete>
+	
+</mapper>

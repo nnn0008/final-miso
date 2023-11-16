@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="meetingMember">
+	
+	<insert id="add">
+		insert into meeting_image(club_member_no, meeting_no)
+		values(#{clubMemberNo}, #{meetingNo}) 
+	</insert>
+	
+	<delete id="remove">
+		delete meeting_member where meeting_no = #{meetingNo} 
+	</delete>
+	
+	<select id="find">
+		select *  from meeting_member where meeting_no = #{meetingNo}
+	</select>
+	
+	<select id="findAll">
+		select * from meeting_member order by meeting_no desc
+	</select>
+
+</mapper> 
