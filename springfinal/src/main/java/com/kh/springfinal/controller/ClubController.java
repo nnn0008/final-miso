@@ -27,13 +27,17 @@ import com.kh.springfinal.dao.AttachDao;
 import com.kh.springfinal.dao.CategoryDao;
 import com.kh.springfinal.dao.ChatRoomDao;
 import com.kh.springfinal.dao.ClubDao;
+import com.kh.springfinal.dao.ClubMemberDao;
 import com.kh.springfinal.dao.ZipCodeDao;
 import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.ChatRoomDto;
 import com.kh.springfinal.dto.ClubDto;
+import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MajorCategoryDto;
+import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.dto.ZipCodeDto;
 import com.kh.springfinal.vo.ClubImageVO;
+import com.kh.springfinal.vo.ClubMemberVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -56,6 +60,9 @@ public class ClubController {
 	
 	@Autowired
 	private AttachDao attachDao;
+	
+	@Autowired
+	private ClubMemberDao clubMemberDao;
 	
 	
 	
@@ -81,10 +88,12 @@ public class ClubController {
 		
 //		String memberId = (String) session.getAttribute("name");	//session 생긴 후 풀 주석
 		
+		ClubMemberDto clubMemberDto = new ClubMemberDto();
 		ChatRoomDto chatRoomDto = new ChatRoomDto();
-		String memberId = "testuser1";
+		String memberId = (String) session.getAttribute("name");
 		int clubNo = clubDao.sequence();
 		int chatRoomNo = chatRoomDao.sequence();
+		int clubMemberNo = clubMemberDao.sequence();
 		
 		chatRoomDto.setChatRoomNo(chatRoomNo);
 		chatRoomDao.insert(chatRoomDto);
@@ -93,9 +102,16 @@ public class ClubController {
 		clubDto.setClubNo(clubNo);
 		clubDto.setClubOwner(memberId);
 		
+		clubMemberDto.setClubMemberNo(clubMemberNo);
+		clubMemberDto.setClubNo(clubNo);
+		clubMemberDto.setClubMemberId(memberId);
+		clubMemberDto.setClubMemberRank("운영진");
+		clubMemberDto.setJoinMessage("환영합니다.");
+		
 		log.debug("clubDto={}",clubDto);
 		
 		clubDao.insert(clubDto);
+		clubMemberDao.insert(clubMemberDto);
 		
 		
 
@@ -105,11 +121,23 @@ public class ClubController {
 	
 	@RequestMapping("/detail")
 	public String detail(@RequestParam int clubNo,
-			Model model) {
+			Model model,HttpSession session) {
 		
+		String memberId = (String) session.getAttribute("name");
 		ClubImageVO clubDto = clubDao.clubDetail(clubNo);
+		MajorCategoryDto major = categoryDao.findMajor(clubDto.getClubCategory());
+		ZipCodeDto zipDto = zipDao.findZip(clubNo);
 		
+		boolean joinButton = !clubMemberDao.existMember(clubNo, memberId);
+		
+		List<ClubMemberVO> clubMemberList = clubMemberDao.memberInfo(clubNo);
+		
+		
+		model.addAttribute("clubMemberDto",clubMemberList);
 		model.addAttribute("clubDto",clubDto);
+		model.addAttribute("major",major);
+		model.addAttribute("zipDto",zipDto);
+		model.addAttribute("joinButton",joinButton);
 		
 
 		return "club/detail";
@@ -152,7 +180,8 @@ public class ClubController {
 	
 	@PostMapping("/edit")
 	public String update(ClubDto clubDto,
-			@RequestParam MultipartFile attach) throws IllegalStateException, IOException {
+			@RequestParam MultipartFile attach) 
+					throws IllegalStateException, IOException {
 		
 		clubDao.edit(clubDto);
 		
@@ -251,6 +280,9 @@ public class ClubController {
 					
 				.body(resource);	
 		}
+		
+		
+		
 	
 	
 	

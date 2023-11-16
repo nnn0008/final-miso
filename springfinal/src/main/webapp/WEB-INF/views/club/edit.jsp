@@ -90,8 +90,6 @@ i want to go home
 		        .val($(".search-input").data("no"))
 		);
 		
-		console.log("zipNo:"+$(".newInput").val());
-		console.log("zipNo:"+$(".search-input").data("no"));
 		
 		
 
@@ -160,19 +158,33 @@ i want to go home
 </script>
 <script>
 $(function(){
-
-	console.log("premium:"+$(".checkBox").val());
-	console.log("clubName:"+$(".name").val());
-
+	
+	var form=$(".add")
+	
+	var check = $("<input>");
+	check.attr("name","clubPremium")
+		.prop("type","hidden");
+	
 	    if($(".checkBox").prop("checked")){
-	        $(".checkBox").val('Y');
-	        $(".checkBox").prop("name", "clubPremium");
+	        $("[name=clubPremium]").val('Y');
 	    } else {
-	        $(".checkBox").val('N');
-	        $(".checkBox").prop("name", "clubPremium");
+	        $("[name=clubPremium]").val('N');
 	    }
 
-	    console.log("premium:"+$(".checkBox").val());
+	$(".checkBox").change(function(){
+		
+		  if($(this).prop("checked")){
+		        $("[name=clubPremium]").val('Y');
+		    } else {
+		        $("[name=clubPremium]").val('N');
+		    }
+		
+	});
+	
+	form.append(check);
+	
+
+
 	
 })
 
