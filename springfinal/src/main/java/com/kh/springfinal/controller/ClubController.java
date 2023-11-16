@@ -35,6 +35,7 @@ import com.kh.springfinal.dto.ClubDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MajorCategoryDto;
 import com.kh.springfinal.dto.MemberDto;
+import com.kh.springfinal.dto.MinorCategoryDto;
 import com.kh.springfinal.dto.ZipCodeDto;
 import com.kh.springfinal.vo.ClubImageVO;
 import com.kh.springfinal.vo.ClubListVO;
@@ -306,6 +307,63 @@ public class ClubController {
 			
 			
 			return "club/list";
+		}
+		
+		@RequestMapping("/list2")
+		public String list2(HttpSession session,Model model, int majorCategoryNo) {
+			
+			List<MinorCategoryDto> categoryList = 
+					categoryDao.minorCategoryList(majorCategoryNo);
+			
+			String memberId = (String) session.getAttribute("name");
+			
+			List<ClubListVO> clubList = clubDao.majorClubList(memberId,majorCategoryNo);
+			
+			
+			for(ClubListVO list : clubList) {
+				
+				int memberCount = clubMemberDao.memberCount(list.getClubNo());
+				list.setMemberCount(memberCount);
+				
+			}
+			
+			model.addAttribute("clubList",clubList);
+			model.addAttribute("categoryList",categoryList);
+			
+			
+			return "club/list2";
+			
+			
+			
+		}
+		
+		@RequestMapping("/list3")
+		public String list3(HttpSession session,Model model, int minorCategoryNo) {
+			
+			List<MinorCategoryDto> categoryList = 
+					categoryDao.minorCategoryList(minorCategoryNo);
+			
+			String memberId = (String) session.getAttribute("name");
+			
+			List<ClubListVO> clubList = clubDao.minorClubList(memberId,minorCategoryNo);
+			
+			log.debug("clubList={}",clubList);
+			
+			for(ClubListVO list : clubList) {
+				
+				int memberCount = clubMemberDao.memberCount(list.getClubNo());
+				list.setMemberCount(memberCount);
+				
+			}
+			
+			model.addAttribute("clubList",clubList);
+			model.addAttribute("categoryList",categoryList);
+			
+			
+			return "club/list3";
+			
+			
+			
 		}
 		
 		

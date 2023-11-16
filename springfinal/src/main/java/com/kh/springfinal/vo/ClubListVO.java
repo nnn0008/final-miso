@@ -13,6 +13,7 @@ public class ClubListVO {
 	private String clubExplain;
 	private String sigungu;
 	private String majorCategoryName;
+	private String minorCategoryName;
 	private int memberCount;
 
 }

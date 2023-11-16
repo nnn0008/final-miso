@@ -200,52 +200,22 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-10 offset-md-1">
-                <div class="p-4 text-light bg-dark rounded">
-                    <h1>자동완성 예제</h1>
-                </div>
+                
 
                 <div class="row mt-4">
                     <div class="col">
-                        <input type="search" class="form-control search-input"
+                       지역 <input type="search" class="form-control search-input"
                             placeholder="동,읍,면을 입력해주세요">
                     </div>                    
                 </div>
                 <div class="row">
                     <div class="col">
                         <ul class="list-group addr-list">
-                        
-                      <%--   <c:forEach var="zipList" items="${zipList}">
-                            <li class="list-group-item zip">
-                            ${zipCodeName}
-                            </li>
-                        </c:forEach> --%>
-                        
-                        	 <!-- <li class="list-group-item zip">서울시 서대문구 홍제동</li>
-                            <li class="list-group-item zip">서울시 서대문구 홍제1동</li>
-                            <li class="list-group-item zip">서울시 서대문구 홍제2동</li>
-                            <li class="list-group-item zip">서울시 서대문구 홍제3동</li>
-                            <li class="list-group-item zip">서울시 서대문구 홍제4동</li>
-                            <li class="list-group-item zip">서울시 서대문구 홍제5동</li>
-                            <li class="list-group-item zip">서울시 서대문구 홍제6동</li>
-                            <li class="list-group-item zip">서울시 서대문구 홍제7동</li>
-                            <li class="list-group-item zip">서울시 서대문구 홍제8동</li>
-                            <li class="list-group-item zip">서울시 서대문구 홍제9동</li>
-                            <li class="list-group-item zip">서울시 서대문구 홍제10동</li>
-                            <li class="list-group-item zip">서울시 서대문구 홍제11동</li>
-                            <li class="list-group-item zip">서울시 서대문구 홍제12동</li>
-                            <li class="list-group-item zip">서울시 서대문구 홍제13동</li>
-                            <li class="list-group-item zip">서울시 서대문구 홍제14동</li>
-                            <li class="list-group-item zip">전혀관</li>  -->
-                        
                         </ul>
                     </div>
                 </div>
 
-                <div class="row mt-4">
-                    <div class="col">
-                        <h1>다음내용</h1>
-                    </div>
-                </div>
+     
             </div>
         </div>        
     </div>

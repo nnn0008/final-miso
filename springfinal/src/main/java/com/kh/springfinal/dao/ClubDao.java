@@ -19,5 +19,7 @@ public interface ClubDao {
 	void connect(int clubNo, int attachNo);
 	AttachDto findImage(int clubNo);
 	List<ClubListVO> clubList(String memberId);
+	List<ClubListVO> majorClubList(String memberId, int majorCategoryNo);
+	List<ClubListVO> minorClubList(String memberId, int minorCategoryNo);
 	
 }
