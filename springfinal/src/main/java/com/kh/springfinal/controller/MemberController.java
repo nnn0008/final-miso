@@ -23,9 +23,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.springfinal.dao.AttachDao;
+import com.kh.springfinal.dao.MemberCategoryDao;
 import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dao.MemberProfileDao;
 import com.kh.springfinal.dto.AttachDto;
+import com.kh.springfinal.dto.MemberCategoryDto;
 import com.kh.springfinal.dto.MemberDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +46,9 @@ public class MemberController {
 	private MemberProfileDao memberProfileDao;
 	
 	@Autowired
+	private MemberCategoryDao memberCategoryDao;
+	
+	@Autowired
 	private JavaMailSender sender;
 	
 	@GetMapping("/join")
@@ -51,9 +56,16 @@ public class MemberController {
 		return "member/join";
 	}
 	@PostMapping("/join")
-	public String join(@ModelAttribute MemberDto memberDto) {
+	public String join(@ModelAttribute MemberDto memberDto, @RequestParam List<Integer> likeCategory) {
 		//회원 정보 DB저장
 		memberDao.join(memberDto);
+		MemberCategoryDto memberCategoryDto = new MemberCategoryDto();
+		memberCategoryDto.setMemberId(memberDto.getMemberId());
+		for(int i = 0; i<likeCategory.size(); i++) {
+			Integer likecategory = likeCategory.get(i);
+			memberCategoryDto.setLikeCategory(likecategory);
+			memberCategoryDao.insert(memberCategoryDto);
+		}
 		return "redirect:./login";
 	}
 	
