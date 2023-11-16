@@ -77,5 +77,5 @@
         WHERE (chat_sender = #{chatSender} AND chat_receiver = #{chatReceiver})
         OR (chat_sender = #{chatReceiver} AND chat_receiver = #{chatSender})
     </select>
-
+    
 </mapper>

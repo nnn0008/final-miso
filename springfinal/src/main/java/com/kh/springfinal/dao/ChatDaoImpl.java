@@ -33,5 +33,9 @@ public class ChatDaoImpl implements ChatDao{
 		return sqlSession.selectList("chat.getChatHistory", chatRoomNo);
 	}
 	
-	
+	////채팅방 마지막 메세지
+	@Override
+	public ChatDto chatLastMsg(int chatRoomNo) {
+		return sqlSession.selectOne("chat.chatLastMsg", chatRoomNo);
+	}
 }

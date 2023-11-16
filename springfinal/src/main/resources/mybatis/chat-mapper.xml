@@ -36,4 +36,15 @@
     ORDER BY chat_time asc
 </select>
 
+<select id="chatLastMsg" resultType="ChatDto">
+select CHAT_CONTENT  from 
+(
+	select CHAT_CONTENT
+	from CHAT
+	WHERE CHAT_ROOM_NO = #{chatRoomNo}
+	order BY CHAT_TIME  DESC
+)
+WHERE rownum = 1
+</select>
+
 </mapper>

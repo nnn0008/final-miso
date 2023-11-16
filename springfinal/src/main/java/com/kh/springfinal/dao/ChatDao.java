@@ -9,4 +9,5 @@ public interface ChatDao {
 	List<ChatDto> list(); //채팅 전체 리스트 
 	List<ChatDto> getChatHistory(int chatRoomNo); //채팅 내역
 
+	ChatDto chatLastMsg(int chatRoomNo); //채팅방 마지막 메세지
 }

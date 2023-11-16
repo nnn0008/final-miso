@@ -420,15 +420,21 @@ public class WebSocketServer extends TextWebSocketHandler{
             attachDto.setAttachSize(fileSize);
             attachDto.setAttachType(fileType);
             attachDao.insert(attachDto);
-                            
-            // DB
-            chatDao.insert(ChatDto.builder()
-//	        		.chatContent(chatContent)
-            		.chatSender(chatSender)
-            		.chatRoomNo(chatRoomNo)
-            		.attachNo(attachNo)
-            		.build());
             
+         // DB
+            if (attachNo != 0) {
+                chatDao.insert(ChatDto.builder()
+                        .chatSender(chatSender)
+                        .chatRoomNo(chatRoomNo)
+                        .attachNo(attachNo)
+                        .build());
+            } else {
+                chatDao.insert(ChatDto.builder()
+                        .chatSender(chatSender)
+                        .chatRoomNo(chatRoomNo)
+                        .build());
+            }
+
             Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
             log.debug("roomMembers for chatRoomNo {}: {}", chatRoomNo, roomMembers);
             

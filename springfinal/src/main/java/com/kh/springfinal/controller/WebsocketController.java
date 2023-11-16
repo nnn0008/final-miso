@@ -63,6 +63,8 @@ public class WebsocketController {
 	    List<ChatOneDto> oneChatRoomList = chatOneDao.oneChatRoomList(memberId, memberId);
 	    log.debug("oneChatRoomList={}",oneChatRoomList);
 	    
+//	    ChatDto lastMessage = chatDao.chatLastMsg(chatRoomNo); //채팅방 마지막 메세지
+//	    log.debug("lastMessage={}",lastMessage);
 	    
 	    // 해당 동호회의 번호, 이름, 내용 조회
 	    List<ChatListVO> roomList = new ArrayList<>();
@@ -75,6 +77,7 @@ public class WebsocketController {
 	    model.addAttribute("list", chatRoomList);
 	    model.addAttribute("roomList", roomList);
 	    model.addAttribute("oneChatRoomList", oneChatRoomList);
+//	    model.addAttribute("lastMessage", lastMessage);
 
 	    return "chat/roomList";
 	}
