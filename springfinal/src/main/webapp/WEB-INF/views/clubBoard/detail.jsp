@@ -7,43 +7,10 @@
 
 <script>
 
-
-	//댓글 작성 시 비동기처리로 댓글 작성 + 댓글 목록 비동기처리
-	$(function(){
-		loadList();
-		
-		//댓글 작성
-		$(".reply-insert-form").submit(function(e){
-			e.preventDefault();
-			if($(".reply-write").val().length == 0) return;
-			var clubBoardReplyContent = $(".reply-write").val();
-			var params = new URLSearchParams(location.search);
-			var clubBoardNo = params.get("clubBoardNo");
-			//var clubBoardReplyParent = null;
-			
-			//console.log($(".reply-write").val());
-			//console.log(clubBoardNo);
-			$.ajax({
-				url:window.contextPath+"/rest/reply/insert",
-				method:"post",
-				data:	
-				{
-					//$(e.target).serialize(),
-					clubBoardReplyContent : clubBoardReplyContent,
-					clubBoardNo : clubBoardNo,
-					//clubBoardReplyParent : clubBoardReplyParent,
-				},	
-				success:function(response){
-					// 댓글을 한 줄씩 추가
-					$(".reply-write").val("");
-					loadList();
-				}
-			});
-		});
+//댓글 작성 시 비동기처리로 댓글 작성 + 댓글 목록 비동기처리
 $(function(){
 	
 	window.socket = new SockJS("${pageContext.request.contextPath}/ws/notify");
-
 	
     loadList();
     //댓글 작성
