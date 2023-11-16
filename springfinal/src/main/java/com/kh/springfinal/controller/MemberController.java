@@ -22,7 +22,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.kh.springfinal.dao.AttachDao;
 import com.kh.springfinal.dao.MemberDao;
+import com.kh.springfinal.dao.MemberProfileDao;
+import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.MemberDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +36,12 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberController {
 	@Autowired
 	private MemberDao memberDao;
+	
+	@Autowired
+	private AttachDao attachDao;
+	
+	@Autowired
+	private MemberProfileDao memberProfileDao;
 	
 	@Autowired
 	private JavaMailSender sender;
@@ -212,8 +221,12 @@ public class MemberController {
 	
 	@RequestMapping("/mypage")
 	public String mypage(HttpSession session, Model model) {
+		//회원 정보
 		String memberId=(String) session.getAttribute("name");
 		MemberDto memberDto = memberDao.loginId(memberId);
+		//프로필 정보
+		AttachDto attachDto = memberProfileDao.profileFindOne(memberId);
+		model.addAttribute("attachDto", attachDto);
 		model.addAttribute("memberDto", memberDto);
 		return "member/mypage";
 	}

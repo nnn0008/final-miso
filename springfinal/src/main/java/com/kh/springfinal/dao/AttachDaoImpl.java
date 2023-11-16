@@ -24,7 +24,7 @@ public class AttachDaoImpl implements AttachDao{
 	
 	@Override
 	public AttachDto selectOne(int attachNo) {
-		return sqlSession.selectOne("attatch.find", attachNo);
+		return sqlSession.selectOne("attach.find", attachNo);
 	}
 
 	@Override

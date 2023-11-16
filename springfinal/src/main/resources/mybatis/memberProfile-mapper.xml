@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="memberProfile">
+
+	<insert id="profileUpload">
+		insert into member_profile(member_id, attach_no) values(#{memberId}, #{attachNo})
+	</insert>
+	
+	<select id="profileFindOne" resultType="AttachDto">
+		SELECT *
+		FROM attach
+		INNER JOIN member_profile ON attach.attach_no = member_profile.attach_no
+		INNER JOIN member ON member_profile.member_id = member.member_id
+		WHERE member.member_id = #{memberId}
+	</select>
+	
+	<delete id="profileDelete">
+		delete member_profile
+		INNER JOIN member ON member_profile.member_id = #{memberId}
+		WHERE member_profile.attach_no = #{attachNo}
+	</delete>
+	
+</mapper>

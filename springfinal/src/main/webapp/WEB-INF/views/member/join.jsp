@@ -83,7 +83,7 @@
                                             if (isValid && inputId != null) {
                                                 // 이미 사용중이 아이디인지 체크
                                                 $.ajax({
-                                                    url: "http://localhost:8080/member/checkId",
+                                                    url: "http://localhost:8080/rest/member/checkId",
                                                     method: "post",
                                                     data: {
                                                         memberId: inputId
@@ -502,8 +502,7 @@
                                                             },
                                                             success: function (
                                                                 response) {
-                                                                console
-                                                                    .log(response);
+                                                                console.log(response);
                                                             }
                                                         });
                                                         if (keyword.length == 0) {
