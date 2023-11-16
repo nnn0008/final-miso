@@ -39,6 +39,8 @@
                 .check {
                     display: none;
                 }
+                
+               
 
                 .btn-join, .email-check {
                     pointer-events: none;
@@ -61,7 +63,7 @@
 
                         <script>
                             $(function () {
-
+								$(".check-number-contain").hide();
                                 // ID 문자열 검사 코드
                                 $("[name=memberId]")
                                     .blur(
@@ -81,7 +83,7 @@
                                             if (isValid && inputId != null) {
                                                 // 이미 사용중이 아이디인지 체크
                                                 $.ajax({
-                                                    url: "http://localhost:8080/member/checkId",
+                                                    url: "http://localhost:8080/rest/member/checkId",
                                                     method: "post",
                                                     data: {
                                                         memberId: inputId
@@ -255,6 +257,7 @@
                                  //이메일 인증번호 발송		
                                 $(".email-check").click(function (e) {
                                     e.preventDefault();
+                                    $(".check-number-contain").show();
                                 	$(".email-feedback").addClass("is-valid");
                                 	$(this)
                                     .text("다시 전송하기")
@@ -414,7 +417,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-											<div class="row mt-3">
+											<div class="row mt-3 check-number-contain">
 												<div class="col">
 		                                            <div class="input-group has-validation">
 		                                                <div class="form-floating checkNumber-feed">
@@ -499,8 +502,7 @@
                                                             },
                                                             success: function (
                                                                 response) {
-                                                                console
-                                                                    .log(response);
+                                                                console.log(response);
                                                             }
                                                         });
                                                         if (keyword.length == 0) {

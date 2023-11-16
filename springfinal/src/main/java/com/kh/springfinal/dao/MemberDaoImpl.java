@@ -58,13 +58,14 @@ public class MemberDaoImpl implements MemberDao{
 	}
   
 	@Override
-	public MemberDto changePw(String memberId) {
+	public boolean changePw(String memberId, String memberPw) {
 		MemberDto memberDto = sqlSession.selectOne("member.loginId", memberId);
-		String originPw = memberDto.getMemberPw();
 		if(memberDto != null) {
-				memberDto.setMemberPw(originPw);
-				return memberDto;
-			}
-		return null;
+			memberDto.setMemberPw(memberPw);
+			int count = sqlSession.update("member.changePw", memberDto);
+			boolean result =  count>0;
+			return result;
+		}
+		return false;
 	}
 }

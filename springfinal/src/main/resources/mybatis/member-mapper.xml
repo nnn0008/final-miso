@@ -21,8 +21,8 @@
     	<select id="memberIdListByEmail" resultType="String">
     		select member_id from member where member_name=#{memberName} and member_email=#{memberEmail}
     	</select>
-
-    	<select id="searchPw" resultType="String">
-    		select member_id from member where member_id=#{memberId} and member_email=#{memberEmail}
-    	</select>
+		
+		<update id="changePw">
+			update member set member_pw = #{memberPw} where member_id=#{memberId}
+		</update>
     </mapper>
