@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.ClubDto;
 import com.kh.springfinal.vo.ClubImageVO;
+import com.kh.springfinal.vo.ClubListVO;
 
 @Repository
 public class ClubDaoImpl implements ClubDao{
@@ -75,6 +76,13 @@ public class ClubDaoImpl implements ClubDao{
 	public AttachDto findImage(int clubNo) {
 		
 		return sqlSession.selectOne("club.findImage",clubNo);
+	}
+
+	@Override
+	public List<ClubListVO> clubList(String memberId) {
+		
+		return sqlSession.selectList("club.clubList",memberId);
+		
 	}
 	
 	

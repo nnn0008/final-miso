@@ -68,9 +68,7 @@
     		console.log($(this).val());
     		
     	})
-    	
-    	
-    	
+
     });
     </script>
     

@@ -63,6 +63,12 @@ public class ClubMemberDaoImpl implements ClubMemberDao{
 		
 		return sqlSession.selectList("clubMember.memberInfo",clubNo);
 	}
+
+	@Override
+	public int memberCount(int clubNo) {
+		return sqlSession.selectOne("clubMember.count",clubNo);
+	}
+	
 	
 	
 

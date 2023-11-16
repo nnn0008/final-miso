@@ -22,6 +22,19 @@
     </div>
 </div>
 <hr>
+	<c:forEach var="clubListVO" items="${clubList}">
+	
+	<div class="row">
+		<div class="col">
+		<img src="${pageContext.request.contextPath}/club/image?clubNo=${clubListVO.clubNo}" class="rounded-circle" width="100" height="100">
+		${clubListVO.clubName}
+		${clubListVO.clubExplain}
+		${clubListVO.sigungu}
+		${clubListVO.majorCategoryName}
+		${clubListVO.memberCount}
+		</div>
+	</div>
+	</c:forEach>
 
 
 

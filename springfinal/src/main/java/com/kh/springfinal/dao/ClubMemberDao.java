@@ -19,5 +19,7 @@ public interface ClubMemberDao {
 	List<ClubMemberDto> memberList(int clubNo);
 	
 	List<ClubMemberVO> memberInfo(int clubNo);
+	
+	int memberCount(int clubNo);
 
 }
