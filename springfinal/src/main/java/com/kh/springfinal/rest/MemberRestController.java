@@ -92,8 +92,8 @@ public class MemberRestController {
 	//프로필 띄우는 코드
 	@RequestMapping("/profileShow")
 	public ResponseEntity<ByteArrayResource> 
-	profileShow(@RequestParam int attachNo) throws IOException {
-		AttachDto attachDto = attachDao.selectOne(attachNo);
+	profileShow(@RequestParam String memberId) throws IOException {
+		AttachDto attachDto = profileDao.profileFindOne(memberId);
 
 		if(attachDto == null) {
 			//throw new NoTargetException("파일 없음");//내가만든 예외로 통합
