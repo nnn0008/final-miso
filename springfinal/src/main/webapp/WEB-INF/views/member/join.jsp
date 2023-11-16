@@ -37,7 +37,7 @@
 
             <style>
                 .check, .choice {
-                   display: none;
+		              display: none;  
                 }
                 
                
@@ -70,7 +70,6 @@
                                         function () {
                                             var regex = /^[a-z][a-z0-9]{4,19}$/;
                                             var inputId = $(this).val(); // Updated to refer to $(this) directly
-                                            console.log(inputId);
                                             var isValid = regex.test(inputId); // Updated to use 'id' directly
                                             //긍정, 부정 class 제거
                                             $(this).removeClass(
@@ -94,13 +93,14 @@
                                                             $('.d-id-feedback').hide();
                                                             $("[name=memberId]").addClass("is-invalid");
                                                             $(".id-feedback").addClass("is-invalid")
-                                                            $("[name=check1]").prop("checked", false);
+                                                            $("[name=check1]").prop("checked", false).trigger("change");
                                                         }
                                                         else {
+                                                        	console.log("아이디 성공");
                                                             $('.d-id-feedback').hide();
                                                             $("[name=memberId]").addClass("is-valid");
                                                             $(".id-feedback").addClass("is-valid");
-                                                            $("#check1").prop("checked", true);
+                                                            $("#check1").prop("checked", true).trigger("change");
                                                         }
                                                     }
                                                 });
@@ -109,7 +109,7 @@
                                                 $('.d-id-feedback').addClass(
                                                     "text-danger");
 	                                                $("[name=check1]").prop(
-	                                                    "checked", false);
+	                                                    "checked", false).trigger("change");
 	                                            }
                                         });
 
@@ -129,7 +129,7 @@
                                                 "text-danger");
                                             if ($("[name=checkPw]").val() != "" && $("[name=checkPw]").val() != $(this).val()) {
                                                 $("[name=checkPw]").addClass("is-invalid");
-                                                $("[name=check2]").prop("checked", false);
+                                                $("[name=check2]").prop("checked", false).trigger("change");
                                                 $(".checkPw-feed").addClass("is-invalid");
                                             }
                                         }
@@ -137,7 +137,7 @@
                                             $(this).addClass("is-valid");
                                             if ($("[name=checkPw]").val() != "" && $("[name=checkPw]").val() != $(this).val()) {
                                                 $("[name=checkPw]").addClass("is-invalid");
-                                                $("[name=check2]").prop("checked", false);
+                                                $("[name=check2]").prop("checked", false).trigger("change");
                                                 $(".checkPw-feed").addClass("is-invalid");
                                             }
                                         }
@@ -150,12 +150,12 @@
                                     $(".checkPw-feed").removeClass("is-invalid");
                                     if($("[name=memberPw]").val()=="")return;
                                     if ($("[name=memberPw]").val() == $(this).val()) {
-                                        $("[name=check2]").prop("checked", true);
+                                        $("[name=check2]").prop("checked", true).trigger("change");
                                         $(this).addClass("is-valid");
                                     }
                                     else {
                                         $(this).addClass("is-invalid");
-                                        $("[name=check2]").prop("checked", false);
+                                        $("[name=check2]").prop("checked", false).trigger("change");
                                         $(".checkPw-feed").addClass("is-invalid");
                                     }
                                 });
@@ -163,9 +163,9 @@
                                 $("[name=memberName]").blur(function () {
                                     if ($("[name=memberName]").val() != "") {
                                         $(this).addClass("is-valid");
-                                        $("[name=check3]").prop("checked", true);
+                                        $("[name=check3]").prop("checked", true).trigger("change");
                                     } else {
-                                        $("[name=check3]").prop("checked", false);
+                                        $("[name=check3]").prop("checked", false).trigger("change");
                                     }
                                 });
 
@@ -242,14 +242,13 @@
                                 //필수 항목 전부 체크시 가입 버튼 활성화
                                 $(".check").change(function () {
                                             if ($(".check").length == $(".check:checked").length) {
-                                            	console.log("성공");
                                                 $(".btn-join").css({
                                                     "pointer-events": "auto",
                                                     "opacity": "1" // 투명도를 1로 설정하여 다시 원래 상태로 만듭니다.
                                                 });
                                             } 
                                             else {
-                                            	console.log("실패");
+                                            	console.log("바뀜");
                                                 $(".btn-join").css({
                                                     "pointer-events": "none",
                                                     "opacity": "0.5" // 투명도를 1로 설정하여 다시 원래 상태로 만듭니다.
@@ -305,15 +304,15 @@
 										 success: function(response) {
 											if(response=="Y"){
 												$("#checkNumber").addClass("is-valid");
-												$(".check-number").prop("checked", true);
+												$(".check-number").prop("checked", true).trigger("change");
 												$("[name=check4]")
-                                                .prop("checked", true);
+                                                .prop("checked", true).trigger("change");
 											}
 											else{
 												$(".checkNumber-feed").addClass("is-invalid");
 												$("#checkNumber").addClass("is-invalid");
 												$("[name=check4]")
-                                                .prop("checked", false);
+                                                .prop("checked", false).trigger("change");
 											}
 										}
 									});
@@ -330,9 +329,9 @@
 								            $(".choice1." + mojor).css("display", "inline-block");
 								        } else {
 								            // 해당 클래스가 없는 경우의 동작을 추가할 수 있습니다.
-								           $(".ds1").prop("selected", true);
+								           $(".ds1").prop("selected", true).trigger("change");
 								    	 $(".choice1").css("display", "none");
-								    	$("#monor1").prop("disabled", true); // 예시로 display를 none으로 설정
+								    	$("#monor1").prop("disabled", true).trigger("change"); // 예시로 display를 none으로 설정
 								        }
 								    }
 								    else{
@@ -388,14 +387,15 @@
 								    }
 								});
 						
+								//카테고리 값 유무 검사
 								$(".mojor-check").change(function () {
 									if($(this).val()!=null){
 										 $(".category-check")
-                                         .prop("checked", true);
+                                         .prop("checked", true).trigger("change");
 									}
 									else{
 										$(".category-check")
-                                        .prop("checked", false);
+                                        .prop("checked", false).trigger("change");
 									}
 								})
 
