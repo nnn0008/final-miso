@@ -68,7 +68,7 @@ public class ReplyRestController {
 		clubBoardReplyDao.insert(clubBoardReplyDto);
 		//댓글 개수 업데이트 필요함
 		clubBoardDao.updateReplyCount(clubBoardNo);
-
+	}
 	public ResponseEntity<Map<String, Object>> insert(HttpSession session,
 	        @RequestParam String clubBoardReplyContent,
 	        @RequestParam(required = false) Integer clubBoardReplyParent,
