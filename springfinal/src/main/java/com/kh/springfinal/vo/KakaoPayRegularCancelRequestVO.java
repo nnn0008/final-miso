@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class KakaoPayRegularCancelRequestVO {
-	private String sid;//요청 고유 번호
-	private String cid;//가맹점 코드
+	private String tid,sid;//요청 고유 번호
+	private int cancelAmount,cancelTaxFreeAmount;
 }
