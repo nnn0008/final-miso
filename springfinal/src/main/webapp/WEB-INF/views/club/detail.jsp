@@ -41,6 +41,38 @@ $(function(){
             }
         });
     });
+    
+    //미팅 만들기
+    $(".makeMeeting").submit(function(e){
+    	
+    	e.preventDefault();
+    	
+    	var formData = new FormData();
+
+        // 각 필드를 FormData에 추가
+        formData.append('meetingImage', $('.meetingImage')[0].files[0]);
+        formData.append('meetingTitle', $(".meetingTitle").val());
+        formData.append('meetingDate', $(".meetingDate").val());
+        formData.append('meetingTime', $(".meetingTime").val());
+        formData.append('meetingLocation', $(".meetingLocation").val());
+        formData.append('meetingMoney', $(".meetingMoney").val());
+        formData.append('meetingMaxPeople', $(".meetingMaxPeople").val());
+    	
+    	$.ajax({
+    		url:window.contextPath + "/rest/meeting/insert",
+    		method:"post",
+    		data: formdata,
+    		success:function(response){
+    			
+    		},
+    	});
+    });
+    
+    
+    
+    
+    
+    
 });
 
 	
@@ -112,7 +144,7 @@ $(function(){
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">가입인사를 작성해주세요</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+                <span aria-hidden="true">&times;</span>4
                 </button>
             </div>
             <div class="modal-body">
@@ -129,7 +161,41 @@ $(function(){
             </div>
         </div>
       </div>
-    
+      
+      <!-- 동호회 모임 만드는 Modal -->
+    <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  동호회 만들기
+</button>
+
+<!-- Modal -->
+        <form action="" enctype="multipart/form-data" class="makeMeeting">
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">정모 만들기</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        	
+			<input type="file" class="meetingImage" name="meetingImage">
+			<input type="text" class="meetingTitle" name="meetingName" placeholder="정모 이름">        
+        	<input type="date" class="meetingDate" name="meetingDate" placeholder="12월 31일">
+        	<input type="time" class="meetingTime" name="meetingTime" placeholder="오후 12:00">
+        	<input type="text" class="meetingLocation" name="meetingLocation" placeholder="위치를 입력하세요">
+        	<input type="number" class="meetingMoney" name="meetingPrice" placeholder="모임비 15000원">원
+        	<input type="number" class="meetingMaxPeople" name="meetingNumber" placeholder="모임 정원">명
+        	
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-primary">만들기</button>
+      </div>
+    </div>
+  </div>
+</div>
+        </form>
     
     
 
