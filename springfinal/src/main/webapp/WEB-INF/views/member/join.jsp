@@ -207,7 +207,7 @@
                                 $("[name=memberBirth]").blur(function () {
                                 	if($(this).val()=="") return;
                                     var inputContent = $(this).val();
-                                    var regex = /^\d{8}$/;
+                                    var regex = /^[1-2][0-9][0-9]{2}-[01][0-9]-[0-3][0-9]$/;
                                     var isValid = regex.test(inputContent)
                                     $(this).removeClass("is-invalid is-valid");
                                     $(".d-brith-feedback").removeClass("text-danger");
@@ -399,6 +399,72 @@
 									}
 								})
 
+								// [1] 모든 .zip 엘리먼트 숨기기
+
+						           // [2] 검색어 입력 처리
+						           $(".search-input").on('input', function () {
+						               console.log("검색중");
+
+						               if (!/^[가-힣]/.test($(this).val())) {
+						                   return;
+						               }
+
+						               var keyword = $(this).val();
+						               console.log(keyword);
+
+						               if (keyword.length === 0) {
+						                   $(".zip").hide();
+						                   return;
+						               }
+
+						               $.ajax({
+						                   url: "http://localhost:8080/rest/zip",
+						                   method: "get",
+						                   data: { keyword: keyword },
+						                   success: function (response) {
+						                       // 검색 결과를 처리
+						                       var zipList = $('.addr-list');
+						                       // 이전 검색 결과 지우기
+						                       zipList.empty();
+
+						                       for (var i = 0; i < response.length; i++) {
+						                           var text = (response[i].sido != null ? response[i].sido + ' ' : '') +
+						                               (response[i].sigungu != null ? response[i].sigungu + ' ' : '') +
+						                               (response[i].eupmyun != null ? response[i].eupmyun + ' ' : '') +
+						                               (response[i].hdongName != null ? response[i].hdongName + ' ' : '');
+
+						                           console.log(text);
+
+						                           zipList.append($("<li>")
+						                               .addClass("list-group-item zip")
+						                               .val(response[i].zipCodeNo)
+						                               .text(text));
+						                       }
+						          
+						                   }
+						               });
+						               
+						               // [3] 목록을 클릭하면 입력창에 채우고 .zip 엘리먼트 숨기기
+						               $(".addr-list").on("click", ".zip", function () {
+						                  
+						                  var form = $('.add');
+						                  
+						                   form.append($("<input>")
+						                        .addClass("newInput")
+						                         .prop("type", "hidden")
+						                         .attr("name", "zipCodeNo")
+						                         .val($(this).val())
+						                     ); 
+
+						                   var selectedAddress = $(this).text();
+						                   $(".search-input").val(selectedAddress);
+						                   $(".zip").hide();
+						                   
+						                   //console.log($('.newInput').val())
+						               });
+						               
+						               
+						           });
 
 									
 						});
@@ -526,8 +592,8 @@
                                                     <div class="input-group has-validation">
                                                         <div class="form-floating">
                                                             <input type="text" class="form-control" name="memberContact"
-                                                                id="memberContect" placeholder="연락처" required> <label
-                                                                for="memberContect">연락처</label>
+                                                                id="memberContact" placeholder="연락처" required> <label
+                                                                for="memberContact">연락처</label>
                                                         </div>
                                                     </div>
                                                     <div class="d-content-feedback">'-'을 제외하고 숫자로만 적어주세요</div>
@@ -541,85 +607,27 @@
                                                             <input type="text" class="form-control" name="memberBirth"
                                                                 id="memberBirth" placeholder="생년월일" required> <label
                                                                 for="memberBirth">생년월일</label>
-                                                            <div class="d-brith-feedback">'-'을 제외하고 숫자로만
-                                                                적어주세요.ex->19901201</div>
+                                                            <div class="d-brith-feedback">'-'을 포함하여 
+                                                                적어주세요.ex->1990-01-01</div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
 
+											<div class="row mt-4">
+							                    <div class="col">
+							                       지역 <input type="search" name="StringmemberAddr" class="form-control search-input"
+							                            placeholder="동,읍,면을 입력해주세요">
+							                    </div>                    
+							                </div>
+							                <div class="row">
+							                    <div class="col">
+							                        <ul class="list-group addr-list">
+							                        </ul>
+							                    </div>
+							                </div>
+											
 
-
-                                            <div class="row mt-4">
-                                                <div class="col">
-                                                    <label>주소</label> <input type="search"
-                                                        class="form-control search-input" placeholder="검색할 주소 입력">
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <ul class="list-group addr-list">
-
-                                                    </ul>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mt-4">
-                                                <div class="col">
-                                                    <h1>다음내용</h1>
-                                                </div>
-                                            </div>
-                                            <script src="https://unpkg.com/hangul-js" type="text/javascript"></script>
-                                            <script>
-                                                $(function () {
-
-                                                    //[1] 다 숨겨
-                                                    $(".addr-list").hide();
-
-                                                    //[2] 검색하면 찾아서 보여줘
-                                                    $(".search-input").blur("input", function () {
-                                                        var keyword = $(this).val();
-                                                        console.log(keyword);
-                                                        //db에 있는 주소 비동기로 조회후 가져오는 구문
-                                                        $.ajax({
-                                                            url: "http://localhost:8080/zip/search",
-                                                            method: "post",
-                                                            data: {
-                                                                searchVal: keyword
-                                                            },
-                                                            success: function (
-                                                                response) {
-                                                                console.log(response);
-                                                            }
-                                                        });
-                                                        if (keyword.length == 0) {
-                                                            $(".addr-list").hide();
-                                                            return;
-                                                        }
-
-                                                        var count = 0;
-                                                        $(".addr-list").each(function (idx, el) {
-                                                            var text = $(el).text().trim();
-                                                            //var index = text.indexOf(keyword);
-                                                            //if(index >= 0) {
-                                                            if (count < 5 && Hangul.search(text, keyword) >= 0) {
-                                                                $(el).show();
-                                                                count++;
-                                                            } else {
-                                                                $(el).hide();
-                                                            }
-                                                        });
-                                                    });
-
-                                                    //[3] 목록 누르면 입력창에 넣어
-                                                    $(".addr-list").find(".list-group-item").click(
-                                                        function () {
-                                                            $(".search-input").val(
-                                                                $(this).text());
-                                                            $(".addr-list").hide();
-                                                        });
-                                                });
-                                            </script>
                                             
                                             <!-- 1. 관심 테이블 대분류 -->
                                             <input type="checkbox" class="category-check check">

@@ -55,7 +55,14 @@
 	
 	</select>
 	
-	
+	<select id="selectOneMemberCN" resultType="zipCodeDto">
+		
+		select * from zip_code where sido=#{sido} and 
+		hdong_name=#{hdongName} and
+		sigungu=#{sigungu} or
+		eupmyun=#{eupmyun}
+		
+	</select> 
 	
 	
 		

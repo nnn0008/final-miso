@@ -14,7 +14,7 @@ public class MemberCategoryDaoImpl implements MemberCategoryDao{
 	
 	@Override
 	public void insert(MemberCategoryDto memberCategoryDto) {
-		sqlSession.insert("memberCategory", memberCategoryDto);
+		sqlSession.insert("memberCategory.addCategory", memberCategoryDto);
 	}
 
 }
