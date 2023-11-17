@@ -11,7 +11,7 @@
     	
     	<!-- 결제 등록 -->
     	<insert id="insert">
-    		insert into paymentRegular(
+    		insert into payment_regular(
     			payment_regular_no,payment_regular_member,
     			payment_regular_tid,payment_regular_sid,
     			payment_regular_name,payment_regular_price,
@@ -27,12 +27,12 @@
     	
     	<!-- 결제 상세등록 -->
     	<insert id="insertDetail">
-    		insert into payment_detail (
+    		insert into regular_detail (
 			regular_detail_no, regular_detail_origin, regular_detail_product,
 			regular_detail_product_name, regular_detail_product_price, regular_detail_status
     		)
     		values(
-    		payment_detail_seq.nextval, 
+    		regular_detail_seq.nextval, 
 			#{regularDetailOrigin}, #{regularDetailProduct}, #{regularDetailProductName},
 			#{regularDetailProductPrice}, '활성화'
     		)
@@ -47,7 +47,7 @@
     		<!-- 회원전체조회 -->
 	    	 <select id="listAll" resultMap="paymentRegularListVO">
 	    	select * from paymentRegular
-	    	<if test="paymentMember != null">
+	    	<if test="paymentRegularMember != null">
 	    	where payment_regular_member = #{paymentRegularMember}
 	    	</if>
 	    	order by payment_regular_no asc
@@ -60,7 +60,7 @@
     		order by regular_detail_no asc
     	</select>
     	
-    	<!-- payment 상세조회 -->
+    	<!-- paymentRegular 상세조회 -->
     	<select id="find" resultType="PaymentRegularDto">
     		select * from paymentRegular where payment_regular_no = #{paymentRegularNo}
     	</select>

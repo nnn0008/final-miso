@@ -25,11 +25,11 @@ import com.kh.springfinal.vo.PurchaseListVO;
 public interface KakaoPayRegularService {
 	KakaoPayRegularReadyResponseVO ready(KakaoPayRegularReadyRequestVO request)throws URISyntaxException;
 	KakaoPayRegularApproveResponseVO approve(KakaoPayRegularApproveRequestVO request)throws URISyntaxException;
-//	KakaoPayRegularRequestResponseVO request(KakaoPayRegularRequestRequestVO request)throws URISyntaxException;
-//	KakaoPayRegularCancelResponseVO cancel(KakaoPayRegularCancelRequestVO request)throws URISyntaxException;
-//	KakaoPayRegularDetailResponseVO detail(KakaoPayRegularDetailRequestVO request)throws URISyntaxException;
-//	KakaoPayRegularReadyResponseVO ready2(KakaoPayRegularReadyRequestVO request)throws URISyntaxException;
-//	KakaoPayRegularApproveResponseVO approve2(KakaoPayRegularApproveRequestVO request)throws URISyntaxException;
+	KakaoPayRegularRequestResponseVO request(KakaoPayRegularRequestRequestVO request)throws URISyntaxException;
+	KakaoPayRegularReadyResponseVO ready2(KakaoPayRegularReadyRequestVO request)throws URISyntaxException;
+	KakaoPayRegularApproveResponseVO approve2(KakaoPayRegularApproveRequestVO request)throws URISyntaxException;
+	KakaoPayRegularCancelResponseVO cancel(KakaoPayRegularCancelRequestVO request)throws URISyntaxException;
+	KakaoPayRegularDetailResponseVO detail(KakaoPayRegularDetailRequestVO request)throws URISyntaxException;
 	
 	KakaoPayRegularReadyRequestVO convert(PurchaseListVO listVO);
 }

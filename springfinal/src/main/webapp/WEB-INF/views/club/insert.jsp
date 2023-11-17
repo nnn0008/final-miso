@@ -6,20 +6,27 @@
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://unpkg.com/hangul-js" type="text/javascript"></script>
+    
+    <style>
+    .addr-list {
+    max-height: 300px; /* 예시: 최대 높이 설정 */
+    overflow: auto; /* 스크롤이 필요한 경우 스크롤 허용 */
+}
+ </style>   
+    
+    
     <script>
  
     $(function(){
     	
     	var no = $(this).find(":selected").val()
 		
-    	console.log(no);
     		
     	$.ajax({
             url:"http://localhost:8080/rest/category",
             method:"get",
             data: {majorCategoryNo:no},
             success:function(response){
-            	console.log(response)
             	
             var select2 = $('.select2');
              select2.empty(); 
@@ -37,14 +44,12 @@
     		
     		var no = $(this).find(":selected").val()
     		
-    	console.log(no);
     		
     	$.ajax({
             url:"http://localhost:8080/rest/category",
             method:"get",
             data: {majorCategoryNo:no},
             success:function(response){
-            	console.log(response)
             	
             var select2 = $('.select2');
              select2.empty(); 
@@ -65,7 +70,6 @@
     		
     		$(this).val(no);
     		
-    		console.log($(this).val());
     		
     	})
 
@@ -80,12 +84,10 @@
     	    $(".search-input").on('input', function () {
     	        console.log("검색중");
 
-    	        if (!/^[가-힣]/.test($(this).val())) {
-    	            return;
-    	        }
+    	        
 
     	        var keyword = $(this).val();
-    	        console.log(keyword);
+    	        console.log("검색 키워드:"+keyword);
 
     	        if (keyword.length === 0) {
     	            $(".zip").hide();
@@ -93,7 +95,7 @@
     	        }
 
     	        $.ajax({
-    	            url: "http://localhost:8080/rest/zip",
+    	            url: "http://localhost:8080/rest/zipPage",
     	            method: "get",
     	            data: { keyword: keyword },
     	            success: function (response) {
@@ -108,12 +110,14 @@
     	                        (response[i].eupmyun != null ? response[i].eupmyun + ' ' : '') +
     	                        (response[i].hdongName != null ? response[i].hdongName + ' ' : '');
 
-    	                    console.log(text);
 
     	                    zipList.append($("<li>")
-    	                        .addClass("list-group-item zip")
-    	                        .val(response[i].zipCodeNo)
-    	                        .text(text));
+    	                    	    .addClass("list-group-item zip")
+    	                    	    .val(response[i].zipCodeNo)
+    	                    	    .text(text)
+    	                    	    .data("result", response[i].sigungu)
+    	                    	);
+
     	                }
     	   
     	            }
@@ -134,17 +138,67 @@
         	    	
         	    	
 
-        	        var selectedAddress = $(this).text();
+        	        var selectedAddress = $(this).data("result");
         	        $(".search-input").val(selectedAddress);
         	        $(".zip").hide();
         	        
-        	        //console.log($('.newInput').val())
         	    });
     	        
     	        
     	    });
     	    
-    	   
+	
+    	    
+    	    var page = 1; // 초기 페이지
+    	    var scrollTimeout; // 스크롤 이벤트를 지연시키기 위한 타이머
+
+    	    // 스크롤 이벤트 핸들러
+    	    $('.addr-list').scroll(function () {
+    	        var zipList = $(this);
+
+    	        if (scrollTimeout) {
+    	            clearTimeout(scrollTimeout); // 이전 타이머가 있다면 제거
+    	        }
+
+    	        // 200ms 후에 스크롤 이벤트를 처리
+    	        scrollTimeout = setTimeout(function () {
+    	            if (zipList.scrollTop() + zipList.innerHeight() >= zipList[0].scrollHeight - 100) {
+    	                // 스크롤이 zipList의 하단에 도달하면 새로운 데이터 로드
+    	                loadMoreData($(".search-input").val());
+    	            }
+    	        }, 200);
+    	    });
+
+    	 // 데이터 로드 함수
+    	 function loadMoreData() {
+    	     page++; // 다음 페이지로 이동
+    	     var keyword = $(".search-input").val();
+
+    	     $.ajax({
+    	         url: "http://localhost:8080/rest/zipPage",
+    	         method: "get",
+    	         data: { keyword: keyword, page: page }, // 페이지 정보를 서버에 전달
+    	         success: function (response) {
+    	             var zipList = $('.addr-list');
+
+    	             for (var i = 0; i < response.length; i++) {
+    	                 var text = (response[i].sido != null ? response[i].sido + ' ' : '') +
+    	                     (response[i].sigungu != null ? response[i].sigungu + ' ' : '') +
+    	                     (response[i].eupmyun != null ? response[i].eupmyun + ' ' : '') +
+    	                     (response[i].hdongName != null ? response[i].hdongName + ' ' : '');
+
+
+    	                 zipList.append($("<li>")
+    	                     .addClass("list-group-item zip")
+    	                     .val(response[i].zipCodeNo)
+    	                     .text(text)
+    	                     .data("result", response[i].sigungu)
+    	                 );
+    	             }
+    	         }
+    	     });
+    	 }
+
 
     	});
 
@@ -200,8 +254,6 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-10 offset-md-1">
-                
-
                 <div class="row mt-4">
                     <div class="col">
                        지역 <input type="search" class="form-control search-input"
@@ -214,8 +266,6 @@
                         </ul>
                     </div>
                 </div>
-
-     
             </div>
         </div>        
     </div>
