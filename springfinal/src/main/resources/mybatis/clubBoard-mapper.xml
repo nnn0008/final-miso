@@ -60,7 +60,6 @@
 		where club_board_no = #{club_board_no}
 	</update>
 	
-
 	<select id="findClubMemberNo" resultType="clubMemberDto">
 		select club_member_no from club_member where club_no = #{clubNo} and club_member_id = #{clubMemberId}
 	</select>

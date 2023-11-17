@@ -20,11 +20,15 @@ import com.kh.springfinal.dao.AttachDao;
 import com.kh.springfinal.dao.ClubBoardImage2Dao;
 import com.kh.springfinal.dao.ClubBoardImage3Dao;
 import com.kh.springfinal.dao.ClubBoardImageDao;
+import com.kh.springfinal.dao.MeetingImageDao;
 import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.ClubBoardImage2Dto;
 import com.kh.springfinal.dto.ClubBoardImage3Dto;
 import com.kh.springfinal.dto.ClubBoardImageDto;
+import com.kh.springfinal.dto.MeetingImageDto;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Component
 public class FileLoadVO {
 	
@@ -45,13 +49,16 @@ public class FileLoadVO {
 	@Autowired
 	private ClubBoardImage3Dao clubBoard3ImageDao;
 	
+	@Autowired
+	private MeetingImageDao meetingImageDao;
+	
 	@PostConstruct
 	public void init() {
 		dir = new File(props.getHome());
 		dir.mkdirs();
 	}
 	
-	//insert시
+	//동호회 게시글 insert시
 	public void upload(ClubBoardImageDto clubBoardImageDto, ClubBoardImage2Dto clubBoardImage2Dto, ClubBoardImage3Dto clubBoardImage3Dto, 
 			int clubBoardNo, MultipartFile attach, MultipartFile attachSecond, MultipartFile attachThird) throws IllegalStateException, IOException {
 		//파일이 있다면 실행시켜주는 메소드
@@ -133,5 +140,36 @@ public class FileLoadVO {
 	}
 	
 	//edit시
+	
+	
+	/////////////////////////////////////////////////////////////////////////////////
+	//MeetingRestController
+	//정모 게시글 insert 시
+	public void meetingUpload (MultipartFile meetingImage, int meetingNo) throws IllegalStateException, IOException {	
+		
+		AttachDto attachDto = new AttachDto();
+		int attachNo = attachDao.sequence();
+		
+		File target = new File(dir, String.valueOf(attachNo));
+		meetingImage.transferTo(target);
+		
+		attachDto.setAttachNo(attachNo);
+		attachDto.setAttachName(meetingImage.getOriginalFilename());
+		attachDto.setAttachSize(meetingImage.getSize());
+		attachDto.setAttachType(meetingImage.getContentType());
+		
+		MeetingImageDto meetingImageDto = new MeetingImageDto();
+		
+		meetingImageDto.setAttachNo(attachNo);
+		meetingImageDto.setMeetingNo(meetingNo);
+		
+		log.debug("attachNo = {}", attachNo);
+		attachDao.insert(attachDto);
+		meetingImageDao.insert(meetingImageDto);
+		
+	}
+	
+	
+	
 	
 }
