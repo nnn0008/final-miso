@@ -64,5 +64,11 @@
     
     </select>
     
+    <select id="memberRank" resultType="String">
+    	
+    	SELECT club_member_rank FROM club_member WHERE club_no=#{clubNo} AND club_member_id=#{clubMemberId}
+    
+    </select>
+    
     
     </mapper>

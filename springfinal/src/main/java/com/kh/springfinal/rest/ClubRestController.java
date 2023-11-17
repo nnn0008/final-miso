@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,7 +19,9 @@ import com.kh.springfinal.dao.ClubMemberDao;
 import com.kh.springfinal.dao.ZipCodeDao;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MinorCategoryDto;
+import com.kh.springfinal.dto.OneDto;
 import com.kh.springfinal.dto.ZipCodeDto;
+import com.kh.springfinal.vo.PaginationVO;
 
 @CrossOrigin
 @RestController
@@ -72,6 +75,16 @@ public class ClubRestController {
 	@GetMapping("/zip")
 	public List<ZipCodeDto> zipList(@RequestParam String keyword) {
 	    List<ZipCodeDto> zipList = zipCodeDao.list(keyword);
+	    return zipList;
+	}
+	
+	@GetMapping("/zipPage")
+	public List<ZipCodeDto> zipPageList(@ModelAttribute(name ="vo") PaginationVO vo) {
+		
+		int count = zipCodeDao.countList(vo);
+		vo.setCount(count);
+		
+	    List<ZipCodeDto> zipList = zipCodeDao.selectListByPage(vo);
 	    return zipList;
 	}
 	

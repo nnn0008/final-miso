@@ -8,7 +8,9 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.springfinal.dto.OneDto;
 import com.kh.springfinal.dto.ZipCodeDto;
+import com.kh.springfinal.vo.PaginationVO;
 import com.kh.springfinal.vo.ZipCodeSearchVO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +53,19 @@ public class ZipCodeDaoImpl implements ZipCodeDao{
 		
 		return sqlSession.selectOne("zipcode.selectByMember",zipCodeNo);
 		
+	}
+	
+	@Override
+	public List<ZipCodeDto> selectListByPage(PaginationVO vo) {
+		
+			List<ZipCodeDto>list=sqlSession.selectList("zipcode.selectListByPage",vo);
+			
+		    return list;
+	}
+
+	@Override
+	public int countList(PaginationVO vo) {
+	    return sqlSession.selectOne("zipcode.countListByPage", vo);
 	}
 	
 	

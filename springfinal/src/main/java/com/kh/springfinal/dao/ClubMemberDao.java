@@ -21,5 +21,7 @@ public interface ClubMemberDao {
 	List<ClubMemberVO> memberInfo(int clubNo);
 	
 	int memberCount(int clubNo);
+	
+	boolean editPossible(int clubNo,String clubMemberId);
 
 }
