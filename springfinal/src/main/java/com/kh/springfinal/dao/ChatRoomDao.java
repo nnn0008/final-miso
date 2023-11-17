@@ -6,6 +6,8 @@ import com.kh.springfinal.dto.ChatDto;
 import com.kh.springfinal.dto.ChatRoomDto;
 import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.vo.ChatListVO;
+import com.kh.springfinal.vo.ChatMemberListVO;
+import com.kh.springfinal.vo.ChatOneMemberListVO;
 import com.kh.springfinal.vo.ChatVO;
 
 public interface ChatRoomDao {
@@ -27,4 +29,7 @@ public interface ChatRoomDao {
 	int sequence();
 	
 	List<ChatDto> getExistingChatRoom(String chatSender, String chatReceiver);
+	
+	List<ChatMemberListVO> chatMemberList(int chatRoomNo);
+	List<ChatOneMemberListVO> chatOneMemberList(int chatRoomNo);
 }

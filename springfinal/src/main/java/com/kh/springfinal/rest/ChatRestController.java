@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.springfinal.configuration.FileUploadProperties;
@@ -23,6 +24,8 @@ import com.kh.springfinal.dao.AttachDao;
 import com.kh.springfinal.dao.ChatRoomDao;
 import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.MemberDto;
+import com.kh.springfinal.vo.ChatMemberListVO;
+import com.kh.springfinal.vo.ChatOneMemberListVO;
 
 @CrossOrigin
 @RestController
@@ -50,7 +53,7 @@ public class ChatRestController {
 	    public List<MemberDto> getProfile() {
 		 	return chatRoomDao.selectMemberProfile();
 	    }
-
+    
 	 @GetMapping("/download")
 	 public ResponseEntity<ByteArrayResource> download(
 			 @RequestParam int attachNo) throws IOException{
@@ -73,7 +76,23 @@ public class ChatRestController {
 					.build().toString()
 					)
 					.body(resource);
-					}
-			 
+		}
+	 
+	 @GetMapping("/getMemberList")
+	 public List<ChatMemberListVO> getMemberList(@RequestParam int chatRoomNo){
+		  System.out.println("Received request for chat room number: " + chatRoomNo);
+
+		    List<ChatMemberListVO> memberList = chatRoomDao.chatMemberList(chatRoomNo);
+
+		    System.out.println("Retrieved member list: " + memberList);
+
+		    return memberList;
+	 } 
+	 
+	 @GetMapping("/getChatOneMemberList")
+	 public List<ChatOneMemberListVO> getChatOneMemberList(@RequestParam int chatRoomNo){
+		 List<ChatOneMemberListVO> chatOneMemberList = chatRoomDao.chatOneMemberList(chatRoomNo);
+		 return  chatOneMemberList;
 	 }
+}
 

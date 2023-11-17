@@ -11,6 +11,8 @@ import com.kh.springfinal.dto.ChatDto;
 import com.kh.springfinal.dto.ChatRoomDto;
 import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.vo.ChatListVO;
+import com.kh.springfinal.vo.ChatMemberListVO;
+import com.kh.springfinal.vo.ChatOneMemberListVO;
 import com.kh.springfinal.vo.ChatVO;
 
 @Repository
@@ -91,5 +93,17 @@ public class ChatRoomDaoImpl implements ChatRoomDao{
 		Map params = Map.of("chatSender", chatSender, "chatReceiver", chatReceiver);
 		return sqlSession.selectList("chatRoom.getExistingChatRoom", params);
 
+	}
+	
+	//동호회 회원 목록을 가져오기 위한 조회
+	@Override
+	public List<ChatMemberListVO> chatMemberList(int chatRoomNo) {
+		return sqlSession.selectList("chatRoom.roomMemberListDetail", chatRoomNo);
+	}
+	
+	//1:1 회원 목록을 가져오기 위한 조회
+	@Override
+	public List<ChatOneMemberListVO> chatOneMemberList(int chatRoomNo) {
+		return sqlSession.selectList("chatRoom.chatOneMemberListDetail", chatRoomNo);
 	}
 }

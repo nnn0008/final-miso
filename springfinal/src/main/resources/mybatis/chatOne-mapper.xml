@@ -50,4 +50,12 @@
 	WHERE c.CHAT_ROOM_NO = #{chatRoomNo}
 	</select>
 
+	<select id="oneChatHistory" resultType="ChatDto">
+	SELECT chat.*
+	FROM chat
+	JOIN CHAT_ONE ON chat.CHAT_ROOM_NO = CHAT_ONE.CHAT_ROOM_NO
+	WHERE CHAT_ONE.CHAT_ROOM_NO = #{chatRoomNo}
+	order by chat_time
+	</select>
+
 </mapper>
