@@ -123,19 +123,6 @@
 		    <artifactId>spring-security-core</artifactId>
 		</dependency>
 
-	
-		<!-- jackson -->
-	<dependency>
-		<groupId>com.fasterxml.jackson.core</groupId>
-		<artifactId>jackson-core</artifactId>
-	</dependency>
-
-	<!-- jackson-core -->
-	<dependency>
-	    <groupId>com.fasterxml.jackson.core</groupId>
-	    <artifactId>jackson-databind</artifactId>
-	</dependency>
-
 	</dependencies>
 
 	<build>
