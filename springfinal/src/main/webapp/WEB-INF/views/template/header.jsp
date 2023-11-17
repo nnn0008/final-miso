@@ -89,8 +89,19 @@
 
 .showNotifyButton {
     position: relative;
-    z-index: 2; /* 이 부분을 추가하여 .showNotifyButton을 가장 위에 표시하도록 함 */
+    z-index: 2;
 }
+
+.badge-counter {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-block;
+    opacity: 1;
+    z-index: 3;
+}
+
 
 .club-image2 {
         width: 50px; /* 원하는 크기로 조절하세요 */
@@ -109,6 +120,12 @@
         background-color: #f0f0f0; /* 호버 효과 배경색 설정 */
         cursor: pointer; /* 호버 시 커서 모양 변경 */
     }
+
+.fa-bell {
+    position: absolute;
+    top: 0;
+}
+
 
 
 </style>
@@ -204,22 +221,69 @@ function getNotifyList() {
     });
 }
 
-//삭제한 알림의 인덱스를 저장하는 배열
-var hiddenNotifications = [];
+//알림 메시지 생성 함수
+function createNotificationMessage(item) {
+    return (
+        '<div class="row">' +
+        '<div class="col">' +
+        item.notifySender + ' | ' + item.notifyDate +
+        '</div>' +
+        '</div>' +
+        '<div class="row">' +
+        '<div class="col-10">' +
+        '<a href="/clubBoard/detail?clubBoardNo=' + item.notifyClubBoardNo + '" class="link-body-emphasis link-underline link-underline-opacity-0" style="color: black;">' +
+        item.notifySender + '님이 ' + item.notifyClubBoardTitle + ' 글에 댓글을 달았습니다</a>' +
+        '</div>' +
+        '<div class="col-2">' +
+        '<i class="fa-solid fa-xmark delete-button" data-notify-no="' + item.notifyNo + '"></i>' +
+        '</div>' +
+        '</div>'
+    );
+}
 
+// 삭제 버튼 클릭 이벤트 처리
+$(document).on('click', '.delete-button', function () {
+    var notifyNo = $(this).data('notify-no');
+    var itemIndex = $(this).data('item-index');
+    // 해당 알림 아이템을 숨기기
+    hideItem(itemIndex);
+
+    // 서버에 삭제 요청 보내기
+    $.ajax({
+        type: 'GET',
+        url: '/rest/notify/delete',
+        data: { notifyNo: notifyNo },
+        success: function (response) {
+
+        },
+        error: function (error) {
+            // 서버에서 삭제가 실패한 경우에는 숨겼던 아이템을 다시 보이게 만들기
+            showItem(itemIndex);
+        }
+    });
+});
+
+//페이지 로딩 시 알림 목록 가져와서 표시
+$(document).ready(function () {
+    getNotifyList(); // 알림 목록 가져오기
+});
+
+// 알림 메시지 표시
 function populateModal(data) {
     var modalContent = $("#notifyModal .notifyAlert .row");
-    modalContent.empty(); // 이전 내용 제거
+    modalContent.empty(); // 기존 내용 제거
 
-    // 최신순으로 정렬 후 최대 6개까지만 표시
+    // 최신순으로 정렬 후 최대 10개까지만 표시
     var sortedData = data.sort(function (a, b) {
         return new Date(b.notifyDate) - new Date(a.notifyDate);
-    }).slice(0, 6);
+    }).slice(0, 10);
 
     // 알림 갯수 표시
     var notificationCount = sortedData.length;
-    var notificationBadge = $("<span class='badge bg-danger'>" + notificationCount + "</span>");
-    $("#notifyIcon").append(notificationBadge);
+    showNotificationCount(notificationCount); // 알림 개수 업데이트
+
+    var notificationCountMessage = $("<div class='col-12 mb-2 text-center'>" + notificationCount + "개의 알림이 있습니다</div>");
+    modalContent.append(notificationCountMessage);
 
     if (notificationCount === 0) {
         // 데이터가 없으면 '알림이 없습니다' 메시지를 추가
@@ -228,51 +292,43 @@ function populateModal(data) {
     } else {
         // 데이터가 있으면 각 알림 메시지를 추가
         sortedData.forEach(function (item, index) {
-
-            var message =
-                '<div class="row">' +
-                '<div class="col">' +
-                item.notifySender + ' | ' + item.notifyDate +
-                '</div>' +
-                '</div>' +
-                '<div class="row">' +
-                '<div class="col">' +
-                '<a href="/clubBoard/detail?clubBoardNo=' + item.notifyClubBoardNo + '" class="link-body-emphasis link-underline link-underline-opacity-0" style="color: black;">' +
-                item.notifySender + '님이 ' + item.notifyClubBoardTitle + ' 글에 댓글을 달았습니다</a>' +
-                '</div>' +
-                '<div class="col">' +
-                '<button class="btn btn-danger btn-sm delete-button" data-index="' + index + '">삭제</button>' +
-                '</div>' +
-                '</div>';
-
-            var listItem = $("<div class='col-12 mb-2 notify-item' data-index='" + index + "'>" + message + "</div>");
+            var message = createNotificationMessage(item);
+            var listItem = $("<div class='col-12 mb-2'>" + message + "</div>");
             modalContent.append(listItem);
-        });
-
-        // 삭제 버튼 클릭 이벤트
-        $(".delete-button").on("click", function () {
-        	  console.log("Delete button clicked");
-        	  var index = $(this).data("index");
-        	    console.log("Deleting item at index:", index);
-        	    hiddenNotifications.push(index);
-        	    localStorage.setItem("hiddenNotifications", JSON.stringify(hiddenNotifications));
         });
     }
 }
 
-	// 페이지 로드 시에 hiddenNotifications 배열을 로컬 스토리지에서 가져와 초기화
-	$(document).ready(function () {
-	    var storedHiddenNotifications = localStorage.getItem("hiddenNotifications");
-	    if (storedHiddenNotifications) {
-	        hiddenNotifications = JSON.parse(storedHiddenNotifications);
-	
-	        // 숨겨진 알림 상태로 설정
-	        hiddenNotifications.forEach(function (index) {
-	            $(".notify-item[data-index='" + index + "']").hide();
-	        });
-	    }
-	});
+// 알림 개수 표시
+function showNotificationCount(notificationCount) {
+    $(".badge-counter").text(notificationCount);
+}
 
+
+// 알림 아이템 숨기기
+function hideItem(index) {
+    var item = $('.notify-item').eq(index);
+    item.hide();
+}
+
+// 알림 아이템 보이기
+function showItem(index) {
+    var item = $('.notify-item').eq(index);
+    item.show();
+}
+
+// 삭제 버튼 클릭 시 호출되는 함수
+function deleteNotification(notifyNo) {
+    // 이 부분에 삭제 처리 로직을 추가
+    console.log('Delete notification with notifyNo:', notifyNo);
+}
+
+
+// // 날짜 포맷팅 함수
+// function formatDate(dateString) {
+//     var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+//     return new Date(dateString).toLocaleDateString('ko-KR', options);
+// }
 
 
 function getChatRoomList() {
@@ -391,7 +447,6 @@ if (Array.isArray(data.oneChatRoomList)) {
  <header>
             <div class="col mt-2">
 	
-	
 		<a href="#" class="link"><img src="${pageContext.request.contextPath}/images/miso_logo.png" width="200px"></a>
 
             </div>
@@ -408,13 +463,19 @@ if (Array.isArray(data.oneChatRoomList)) {
            <div class="etc container">
 		    <div class="col-4 ms-4" id="notifyContainer">
         <i class="fa-regular fa-bell fa-2xl notifyContainer showNotifyButton" data-modal="notifyModal"></i>
+       
+       <div class="col">
+  <span class="badge rounded-pill bg-danger badge-counter"></span>
+       </div>
+       
     </div>
-    <div class="col-4">
-  
+    
+    <div class="col-4 ms-1">
+ 
             <i class="fa-regular fa-comments fa-2xl showNotifyButton" data-modal="chatModal" ></i>
 
     </div>
-		    <div class="col-4">
+		    <div class="col-4 ms-2">
 		        <a href="${pageContext.request.contextPath}/member/login" class="link-body-emphasis link-underline link-underline-opacity-0 showNotifyButton">
 		            <i class="fa-solid fa-power-off fa-2xl"></i>
 		        </a>
@@ -424,7 +485,6 @@ if (Array.isArray(data.oneChatRoomList)) {
 	<div id="notifyModal" class="notifyLayer">
 	    <div class="alert alert-dismissible alert-light notifyAlert">
 	        <div class="row d-flex justify-content-center">
-	            알림이 없습니다
 	        </div>
 	    </div>
 	</div>
@@ -432,7 +492,6 @@ if (Array.isArray(data.oneChatRoomList)) {
 	<div id="chatModal" class="notifyLayer">
 	    <div class="alert alert-dismissible alert-light notifyAlert">
 	        <div class="row d-flex justify-content-center">
-	            ㅎㅎ (채팅 모달 내용)
 	        </div>
 	    </div>
 	</div>

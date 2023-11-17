@@ -31,5 +31,9 @@ public class NotifyDaoImpl implements NotifyDao{
 		return sqlSession.selectList("notify.notifyList", notifyReceiver);
 	}
 	
+	@Override
+	public boolean delete(int notifyNo) {
+		return sqlSession.delete("notify.del", notifyNo) > 0;
+	}
 
 }

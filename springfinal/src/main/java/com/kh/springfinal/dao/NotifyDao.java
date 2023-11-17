@@ -13,4 +13,6 @@ public interface NotifyDao {
 	void insert(NotifyDto notifyDto);
 	List<NotifyDto> list(String notifyReceiver);
 //	List<NotifyVO> notifyListWithNames(@Param("notifyReceiver") String notifyReceiver);
+	
+	boolean delete(int notifyNo);
 }
