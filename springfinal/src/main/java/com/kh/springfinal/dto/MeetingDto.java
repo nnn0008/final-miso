@@ -1,6 +1,7 @@
 package com.kh.springfinal.dto;
 
-import java.sql.Date;
+
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,4 +16,7 @@ public class MeetingDto {
 	private String meetingLocation;
 	private int meetingPrice;
 	private int meetingNumber;
+	private int clubMemberNo;
+	private int clubNo;
+	
 }
