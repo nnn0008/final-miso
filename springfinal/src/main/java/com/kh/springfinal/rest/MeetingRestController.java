@@ -50,7 +50,7 @@ public class MeetingRestController {
 	@PostMapping("/insert")
 	public void insert(HttpSession session,
 			@RequestParam int clubNo, @RequestParam String meetingName,
-			@RequestParam("meetingTime") @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm") Date meetingTime,
+			@RequestParam("meetingTime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date meetingTime,
 			@RequestParam String meetingLocation, @RequestParam int meetingPrice,
 			@RequestParam int meetingNumber, @RequestParam MultipartFile meetingImage,
 			@RequestParam String meetingFix
@@ -64,13 +64,15 @@ public class MeetingRestController {
 		int meetingNo = meetingDao.sequence();
 		
 		meetingDto.setMeetingDate(meetingTime); //날짜
-		meetingDto.setMeetingLocation(meetingLocation); //시간
+		meetingDto.setMeetingLocation(meetingLocation); //위치
 		meetingDto.setMeetingName(meetingName); //정모 제목
 		meetingDto.setMeetingNo(meetingNo); //정모 번호
 		meetingDto.setMeetingNumber(meetingNumber); //정모 인원
 		meetingDto.setMeetingPrice(meetingPrice); 
 		meetingDto.setClubNo(clubNo);
 		meetingDto.setMeetingFix(meetingFix);
+		
+		log.debug("meetingTime={}",meetingTime);
 		
 		meetingDao.insert(meetingDto);
 		

@@ -83,14 +83,11 @@ $(function(){
 		
 		var meetingFix = $(".meetingFix").val();
 
-		
 			
         // FormData 객체 생성
         var formData = new FormData();
         formData.append("clubNo", meetingClubNo);
         formData.append("meetingName", meetingName);
-        //formData.append("meetingDate", meetingDate);
-        //formData.append("meetingTime", meetingTime);
         formData.append("meetingTime", formatDateTime);
         formData.append("meetingLocation", meetingLocation);
         formData.append("meetingPrice", meetingPrice);
