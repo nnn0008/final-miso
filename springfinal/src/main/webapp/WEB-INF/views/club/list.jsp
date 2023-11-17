@@ -25,7 +25,8 @@
 	<c:forEach var="clubListVO" items="${clubList}">
 	<div class="row">
 		<div class="col">
-		<a href="/club/detail?clubNo=${clubListVO.clubNo}">
+       <div class="alert alert-dismissible alert-light">
+        <a href="/club/detail?clubNo=${clubListVO.clubNo}">
 		<img src="${pageContext.request.contextPath}/club/image?clubNo=${clubListVO.clubNo}" class="rounded-circle" width="100" height="100">
 		</a>
 		클럽 이름 : ${clubListVO.clubName}
@@ -33,7 +34,10 @@
 		지역 : ${clubListVO.sigungu}
 		카테고리 이름 : ${clubListVO.majorCategoryName}
 		멤버 수 : ${clubListVO.memberCount}
-		</div>
+         </div>
+          </div>
+		
+		
 	</div>
 	</c:forEach>
 

@@ -178,6 +178,7 @@ $(function(){
         
            <span class="badge text-bg-primary">${zipDto.sigungu}</span>
            <span class="badge text-bg-primary">${major.majorCategoryName}</span>
+           <span class="badge text-bg-primary">멤버 ${memberCount}</span>
         </div>
     </div>
     <div class="row mt-4">
@@ -193,10 +194,12 @@ $(function(){
     </div>
     <c:if test="${joinButton==true}">
    <button type="button" class="btn btn-secondary mt-4 join" data-bs-toggle="modal">가입하기</button>
+	</c:if>
+	 <c:if test="${editPossible==true}">
    <a href="/club/edit?clubNo=${clubDto.clubNo}">
    <button type="button" class="btn btn-primary mt-4">수정하기</button>
    </a> 
-	</c:if>
+   </c:if>
 	
 	<hr>
 	<div class="row">
