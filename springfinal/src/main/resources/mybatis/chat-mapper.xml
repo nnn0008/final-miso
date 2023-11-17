@@ -47,4 +47,14 @@ select CHAT_CONTENT  from
 WHERE rownum = 1
 </select>
 
+<select id="getChatHistoryDetail" resultType="ChatDto">
+SELECT cm.CLUB_MEMBER_NO, cm.CLUB_NO, cm.CLUB_MEMBER_RANK, cm.JOIN_DATE , club.chat_room_no, chat.CHAT_NO, 
+chat.CHAT_SENDER, chat.CHAT_RECEIVER, chat.CHAT_CONTENT, chat.CHAT_TIME, chat.ATTACH_NO
+FROM club_member cm
+JOIN club ON cm.club_no = club.club_no
+JOIN chat ON club.chat_room_no = chat.chat_room_no
+WHERE chat.chat_room_no = #{chatRoomNo} AND chat.chat_time >= cm.JOIN_DATE AND cm.CLUB_MEMBER_ID = #{chatSender}
+ORDER BY chat.chat_time ASC
+</select>
+
 </mapper>

@@ -10,4 +10,6 @@ public interface ChatDao {
 	List<ChatDto> getChatHistory(int chatRoomNo); //채팅 내역
 
 	ChatDto chatLastMsg(int chatRoomNo); //채팅방 마지막 메세지
+	
+	List<ChatDto> getChatHistoryDetail(int chatRoomNo, String chatSender); //멤버별 채팅방 메시지
 }
