@@ -158,14 +158,11 @@ public class FileLoadVO {
 		attachDto.setAttachSize(meetingImage.getSize());
 		attachDto.setAttachType(meetingImage.getContentType());
 		
-		MeetingImageDto meetingImageDto = new MeetingImageDto();
 		
-		meetingImageDto.setAttachNo(attachNo);
-		meetingImageDto.setMeetingNo(meetingNo);
 		
 		log.debug("attachNo = {}", attachNo);
 		attachDao.insert(attachDto);
-		meetingImageDao.insert(meetingImageDto);
+		meetingImageDao.insert(attachNo,meetingNo);
 		
 	}
 	

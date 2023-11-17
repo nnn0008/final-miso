@@ -29,12 +29,14 @@ import com.kh.springfinal.dao.CategoryDao;
 import com.kh.springfinal.dao.ChatRoomDao;
 import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dao.ClubMemberDao;
+import com.kh.springfinal.dao.MeetingDao;
 import com.kh.springfinal.dao.ZipCodeDao;
 import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.ChatRoomDto;
 import com.kh.springfinal.dto.ClubDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MajorCategoryDto;
+import com.kh.springfinal.dto.MeetingDto;
 import com.kh.springfinal.dto.MinorCategoryDto;
 import com.kh.springfinal.dto.ZipCodeDto;
 import com.kh.springfinal.vo.ClubImageVO;
@@ -65,6 +67,9 @@ public class ClubController {
 	
 	@Autowired
 	private ClubMemberDao clubMemberDao;
+	
+	@Autowired
+	private MeetingDao meetingDao;
 	
 	
 	
@@ -125,10 +130,6 @@ public class ClubController {
 	public String detail(@RequestParam int clubNo,
 			Model model,HttpSession session) {
 		
-		
-		
-	
-		
 		String memberId = (String) session.getAttribute("name");
 		ClubImageVO clubDto = clubDao.clubDetail(clubNo);
 		MajorCategoryDto major = categoryDao.findMajor(clubDto.getClubCategory());
@@ -141,6 +142,8 @@ public class ClubController {
 		
 		int memberCount = clubMemberDao.memberCount(clubNo);
 		
+		List<MeetingDto> meetingList = meetingDao.selectList(clubNo);
+		
 		
 		
 		
@@ -151,6 +154,7 @@ public class ClubController {
 		model.addAttribute("major",major);
 		model.addAttribute("zipDto",zipDto);
 		model.addAttribute("joinButton",joinButton);
+		model.addAttribute("meetingList",meetingList);
 		
 
 		return "club/detail";
