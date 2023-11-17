@@ -99,7 +99,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            addRoomMember(client, chatRoomNo);
 	        }
 	    }
-	    log.debug("사용자 접속! 현재 {}명", clients.size());
+//	    log.debug("사용자 접속! 현재 {}명", clients.size());
 	}
 
 		
@@ -116,7 +116,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 		        }
 		    }
 
-	    log.debug("사용자 종료! 현재 {}명", clients.size());
+//	    log.debug("사용자 종료! 현재 {}명", clients.size());
 	    // 다른 로직 추가
 	}
 	

@@ -23,6 +23,8 @@ import com.kh.springfinal.dao.AttachDao;
 import com.kh.springfinal.dao.ChatRoomDao;
 import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.MemberDto;
+import com.kh.springfinal.vo.ChatMemberListVO;
+import com.kh.springfinal.vo.ChatOneMemberListVO;
 
 @CrossOrigin
 @RestController
@@ -73,7 +75,23 @@ public class ChatRestController {
 					.build().toString()
 					)
 					.body(resource);
-					}
-			 
+		}
+	 
+	 @GetMapping("/getMemberList")
+	 public List<ChatMemberListVO> getMemberList(@RequestParam int chatRoomNo){
+		  System.out.println("Received request for chat room number: " + chatRoomNo);
+
+		    List<ChatMemberListVO> memberList = chatRoomDao.chatMemberList(chatRoomNo);
+
+		    System.out.println("Retrieved member list: " + memberList);
+
+		    return memberList;
+	 } 
+	 
+	 @GetMapping("/getChatOneMemberList")
+	 public List<ChatOneMemberListVO> getChatOneMemberList(@RequestParam int chatRoomNo){
+		 List<ChatOneMemberListVO> chatOneMemberList = chatRoomDao.chatOneMemberList(chatRoomNo);
+		 return  chatOneMemberList;
 	 }
+}
 

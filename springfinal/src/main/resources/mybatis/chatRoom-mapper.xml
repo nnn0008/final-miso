@@ -78,4 +78,44 @@
         OR (chat_sender = #{chatReceiver} AND chat_receiver = #{chatSender})
     </select>
     
+     <!-- 동호회 회원 목록을 가져오기 위한 조회 -->
+    <select id="roomMemberListDetail" resultType="ChatMemberListVO">
+    SELECT
+    cm.CLUB_MEMBER_ID,
+    m.MEMBER_NAME,
+    cm.CLUB_MEMBER_RANK,
+    c.CHAT_ROOM_NO,
+    c.CLUB_NO
+	FROM
+	    club_member cm
+	JOIN
+	    club c ON cm.CLUB_NO = c.CLUB_NO
+	JOIN
+	    chat_room cr ON c.CHAT_ROOM_NO = cr.CHAT_ROOM_NO
+	JOIN
+	    member m ON cm.CLUB_MEMBER_ID = m.MEMBER_ID
+	WHERE
+	    cr.CHAT_ROOM_NO = #{chatRoomNo}
+    </select>
+    
+    <!-- 1:1 회원 목록을 가져오기 위한 조회 -->
+    <select id="chatOneMemberListDetail" resultType="ChatOneMemberListVO">
+    SELECT
+    co.CHAT_SENDER,
+    sender.MEMBER_NAME AS SENDER_NAME,
+    sender.MEMBER_LEVEL AS SENDER_LEVEL,
+    co.CHAT_RECEIVER,
+    receiver.MEMBER_NAME AS RECEIVER_NAME,
+    receiver.MEMBER_LEVEL AS RECEIVER_LEVEL,
+    co.CHAT_ROOM_NO
+FROM
+    chat_one co
+LEFT JOIN
+    member sender ON co.CHAT_SENDER = sender.MEMBER_ID
+LEFT JOIN
+    member receiver ON co.CHAT_RECEIVER = receiver.MEMBER_ID
+WHERE
+    co.CHAT_ROOM_NO = #{chatRoomNo}
+    </select>
+    
 </mapper>
