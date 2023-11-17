@@ -3,6 +3,7 @@ package com.kh.springfinal.controller;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -34,7 +35,6 @@ import com.kh.springfinal.dto.ChatRoomDto;
 import com.kh.springfinal.dto.ClubDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MajorCategoryDto;
-import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.dto.MinorCategoryDto;
 import com.kh.springfinal.dto.ZipCodeDto;
 import com.kh.springfinal.vo.ClubImageVO;
@@ -125,16 +125,27 @@ public class ClubController {
 	public String detail(@RequestParam int clubNo,
 			Model model,HttpSession session) {
 		
+		
+		
+	
+		
 		String memberId = (String) session.getAttribute("name");
 		ClubImageVO clubDto = clubDao.clubDetail(clubNo);
 		MajorCategoryDto major = categoryDao.findMajor(clubDto.getClubCategory());
 		ZipCodeDto zipDto = zipDao.findZip(clubNo);
 		
 		boolean joinButton = !clubMemberDao.existMember(clubNo, memberId);
+		boolean editPossible = clubMemberDao.editPossible(clubNo, memberId);
 		
 		List<ClubMemberVO> clubMemberList = clubMemberDao.memberInfo(clubNo);
 		
+		int memberCount = clubMemberDao.memberCount(clubNo);
 		
+		
+		
+		
+		model.addAttribute("memberCount",memberCount);
+		model.addAttribute("editPossible",editPossible);
 		model.addAttribute("clubMemberDto",clubMemberList);
 		model.addAttribute("clubDto",clubDto);
 		model.addAttribute("major",major);

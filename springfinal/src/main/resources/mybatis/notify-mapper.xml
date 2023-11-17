@@ -31,4 +31,8 @@
     <result property="memberName" column="memberName"/>
 </resultMap>
   
+  <delete id="del">
+  	delete notify where notify_no=#{notifyNo}
+  </delete>
+  
   </mapper>

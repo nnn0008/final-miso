@@ -35,8 +35,25 @@
         OR instr(sigungu, #{keyword})>0 
         OR instr(eupmyun, #{keyword})>0 
         OR instr(hdong_name, #{keyword})>0  
+   
 
 
+	
+	</select>
+	
+	<select id="selectListByPage" resultType="zipCodeDto">
+		
+		   select * from (
+			        select rownum rn, TMP.* from (
+			        select * from zip_code
+			        WHERE instr(sido, #{keyword})>0 
+        			OR instr(sigungu, #{keyword})>0 
+        			OR instr(eupmyun, #{keyword})>0 
+        			OR instr(hdong_name, #{keyword})>0
+			        ) TMP
+			    )
+			    where rn between #{startRow} and #{finishRow}
+	
 	
 	</select>
 	
@@ -54,6 +71,16 @@
 		SELECT zc.* FROM ZIP_CODE zc JOIN CLUB c ON zc.ZIP_CODE_NO=c.zip_code_NO WHERE c.CLUB_NO =#{clubNo}
 	
 	</select>
+	
+	<select id="countListByPage" resultType="int">
+	
+	 				select count(*) from zip_code
+	 				WHERE instr(sido, #{keyword})>0 
+        			OR instr(sigungu, #{keyword})>0 
+        			OR instr(eupmyun, #{keyword})>0 
+        			OR instr(hdong_name, #{keyword})>0
+	 				
+	 	</select>
 	
 	
 	

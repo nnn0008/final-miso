@@ -8,11 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/photo")
 public class PhotoController {
 	
-	@GetMapping("/write")
-	public String write() {
-		return "photo/write";
-	}
-	
 	@RequestMapping("/list")
 	public String list() {
 		return "photo/list";
