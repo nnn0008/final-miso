@@ -58,7 +58,6 @@ $(function(){
             data: { clubNo: clubNo, clubMemberId: memberId, joinMessage: joinMessage },
             success: function (response) {
                 $(".exampleModal").modal("hide");
-                location.reload();
             }
         });
     });
@@ -68,8 +67,8 @@ $(function(){
         e.preventDefault();
 
         // 파일 선택
-        var meetingImageInput = $("#meetingImage")[0];
-        var meetingImage = meetingImageInput.files[0];
+        var meetingImageInput = $(".meetingImage")[0];
+        var attach = meetingImageInput.files[0];
 
         // 각 필드 값을 가져오기
         var meetingClubNo = $(".clubNo").data("no");
@@ -92,7 +91,7 @@ $(function(){
         formData.append("meetingLocation", meetingLocation);
         formData.append("meetingPrice", meetingPrice);
         formData.append("meetingNumber", meetingNumber);
-        formData.append("meetingImage", meetingImage);
+        formData.append("attach", attach);
         formData.append("meetingFix", meetingFix);
 
         // Ajax 통신
@@ -104,12 +103,11 @@ $(function(){
             processData: false,
             success: function(response) {
                 console.log("성공, 목록을 갱신합니다");
-                //loadList();
+                loadList();
             },
             error: function(error) {
                 console.error("파일 업로드 에러", error);
                 // 오류 처리 로직 추가
-                console.log("Meeting Image:", meetingImage);
             }
         });
     });
@@ -141,47 +139,7 @@ $(function(){
 
 </script>
 
-<script id="meeting-template" type="text/template">
-<div class="col">
-	
-	<div class="row">
-		<div class="col">
-			<a class="d-day">디데이</a>
-		</div>
-		<div class="col">
-			<button class="btn btn-danger">취소</button>
-			<button class="btn btn-success">참석</button>
-		</div>
-	</div>
-	
-	<div class="row">
-		<div class="col">
-			<a class="madeMeetingName">제목</a>
-		</div>
-	</div>
-	
-	<div class="row">
-		<div class="col">
-			<img class="madeMeetingImage">
-		</div>
-		<div class="col">
-			<div class="row">
-				일시 <a class="madeMeetingDate">날짜</a>
-			</div>
-			<div class="row">
-				위치 <a class="madeMeetingLocation">위치</a>
-			</div>
-			<div class="row">
-				비용 <a class="madeMeetingPrice">비용</a>
-			</div>
-			<div class="row">
-				참석 <a class="madeRealAttendant">5</a><a class="madeMeetingMaxNumber">250</a>
-			</div>
-		</div>
-	</div>
-	
-</div>
-</script>
+
 
 
 <h1>클럽디테일</h1>
@@ -223,6 +181,26 @@ $(function(){
    <button type="button" class="btn btn-primary mt-4">수정하기</button>
    </a> 
    </c:if>
+   <hr>
+   
+   <c:forEach var="meetingDto" items="${meetingList}">
+   <div class="row">
+   	<div class="col">
+   	<div class="alert alert-dismissible alert-light">
+   	<img src="/rest/meeting/image?meetingNo=${meetingDto.meetingNo}" width="100" height="100">
+   	미팅이름:${meetingDto.meetingName}
+   	미팅날짜:${meetingDto.meetingDate}
+   	미팅위치:${meetingDto.meetingLocation}
+   	미팅비용:${meetingDto.meetingPrice}
+   	미팅참석:/${meetingDto.meetingNumber}
+   	</div>
+   
+   	
+   	</div>
+   </div>
+   
+   </c:forEach>
+   
 	
 	<hr>
 	<div class="row">
@@ -295,7 +273,7 @@ $(function(){
       </div>
       <div class="modal-body">
         	<input type="hidden" class="meetingClubNo" data-no="${clubDto.clubNo}" name="clubNo" value="${clubDto.clubNo}">
-			<input type="file" class="meetingImage" name="meetingImage" id="meetingImage">
+			<input type="file" class="meetingImage" name="attach">
 			<input type="text" class="meetingName" name="meetingName" placeholder="정모 이름">        
         	<input type="date" class="meetingDate" name="meetingDate" placeholder="12월 31일">
         	<input type="time" class="meetingTime" name="meetingTime" placeholder="오후 12:00">

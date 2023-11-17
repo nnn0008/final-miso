@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.MeetingDto;
 
 @Repository
@@ -31,10 +32,15 @@ public class MeetingDaoImpl implements MeetingDao{
 	}
 	@Override
 	public List<MeetingDto> selectList(int clubNo) {
-		return sqlSession.selectList("meeting.findAll", clubNo);
+		return sqlSession.selectList("meeting.selectByClubNo", clubNo);
 	}
 	@Override
 	public boolean update(int meetingNo) {
 		return sqlSession.update("meeting.edit", meetingNo) > 0;
+	}
+	@Override
+	public AttachDto findImage(int meetingNo) {
+		
+		return sqlSession.selectOne("meeting.findImage",meetingNo);
 	}
 }

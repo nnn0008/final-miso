@@ -31,13 +31,20 @@
 		select * from meeting where meeting_no = #{meetingNo}
 	</select>
 	
-	<select id="findAll" resultType="MeetingDto">
+	<select id="selectByClubNo" resultType="MeetingDto">
 		select * from meeting where club_no = #{clubNo} order by meeting_no desc
 	</select>
 	
 	<delete id="remove">
 		delete meeting where meeting_no = #{meetingNo}
 	</delete>
+	
+	  <select id="findImage" resultType="attachDto">
+    
+    select * from attach where attach_no=(
+    select attach_no from meeting_image where meeting_no=#{meetingNo}
+    )
+    </select>
 	
 	
 
