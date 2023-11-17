@@ -118,4 +118,12 @@ WHERE
     co.CHAT_ROOM_NO = #{chatRoomNo}
     </select>
     
+    <!-- 채팅 이력 초기화를 위한 구문 -->
+    <select id="chatReset" resultType="ChatDto">
+    SELECT * FROM chat 
+	WHERE chat_room_no = #{chatRoomNo} AND chat_sender = #{chatSender} AND chat_time > CURRENT_TIMESTAMP 
+	ORDER BY chat_time
+    </select>
+    
+    
 </mapper>

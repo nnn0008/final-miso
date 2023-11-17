@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.springfinal.configuration.FileUploadProperties;
@@ -52,7 +53,7 @@ public class ChatRestController {
 	    public List<MemberDto> getProfile() {
 		 	return chatRoomDao.selectMemberProfile();
 	    }
-
+    
 	 @GetMapping("/download")
 	 public ResponseEntity<ByteArrayResource> download(
 			 @RequestParam int attachNo) throws IOException{

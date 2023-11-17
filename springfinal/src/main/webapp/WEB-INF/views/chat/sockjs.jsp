@@ -64,12 +64,16 @@
 							</div>
 							<div class="offcanvas-body">
 								<div class="col-md-4 client-list"></div>
-								<div class="col-md-4 chatRoom-list"></div>
-								<div></div>
 							</div>
 						</div>
 					</div>
+					
+					<div class="col text-end">
+					<i class="fa-solid fa-ellipsis fa-xl chat-more"></i>
+					</div>
+					
 				</div>
+				
 
 				<!-- 메세지 표시 영역 -->
 				<div class="row">
@@ -140,6 +144,25 @@
 			</div>
 		</div>
 
+		<!-- 모달 -->
+		<div class="modal" id="chatMoreModal">
+		    <div class="modal-dialog">
+		        <div class="modal-content">
+		            <!-- 모달 내용 -->
+		            <div class="modal-body">
+		                <p>채팅방을 지우거나 나가시겠습니까?</p>
+		            </div>
+		
+		            <!-- 모달 하단 버튼 -->
+		            <div class="modal-footer">
+		                <button type="button" class="btn btn-danger" id="deleteChatRoomBtn">채팅방 지우기</button>
+		                <button type="button" class="btn btn-secondary" id="leaveChatRoomBtn">채팅방 나가기</button>
+		                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+
 
 	</div>
 
@@ -169,6 +192,35 @@
 	var prevMessageDate = null;
 	var clubName;
 
+	// 클릭 이벤트 처리
+	$(".chat-more").click(function() {
+	    // 모달 표시
+	    $("#chatMoreModal").modal("show");
+	});
+
+	// 채팅방 지우기 버튼 클릭 이벤트
+	$("#deleteChatRoomBtn").click(function() {
+	    // 여기에 채팅방 지우기 로직 추가
+	    var resetMessage = {
+	        messageType: "chatReset",
+	        chatRoomNo: ${chatRoomNo},
+	        chatSender: chatSender
+	    };
+
+	    window.socket.send(JSON.stringify(resetMessage));
+	  
+	    // 모달 닫기
+	    $("#chatMoreModal").modal("hide");
+	});
+
+	// 채팅방 나가기 버튼 클릭 이벤트
+	$("#leaveChatRoomBtn").click(function() {
+	    // 여기에 채팅방 나가기 로직 추가
+	    // 모달 닫기
+	    $("#chatMoreModal").modal("hide");
+	});
+
+	
 	window.socket.onopen = function (e) {
 	     console.log('Info: connection opened.');
 	    
@@ -383,6 +435,7 @@
 	        url: "/getMemberList",
 	        method: "GET",
 	        dataType : "json",
+	        contentType: 'application/json',
 	        data: { chatRoomNo: chatRoomNo },
 	        success: function(data) {
 	            console.log("Member List:", data);
@@ -399,6 +452,7 @@
 	        url: "/getChatOneMemberList",
 	        method: "GET",
 	        dataType : "json",
+	        contentType: 'application/json',
 	        data: { chatRoomNo: chatRoomNo },
 	        success: function(data) {
 	            console.log("Chat One Member List:", data);
@@ -574,8 +628,9 @@
 		    	// 클릭 이벤트 추가
 		    	imageContainer.on("click", function() {
 		    	    $.ajax({
-		    	        url: 'http://localhost:8080/getProfile',
+		    	        url: '/getProfile',
 		    	        type: 'GET',
+		    	        contentType: 'application/json',
 		    	        dataType: 'json',
 		    	        success: function(data) {
 		    	            // 성공적으로 데이터를 받아왔을 때 처리

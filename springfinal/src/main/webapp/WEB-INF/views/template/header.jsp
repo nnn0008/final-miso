@@ -209,6 +209,8 @@ function getNotifyList() {
     $.ajax({
         url: window.contextPath + "/rest/notify/list",
         method: "GET",
+        dataType: "json",
+        contentType: 'application/json',
         data: {
             notifyReceiver: notifyReceiver
         },
@@ -252,6 +254,7 @@ $(document).on('click', '.delete-button', function () {
     $.ajax({
         type: 'GET',
         url: '/rest/notify/delete',
+        contentType: 'application/json',
         data: { notifyNo: notifyNo },
         success: function (response) {
 
@@ -342,6 +345,7 @@ function getChatRoomList() {
             memberId: memberId
         },
         dataType: 'json', // JSON 데이터 형식으로 처리
+        contentType: 'application/json',
         success: function (data) {
             // 채팅 모달에 데이터 추가
             populateChatModal(data);

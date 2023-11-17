@@ -47,6 +47,7 @@ public class NotifyRestController {
 //
 //	}
 //	
+
 	@GetMapping("/list")
 	public List<NotifyDto> notifyList(@RequestParam String notifyReceiver) {
 	    List<NotifyDto> list = notifyDao.list(notifyReceiver);	    
@@ -75,7 +76,6 @@ public class NotifyRestController {
 	}
 	
 	@GetMapping("/delete")
-	@ResponseBody
 	public boolean delete(@RequestParam int notifyNo) {
 	    boolean result = notifyDao.delete(notifyNo);
 

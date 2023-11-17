@@ -138,9 +138,6 @@ public class WebSocketServer extends TextWebSocketHandler{
 
 	// 특정 채팅방 입장 시 이전 메시지 조회 및 전송
 	public void sendChatHistory(Integer chatRoomNo, WebSocketSession session) throws IOException {
-	    MessageDto messageDto = new MessageDto();
-	    // messageType 추출
-	    MessageType messageType = messageDto.getMessageType();
 
 	    ClientVO client = clientService.createClientVO(session);
 	    String chatSender = client.getMemberId();
@@ -160,7 +157,21 @@ public class WebSocketServer extends TextWebSocketHandler{
 	}
 
 	private void processChatDto(ChatDto chatDto, Integer chatRoomNo, WebSocketSession session) throws IOException {
-	    LocalDateTime chatTime = chatDto.getChatTime();
+		 MessageDto messageDto = new MessageDto();
+		MessageType messageType = messageDto.getMessageType();
+		
+		// 서버에서 'chatReset' 메시지 처리
+		if (MessageType.chatReset.equals(messageType)) {
+		    List<ChatDto> chatHistoryAfterReset = chatDao.getChatHistoryAfterDate(messageDto.getChatRoomNo(), messageDto.getChatSender());
+
+		    // 클라이언트에게 가져온 이력 전송
+		    for (ChatDto resetChatDto : chatHistoryAfterReset) {
+		        processChatDto(resetChatDto, chatRoomNo, session);
+		    }
+		    return;
+		}
+
+		LocalDateTime chatTime = chatDto.getChatTime();
 
 	    Map<String, Object> map = new HashMap<>();
 	    map.put("memberId", chatDto.getChatSender());
