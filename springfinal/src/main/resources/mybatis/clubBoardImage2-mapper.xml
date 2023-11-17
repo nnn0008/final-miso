@@ -14,11 +14,11 @@
 		delete club_board_image2 where club_board_no = #{clubBoardNo} 
 	</delete>
 	
-	<select id="find">
+	<select id="find" resultType="ClubBoardImage2Dto">
 		select *  from club_board_image2 where club_board_no = #{clubBoardNo}
 	</select>
 	
-	<select id="findAll">
+	<select id="findAll" resultType="ClubBoardImage2Dto">
 		select * from club_board_image2 order by club_board_image asc
 	</select>
 
