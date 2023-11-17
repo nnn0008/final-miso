@@ -6,8 +6,29 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://unpkg.com/hangul-js" type="text/javascript"></script>
 
+
+
 <script>
 $(function(){
+	
+	
+	    if($(".meetingFix").prop("checked")){
+	        $("[name=meetingFix]").val('Y');
+	    } else {
+	        $("[name=meetingFix]").val('N');
+	    }
+
+	$(".meetingFix").change(function(){
+		
+		 if($(".meetingFix").prop("checked")){
+		        $("[name=meetingFix]").val('Y');
+		    } else {
+		        $("[name=meetingFix]").val('N');
+		    }
+		
+	});
+	
+	
     $(".join").click(function(e){
         var clubNo = $(".clubNo").data("no");
         var memberId = $(".memberId").data("id");
@@ -59,6 +80,10 @@ $(function(){
         var meetingPrice = $(".meetingPrice").val();
         var meetingNumber = $(".meetingMaxPeople").val();
 		var formatDateTime = meetingDate + " " + meetingTime; 
+		
+		var meetingFix = $(".meetingFix").val();
+
+		
 			
         // FormData 객체 생성
         var formData = new FormData();
@@ -71,6 +96,7 @@ $(function(){
         formData.append("meetingPrice", meetingPrice);
         formData.append("meetingNumber", meetingNumber);
         formData.append("meetingImage", meetingImage);
+        formData.append("meetingFix", meetingFix);
 
         // Ajax 통신
         $.ajax({
@@ -224,7 +250,7 @@ $(function(){
 	<div class="row">
 		<div class="col">
 			<button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
-			  	동호회 만들기
+			  	정모 만들기
 			</button>
 		</div>
 	</div>
@@ -279,6 +305,7 @@ $(function(){
         	<input type="text" class="meetingLocation" name="meetingLocation" placeholder="위치를 입력하세요">
         	<input type="number" class="meetingPrice" name="meetingPrice" placeholder="모임비 15000원">원
         	<input type="number" class="meetingMaxPeople" name="meetingNumber" placeholder="모임 정원">명
+        	모임공개여부<input class="form-check-input meetingFix" type="checkBox" name="meetingFix">
         	
       </div>
       <div class="modal-footer">

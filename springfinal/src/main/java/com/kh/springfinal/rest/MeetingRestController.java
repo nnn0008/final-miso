@@ -2,8 +2,6 @@ package com.kh.springfinal.rest;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -22,6 +20,7 @@ import com.kh.springfinal.dao.MeetingImageDao;
 import com.kh.springfinal.dao.MeetingMemberDao;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MeetingDto;
+import com.kh.springfinal.dto.MeetingMemberDto;
 import com.kh.springfinal.vo.FileLoadVO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +52,8 @@ public class MeetingRestController {
 			@RequestParam int clubNo, @RequestParam String meetingName,
 			@RequestParam("meetingTime") @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm") Date meetingTime,
 			@RequestParam String meetingLocation, @RequestParam int meetingPrice,
-			@RequestParam int meetingNumber, @RequestParam MultipartFile meetingImage
+			@RequestParam int meetingNumber, @RequestParam MultipartFile meetingImage,
+			@RequestParam String meetingFix
 			) throws IllegalStateException, IOException {
 		
 		//아이디가 필요하다
@@ -68,10 +68,20 @@ public class MeetingRestController {
 		meetingDto.setMeetingName(meetingName); //정모 제목
 		meetingDto.setMeetingNo(meetingNo); //정모 번호
 		meetingDto.setMeetingNumber(meetingNumber); //정모 인원
-		meetingDto.setClubMemberNo(clubMemberDto.getClubMemberNo());
+		meetingDto.setMeetingPrice(meetingPrice); 
 		meetingDto.setClubNo(clubNo);
+		meetingDto.setMeetingFix(meetingFix);
 		
 		meetingDao.insert(meetingDto);
+		
+		MeetingMemberDto meetingMemberDto = new MeetingMemberDto();
+		
+		meetingMemberDto.setClubMemberNo(clubMemberDto.getClubMemberNo());
+		meetingMemberDto.setMeetingNo(meetingNo);
+		
+		meetingMemberDao.insert(meetingMemberDto);
+		
+		
 		//파일
 		fileLoadVO.meetingUpload(meetingImage, meetingNo);
 	}

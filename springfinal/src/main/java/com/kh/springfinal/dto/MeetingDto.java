@@ -16,7 +16,7 @@ public class MeetingDto {
 	private String meetingLocation;
 	private int meetingPrice;
 	private int meetingNumber;
-	private int clubMemberNo;
+	private String meetingFix;
 	private int clubNo;
 	
 }

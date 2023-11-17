@@ -6,7 +6,7 @@
 <mapper namespace="meetingMember">
 	
 	<insert id="add">
-		insert into meeting_image(club_member_no, meeting_no)
+		insert into meeting_member(club_member_no, meeting_no)
 		values(#{clubMemberNo}, #{meetingNo}) 
 	</insert>
 	

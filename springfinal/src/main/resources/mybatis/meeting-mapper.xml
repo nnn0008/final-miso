@@ -11,12 +11,12 @@
 	
 	<insert id="add">
 		insert into meeting(
-			meeting_no, meeting_name, meeting_date, 
-			meeting_location, meeting_price, meeting_number
+			meeting_no, club_no,meeting_name, meeting_date, 
+			meeting_location, meeting_price, meeting_number,meeting_fix
 		) 
 		values(
-			#{meetingNo}, #{meetingName}, #{meetingDate},
-			#{meetingLocation}, #{meetingPrice}, #{meetingNumber}
+			#{meetingNo}, #{clubNo},#{meetingName}, #{meetingDate},
+			#{meetingLocation}, #{meetingPrice}, #{meetingNumber},#{meetingFix}
 		)	
 	</insert>
 	<update id="edit">
@@ -38,5 +38,8 @@
 	<delete id="remove">
 		delete meeting where meeting_no = #{meetingNo}
 	</delete>
+	
+	
+
 	
 </mapper>
