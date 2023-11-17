@@ -33,6 +33,8 @@ import com.kh.springfinal.vo.KakaoPayReadyRequestVO;
 import com.kh.springfinal.vo.KakaoPayReadyResponseVO;
 import com.kh.springfinal.vo.KakaoPayRegularApproveRequestVO;
 import com.kh.springfinal.vo.KakaoPayRegularApproveResponseVO;
+import com.kh.springfinal.vo.KakaoPayRegularCancelRequestVO;
+import com.kh.springfinal.vo.KakaoPayRegularCancelResponseVO;
 import com.kh.springfinal.vo.KakaoPayRegularReadyRequestVO;
 import com.kh.springfinal.vo.KakaoPayRegularReadyResponseVO;
 import com.kh.springfinal.vo.PurchaseConfirmVO;
@@ -246,7 +248,7 @@ public class KakaopayController {
 		session.removeAttribute("listVO");
 		return "pay/cancelPage";//취소했을때 보여주는 페이지
 	}
-	@RequestMapping("/fail")
+	@RequestMapping("/failPage")
 	public String fail(HttpSession session) {
 		session.removeAttribute("approve");
 		session.removeAttribute("listVO");
@@ -318,13 +320,13 @@ public class KakaopayController {
 					
 						//[1] 결제번호 생성
 						int paymentRegularNo = Integer.parseInt(response.getPartnerOrderId());
-						
 					
 						//[2] 결제번호 등록
 						paymentRegularDao.insert(PaymentRegularDto.builder()
 								.paymentRegularNo(paymentRegularNo)//결제고유번호
 								.paymentRegularMember(response.getPartnerUserId())//결제자ID
 								.paymentRegularTid(response.getTid())//PG사 거래번호
+								.paymentRegularSid(response.getSid())//PG사 정기결제번호
 								.paymentRegularName(response.getItemName())//PG사 결제상품명
 								.paymentRegularPrice(response.getAmount().getTotal())//총 결제액
 								.paymentRegularRemain(response.getAmount().getTotal())//총 취소가능액
@@ -351,5 +353,65 @@ public class KakaopayController {
 			public String regularSuccessResult() {
 				return"pay/regularSuccessResult";
 			}
-	
+			
+			@RequestMapping("/pay/regularCancel")
+			public String regularCancel(@RequestParam int regularDetailNo)throws URISyntaxException{
+				//1
+				RegularDetailDto regularDetailDto = paymentRegularDao.selectDetail(regularDetailNo);
+				
+				if(regularDetailDto == null || regularDetailDto.isCanceled() ) {
+//					throw new NoTargetException();
+					return"에러페이지";
+				}
+				//2
+				PaymentRegularDto paymentRegularDto = paymentRegularDao.selectOne(regularDetailDto.getRegularDetailOrigin());
+				//3
+				KakaoPayRegularCancelRequestVO request = KakaoPayRegularCancelRequestVO.builder()
+						.sid(paymentRegularDto.getPaymentRegularSid())
+						.cancelAmount(regularDetailDto.getRegularDetailProductPrice()*regularDetailDto.getRegularDetailProductQty())
+						.build();
+				//4
+				KakaoPayRegularCancelResponseVO response = kakaoPayRegularService.cancel(request);
+				//5
+				paymentRegularDao.cancelDetail(regularDetailNo);
+				paymentRegularDao.cancel(PaymentRegularDto.builder()
+						.paymentRegularNo(paymentRegularDto.getPaymentRegularNo())//결제대표번호
+						.paymentRegularRemain(response.getCancelAvailableAmount().getTotal())//잔여금액
+						.build());
+	return "redirect:list2";
 }
+		@RequestMapping("/pay/regularCancelAll")
+		public String regularCancelAll(@RequestParam int paymentRegularNo)throws URISyntaxException{
+			
+			//1
+			PaymentRegularDto paymentRegularDto = paymentRegularDao.selectOne(paymentRegularNo);
+			if(paymentRegularDto == null || paymentRegularDto.getPaymentRegularRemain() == 0) {
+//				throw new NoTargetException("이미 취소된 결제입니다");
+				return"에러페이지";
+		}
+			//2
+			KakaoPayRegularCancelRequestVO request = KakaoPayRegularCancelRequestVO.builder()
+					.sid(paymentRegularDto.getPaymentRegularSid())
+					.build();
+			 log.debug("sid={}",paymentRegularDto.getPaymentRegularSid());
+	         log.debug("vo sid={}", request);
+	         KakaoPayRegularCancelResponseVO response = kakaoPayRegularService.cancel(request);
+	         
+	         //3
+	         paymentRegularDao.cancel(PaymentRegularDto.builder()
+	        		 .paymentRegularNo(paymentRegularNo)
+	        		 .paymentRegularRemain(0)
+	        		 .build());
+	         paymentRegularDao.cancelDetailGroup(paymentRegularNo);
+	         
+	         return "redirect:list2";
+		}
+		@RequestMapping("/list2")
+		public String list2(HttpSession session,Model model) {
+			String memberId = (String) session.getAttribute("name");
+			
+			model.addAttribute("list",paymentRegularDao.selectTotalList());//전체내경
+			model.addAttribute("list",paymentRegularDao.selectTotalListByMember(memberId));//나의내역
+			return"pay/list2";
+		}
+		}

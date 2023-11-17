@@ -59,9 +59,8 @@
 
 <div class="row">
    <div class="col text-end">
-      <button class="btn btn-primary purchase-btn" type="button">
-         <i class="fa-solid fa-cart-shopping"></i>
-         구매하기
+      <button class="btn btn-success purchase-btn" type="button">
+         <img src="/images/payment.png">
       </button>
    </div>
 </div> 
