@@ -29,7 +29,7 @@ $(function(){
 	});
 	
 	
-    $(".join").click(function(e){
+    /* $(".join").click(function(e){
         var clubNo = $(".clubNo").data("no");
         var memberId = $(".memberId").data("id");
 
@@ -45,7 +45,7 @@ $(function(){
                 }
             }
         });
-    });
+    }); */
 
     $(".commit").click(function(){
         var clubNo = $(".clubNo").data("no");
@@ -57,7 +57,13 @@ $(function(){
             method: "post",
             data: { clubNo: clubNo, clubMemberId: memberId, joinMessage: joinMessage },
             success: function (response) {
-                $(".exampleModal").modal("hide");
+            
+             $(".cancel").click();
+                
+            	
+            	
+                
+                
             }
         });
     });
@@ -174,7 +180,8 @@ $(function(){
         </div>
     </div>
     <c:if test="${joinButton==true}">
-   <button type="button" class="btn btn-secondary mt-4 join" data-bs-toggle="modal">가입하기</button>
+   <button type="button" class="btn btn-secondary mt-4 join" data-bs-toggle="modal"
+    data-bs-target=".joinModal">가입하기</button>
 	</c:if>
 	 <c:if test="${editPossible==true}">
    <a href="/club/edit?clubNo=${clubDto.clubNo}">
@@ -211,7 +218,7 @@ $(function(){
 	<c:forEach var="clubMember" items="${clubMemberDto}">
 	
 	<div class="row">
-	<div class="col">
+	<div class="col memberList">
 	<img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${clubMember.memberId}" width="100" height="100" class="rounded-circle">
 	${clubMember.memberName}
 	${clubMember.clubMemberRank}
@@ -233,8 +240,8 @@ $(function(){
     
 </div>
     
-      <div class="modal fade exampleModal"
-                data-bs-backdrop="static" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal fade joinModal"
+                 tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
             <div class="modal-header">
@@ -251,7 +258,7 @@ $(function(){
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button class="btn btn-secondary cancel" data-bs-dismiss="modal">취소</button>
                 <button class="btn btn-success commit">확인</button>
             </div>
             </div>
