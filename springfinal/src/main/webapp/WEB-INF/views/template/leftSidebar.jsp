@@ -35,7 +35,7 @@
 
                     <div class="row p-2">
                         <div class="col">
-                            <a href="#" class="link">
+                            <a href="/club/list" class="link">
                                 <img src="${pageContext.request.contextPath}/images/Vector.png" width="20%">
                                 <strong class="ms-2">모임 찾기</strong> 
                             </a>
@@ -62,7 +62,7 @@
 
                     <div class="row p-1 mt-4">
                         <div class="col">
-                            <a href="#" class="badge rounded-pill bg-miso btn-miso p-3 link">
+                            <a href="/club/insert" class="badge rounded-pill bg-miso btn-miso p-3 link">
                                 모임 만들기
                             </a>
                         </div>
