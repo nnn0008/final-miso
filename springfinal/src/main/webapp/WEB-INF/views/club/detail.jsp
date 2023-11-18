@@ -59,8 +59,11 @@ $(function(){
             success: function (response) {
             
              $(".cancel").click();
+             
+             alert("가입되었습니다.");
+             
+             location.reload();
                 
-            	
             	
                 
                 
@@ -119,31 +122,81 @@ $(function(){
     });
     
    	//동호회를 만들었을때 넣어줘야 할 목록
-   function loadList(){
-   		var params = new URLSearchParams(location.search);
-   		var clubNo = params.get("clubNo");
-   		$.ajax({
-   			url:window.contextPath + "/rest/meeting/list",
-   			method:"post",
-   			data:{
-   				clubNo : clubNo,
-   			},
-   			success:function(response){
-   				$(".attach-meeting-list").empty();
-   				console.log(response[i]);
-   				for(let i = 0; i < response.length; i++){
-   								
-   				}
-   				
-   			},
-   		});
-   }
-    	
+    function loadList() {
+        var params = new URLSearchParams(location.search);
+        var clubNo = params.get("clubNo");
+        
+        $.ajax({
+            url: window.contextPath + "/rest/meeting/list",
+            method: "get",
+            data: {
+                clubNo: clubNo,
+            },
+            success: function (response) {
+            	$(".attach-meeting-list").empty();
+            	
+                for (var i = 0; i < response.length; i++) {
+                    var img = $('<img>')
+                        .attr('src', "/rest/meeting/image?meetingNo=" + response[i].meetingNo)
+                        .attr('width', '100')
+                        .attr('height', '100');
+                    
 
-    
+                    $(".attach-meeting-list").append(
+                        $('<div>').append(
+                        		$('<div>').append(
+                        				$('<div>').append(
+                        					$('<div>').append('<label>').text("D-"+response[i].dday)
+                        					.attr('class','font-weight-bold text-danger'),
+                        					img,
+                        					$('<div>').text("미팅이름: " + response[i].meetingName), 
+                        			        $('<div>').text(" 미팅날짜: " + response[i].dateString),
+                        			        $('<div>').text(" 미팅위치: " + response[i].meetingLocation),
+                        			        $('<div>').text(" 미팅비용: " + response[i].meetingPrice),
+                        			        $('<div>').text(" 미팅참석: " + response[i].meetingNumber)
+                        			        )
+                        			    .attr('class','alert alert-dismissible alert-light')
+                        ).attr('class','col')
+                        ).attr('class','row')
+                    )
+                }
+            }
+        });
+    }
+   	
+   	
+   	$(".attend").click(function(){
+   	  var params = new URLSearchParams(location.search);
+      var clubNo = params.get("clubNo");
+      var meetingNo = $(this).closest(".col").find(".meetingNo").data("no");
+      
+      console.log(meetingNo);
+   		
+   	    $.ajax({
+            url: window.contextPath +"/rest/meeting/attend",
+            method: "post",
+            data: { clubNo: clubNo, meetingNo : meetingNo },
+            success: function () {
+            $(".attend").attr('class','cancel').text("취소");
+                
+            	
+                
+                
+            },
+            error: function(error) {
+                console.error("모임참석에러", error);
+            }
+        });
+   		
+   		
+   		
+   		
+   	})
+   	
+   	
 });
-
-</script>
+    </script>
+    
 
 
 
@@ -188,25 +241,39 @@ $(function(){
    <button type="button" class="btn btn-primary mt-4">수정하기</button>
    </a> 
    </c:if>
+   
+   
    <hr>
    
+   <div class="row">
+		<div class="col">
+			<button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
+			  	정모 만들기
+			</button>
+		</div>
+	</div>
+   
+   <!-- 동호회 만들면 올자리 -->
+	<div class="row attach-meeting-list">
    <c:forEach var="meetingDto" items="${meetingList}">
    <div class="row">
    	<div class="col">
    	<div class="alert alert-dismissible alert-light">
+   	<div>
+     <label class="font-weight-bold text-danger">D-${meetingDto.dday}</label>
+	</div>
    	<img src="/rest/meeting/image?meetingNo=${meetingDto.meetingNo}" width="100" height="100">
-   	미팅이름:${meetingDto.meetingName}
-   	미팅날짜:${meetingDto.meetingDate}
-   	미팅위치:${meetingDto.meetingLocation}
-   	미팅비용:${meetingDto.meetingPrice}
-   	미팅참석:/${meetingDto.meetingNumber}
+   	<div class="meetingNo" data-no="${meetingDto.meetingNo}">미팅이름: ${meetingDto.meetingName}</div>
+   	<div>미팅날짜: ${meetingDto.dateString}</div>
+   	<div>미팅위치: ${meetingDto.meetingLocation}</div>
+   	<div>미팅비용: ${meetingDto.meetingPrice}</div>
+   	<div>미팅참석: /${meetingDto.meetingNumber}</div>
+   	<button class="btn btn-primary attend">참석</button>
    	</div>
-   
-   	
    	</div>
    </div>
-   
    </c:forEach>
+   </div>
    
 	
 	<hr>
@@ -226,16 +293,9 @@ $(function(){
 	</div>
 	</div>
 	</c:forEach>
-	<!-- 동호회 만들면 올자리 -->
-	<div class="row attach-meeting-list"></div>
 	
-	<div class="row">
-		<div class="col">
-			<button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
-			  	정모 만들기
-			</button>
-		</div>
-	</div>
+	
+	
 	
     
 </div>
@@ -298,6 +358,30 @@ $(function(){
   </div>
 </div>
         </form>
+        
+        
+          <div class="modal fade joinFinish">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">가입인사를 작성해주세요</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                  <div class="col">
+                  가입되었습니다.
+                  </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" data-bs-dismiss="modal">확인</button>
+            </div>
+            </div>
+        </div>
+      </div>
     
     
 

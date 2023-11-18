@@ -70,5 +70,11 @@
     
     </select>
     
+    <select id="findClubMemberNo" resultType="int">
+    	
+    	select club_member_no from club_member where club_no=#{clubNo} and club_member_id=#{memberId}
+    
+    </select>
+    
     
     </mapper>

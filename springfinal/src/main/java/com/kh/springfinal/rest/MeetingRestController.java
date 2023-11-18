@@ -3,7 +3,11 @@ package com.kh.springfinal.rest;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -14,6 +18,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.springfinal.dao.AttachDao;
 import com.kh.springfinal.dao.ClubBoardDao;
+import com.kh.springfinal.dao.ClubMemberDao;
 import com.kh.springfinal.dao.MeetingDao;
 import com.kh.springfinal.dao.MeetingImageDao;
 import com.kh.springfinal.dao.MeetingMemberDao;
@@ -56,6 +62,9 @@ public class MeetingRestController {
 	
 	@Autowired
 	private FileLoadVO fileLoadVO;
+	
+	@Autowired
+	private ClubMemberDao clubMemberDao;
 	
 	@PostMapping("/insert")
 	public void insert(HttpSession session,
@@ -123,14 +132,36 @@ public class MeetingRestController {
 		
 		//파일
 	}
-	
-//	@PostMapping("/list")
-//	public Map<String,Object> params(@RequestParam int clubNo, @RequestParam int meetingNo){
-//		List<MeetingDto> meetingList = meetingDao.selectList(clubNo);
-//		List<MeetingMemberDto> meetingMemberDto = meetingMemberDao.selectList(meetingNo);
-//		Map params = Map.of("meetingList", meetingList, "meetingMemberDto", meetingMemberDto);
-//		return params;
-//	}
+	@GetMapping("/list")
+	public List<MeetingDto> list(int clubNo) throws ParseException{
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd E a hh:mm:ss");
+		List<MeetingDto> meetingList = meetingDao.selectList(clubNo);
+		
+		for(MeetingDto dto : meetingList) {
+
+			//스트링 날짜 설정
+		 	Date date = dto.getMeetingDate();
+	        String formattedDate = dateFormat.format(date);
+	        dto.setDateString(formattedDate); 
+	        
+	        
+	        
+	        //디데이 설정
+	        
+	        Date currentDate = new Date();
+	        SimpleDateFormat currentDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	        String formattedCurrentDate = currentDateFormat.format(currentDate);
+	        String day = currentDateFormat.format(date);
+	        
+            int timeDiff = (int) (currentDateFormat.parse(day).getTime() - currentDateFormat.parse(formattedCurrentDate).getTime());
+            int daysDiff = (int) Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+            dto.setDday(daysDiff);
+		}
+		
+		return meetingList;
+		
+	}
 	
 	
 	@ResponseBody
@@ -180,6 +211,24 @@ public class MeetingRestController {
 						)
 				
 			.body(resource);	
+	}
+	
+	@PostMapping("/attend")
+	public void attend(@RequestParam int clubNo, @RequestParam int meetingNo,HttpSession session) {
+		
+		
+		String memberId= (String) session.getAttribute("name");
+		
+		int clubMemberNo = clubMemberDao.findClubMemberNo(clubNo, memberId);
+		
+		MeetingMemberDto meetingMemberDto = new MeetingMemberDto();
+		
+		meetingMemberDto.setClubMemberNo(clubMemberNo);
+		meetingMemberDto.setMeetingNo(meetingNo);
+		
+		meetingMemberDao.insert(meetingMemberDto);
+		
+		
 	}
 	
 	

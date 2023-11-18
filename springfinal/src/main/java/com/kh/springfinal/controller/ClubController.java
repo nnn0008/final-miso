@@ -3,6 +3,8 @@ package com.kh.springfinal.controller;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -125,11 +127,11 @@ public class ClubController {
 		return "redirect:/";
 		
 	}
-	
 	@RequestMapping("/detail")
 	public String detail(@RequestParam int clubNo,
-			Model model,HttpSession session) {
+			Model model,HttpSession session) throws ParseException {
 		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd E a hh:mm:ss");
 		String memberId = (String) session.getAttribute("name");
 		ClubImageVO clubDto = clubDao.clubDetail(clubNo);
 		MajorCategoryDto major = categoryDao.findMajor(clubDto.getClubCategory());
@@ -140,9 +142,33 @@ public class ClubController {
 		
 		List<ClubMemberVO> clubMemberList = clubMemberDao.memberInfo(clubNo);
 		
+		
+		
 		int memberCount = clubMemberDao.memberCount(clubNo);
 		
 		List<MeetingDto> meetingList = meetingDao.selectList(clubNo);
+		for(MeetingDto dto : meetingList) {
+			//스트링 날짜 설정
+			 	Date date = dto.getMeetingDate();
+		        String formattedDate = dateFormat.format(date);
+		        dto.setDateString(formattedDate); 
+		        
+		        
+		        
+		        //디데이 설정
+		        
+		        Date currentDate = new Date();
+		        SimpleDateFormat currentDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		        String formattedCurrentDate = currentDateFormat.format(currentDate);
+		        String day = currentDateFormat.format(date);
+		        
+                int timeDiff = (int) (currentDateFormat.parse(day).getTime() - currentDateFormat.parse(formattedCurrentDate).getTime());
+                int daysDiff = (int) Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+                dto.setDday(daysDiff);
+			
+			
+		}
 		
 		
 		
