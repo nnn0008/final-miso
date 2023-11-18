@@ -18,5 +18,7 @@ public class MeetingDto {
 	private int meetingNumber;
 	private String meetingFix;
 	private int clubNo;
+	private String dateString;
+	private int dday;
 	
 }

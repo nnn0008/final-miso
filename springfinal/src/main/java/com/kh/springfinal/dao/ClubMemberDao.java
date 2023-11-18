@@ -23,5 +23,7 @@ public interface ClubMemberDao {
 	int memberCount(int clubNo);
 	
 	boolean editPossible(int clubNo,String clubMemberId);
+	
+	int findClubMemberNo(int clubNo,String memberId);
 
 }

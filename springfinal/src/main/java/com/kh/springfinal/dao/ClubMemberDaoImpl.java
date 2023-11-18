@@ -83,6 +83,17 @@ public class ClubMemberDaoImpl implements ClubMemberDao{
 		return editPossible;
 		
 	}
+
+	@Override
+	public int findClubMemberNo(int clubNo, String memberId) {
+		
+		Map<String,Object> params = new HashMap<>();
+		
+		params.put("clubNo", clubNo);
+		params.put("memberId", memberId);
+		
+		return sqlSession.selectOne("clubMember.findClubMemberNo",params);
+	}
 	
 	
 	
