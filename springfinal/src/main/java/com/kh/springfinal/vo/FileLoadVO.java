@@ -21,11 +21,13 @@ import com.kh.springfinal.dao.ClubBoardImage2Dao;
 import com.kh.springfinal.dao.ClubBoardImage3Dao;
 import com.kh.springfinal.dao.ClubBoardImageDao;
 import com.kh.springfinal.dao.MeetingImageDao;
+import com.kh.springfinal.dao.PhotoImageDao;
 import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.ClubBoardImage2Dto;
 import com.kh.springfinal.dto.ClubBoardImage3Dto;
 import com.kh.springfinal.dto.ClubBoardImageDto;
 import com.kh.springfinal.dto.MeetingImageDto;
+import com.kh.springfinal.dto.PhotoImageDto;
 
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
@@ -51,6 +53,9 @@ public class FileLoadVO {
 	
 	@Autowired
 	private MeetingImageDao meetingImageDao;
+	
+	@Autowired
+	private PhotoImageDao photoImageDao;
 	
 	@PostConstruct
 	public void init() {
@@ -163,12 +168,37 @@ public class FileLoadVO {
 		meetingImageDto.setAttachNo(attachNo);
 		meetingImageDto.setMeetingNo(meetingNo);
 		
-		log.debug("attachNo = {}", attachNo);
+		//log.debug("attachNo = {}", attachNo);
 		attachDao.insert(attachDto);
 		meetingImageDao.insert(meetingImageDto);
 		
 	}
 	
+	//////////////////////////////////////////////
+	//사진게시판 insert시
+	public void photoUpload(MultipartFile multipartFile, int photoNo) throws IllegalStateException, IOException {
+		AttachDto attachDto = new AttachDto();
+		int attachNo = attachDao.sequence();
+		
+		File target = new File(dir, String.valueOf(attachNo));
+		multipartFile.transferTo(target);
+		
+		attachDto.setAttachNo(attachNo);
+		attachDto.setAttachName(multipartFile.getOriginalFilename());
+		attachDto.setAttachSize(multipartFile.getSize());
+		attachDto.setAttachType(multipartFile.getContentType());
+		
+		PhotoImageDto photoImageDto = new PhotoImageDto();
+		
+		photoImageDto.setAttachNo(attachNo);
+		photoImageDto.setPhotoNo(photoNo);
+		//log.debug("attachNo={}", attachNo);
+		//log.debug("photoNo={}", photoNo);
+		attachDao.insert(attachDto);
+		photoImageDao.insert(photoImageDto);
+	}
+	
+	//사진 게시판 List
 	
 	
 	

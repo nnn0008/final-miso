@@ -61,7 +61,7 @@
 	</update>
 	
 	<select id="findClubMemberNo" resultType="clubMemberDto">
-		select club_member_no from club_member where club_no = #{clubNo} and club_member_id = #{clubMemberId}
+		select * from club_member where club_no = #{clubNo} and club_member_id = #{clubMemberId}
 	</select>
 	
 	<select id="selectListByPage" resultType="clubBoardAllDto">
