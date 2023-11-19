@@ -66,4 +66,9 @@ public class PaymentRegularDaoImpl implements PaymentRegularDao {
 	public List<PaymentRegularListVO> selectTotalListByMember(String paymentRegularMember) {
 		return sqlSession.selectList("paymentRegular.listAll",paymentRegularMember);
 	}
+
+	@Override
+	public void updatePaymentRegularTime() {
+		sqlSession.update("paymentRegular.scheduler");
+	}
 }

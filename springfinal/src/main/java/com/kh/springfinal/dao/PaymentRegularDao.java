@@ -24,4 +24,7 @@ public interface PaymentRegularDao {
 	void cancelDetailGroup(int regularDetailOrigin);
 	
 	
+	//5분마다 정기결제 테스트
+	void updatePaymentRegularTime();
+	
 }
