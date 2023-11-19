@@ -9,5 +9,5 @@ public interface PhotoDao {
 	void insert(PhotoDto photoDto);
 	boolean delete(int photoNo);
 	PhotoDto selectOne(int photoNo);
-	List<PhotoDto> selectList(int clubBoardNo);
+	List<PhotoDto> selectList(int clubNo);
 }
