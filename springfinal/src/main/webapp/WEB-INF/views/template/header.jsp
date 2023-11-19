@@ -207,8 +207,8 @@ function getNotifyList() {
     var notifyReceiver = "${sessionScope.name}";
 
     $.ajax({
-        url: window.contextPath + "/rest/notify/list",
-        method: "GET",
+        url: "/rest/notify/list",
+        type: "GET",
         dataType: "json",
         contentType: 'application/json',
         data: {
@@ -252,7 +252,7 @@ $(document).on('click', '.delete-button', function () {
 
     // 서버에 삭제 요청 보내기
     $.ajax({
-        type: 'GET',
+    	type: 'GET',
         url: '/rest/notify/delete',
         contentType: 'application/json',
         data: { notifyNo: notifyNo },
@@ -335,17 +335,15 @@ function deleteNotification(notifyNo) {
 
 
 function getChatRoomList() {
-    // 세션에서 로그인한 사용자의 아이디를 가져옴
     var memberId = "${sessionScope.name}";
 
     $.ajax({
-        url: window.contextPath + "/rest/notify/roomList",
-        method: "GET",
+        url: "/rest/notify/roomList",
+        type: "GET",
         data: {
             memberId: memberId
         },
-        dataType: 'json', // JSON 데이터 형식으로 처리
-        contentType: 'application/json',
+        dataType: 'json',
         success: function (data) {
             // 채팅 모달에 데이터 추가
             populateChatModal(data);
@@ -355,8 +353,8 @@ function getChatRoomList() {
             console.error('Failed to get chat room list:', error);
         }
     });
-
 }
+
 
 function populateChatModal(data) {
     var modalContent = $("#chatModal .notifyAlert .row");
@@ -434,7 +432,7 @@ if (Array.isArray(data.oneChatRoomList)) {
         modalContent.append(oneRoomListItem);
     });
 } else {
-    console.error("oneChatRoomList is not an array:", data.oneChatRoomList);
+//     console.error("oneChatRoomList is not an array:", data.oneChatRoomList);
 }
 
 }
@@ -451,7 +449,7 @@ if (Array.isArray(data.oneChatRoomList)) {
  <header>
             <div class="col mt-2">
 	
-		<a href="#" class="link"><img src="${pageContext.request.contextPath}/images/miso_logo.png" width="200px"></a>
+		<a href="#" class="link logo"><img src="${pageContext.request.contextPath}/images/miso_logo.png" width="200px"></a>
 
             </div>
             <div class="title">
@@ -480,7 +478,7 @@ if (Array.isArray(data.oneChatRoomList)) {
 
     </div>
 		    <div class="col-4 ms-2">
-		        <a href="${pageContext.request.contextPath}/member/login" class="link-body-emphasis link-underline link-underline-opacity-0 showNotifyButton">
+		        <a href="${pageContext.request.contextPath}/member/logout" class="link-body-emphasis link-underline link-underline-opacity-0 showNotifyButton">
 		            <i class="fa-solid fa-power-off fa-2xl"></i>
 		        </a>
 		    </div>

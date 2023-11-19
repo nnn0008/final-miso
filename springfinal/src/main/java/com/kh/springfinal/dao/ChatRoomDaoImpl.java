@@ -106,4 +106,9 @@ public class ChatRoomDaoImpl implements ChatRoomDao{
 	public List<ChatOneMemberListVO> chatOneMemberList(int chatRoomNo) {
 		return sqlSession.selectList("chatRoom.chatOneMemberListDetail", chatRoomNo);
 	}
+	
+	@Override
+	public List<ChatRoomDto> chatRoomAllList(String memberId) {
+		return sqlSession.selectList("chatRoom.chatRoomAllList", memberId);
+	}
 }

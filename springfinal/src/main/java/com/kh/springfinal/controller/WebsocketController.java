@@ -28,7 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequiredArgsConstructor
 @RequestMapping("/chat")
 public class WebsocketController {
 	
@@ -48,7 +47,7 @@ public class WebsocketController {
 	
 	@RequestMapping("/chat")
 	public String chat() {
-		return "chat/sockjs";
+		return "chat/sockjs2";
 	}
 	
 	//채팅방 리스트
@@ -98,7 +97,7 @@ public class WebsocketController {
 //	    List<ChatDto> chatHistory = chatDao.getChatHistory(chatRoomNo);
 //	    model.addAttribute("chatHistory", chatHistory);
 
-	    return "chat/sockjs";
+	    return "chat/sockjs2";
 	}
 	
 	

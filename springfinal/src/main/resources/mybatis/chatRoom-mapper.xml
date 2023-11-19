@@ -120,10 +120,21 @@ WHERE
     
     <!-- 채팅 이력 초기화를 위한 구문 -->
     <select id="chatReset" resultType="ChatDto">
-    SELECT * FROM chat 
-	WHERE chat_room_no = #{chatRoomNo} AND chat_sender = #{chatSender} AND chat_time > CURRENT_TIMESTAMP 
-	ORDER BY chat_time
+ 	SELECT * FROM chat 
+    WHERE chat_room_no = #{chatRoomNo} AND chat_time > sysdate
+    ORDER BY chat_time
     </select>
     
-    
+    <!-- 채팅방 조회 구문 -->
+    <select id="chatRoomAllList" resultType="ChatRoomDto">
+    SELECT cr.chat_room_no
+	FROM chat_room cr
+	INNER JOIN club c ON c.chat_room_no = cr.chat_room_no
+	INNER JOIN club_member cm ON c.club_no = cm.club_no
+	WHERE cm.club_member_id = #{memberId}
+	UNION
+	SELECT chat_room_no
+	FROM CHAT_ONE co 
+	WHERE chat_sender = #{memberId} OR chat_receiver = #{memberId}
+    </select>
 </mapper>

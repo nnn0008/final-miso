@@ -138,8 +138,13 @@ public class MemberController {
 			//	session.setAttribute("chatRoomNo", chatRoomDto.getChatRoomNo()); //채팅방 번호를 넣어라
 			//}		
 			
-			
-		
+  	@RequestMapping("/logout")
+	public String logout(HttpSession session){
+		session.removeAttribute("name");
+		session.removeAttribute("level");
+		session.removeAttribute("memberName");
+		return "redirect:./login";
+	}		
 	
 	//아이디 찾기
 	@GetMapping("/searchId")

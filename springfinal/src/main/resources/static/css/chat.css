@@ -68,17 +68,19 @@
     background-color:#FCFCFD;;
 }
 	.msg_nickname{
+		margin-top: auto;
+		margin-bottom: 0.3em;
 	margin-left: 1em;
 	font-size: 13px;
 	}
 	.time-right{
-	margin-top: 2.5em;
+	margin-top: auto;
 	margin-right: 0.5em;
 	font-size: 12px;
 	}
 	
 	.time-left{
-	margin-top: 2.3em;
+	margin-top: auto;
 	margin-left: 0.5em;
 	font-size: 12px;
 	}
@@ -109,4 +111,24 @@
 	.bg-null{
 		margin-left:1.1em;
 	}
+	.delete-left{
+		margin-left : 0.5em;
+		margin-top: 2.5em;
+	}
 	
+	.delete-right{
+		margin-left : 0.5em;
+		margin-top: 2.5em;
+	}
+	
+	 input[type="file"] {
+    display: none;
+  }
+
+  /* 스타일을 적용할 버튼 */
+  .custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+  }

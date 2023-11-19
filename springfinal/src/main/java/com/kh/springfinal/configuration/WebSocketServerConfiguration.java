@@ -12,7 +12,6 @@ import org.springframework.web.socket.server.support.HttpSessionHandshakeInterce
 import com.kh.springfinal.websocket.WebSocketNotifyServer;
 import com.kh.springfinal.websocket.WebSocketServer;
 
-
 @EnableWebSocket //중요(기본적으로 잠겨있음)
 @Configuration
 public class WebSocketServerConfiguration implements WebSocketConfigurer{
@@ -29,9 +28,9 @@ public class WebSocketServerConfiguration implements WebSocketConfigurer{
 		.addInterceptors(new HttpSessionHandshakeInterceptor())
 		.withSockJS(); //spring 표준
 		
-		registry.addHandler(webSocketNotifyServer, "/ws/notify")
-		.addInterceptors(new HttpSessionHandshakeInterceptor())
-		.withSockJS();
+//		registry.addHandler(webSocketNotifyServer, "/ws/notify")
+//		.addInterceptors(new HttpSessionHandshakeInterceptor())
+//		.withSockJS();
 	}
 	
 	//웹소켓 허용량을 늘리는 도구 추가
@@ -42,6 +41,5 @@ public class WebSocketServerConfiguration implements WebSocketConfigurer{
 //		bean.setMaxTextMessageBufferSize(8192);//자바 표준 사이즈
 		return bean;
 	}
-	
-	
+
 }
