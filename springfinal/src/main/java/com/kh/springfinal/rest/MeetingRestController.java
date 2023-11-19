@@ -96,12 +96,7 @@ public class MeetingRestController {
 		
 		meetingDao.insert(meetingDto);
 		
-		MeetingMemberDto meetingMemberDto = new MeetingMemberDto();
 		
-		meetingMemberDto.setClubMemberNo(clubMemberDto.getClubMemberNo());
-		meetingMemberDto.setMeetingNo(meetingNo);
-		
-		meetingMemberDao.insert(meetingMemberDto);
 		
 		if(!attach.isEmpty()) {
 			int attachNo = attachDao.sequence();
@@ -126,6 +121,11 @@ public class MeetingRestController {
 			meetingImageDao.insert(attachNo,meetingNo);
 			
 		}
+		MeetingMemberDto meetingMemberDto = new MeetingMemberDto();
+		
+		meetingMemberDto.setClubMemberNo(clubMemberDto.getClubMemberNo());
+		meetingMemberDto.setMeetingNo(meetingNo);
+		meetingMemberDao.insert(meetingMemberDto);
 		
 		
 		
