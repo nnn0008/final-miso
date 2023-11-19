@@ -1,5 +1,6 @@
 package com.kh.springfinal.websocket;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,6 +42,17 @@ public class WebSocketNotifyServer extends TextWebSocketHandler{
 //			 log.debug("사용자 접속! 현재 {}명", clientsMap);
 		}
 		
+		//접속 종료
+		@Override
+		public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+			ClientVO client = new ClientVO(session);
+			clients.remove(client);
+			
+			String memberId = client.getMemberId();
+			clientsMap.remove(memberId, session); //멤버 아이디랑 세션
+//			 log.debug("사용자 종료! 현재 {}명", clientsMap);
+		}
+
 		
 		@Override
 		protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
@@ -73,35 +85,30 @@ public class WebSocketNotifyServer extends TextWebSocketHandler{
 
             
          // 게시글 작성자 세션이 존재하면 메시지 발송
-            if("reply".equals(notifyType) && replyWriterMemberClient != null) {
-            	TextMessage tm = new TextMessage(replyWriterName + "님이 "
-            	        + "<a href='/clubBoard/detail?clubBoardNo=" + boardNo + "' class='link-body-emphasis link-underline link-underline-opacity-0' style='color: black'>"
-            	        + boardTitle + " 글에 댓글을 달았습니다!</a>");
-            	
-            	boardWriterMemberClient.sendMessage(tm); //게시글 작성자에게 발송
-            } 	
-            	//DB
-            	notifyDao.insert(NotifyDto.builder()
-            			.notifySender(replyWriterMember) //댓글 작성자(발신자)
-            			.notifyReceiver(boardWriterMember) //게시글 작성자(수신자)
-            			.notifyClubBoardNo(boardNo) //게시글 번호
-            			.notifyClubBoardTitle(boardTitle) //게시글 제목
-            			.notifyType(notifyType) //알림 종류(reply)
-            			.build());
+            if ("reply".equals(notifyType) && replyWriterMemberClient != null) {
+                TextMessage tm = new TextMessage(replyWriterName + "님이 "
+                        + "<a href='/clubBoard/detail?clubBoardNo=" + boardNo + "' class='link-body-emphasis link-underline link-underline-opacity-0' style='color: black'>"
+                        + boardTitle + " 글에 댓글을 달았습니다!</a>");
+
+                try {
+                    boardWriterMemberClient.sendMessage(tm); // 게시글 작성자에게 발송
+                } catch (IOException e) {
+                    log.error("Failed to send message to boardWriterMember", e);
+                }
+            }
+
+            // DB에 알림 저장
+            notifyDao.insert(NotifyDto.builder()
+                    .notifySender(replyWriterMember) // 댓글 작성자(발신자)
+                    .notifyReceiver(boardWriterMember) // 게시글 작성자(수신자)
+                    .notifyClubBoardNo(boardNo) // 게시글 번호
+                    .notifyClubBoardTitle(boardTitle) // 게시글 제목
+                    .notifyType(notifyType) // 알림 종류(reply)
+                    .build());
+
             }
 						
 		
-
-		//접속 종료
-		@Override
-		public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-			ClientVO client = new ClientVO(session);
-			clients.remove(client);
-			
-			String memberId = client.getMemberId();
-			clientsMap.remove(memberId, session); //멤버 아이디랑 세션
-//			 log.debug("사용자 종료! 현재 {}명", clientsMap);
-		}
 
 		
 }

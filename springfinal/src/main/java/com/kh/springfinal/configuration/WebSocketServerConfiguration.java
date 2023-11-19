@@ -1,8 +1,12 @@
 package com.kh.springfinal.configuration;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
@@ -11,7 +15,6 @@ import org.springframework.web.socket.server.support.HttpSessionHandshakeInterce
 
 import com.kh.springfinal.websocket.WebSocketNotifyServer;
 import com.kh.springfinal.websocket.WebSocketServer;
-
 
 @EnableWebSocket //중요(기본적으로 잠겨있음)
 @Configuration
@@ -42,6 +45,5 @@ public class WebSocketServerConfiguration implements WebSocketConfigurer{
 //		bean.setMaxTextMessageBufferSize(8192);//자바 표준 사이즈
 		return bean;
 	}
-	
-	
+
 }

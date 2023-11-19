@@ -1,5 +1,6 @@
 package com.kh.springfinal.dao;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,12 +51,28 @@ public class ChatDaoImpl implements ChatDao{
 	    return sqlSession.selectList("chat.getChatHistoryDetail", params);
 	}
 	
+	
 	@Override
-	public List<ChatDto> getChatHistoryAfterDate(int chatRoomNo, String chatSender) {
+	public List<ChatDto> getChatHistoryAfterDate(int chatRoomNo, String chatSender, LocalDateTime targetTime) {
 		 Map<String, Object> params = new HashMap<>();
 		params.put("chatSender", chatSender);
 		params.put("chatRoomNo", chatRoomNo);
-		return sqlSession.selectList("chatRoom.chatReset", params);
+		 params.put("targetTime", targetTime); 
+		return sqlSession.selectList("chat.getChatHistoryReset", params);
+	}
+
+	@Override
+	public boolean chatBlindUpdate(int chatNo) {
+		return sqlSession.update("chat.chatBlindUpdate", chatNo) > 0;
+	}
+	
+	public int sequence() {
+		return sqlSession.selectOne("chat.sequence");
+	}
+
+	@Override
+	public boolean chatBlindCheck(int chatNo) {
+		return sqlSession.selectOne("chat.chatBliindCheck", chatNo);
 	}
 
 }

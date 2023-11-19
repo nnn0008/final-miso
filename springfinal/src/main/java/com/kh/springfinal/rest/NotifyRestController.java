@@ -1,17 +1,15 @@
 package com.kh.springfinal.rest;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.springfinal.dao.ChatOneDao;
@@ -39,14 +37,6 @@ public class NotifyRestController {
 	@Autowired
 	private ChatOneDao chatOneDao;
 	
-//	@GetMapping("/list")
-//	public List<NotifyDto> notifyList(@RequestParam String notifyReceiver) {
-//
-//	    List<NotifyDto> list = notifyDao.list(notifyReceiver);
-//	    return list;
-//
-//	}
-//	
 
 	@GetMapping("/list")
 	public List<NotifyDto> notifyList(@RequestParam String notifyReceiver) {

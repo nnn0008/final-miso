@@ -20,12 +20,4 @@ public class ChatVO {
 	private String memberName;
 	
 	private LocalDateTime chatTime;
-	
-	 public LocalDateTime getChatTime() {
-	        return chatTime;
-	    }
-
-	    public void setChatTime(LocalDateTime chatTime) {
-	        this.chatTime = chatTime;
-	    }
 }

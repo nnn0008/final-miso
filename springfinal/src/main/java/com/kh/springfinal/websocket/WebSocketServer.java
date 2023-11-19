@@ -3,7 +3,6 @@ package com.kh.springfinal.websocket;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +25,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.springfinal.configuration.FileUploadProperties;
 import com.kh.springfinal.dao.AttachDao;
@@ -89,51 +89,65 @@ public class WebSocketServer extends TextWebSocketHandler{
 	
 	
 	// 접속 성공
+	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 	    ClientVO client = clientService.createClientVO(session);
 
 	    if (client.isMember()) {
-	        clients.add(client);
+	        // 클라이언트가 이미 리스트에 존재하는지 확인
+	        if (!clients.contains(client)) {
+	            clients.add(client);
 
-	        for (Integer chatRoomNo : client.getChatRoomNos()) {
-	            addRoomMember(client, chatRoomNo);
+	            // 클라이언트가 속한 모든 채팅방에 대해 처리
+	            for (Integer chatRoomNo : client.getChatRoomNos()) {
+	                addRoomMember(client, chatRoomNo);
+	            }
+	            log.debug("사용자 접속! 현재 {}명", clients.size());
+	        } else {
+	            log.debug("이미 존재하는 클라이언트: {}", client);
 	        }
 	    }
-//	    log.debug("사용자 접속! 현재 {}명", clients.size());
 	}
 
-		
-	// 접속 종료
+	//접속 종료	
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		  ClientVO client = clientService.createClientVO(session);
+	    ClientVO client = clientService.createClientVO(session);
 
-		    if (client.isMember()) {
-		        clients.remove(client);
+	    if (client.isMember()) {
+	        clients.remove(client);
 
-		        for (Integer chatRoomNo : client.getChatRoomNos()) {
-		        	removeRoomMember(client, chatRoomNo);
-		        }
-		    }
+	        for (Integer chatRoomNo : client.getChatRoomNos()) {
+	            removeRoomMember(client, chatRoomNo);
+	        }
+	    }
 
-//	    log.debug("사용자 종료! 현재 {}명", clients.size());
-	    // 다른 로직 추가
+	    log.debug("사용자 종료! 현재 {}명", clients.size());
 	}
+
 	
 	// 채팅방 멤버 추가
-	public void addRoomMember(ClientVO client, Integer chatRoomNo) {
-	    Set<ClientVO> roomMembers = roomMembersMap.computeIfAbsent(chatRoomNo, k -> new HashSet<>());
+	private void addRoomMember(ClientVO client, Integer chatRoomNo) {
+		 // 채팅방 번호를 키로 사용하여 해당 채팅방의 멤버 Set을 가져옴
+	    Set<ClientVO> roomMembers = roomMembersMap.computeIfAbsent(chatRoomNo, k -> new CopyOnWriteArraySet<>());
+
+	    // 채팅방 멤버에 사용자 추가
 	    roomMembers.add(client);
-//	    log.debug("채팅방 멤버 추가 - 채팅방 번호: {}, 멤버 수: {}", chatRoomNo, roomMembers.size());
+
+	    // 클라이언트의 채팅방 목록에 채팅방 번호 추가
+	    client.addChatRoomNo(chatRoomNo);
 	}
+
 
 	// 채팅방 멤버 제거
 	public void removeRoomMember(ClientVO client, Integer chatRoomNo) {
+		// 채팅방 번호를 키로 사용하여 해당 채팅방의 멤버 Set을 가져옴
 	    Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
-	    if (roomMembers != null) {
+
 	        roomMembers.remove(client);
-//	        log.debug("채팅방 멤버 제거 - 채팅방 번호: {}, 멤버 수: {}", chatRoomNo, roomMembers.size());
-	    }
+
+	    // 클라이언트의 채팅방 목록에서 채팅방 번호 제거
+	    client.removeChatRoomNo(chatRoomNo);
 	}
 
 	// 특정 채팅방 입장 시 이전 메시지 조회 및 전송
@@ -142,10 +156,15 @@ public class WebSocketServer extends TextWebSocketHandler{
 	    ClientVO client = clientService.createClientVO(session);
 	    String chatSender = client.getMemberId();
 	    log.debug("chatSender:{}", chatSender);
+	    
+	    LocalDateTime targetTime = LocalDateTime.now();
 
+	    
 	    log.debug("Before executing the query for chatRoomNo {} and chatSender {}", chatRoomNo, chatSender);
 	    List<ChatDto> chatHistory = chatDao.getChatHistoryDetail(chatRoomNo, chatSender); // 동호회 채팅 내역
 	    List<ChatDto> oneChatHistory = chatOneDao.getChatOnetHistory(chatRoomNo); // 개인 채팅 내역
+	    
+	    List<ChatDto> chatHistoryReset = chatDao.getChatHistoryAfterDate(chatRoomNo, chatSender, targetTime);
 
 	    for (ChatDto chatDto : chatHistory) {
 	        processChatDto(chatDto, chatRoomNo, session);
@@ -157,19 +176,6 @@ public class WebSocketServer extends TextWebSocketHandler{
 	}
 
 	private void processChatDto(ChatDto chatDto, Integer chatRoomNo, WebSocketSession session) throws IOException {
-		 MessageDto messageDto = new MessageDto();
-		MessageType messageType = messageDto.getMessageType();
-		
-		// 서버에서 'chatReset' 메시지 처리
-		if (MessageType.chatReset.equals(messageType)) {
-		    List<ChatDto> chatHistoryAfterReset = chatDao.getChatHistoryAfterDate(messageDto.getChatRoomNo(), messageDto.getChatSender());
-
-		    // 클라이언트에게 가져온 이력 전송
-		    for (ChatDto resetChatDto : chatHistoryAfterReset) {
-		        processChatDto(resetChatDto, chatRoomNo, session);
-		    }
-		    return;
-		}
 
 		LocalDateTime chatTime = chatDto.getChatTime();
 
@@ -177,13 +183,20 @@ public class WebSocketServer extends TextWebSocketHandler{
 	    map.put("memberId", chatDto.getChatSender());
 	    map.put("chatTime", chatTime.toString());
 	    map.put("chatRoomNo", chatRoomNo);
+	    map.put("chatNo", chatDto.getChatNo());
+	    map.put("chatBlind", chatDto.getChatBlind());
 
-	    if (chatDto.getAttachNo() != 0) {
-	        map.put("messageType", "file");
-	        map.put("content", "/download?attachNo=" + chatDto.getAttachNo());
+	    if ("Y".equals(chatDto.getChatBlind())) {
+	        map.put("content", "삭제된 메시지입니다");
 	    } else {
-	        map.put("content", chatDto.getChatContent());
+	        if (chatDto.getAttachNo() != 0) {
+	            map.put("messageType", "file");
+	            map.put("content", "/download?attachNo=" + chatDto.getAttachNo());
+	        } else {
+	            map.put("content", chatDto.getChatContent());
+	        }
 	    }
+
 
 	    // 기존 채팅방 멤버의 닉네임 가져오기
 	    List<ChatVO> roomMembers = chatRoomDao.chatRoomMemberName(chatRoomNo);
@@ -263,6 +276,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            data.put("chatSender", client.getMemberId());
 	            data.put("memberName", client.getMemberName());
 	            data.put("clubName", clubName);
+	            data.put("clubExplain", clubExplain);
 
 	            // roomMembers에 있는 각 ClientVO의 memberId와 memberName을 전송
 	            List<Map<String, Object>> membersList = new ArrayList<>();
@@ -278,14 +292,16 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            String joinMessageJson = mapper.writeValueAsString(data);
 	            TextMessage tm = new TextMessage(joinMessageJson);
 
+	            // 해당 룸의 멤버들에게만 입장 메시지를 전송
 	            client.send(tm);
+	            
 	        }
 	            else {
 
 	    	        // 여기에서 chatRoomNo를 활용하여 처리
 	                sendChatHistory(chatRoomNo, session);
 	            	
-	            	log.warn("chatList is empty for chatRoomNo {}", chatRoomNo);
+	            	log. debug("chatList is empty for chatRoomNo {}", chatRoomNo);
 	            	
 	            }
 	        } 
@@ -297,6 +313,10 @@ public class WebSocketServer extends TextWebSocketHandler{
 	        Integer chatRoomNo = messageDto.getChatRoomNo();
 	        String chatContent = messageDto.getChatContent();
 	        String chatSender = messageDto.getChatSender();
+	        
+	        //채팅 삭제 업데이트를 위한
+	        String chatBlind = "N";
+	        int chatNo = chatDao.sequence();
 	        
 	        Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
 	        log.debug("roomMembers for chatRoomNo {}: {}", chatRoomNo, roomMembers);
@@ -311,22 +331,26 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            data.put("chatRoomNo", chatRoomNo);
 	            data.put("memberLevel", client.getMemberLevel());
 	            data.put("memberName", client.getMemberName());
+	            data.put("chatBlind", chatBlind);
+	            data.put("chatNo", chatNo);
 	            
 	            String messageJson = mapper.writeValueAsString(data);
 	            TextMessage tm = new TextMessage(messageJson);
 
-	            for (ClientVO c : roomMembers) {
-	                c.send(tm);
+	            for (ClientVO roomMember : roomMembers) {
+	                roomMember.send(tm);
 	            }
+
 	           
 	            // DB
 	            chatDao.insert(ChatDto.builder()
+	            		.chatNo(chatNo)
 	                    .chatContent(chatContent)
 	                    .chatSender(chatSender)
 	                    .chatRoomNo(chatRoomNo)
 	                    .build());
 	        } else {
-	            log.warn("roomMembers is null for chatRoomNo {}", chatRoomNo);
+	            log.debug("roomMembers is null for chatRoomNo {}", chatRoomNo);
 	        }
 	    }
 	    
@@ -336,6 +360,10 @@ public class WebSocketServer extends TextWebSocketHandler{
 	        String chatSender = messageDto.getChatSender();
 	        String chatReceiver = messageDto.getChatReceiver();
 	        String chatContent = messageDto.getChatContent();
+	        
+	        //채팅 삭제 업데이트를 위한
+	        String chatBlind = "N";
+	        int chatNo = chatDao.sequence();
 	        
 	        // 1:1 채팅 룸이 이미 존재하는지 확인
 	        List<ChatOneDto> existingChatRooms1 = chatOneDao.getExistingChatRoom(chatSender, chatReceiver);
@@ -358,6 +386,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	        chatRoomDto.setChatRoomNo(chatRoomNo); // 생성된 룸 번호를 ChatRoomDto에 설정
 	        chatRoomDao.insert(chatRoomDto); // DB에 넣기
 	        
+	        
 	        //새로운 채팅방 번호를 참여한 사용자들에게 전송
 	        Set<ClientVO> roomMembers = roomMembersMap.computeIfAbsent(chatRoomNo, k -> new HashSet<>());
 	        roomMembers.add(client);
@@ -374,6 +403,8 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            data.put("chatTime", chatTime.toString());
 	            data.put("memberLevel", client.getMemberLevel());
 	            data.put("memberName", client.getMemberName());
+	            data.put("chatBlind", chatBlind);
+	            data.put("chatNo", chatNo);
 	            
 	            String messageJson = mapper.writeValueAsString(data);
 	            TextMessage tm = new TextMessage(messageJson);
@@ -391,6 +422,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            
 	            // DB
 	 	        chatDao.insert(ChatDto.builder()
+	 	        		.chatNo(chatNo)
 	 	        		.chatContent(chatContent)
 	 	        		.chatSender(chatSender)
 	 	        		.chatRoomNo(chatRoomNo)
@@ -412,6 +444,10 @@ public class WebSocketServer extends TextWebSocketHandler{
 	        String fileName = messageDto.getFileName();
 	        long fileSize = messageDto.getFileSize();
 	        String fileType = messageDto.getFileType(); 
+	        
+	        //채팅 삭제 업데이트를 위한
+	        String chatBlind = "N";
+	        int chatNo = chatDao.sequence();
 	        
 //	        log.debug("chatRoomNo: {}, chatContent: {}, chatSender: {}, fileName: {}, fileSize: {}, fileType: {}", 
 //	                chatRoomNo, chatContent, chatSender, fileName, fileSize, fileType);
@@ -442,12 +478,14 @@ public class WebSocketServer extends TextWebSocketHandler{
          // DB
             if (attachNo != 0) {
                 chatDao.insert(ChatDto.builder()
+                		.chatNo(chatNo)
                         .chatSender(chatSender)
                         .chatRoomNo(chatRoomNo)
                         .attachNo(attachNo)
                         .build());
             } else {
                 chatDao.insert(ChatDto.builder()
+                		.chatNo(chatNo)
                         .chatSender(chatSender)
                         .chatRoomNo(chatRoomNo)
                         .build());
@@ -465,6 +503,8 @@ public class WebSocketServer extends TextWebSocketHandler{
             FileChat.put("chatRoomNo", chatRoomNo);
             FileChat.put("memberLevel", client.getMemberLevel());
             FileChat.put("memberName", client.getMemberName());
+            FileChat.put("chatBlind", chatBlind);
+            FileChat.put("chatNo", chatNo);
                            
             String messageJson = mapper.writeValueAsString(FileChat);
             TextMessage tm = new TextMessage(messageJson);
@@ -475,6 +515,33 @@ public class WebSocketServer extends TextWebSocketHandler{
          }
             
 	    }	
+	    
+	    else if(MessageType.delete.equals(messageType)) {
+	    	
+	        String payload = (String) message.getPayload();
+	        ObjectMapper objectMapper = new ObjectMapper();
+	        Map<String, String> messageMap = objectMapper.readValue(payload, new TypeReference<Map<String, String>>() {});
+
+	        String chatNoString = messageMap.get("chatNo");
+	        int chatRoomNo = messageDto.getChatRoomNo();
+	        
+	        // chatNo를 int로 변환
+	        int  chatNo = Integer.parseInt(chatNoString);
+	        
+	        Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
+	        log.debug("roomMembers for chatRoomNo {}: {}", chatRoomNo, roomMembers);
+	        
+	        chatDao.chatBlindCheck(chatNo); //해당 메시지 블라인드 체크
+	        
+	        TextMessage tm = new TextMessage("메세지가 삭제되었습니다");
+	        session.sendMessage(tm);
+	        
+	        for (ClientVO c : roomMembers) {
+	            c.send(tm);
+	        }
+	        
+	    }
+
    }
 	
 

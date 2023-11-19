@@ -3,25 +3,12 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 <jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
 
-
-<!doctype html>
-<html lang="ko">
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bootstrap demo</title>
-
 <!-- 아이콘 사용을 위한 Font Awesome 6 CDN -->
 <link rel="stylesheet" type="text/css"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link
-	href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.2/zephyr/bootstrap.min.css"
-	rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.2/zephyr/bootstrap.min.css" rel="stylesheet">
 
 <link href="${pageContext.request.contextPath}/css/chat.css"
 	rel="stylesheet">
@@ -183,73 +170,44 @@
 	//연결 후 해야할 일들을 콜백함수로 지정(onopen, onclose, onerror, onmessage)
 	
 	// 클라이언트에서 SockJS로 서버에 접속하는 부분
+	window.socket = new SockJS("${pageContext.request.contextPath}/ws/chat");
 
 	var chatRoomNo = getRoomNoFromURL();  // 채팅방 번호를 얻어옴
-	
-	window.socket = new SockJS("${pageContext.request.contextPath}/ws/chat");
-	
 	var chatSender = "${sessionScope.name}"; //발신자
-	var memberName = null;
+	var memberName;
 	//console.log(memberName);
-	
-	var oneChatMemberName = null;
-	
-	var prevMessageDate = null;
+	var oneChatMemberName;
+	var prevMessageDate;
 	var clubName;
 
-	// 클릭 이벤트 처리
-	$(".chat-more").click(function() {
-	    // 모달 표시
-	    $("#chatMoreModal").modal("show");
-	});
+// 	// 클릭 이벤트 처리
+// 	$(".chat-more").click(function() {
+// 	    // 모달 표시
+// 	    $("#chatMoreModal").modal("show");
+// 	});
 
-	// 채팅방 지우기 버튼 클릭 이벤트
-	$("#deleteChatRoomBtn").click(function() {
-	    // 여기에 채팅방 지우기 로직 추가
-	    var resetMessage = {
-	        messageType: "chatReset",
-	        chatRoomNo: chatRoomNo,
-	        chatSender: chatSender
-	    };
+// 	// 채팅방 지우기 버튼 클릭 이벤트
+// 	$("#deleteChatRoomBtn").click(function() {
+// 	    // 여기에 채팅방 지우기 로직 추가
+// 	    var resetMessage = {
+// 	        messageType: "chatReset",
+// 	        chatRoomNo: chatRoomNo,
+// 	        chatSender: chatSender
+// 	    };
 
-	    window.socket.send(JSON.stringify(resetMessage));
+// 	    window.socket.send(JSON.stringify(resetMessage));
 	  
-	    // 모달 닫기
-	    $("#chatMoreModal").modal("hide");
-	});
+// 	    // 모달 닫기
+// 	    $("#chatMoreModal").modal("hide");
+// 	});
 
-	// 채팅방 나가기 버튼 클릭 이벤트
-	$("#leaveChatRoomBtn").click(function() {
-	    // 여기에 채팅방 나가기 로직 추가
-	    // 모달 닫기
-	    $("#chatMoreModal").modal("hide");
-	});
+// 	// 채팅방 나가기 버튼 클릭 이벤트
+// 	$("#leaveChatRoomBtn").click(function() {
+// 	    // 여기에 채팅방 나가기 로직 추가
+// 	    // 모달 닫기
+// 	    $("#chatMoreModal").modal("hide");
+// 	});
 
-	
-	window.socket.onopen = function (e) {
-	     console.log('Info: connection opened.');
-	    
-// 	    console.log("chatRoomNo:", chatRoomNo); // 디버그용 로그 추가
-// 	    console.log("chatSender:", chatSender); // 디버그용 로그 추가
-	    	   
-	    // 서버에 join 메시지 전송
-	    var joinMessage = {
-	        messageType: "join",
-	        chatRoomNo: chatRoomNo,
-	        chatSender: chatSender,
-	        memberName: memberName
-	    };
-
-	    window.socket.send(JSON.stringify(joinMessage));
-	  
-	};
-
-	  document.getElementById('fileInput').addEventListener('change', function() {
-	      // 파일을 선택한 경우, 파일을 자동으로 메시지 전송
-	      document.querySelector('.send-file-btn').click();
-	    });
-	 
-	  
 	// 방 이동 시
 	function moveToRoom(selectedRoomNo) {
 	    window.location.href = "/chat/enterRoom/" + selectedRoomNo;
@@ -262,6 +220,27 @@
 	    return match ? parseInt(match[1]) : null;
 	}	
 	
+	window.socket.onopen = function (e) {
+// 	     console.log('Info: connection opened.');
+
+	    // 서버에 join 메시지 전송
+	    var joinMessage = {
+	        messageType: "join",
+	        chatRoomNo: chatRoomNo,
+	        chatSender: chatSender,
+	        memberName: memberName
+	    };
+
+	    window.socket.send(JSON.stringify(joinMessage));
+	  
+	};
+
+	//파일
+	  document.getElementById('fileInput').addEventListener('change', function() {
+	      // 파일을 선택한 경우, 파일을 자동으로 메시지 전송
+	      document.querySelector('.send-file-btn').click();
+	    });
+ 
 	//파일크기 경고
 	$("[name=attach]").change(function(e){
 		const files = this.files;
@@ -471,7 +450,7 @@
 	
 		
 		var data = JSON.parse(e.data);
-		console.log(data);
+// 		console.log(data);
 		clubName = data.clubName;
 		//console.log(data.clubName);
 		
@@ -548,7 +527,7 @@
 		    
 		    var memberName = data.memberName;
 		    var oneChatMemberName = data.oneChatMemberName;
-			console.log("oneChatMemberName",oneChatMemberName);
+// 			console.log("oneChatMemberName",oneChatMemberName);
 		   
 		   // console.log(memberName);
 		    
@@ -593,7 +572,7 @@
 
 		        // 파일인 경우 이미지 태그를 추가
 		        if (data.messageType === "file") {
-		            console.log("file data: ", data);
+// 		            console.log("file data: ", data);
 		            var img = $("<img>")
 		                .attr("src", "${pageContext.request.contextPath}" + data.content) // 이미지 소스 설정
 		                .css("width", "300px"); // 이미지 크기 조절
@@ -676,6 +655,9 @@
 		        messageDiv.append(timeSpan).append(contentDiv).append(imageContainer);
 
 		        $(".message-list").append(messageDiv);
+		        
+		        // 새로운 메시지가 추가된 후에 isBlind 값을 확인하여 UI 업데이트
+// 		        updateMessageVisibility(data);
 		    }  else {
 		    	
 		    	// 상대방 메시지 (왼쪽에 표시)
@@ -689,8 +671,6 @@
 		    	    $.ajax({
 		    	        url: window.contextPath +'/getProfile',
 		    	        type: 'GET',
-		    	        contentType: 'application/json',
-		    	        dataType: 'json',
 		    	        success: function(data) {
 		    	            // 성공적으로 데이터를 받아왔을 때 처리
 		    	            console.log(data); // 여기서 data는 List<MemberDto> 형태
@@ -722,8 +702,8 @@
 		    	    });
 		    	});
 		    	
-				   console.log(data.memberId); 
-				   console.log(data.memberName);
+// 				   console.log(data.memberId); 
+// 				   console.log(data.memberName);
 				
 				   var contentDiv = $("<div>").addClass("d-flex flex-column");
 
@@ -734,7 +714,7 @@
 
 				   // 파일인 경우 이미지 태그를 추가
 				   if (data.messageType === "file") {
-				       console.log("file data: ", data);
+// 				       console.log("file data: ", data);
 				       var img = $("<img>")
 				           .attr("src", "${pageContext.request.contextPath}" + data.content) // 이미지 소스 설정
 				           .css("width", "300px");// 이미지 크기 조절
@@ -812,13 +792,24 @@
 
 				   $(".message-list").append(messageDiv);
 
-
+				   // 새로운 메시지가 추가된 후에 isBlind 값을 확인하여 UI 업데이트
+// 				    updateMessageVisibility(data);
 		}
 		// 스크롤바 이동
 		$(".message-list").scrollTop($(".message-list")[0].scrollHeight);		
 		    }
 	}
 
+// 		// 메시지의 가시성을 업데이트하는 함수
+// 		function updateMessageVisibility(data) {
+// 		    // isBlind 값이 'true'인 경우 해당 메시지를 숨김
+// 		    console.log(data.isBlind);
+// 		    if (data.isBlind === true) {
+// 		        var lastMessage =  messageContent.html("삭제된 메시지입니다");
+// 		        lastMessage.hide();
+// 		    }
+// 		}
+		
 		//메세지를 전송하는 코드
 		//-메세지가 @로 시작하면 DM으로 처리(아이디 유무 검사정도 하면 좋음)
 		//- @아이디 메세지		

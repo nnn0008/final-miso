@@ -32,4 +32,5 @@ public interface ChatRoomDao {
 	
 	List<ChatMemberListVO> chatMemberList(int chatRoomNo);
 	List<ChatOneMemberListVO> chatOneMemberList(int chatRoomNo);
+	List<ChatRoomDto> chatRoomAllList(String memberId);
 }

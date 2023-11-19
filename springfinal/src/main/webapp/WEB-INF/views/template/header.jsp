@@ -335,7 +335,6 @@ function deleteNotification(notifyNo) {
 
 
 function getChatRoomList() {
-    // 세션에서 로그인한 사용자의 아이디를 가져옴
     var memberId = "${sessionScope.name}";
 
     $.ajax({
@@ -344,8 +343,7 @@ function getChatRoomList() {
         data: {
             memberId: memberId
         },
-        dataType: 'json', // JSON 데이터 형식으로 처리
-        contentType: 'application/json',
+        dataType: 'json',
         success: function (data) {
             // 채팅 모달에 데이터 추가
             populateChatModal(data);
@@ -355,8 +353,8 @@ function getChatRoomList() {
             console.error('Failed to get chat room list:', error);
         }
     });
-
 }
+
 
 function populateChatModal(data) {
     var modalContent = $("#chatModal .notifyAlert .row");
@@ -480,7 +478,7 @@ if (Array.isArray(data.oneChatRoomList)) {
 
     </div>
 		    <div class="col-4 ms-2">
-		        <a href="${pageContext.request.contextPath}/member/login" class="link-body-emphasis link-underline link-underline-opacity-0 showNotifyButton">
+		        <a href="${pageContext.request.contextPath}/member/logout" class="link-body-emphasis link-underline link-underline-opacity-0 showNotifyButton">
 		            <i class="fa-solid fa-power-off fa-2xl"></i>
 		        </a>
 		    </div>
