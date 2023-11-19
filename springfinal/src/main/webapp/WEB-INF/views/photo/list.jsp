@@ -81,9 +81,10 @@ $(function(){
    					.attr("src", window.contextPath + "/rest/photo/download/" + response[i].photoNo));
    					
    					//detail 모달을 열고
-   					$(document).on("click", ".img-thumbnail", function(e){
+   					$(".img-thumbnail").on("click", function(e){
    						$("#exampleModal2").modal("show");
    						var photoNo = $(this).data("photo-no");
+   						//console.log(photoNo);
    						//Modal안에 정보가 들어있어야 한다
    						$.ajax({
    							url: window.contextPath + "/rest/photo/detail",
@@ -92,9 +93,30 @@ $(function(){
    								photoNo: photoNo,
    							},
    							success: function(response){
-   								
+   								console.log(response);
+   								//또 마지막 사진 하나가 작동을 안한다..
+   								$(".detail-image").attr("src", window.contextPath + "/rest/photo/download/" + photoNo);
+   							},
+   							error: function(error){
+   								console.error("에러");
+   								console.error(error);
    							}
    						});
+   						
+   						//삭제 버튼을 눌렀다면
+   						$(".btn-image-delete").click(function(){
+   							$.ajax({
+   								url: window.contextPath + "/rest/photo/delete",
+   								method: "post",
+   								data:{
+   									photoNo: photoNo,
+   								},
+   								success: function(response){
+   									loadList(); //삭제 성공 후 목록 정렬
+   								},
+   							});
+   						});
+   						
    						
    					});
    					
@@ -208,21 +230,29 @@ $(function(){
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel">여기에 프로필사진과 이름</h1>
+        <button type="button" class="btn btn-danger btn-image-delete" data-bs-dismiss="modal">사진 삭제</button>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
       
-      사진 크게..
+      <div class="container-fluid">
+      	
+      	<div class="row">
+      		<div class="col">
+      			<img class="detail-image" src="">
+      		</div>
+      	</div>
       
-      	<i class="fa-solid fa-heart" style="color: red"></i>누른 좋아요 -> 이거 누르면 빈 하트로 바뀌고 카운트 -1
-      	<i class="fa-regular fa-heart" style="color: red"></i> 좋아요 -> 이거 누르면 찬 하트로 바뀌고 카운트 +1
+      	<i class="fa-solid fa-heart photo-dislike" style="color: red"></i>누른 좋아요 -> 이거 누르면 빈 하트로 바뀌고 카운트 -1
+      	<i class="fa-regular fa-heart photo-like" style="color: red"></i> 좋아요 -> 이거 누르면 찬 하트로 바뀌고 카운트 +1
       
-      댓글 창
+      	댓글 창
       
+      </div>
       
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
         <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
