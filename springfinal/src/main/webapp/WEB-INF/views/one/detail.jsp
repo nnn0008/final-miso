@@ -13,55 +13,57 @@
 
 	<div class="container">
 		<div class="row mt-4">
-			<div class="col">
+		  <div class="col text-start d-flex align-items-center ms-3 mt-3">
+                                <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+                                <strong class="ms-2">1대 1 문의</strong>
+                            </div>
+                            
+                      </div>
+			<div class="col mt-4">
 				<table class="table table-rounded">
-					<tr>
-						<th>제목</th>
-						<td>${OneDto.oneTitle}</td>
+						<tr>
+						<td><i class="fa-solid fa-pen"></i> ${OneDto.oneTitle}</td>
 						</tr>
 						<tr>
-						<th>내용</th>
-						<td>${OneDto.oneContent}</td>
+						<td><i class="fa-solid fa-user"></i> ${OneDto.oneMember}</td>
 						</tr>
 						<tr>
-						<th>작성자</th>
-						<td>${OneDto.oneMember}</td>
+						<td><i class="fa-regular fa-calendar"></i> ${OneDto.oneDate}</td>
 						</tr>
-						<tr>
-						<th>작성일</th>
-						<td>${OneDto.oneDate}</td>
-						</tr>
+					<td height="350px" style="background-color:#ACCEFF;">${OneDto.oneContent}</td>
+					
 				</table>
+				
 			</div>
 		</div>
 		<%-- 각종 버튼이 위치하는 곳 --%>
 	<div class="row mt-4">
-	<div class="col">
+	<div class="col text-end">
 		<%-- 회원일 때만 글쓰기,수정,삭제가 나와야 한다 --%>
 		<c:if test="${sessionScope.name != null}">
-		<a class="btn btn-positive" href="insert">
+		<a class="btn btn-outline-success" href="insert">
 			<i class="fa-solid fa-pen"></i>
 			새글
 		</a>
-		<a class="btn btn-positive" href="insert?oneParent=${OneDto.oneNo}">
-			<i class="fa-solid fa-pen"></i>
+		<a class="btn btn-outline-info" href="insert?oneParent=${OneDto.oneNo}">
+			<i class="fa-solid fa-reply"></i>
 			답글
 		</a>
 		
 		<%-- 수정/삭제는 소유자일 경우만 나와야 한다 --%>
 		<c:if test="${sessionScope.name == OneDto.oneMember}">
-		<a class="btn btn-negative" href="edit?oneNo=${OneDto.oneNo}">
-		<i class="fa-solid fa-pen"></i>
+		<a class="btn btn-outline-warning" href="edit?oneNo=${OneDto.oneNo}">
+		<i class="fa-solid fa-eraser"></i>
 			수정
 		</a>
-		<a class="btn btn-negative" href="delete?oneNo=${OneDto.oneNo}">
-		<i class="fa-solid fa-pen"></i>
+		<a class="btn btn-outline-danger" href="delete?oneNo=${OneDto.oneNo}">
+		<i class="fa-solid fa-trash-can"></i>
 			삭제
 		</a>
 		</c:if>
 		</c:if>
-		<a class="btn" href="list">
-		<i class="fa-solid fa-pen"></i>
+		<a class="btn btn-outline-light" href="list">
+		<i class="fa-solid fa-bars"></i>
 			목록
 		</a>
 	</div>

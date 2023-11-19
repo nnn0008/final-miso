@@ -15,16 +15,22 @@
 			<div class="col">
 				<c:choose>
 	            <c:when test="${isReply}">
-					<h1>답글 작성</h1>
+					<div class="col text-start d-flex align-items-center ms-3 mt-3">
+                                <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+                                <strong class="ms-2">답글 작성</strong>
+                        </div>
 				</c:when>
 				<c:otherwise>
-					<h1>게시글 작성</h1>
+                            <div class="col text-start d-flex align-items-center ms-3 mt-3">
+                                <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+                                <strong class="ms-2">게시글 작성</strong>
+                        </div>
 				</c:otherwise>
             </c:choose>
 			</div>
 		</div>
 		
-		<div class="row mt-4">
+		<div class="row mt-3">
 			<div class="col">
 				<select name="oneCategory" required class="form-select">
 					<option  disabled selected hidden>종류를 선택해주세요.</option>
@@ -38,7 +44,7 @@
 			</div>
 		</div>
 		
-		<div class="row mt-4">
+		<div class="row mt-3">
 			<div class="col">
 			<c:choose>
 				<c:when test="${isReply}">
@@ -51,19 +57,19 @@
 			</div>
 		</div>
 		
-		<div class="row mt-4">
+		<div class="row mt-3">
 			<div class="col">
 				<textarea name="oneContent" class="form-control" placeholder="내용" rows="10" cols="80"></textarea>
 			</div>
 		</div>
 		
-		<div class="row mt-4">
+		<div class="row mt-3">
 			<div class="col">
 				<input type="file">
 			</div>
 		</div>
 		
-		<div class="row mt-4">
+		<div class="row mt-3">
 			<div class="col">
 				<label>
 					<input type="file" class="profile-chooser" accept="image/*" style="display:none;">
@@ -74,9 +80,9 @@
 			</div>
 		</div>
 		
-		<div class="row mt-4">
+		<div class="row mt-3">
 			<div class="col">
-				<button type="submit" class="btn  btn-info w-100 mt-3">
+				<button type="submit" class="btn  bg-miso w-100 mt-3">
 				<i class= "fa-solid fa-pen"></i>
 				등록
 				</button>
