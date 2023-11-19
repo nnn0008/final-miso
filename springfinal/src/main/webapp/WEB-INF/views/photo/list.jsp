@@ -10,7 +10,10 @@
 </style>
 <script>
 $(function(){
-	
+	//현재 이 화면에서 남은 작업
+	//- 디자인
+	//- 웹소켓을 이용하여 댓글, 좋아요 알림
+	//- 프로필 사진 끌어오기
 	loadList();
 	
 	//Modal에서 사진 미리보기
@@ -96,10 +99,12 @@ $(function(){
    								console.log(response);
    								//또 마지막 사진 하나가 작동을 안한다..
    								$(".detail-image").attr("src", window.contextPath + "/rest/photo/download/" + photoNo);
+   								$(".photo-like-count").append(response.photoDto.photoLikecount);
+   								$("#exampleModalLabel2").append(response.memberDto.memberName);
    							},
    							error: function(error){
-   								console.error("에러");
-   								console.error(error);
+   								//console.error("에러");
+   								//console.error(error);
    							}
    						});
    						
@@ -117,6 +122,55 @@ $(function(){
    							});
    						});
    						
+   						//좋아요와 관련된 처리
+   						var memberId = "${sessionScope.name}"; //로그인한 아이디
+   				   		
+   						//좋아요 여부를 체크
+   				   		$.ajax({
+   				   			url: window.contextPath + "/rest/photo/check",
+   				   			method: "post",
+   				   			data: {
+   				   				clubNo: clubNo,
+   				   				photoNo, photoNo
+   				   			},
+   				   			success: function(response){
+   				   				//console.log(response)
+   				   				if(response.check){
+   				   					$(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-solid");
+   				   				}
+   				   				else{
+   				   					$(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-regular");
+   				   				}	
+   				   			},
+   				   		});
+   						
+   						//하트 버튼을 클릭했을 때
+   						$(".fa-heart").click(function(){
+   							$.ajax({
+   								url: window.contextPath + "/rest/photo/action",
+   								method:"post",
+   								data: {
+   									photoNo: photoNo,
+   									clubNo : clubNo,
+   								},
+   								success: function(response){
+   									//console.log(response);
+   									if(response.check){ //좋아요 상태라면
+   										$(".fa-heart").removeClass("fa-solid fa-regular")
+										.addClass("fa-solid");
+   										$(".photo-like-count").empty();
+   										$(".photo-like-count").append(response.count);
+   									}
+   									else{
+   										$(".fa-heart").removeClass("fa-solid fa-regular")
+										.addClass("fa-regular");
+   										$(".photo-like-count").empty();
+   										$(".photo-like-count").append(response.count);
+   									}
+   								}
+   							});
+   						});
+   						
    						
    					});
    					
@@ -127,7 +181,9 @@ $(function(){
    			},
    		});
    		
-   		
+		$("#exampleModal2").on("hidden.bs.modal", function(){
+			$(".photo-like-count").empty(); //좋아요 수 초기화
+		});
    		
 	}
 	
@@ -163,28 +219,6 @@ $(function(){
         <div class="row image-attach">
 
 			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail attached-image"></div>
-			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail"></div>
-			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail"></div>
-			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail"></div>
-			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail"></div>
-			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail"></div>
-			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail"></div>
-			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail"></div>
-			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail"></div>
-			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail"></div>
-			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail"></div>
-			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail"></div>
-			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail"></div>
-			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail"></div>
-			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail"></div>
-			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail"></div>
-			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail"></div>
-			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail"></div>
-			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail"></div>
-			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail"></div>
-			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail"></div>
-			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail"></div>
-			<div class="col-sm-6 col-md-4 col-lg-3 p-3"><img src="https://dummyimage.com/200x200/000/fff" class="w-100 img-thumbnail"></div>
           
         </div>
         </div>
@@ -229,7 +263,7 @@ $(function(){
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">여기에 프로필사진과 이름</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel2"></h1>
         <button type="button" class="btn btn-danger btn-image-delete" data-bs-dismiss="modal">사진 삭제</button>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -242,9 +276,12 @@ $(function(){
       			<img class="detail-image" src="">
       		</div>
       	</div>
-      
-      	<i class="fa-solid fa-heart photo-dislike" style="color: red"></i>누른 좋아요 -> 이거 누르면 빈 하트로 바뀌고 카운트 -1
-      	<i class="fa-regular fa-heart photo-like" style="color: red"></i> 좋아요 -> 이거 누르면 찬 하트로 바뀌고 카운트 +1
+		
+		<div class="row">
+			<div class="col">
+				<i class="fa-regular fa-heart photo-like" style="color: red"></i><p class="photo-like-count"></p> 
+			</div>
+		</div>      
       
       	댓글 창
       

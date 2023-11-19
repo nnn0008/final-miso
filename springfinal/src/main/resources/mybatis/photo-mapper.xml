@@ -31,4 +31,21 @@
 		select * from photo where club_no = #{clubNo} order by photo_no desc
 	</select>
 	
+	<!-- 좋아요 수를 업데이트 하는 구문 -->
+	<update id="updateLikeCount">
+		update photo set photo_likecount = (select count(*) from photo_like where photo_no = #{photoNo)
+		where photo_no = #{photoNo}
+	</update>
+	
+	<!-- 좋아요 수를 한 개 증가시키는 구문 -->
+	<update id="updatePlusLikeCount">
+		update photo set photo_likecount = photo_likecount + 1 where photo_no = #{photoNo}
+	</update>
+	
+	<!-- 좋아요 수를 한 개 감소시키는 구문 -->
+	<update id="updateMinusLikeCount">
+		update photo set photo_likecount = photo_likecount - 1 where photo_no = #{photoNo}
+	</update>
+	
+	
 </mapper>

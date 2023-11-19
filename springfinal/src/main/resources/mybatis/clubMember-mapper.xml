@@ -33,7 +33,7 @@
 
     	</insert>
     	
-    	<select id="detail" >
+    	<select id="detail" resultType="clubMemberDto">
     		
     		select * from club_member where club_member_no=#{clubMemberNo}
     		
