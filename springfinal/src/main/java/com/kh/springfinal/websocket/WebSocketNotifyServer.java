@@ -84,18 +84,18 @@ public class WebSocketNotifyServer extends TextWebSocketHandler{
             log.debug("boardWriterMemberClient={}",boardWriterMemberClient);
 
             
-         // 게시글 작성자 세션이 존재하면 메시지 발송
-            if ("reply".equals(notifyType) && replyWriterMemberClient != null) {
-                TextMessage tm = new TextMessage(replyWriterName + "님이 "
-                        + "<a href='/clubBoard/detail?clubBoardNo=" + boardNo + "' class='link-body-emphasis link-underline link-underline-opacity-0' style='color: black'>"
-                        + boardTitle + " 글에 댓글을 달았습니다!</a>");
-
-                try {
-                    boardWriterMemberClient.sendMessage(tm); // 게시글 작성자에게 발송
-                } catch (IOException e) {
-                    log.error("Failed to send message to boardWriterMember", e);
-                }
-            }
+//         // 게시글 작성자 세션이 존재하면 메시지 발송
+//            if ("reply".equals(notifyType) && replyWriterMemberClient != null) {
+//                TextMessage tm = new TextMessage(replyWriterName + "님이 "
+//                        + "<a href='/clubBoard/detail?clubBoardNo=" + boardNo + "' class='link-body-emphasis link-underline link-underline-opacity-0' style='color: black'>"
+//                        + boardTitle + " 글에 댓글을 달았습니다!</a>");
+//
+//                try {
+//                    boardWriterMemberClient.sendMessage(tm); // 게시글 작성자에게 발송
+//                } catch (IOException e) {
+//                    log.error("Failed to send message to boardWriterMember", e);
+//                }
+//            }
 
             // DB에 알림 저장
             notifyDao.insert(NotifyDto.builder()
@@ -107,8 +107,6 @@ public class WebSocketNotifyServer extends TextWebSocketHandler{
                     .build());
 
             }
-						
-		
 
 		
 }

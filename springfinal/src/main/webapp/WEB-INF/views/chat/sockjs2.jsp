@@ -168,9 +168,10 @@
 	<script>
 	//연결 생성
 	//연결 후 해야할 일들을 콜백함수로 지정(onopen, onclose, onerror, onmessage)
-	
+
+	function connect() {
 	// 클라이언트에서 SockJS로 서버에 접속하는 부분
-	window.socket = new SockJS("${pageContext.request.contextPath}/ws/chat");
+	window.socket = new SockJS("http://localhost:8080/ws/chat");
 
 	var chatRoomNo = getRoomNoFromURL();  // 채팅방 번호를 얻어옴
 	var chatSender = "${sessionScope.name}"; //발신자
@@ -415,7 +416,7 @@
 	    // getMemberList 호출
 	    $.ajax({
 	        url: window.contextPath +"/getMemberList",
-	        method: "GET",
+	        type: "GET",
 	        data: { chatRoomNo: chatRoomNo },
 	        success: function(data) {
 	            console.log("Member List:", data);
@@ -430,7 +431,7 @@
 	    // getChatOneMemberList 호출
 	    $.ajax({
 	        url: window.contextPath +"/getChatOneMemberList",
-	        method: "GET",
+	        type: "GET",
 	        data: { chatRoomNo: chatRoomNo },
 	        success: function(data) {
 	            console.log("Chat One Member List:", data);
@@ -925,6 +926,15 @@
 			$(".client-list").toggleClass("active");
 		});
 		
+		window.socket.onclose = function(e) {
+			 setTimeout(function() {
+			      connect();
+			    }, 1000); // 웹소켓을 재연결하는 코드 삽입
+		};
+		
+	}
+
+	connect();
 
 	</script>
 </body>

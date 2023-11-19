@@ -51,7 +51,7 @@ public class NotifyRestController {
 
 	    // 해당 사용자가 가지고 있는 1:1룸 목록 조회
 	    List<ChatOneDto> oneChatRoomList = chatOneDao.oneChatRoomList(memberId, memberId);
-	    log.debug("oneChatRoomList={}", oneChatRoomList);
+//	    log.debug("oneChatRoomList={}", oneChatRoomList);
 
 	    // 해당 동호회의 번호, 이름, 내용 조회
 	    List<ChatListVO> roomList = new ArrayList<>();

@@ -207,8 +207,8 @@ function getNotifyList() {
     var notifyReceiver = "${sessionScope.name}";
 
     $.ajax({
-        url: window.contextPath + "/rest/notify/list",
-        method: "GET",
+        url: "/rest/notify/list",
+        type: "GET",
         dataType: "json",
         contentType: 'application/json',
         data: {
@@ -252,7 +252,7 @@ $(document).on('click', '.delete-button', function () {
 
     // 서버에 삭제 요청 보내기
     $.ajax({
-        type: 'GET',
+    	type: 'GET',
         url: '/rest/notify/delete',
         contentType: 'application/json',
         data: { notifyNo: notifyNo },
@@ -338,8 +338,8 @@ function getChatRoomList() {
     var memberId = "${sessionScope.name}";
 
     $.ajax({
-        url: window.contextPath + "/rest/notify/roomList",
-        method: "GET",
+        url: "/rest/notify/roomList",
+        type: "GET",
         data: {
             memberId: memberId
         },
@@ -432,7 +432,7 @@ if (Array.isArray(data.oneChatRoomList)) {
         modalContent.append(oneRoomListItem);
     });
 } else {
-    console.error("oneChatRoomList is not an array:", data.oneChatRoomList);
+//     console.error("oneChatRoomList is not an array:", data.oneChatRoomList);
 }
 
 }
@@ -449,7 +449,7 @@ if (Array.isArray(data.oneChatRoomList)) {
  <header>
             <div class="col mt-2">
 	
-		<a href="#" class="link"><img src="${pageContext.request.contextPath}/images/miso_logo.png" width="200px"></a>
+		<a href="#" class="link logo"><img src="${pageContext.request.contextPath}/images/miso_logo.png" width="200px"></a>
 
             </div>
             <div class="title">

@@ -13,6 +13,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -25,7 +26,6 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.springfinal.configuration.FileUploadProperties;
 import com.kh.springfinal.dao.AttachDao;
@@ -86,69 +86,48 @@ public class WebSocketServer extends TextWebSocketHandler{
 	//저장소
 	private Set<ClientVO> clients = new CopyOnWriteArraySet<>(); //전체 회원(로그인)
 	private Map<Integer, Set<ClientVO>> roomMembersMap = new ConcurrentHashMap<>(); // 채팅방 멤버, 채팅방 번호를 키로 사용
-	
+	 private List<Map<String, Object>> sessionList = new ArrayList<Map<String, Object>>();
 	
 	// 접속 성공
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-	    ClientVO client = clientService.createClientVO(session);
-
-	    if (client.isMember()) {
-	        // 클라이언트가 이미 리스트에 존재하는지 확인
-	        if (!clients.contains(client)) {
-	            clients.add(client);
-
-	            // 클라이언트가 속한 모든 채팅방에 대해 처리
-	            for (Integer chatRoomNo : client.getChatRoomNos()) {
-	                addRoomMember(client, chatRoomNo);
-	            }
-	            log.debug("사용자 접속! 현재 {}명", clients.size());
-	        } else {
-	            log.debug("이미 존재하는 클라이언트: {}", client);
-	        }
-	    }
+		 ClientVO client = new ClientVO(session);
+		clients.add(client);
 	}
 
 	//접속 종료	
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-	    ClientVO client = clientService.createClientVO(session);
-
-	    if (client.isMember()) {
-	        clients.remove(client);
-
-	        for (Integer chatRoomNo : client.getChatRoomNos()) {
-	            removeRoomMember(client, chatRoomNo);
-	        }
-	    }
-
+		 ClientVO client = new ClientVO(session);
+		clients.remove(client);
 	    log.debug("사용자 종료! 현재 {}명", clients.size());
 	}
 
 	
-	// 채팅방 멤버 추가
-	private void addRoomMember(ClientVO client, Integer chatRoomNo) {
-		 // 채팅방 번호를 키로 사용하여 해당 채팅방의 멤버 Set을 가져옴
-	    Set<ClientVO> roomMembers = roomMembersMap.computeIfAbsent(chatRoomNo, k -> new CopyOnWriteArraySet<>());
-
-	    // 채팅방 멤버에 사용자 추가
-	    roomMembers.add(client);
-
-	    // 클라이언트의 채팅방 목록에 채팅방 번호 추가
-	    client.addChatRoomNo(chatRoomNo);
-	}
-
-
-	// 채팅방 멤버 제거
-	public void removeRoomMember(ClientVO client, Integer chatRoomNo) {
-		// 채팅방 번호를 키로 사용하여 해당 채팅방의 멤버 Set을 가져옴
-	    Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
-
-	        roomMembers.remove(client);
-
-	    // 클라이언트의 채팅방 목록에서 채팅방 번호 제거
-	    client.removeChatRoomNo(chatRoomNo);
-	}
+//	// 채팅방 멤버 추가
+//	private void addRoomMember(Integer chatRoomNo, ClientVO client) throws IOException {
+//	    
+//		// 채팅방 번호를 키로 사용하여 해당 채팅방의 멤버 Set을 가져옴
+//	    Set<ClientVO> roomMembers = roomMembersMap.computeIfAbsent(chatRoomNo, k -> new CopyOnWriteArraySet<>());
+//
+//	    // 채팅방 멤버에 사용자 추가
+//	    roomMembers.add(client);
+//
+//	    // 클라이언트의 채팅방 목록에 채팅방 번호 추가
+//	    client.addChatRoomNo(chatRoomNo);
+//	}
+//
+//
+//	// 채팅방 멤버 제거
+//	public void removeRoomMember(ClientVO client, Integer chatRoomNo) {
+//		// 채팅방 번호를 키로 사용하여 해당 채팅방의 멤버 Set을 가져옴
+//	    Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
+//
+//	        roomMembers.remove(client);
+//
+//	    // 클라이언트의 채팅방 목록에서 채팅방 번호 제거
+//	    client.removeChatRoomNo(chatRoomNo);
+//	}
 
 	// 특정 채팅방 입장 시 이전 메시지 조회 및 전송
 	public void sendChatHistory(Integer chatRoomNo, WebSocketSession session) throws IOException {
@@ -251,16 +230,19 @@ public class WebSocketServer extends TextWebSocketHandler{
 
 	    // messageType에 따라 처리
 	    
-	    //입장 메세지인 경우
+	  //입장 메세지인 경우
 	    if (MessageType.join.equals(messageType)) {
 	        
-	    	//해당 룸번호를 가져옴 
-	    	Integer chatRoomNo = messageDto.getChatRoomNo();
-	    	
-	    	//해당 룸번호에 해당하는 멤버를 넣는다
-	    	Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
-	    	log.debug("roomMembers for chatRoomNo {}: {}", chatRoomNo, roomMembers);
+	        //해당 룸번호를 가져옴 
+	        Integer chatRoomNo = messageDto.getChatRoomNo();
+	        
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("chatRoomNo", chatRoomNo);        
+	        map.put("session", session);
+	        sessionList.add(map);
 
+	        System.out.println("Current sessionList: " + sessionList);
+	        
 	        List<ChatListVO> chatList = chatRoomDao.chatRoomLIst(chatRoomNo);
 	        if (!chatList.isEmpty()) {
 	            ChatListVO firstChat = chatList.get(0);
@@ -269,7 +251,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 
 	            // 여기에서 chatRoomNo를 활용하여 처리
 	            sendChatHistory(chatRoomNo, session);
-
+	        
 	            // sender 정보와 추가 정보(예: 입장하는 사용자의 ID 목록)를 map에 추가하여 전송
 	            Map<String, Object> data = new HashMap<>();
 	            data.put("messageType", MessageType.join);
@@ -277,36 +259,146 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            data.put("memberName", client.getMemberName());
 	            data.put("clubName", clubName);
 	            data.put("clubExplain", clubExplain);
-
-	            // roomMembers에 있는 각 ClientVO의 memberId와 memberName을 전송
-	            List<Map<String, Object>> membersList = new ArrayList<>();
-	            for (ClientVO roomMember : roomMembers) {
-	                Map<String, Object> memberData = new HashMap<>();
-	                memberData.put("memberId", roomMember.getMemberId());
-	                memberData.put("memberName", roomMember.getMemberName());
-	                memberData.put("memberLevel", roomMember.getMemberLevel());
-	                membersList.add(memberData);
-	            }
-	            data.put("roomMembers", membersList);
-
-	            String joinMessageJson = mapper.writeValueAsString(data);
-	            TextMessage tm = new TextMessage(joinMessageJson);
-
-	            // 해당 룸의 멤버들에게만 입장 메시지를 전송
-	            client.send(tm);
 	            
-	        }
+//		    	Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
+//		    	log.debug("roomMembers for chatRoomNo {}: {}", chatRoomNo, roomMembers);
+//		    	
+//	            // roomMembers에 있는 각 ClientVO의 memberId와 memberName을 전송
+//	            List<Map<String, Object>> membersList = new ArrayList<>();
+//	            for (ClientVO roomMember : roomMembers) {
+//	                Map<String, Object> memberData = new HashMap<>();
+//	                memberData.put("memberId", roomMember.getMemberId());
+//	                memberData.put("memberName", roomMember.getMemberName());
+//	                memberData.put("memberLevel", roomMember.getMemberLevel());
+//	                membersList.add(memberData);
+//	            }
+//	            data.put("roomMembers", membersList);
+	           
+	            for (Map<String, Object> mapSessionList : sessionList) {
+	                Integer roomNo = (Integer) mapSessionList.get("chatRoomNo");
+	                WebSocketSession sess = (WebSocketSession) mapSessionList.get("session");
+
+	                if (roomNo.equals(chatRoomNo)) {
+	                    Map<String, String> mapToSend = new HashMap<>();
+	                    mapToSend.put("chatRoomNo", roomNo.toString()); // roomNo를 문자열로 변환하여 넣어줌
+	                    mapToSend.put("data", mapper.writeValueAsString(data)); // 데이터 전송
+
+	                    String joinMessageJson = mapper.writeValueAsString(mapToSend);
+	                    TextMessage tm = new TextMessage(joinMessageJson);
+
+	                    sess.sendMessage(tm);
+	                }
+	            
 	            else {
 
-	    	        // 여기에서 chatRoomNo를 활용하여 처리
-	                sendChatHistory(chatRoomNo, session);
-	            	
-	            	log. debug("chatList is empty for chatRoomNo {}", chatRoomNo);
-	            	
+    	        // 여기에서 chatRoomNo를 활용하여 처리
+                sendChatHistory(chatRoomNo, session);
+            	
+            	log. debug("chatList is empty for chatRoomNo {}", chatRoomNo);
+            	
+            }
 	            }
-	        } 
+	            
+	        }
+	        
+//	    	
+//	    	//해당 룸번호에 해당하는 멤버를 넣는다
+//	    	Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
+//	    	log.debug("roomMembers for chatRoomNo {}: {}", chatRoomNo, roomMembers);
+//
+//	        List<ChatListVO> chatList = chatRoomDao.chatRoomLIst(chatRoomNo);
+//	        if (!chatList.isEmpty()) {
+//	            ChatListVO firstChat = chatList.get(0);
+//	            String clubName = firstChat.getClubName();
+//	            String clubExplain = firstChat.getClubExplain();
+//
+//	            // 여기에서 chatRoomNo를 활용하여 처리
+//	            sendChatHistory(chatRoomNo, session);
+//
+//	            // sender 정보와 추가 정보(예: 입장하는 사용자의 ID 목록)를 map에 추가하여 전송
+//	            Map<String, Object> data = new HashMap<>();
+//	            data.put("messageType", MessageType.join);
+//	            data.put("chatSender", client.getMemberId());
+//	            data.put("memberName", client.getMemberName());
+//	            data.put("clubName", clubName);
+//	            data.put("clubExplain", clubExplain);
+//
+//	            // roomMembers에 있는 각 ClientVO의 memberId와 memberName을 전송
+//	            List<Map<String, Object>> membersList = new ArrayList<>();
+//	            for (ClientVO roomMember : roomMembers) {
+//	                Map<String, Object> memberData = new HashMap<>();
+//	                memberData.put("memberId", roomMember.getMemberId());
+//	                memberData.put("memberName", roomMember.getMemberName());
+//	                memberData.put("memberLevel", roomMember.getMemberLevel());
+//	                membersList.add(memberData);
+//	            }
+//	            data.put("roomMembers", membersList);
+//
+//	            String joinMessageJson = mapper.writeValueAsString(data);
+//	            TextMessage tm = new TextMessage(joinMessageJson);
+//
+//	            // 해당 룸의 멤버들에게만 입장 메시지를 전송
+//	            client.send(tm);
+//	            
+//	        }
+//	            else {
+//
+//	    	        // 여기에서 chatRoomNo를 활용하여 처리
+//	                sendChatHistory(chatRoomNo, session);
+//	            	
+//	            	log. debug("chatList is empty for chatRoomNo {}", chatRoomNo);
+//	            	
+//	            }
 
-	    // 채팅 메시지인 경우
+//	    // 채팅 메시지인 경우
+//	    else if (MessageType.message.equals(messageType)) {
+//	        LocalDateTime chatTime = LocalDateTime.now();
+//	        
+//	        Integer chatRoomNo = messageDto.getChatRoomNo();
+//	        String chatContent = messageDto.getChatContent();
+//	        String chatSender = messageDto.getChatSender();
+//	        
+//	        //채팅 삭제 업데이트를 위한
+//	        String chatBlind = "N";
+//	        int chatNo = chatDao.sequence();
+//	        
+//	        Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
+//	        log.debug("roomMembers for chatRoomNo {}: {}", chatRoomNo, roomMembers);
+//	        
+//	        if (roomMembers != null) {
+//	            // 정보를 Map에 담아서 변환 후 전송
+//	            Map<String, Object> data = new HashMap<>();
+//	            data.put("messageType", MessageType.message);
+//	            data.put("memberId", client.getMemberId());
+//	            data.put("content", chatContent);
+//	            data.put("chatTime", chatTime.toString());
+//	            data.put("chatRoomNo", chatRoomNo);
+//	            data.put("memberLevel", client.getMemberLevel());
+//	            data.put("memberName", client.getMemberName());
+//	            data.put("chatBlind", chatBlind);
+//	            data.put("chatNo", chatNo);
+//	            
+//	            String messageJson = mapper.writeValueAsString(data);
+//	            TextMessage tm = new TextMessage(messageJson);
+//
+//	            for (ClientVO roomMember : roomMembers) {
+//	                roomMember.send(tm);
+//	            }
+//
+//	           
+//	            // DB
+//	            chatDao.insert(ChatDto.builder()
+//	            		.chatNo(chatNo)
+//	                    .chatContent(chatContent)
+//	                    .chatSender(chatSender)
+//	                    .chatRoomNo(chatRoomNo)
+//	                    .build());
+//	        } else {
+//	            log.debug("roomMembers is null for chatRoomNo {}", chatRoomNo);
+//	        }
+//	    }
+	    }
+	 // 채팅 메시지인 경우
 	    else if (MessageType.message.equals(messageType)) {
 	        LocalDateTime chatTime = LocalDateTime.now();
 	        
@@ -318,10 +410,15 @@ public class WebSocketServer extends TextWebSocketHandler{
 	        String chatBlind = "N";
 	        int chatNo = chatDao.sequence();
 	        
-	        Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
-	        log.debug("roomMembers for chatRoomNo {}: {}", chatRoomNo, roomMembers);
-	        
-	        if (roomMembers != null) {
+	        // Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
+	        List<Map<String, Object>> targetSessions = sessionList.stream()
+	                .filter(map -> map.get("chatRoomNo").equals(chatRoomNo))
+	                .collect(Collectors.toList());
+
+	        // log.debug("roomMembers for chatRoomNo {}: {}", chatRoomNo, roomMembers);
+	        log.debug("Target sessions for chatRoomNo {}: {}", chatRoomNo, targetSessions);
+
+	        if (!targetSessions.isEmpty()) {
 	            // 정보를 Map에 담아서 변환 후 전송
 	            Map<String, Object> data = new HashMap<>();
 	            data.put("messageType", MessageType.message);
@@ -337,23 +434,24 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            String messageJson = mapper.writeValueAsString(data);
 	            TextMessage tm = new TextMessage(messageJson);
 
-	            for (ClientVO roomMember : roomMembers) {
-	                roomMember.send(tm);
+	            for (Map<String, Object> targetSessionMap : targetSessions) {
+	                WebSocketSession targetSession = (WebSocketSession) targetSessionMap.get("session");
+	                targetSession.sendMessage(tm);
 	            }
 
-	           
+
 	            // DB
 	            chatDao.insert(ChatDto.builder()
-	            		.chatNo(chatNo)
+	                    .chatNo(chatNo)
 	                    .chatContent(chatContent)
 	                    .chatSender(chatSender)
 	                    .chatRoomNo(chatRoomNo)
 	                    .build());
 	        } else {
-	            log.debug("roomMembers is null for chatRoomNo {}", chatRoomNo);
+	            log.debug("No target sessions for chatRoomNo {}", chatRoomNo);
 	        }
 	    }
-	    
+
 	    else if (MessageType.dm.equals(messageType)) {
 	        LocalDateTime chatTime = LocalDateTime.now();
 	        
@@ -434,88 +532,88 @@ public class WebSocketServer extends TextWebSocketHandler{
 	        }
 	    }
 	    
-//	    //메세지 타입이 파일일 경우
-//	    else if (MessageType.file.equals(messageType)) { 
-//	        log.debug("Entering the file processing block");
-//	        
-//	        Integer chatRoomNo = messageDto.getChatRoomNo();
-//	        String chatContent = messageDto.getChatContent();
-//	        String chatSender = messageDto.getChatSender();
-//	        String fileName = messageDto.getFileName();
-//	        long fileSize = messageDto.getFileSize();
-//	        String fileType = messageDto.getFileType(); 
-//	        
-//	        //채팅 삭제 업데이트를 위한
-//	        String chatBlind = "N";
-//	        int chatNo = chatDao.sequence();
-//	        
-////	        log.debug("chatRoomNo: {}, chatContent: {}, chatSender: {}, fileName: {}, fileSize: {}, fileType: {}", 
-////	                chatRoomNo, chatContent, chatSender, fileName, fileSize, fileType);
-//				       
-//            //뒷부분이 실제 이미지 파일내용이므로 제거한 다음 분석하도록 처리
-//            String[] slice = messageDto.getChatContent().split(",");
-//            byte[] data = Base64Utils.decodeFromString(slice[1]);
-//            LocalDateTime chatTime = LocalDateTime.now();
-//                           
-//            //분석한 내용을 저장
-//			//- 이 부분에 데이터베이스 저장 및 시퀀스 생성을 통한 파일명 설정 코드가 있어야 함
-//            int attachNo = attachDao.sequence(); // 시퀀스 번호 생성
-//            
-//            //시퀀스 번호를 파일명으로 하여 실제 파일 저장
-//            File target = new File(dir, String.valueOf(attachNo));
-//            try(FileOutputStream out = new FileOutputStream(target)) {
-//				out.write(data);
-//
-//            
-//            //DB에 저장한 파일 정보 모아서 insert
-//            AttachDto attachDto = new AttachDto();
-//            attachDto.setAttachNo(attachNo); //실제 저장된 이름
-//            attachDto.setAttachName(fileName); //사용자가 저장한 이름
-//            attachDto.setAttachSize(fileSize);
-//            attachDto.setAttachType(fileType);
-//            attachDao.insert(attachDto);
-//            
-//         // DB
-//            if (attachNo != 0) {
-//                chatDao.insert(ChatDto.builder()
-//                		.chatNo(chatNo)
-//                        .chatSender(chatSender)
-//                        .chatRoomNo(chatRoomNo)
-//                        .attachNo(attachNo)
-//                        .build());
-//            } else {
-//                chatDao.insert(ChatDto.builder()
-//                		.chatNo(chatNo)
-//                        .chatSender(chatSender)
-//                        .chatRoomNo(chatRoomNo)
-//                        .build());
-//            }
-//         }
-//            
-//            Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
-//            log.debug("roomMembers for chatRoomNo {}: {}", chatRoomNo, roomMembers);
-//            
-//            if (roomMembers != null) {
-//            Map<String, Object> FileChat = new HashMap<>();
-//            FileChat.put("messageType", MessageType.file);
-//            FileChat.put("memberId", client.getMemberId());
-//            FileChat.put("content", "/download?attachNo=" + attachNo); // 파일 다운로드를 알리는 채팅 내용
-//            FileChat.put("chatTime", chatTime.toString());
-//            FileChat.put("chatRoomNo", chatRoomNo);
-//            FileChat.put("memberLevel", client.getMemberLevel());
-//            FileChat.put("memberName", client.getMemberName());
-//            FileChat.put("chatBlind", chatBlind);
-//            FileChat.put("chatNo", chatNo);
-//                           
-//            String messageJson = mapper.writeValueAsString(FileChat);
-//            TextMessage tm = new TextMessage(messageJson);
-//            
-//            for (ClientVO c : roomMembers) {
-//                c.send(tm);
-//            }
-//         }
-//            
-//	    }	
+	    //메세지 타입이 파일일 경우
+	    else if (MessageType.file.equals(messageType)) { 
+	        log.debug("Entering the file processing block");
+	        
+	        Integer chatRoomNo = messageDto.getChatRoomNo();
+	        String chatContent = messageDto.getChatContent();
+	        String chatSender = messageDto.getChatSender();
+	        String fileName = messageDto.getFileName();
+	        long fileSize = messageDto.getFileSize();
+	        String fileType = messageDto.getFileType(); 
+	        
+	        //채팅 삭제 업데이트를 위한
+	        String chatBlind = "N";
+	        int chatNo = chatDao.sequence();
+	        
+//	        log.debug("chatRoomNo: {}, chatContent: {}, chatSender: {}, fileName: {}, fileSize: {}, fileType: {}", 
+//	                chatRoomNo, chatContent, chatSender, fileName, fileSize, fileType);
+				       
+            //뒷부분이 실제 이미지 파일내용이므로 제거한 다음 분석하도록 처리
+            String[] slice = messageDto.getChatContent().split(",");
+            byte[] data = Base64Utils.decodeFromString(slice[1]);
+            LocalDateTime chatTime = LocalDateTime.now();
+                           
+            //분석한 내용을 저장
+			//- 이 부분에 데이터베이스 저장 및 시퀀스 생성을 통한 파일명 설정 코드가 있어야 함
+            int attachNo = attachDao.sequence(); // 시퀀스 번호 생성
+            
+            //시퀀스 번호를 파일명으로 하여 실제 파일 저장
+            File target = new File(dir, String.valueOf(attachNo));
+            try(FileOutputStream out = new FileOutputStream(target)) {
+				out.write(data);
+
+            
+            //DB에 저장한 파일 정보 모아서 insert
+            AttachDto attachDto = new AttachDto();
+            attachDto.setAttachNo(attachNo); //실제 저장된 이름
+            attachDto.setAttachName(fileName); //사용자가 저장한 이름
+            attachDto.setAttachSize(fileSize);
+            attachDto.setAttachType(fileType);
+            attachDao.insert(attachDto);
+            
+         // DB
+            if (attachNo != 0) {
+                chatDao.insert(ChatDto.builder()
+                		.chatNo(chatNo)
+                        .chatSender(chatSender)
+                        .chatRoomNo(chatRoomNo)
+                        .attachNo(attachNo)
+                        .build());
+            } else {
+                chatDao.insert(ChatDto.builder()
+                		.chatNo(chatNo)
+                        .chatSender(chatSender)
+                        .chatRoomNo(chatRoomNo)
+                        .build());
+            }
+         }
+            
+            Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
+            log.debug("roomMembers for chatRoomNo {}: {}", chatRoomNo, roomMembers);
+            
+            if (roomMembers != null) {
+            Map<String, Object> FileChat = new HashMap<>();
+            FileChat.put("messageType", MessageType.file);
+            FileChat.put("memberId", client.getMemberId());
+            FileChat.put("content", "/download?attachNo=" + attachNo); // 파일 다운로드를 알리는 채팅 내용
+            FileChat.put("chatTime", chatTime.toString());
+            FileChat.put("chatRoomNo", chatRoomNo);
+            FileChat.put("memberLevel", client.getMemberLevel());
+            FileChat.put("memberName", client.getMemberName());
+            FileChat.put("chatBlind", chatBlind);
+            FileChat.put("chatNo", chatNo);
+                           
+            String messageJson = mapper.writeValueAsString(FileChat);
+            TextMessage tm = new TextMessage(messageJson);
+            
+            for (ClientVO c : roomMembers) {
+                c.send(tm);
+            }
+         }
+            
+	    }	
 //	    
 //	    else if(MessageType.delete.equals(messageType)) {
 //	    	

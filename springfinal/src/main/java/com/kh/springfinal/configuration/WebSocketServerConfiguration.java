@@ -1,12 +1,8 @@
 package com.kh.springfinal.configuration;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
@@ -32,9 +28,9 @@ public class WebSocketServerConfiguration implements WebSocketConfigurer{
 		.addInterceptors(new HttpSessionHandshakeInterceptor())
 		.withSockJS(); //spring 표준
 		
-		registry.addHandler(webSocketNotifyServer, "/ws/notify")
-		.addInterceptors(new HttpSessionHandshakeInterceptor())
-		.withSockJS();
+//		registry.addHandler(webSocketNotifyServer, "/ws/notify")
+//		.addInterceptors(new HttpSessionHandshakeInterceptor())
+//		.withSockJS();
 	}
 	
 	//웹소켓 허용량을 늘리는 도구 추가

@@ -88,11 +88,11 @@ public class ChatRestController {
 	 
 	 @GetMapping("/getMemberList")
 	 public ResponseEntity<List<ChatMemberListVO>> getMemberList(@RequestParam  int chatRoomNo) {
-	     System.out.println("Received request for chat room number: " + chatRoomNo);
+//	     System.out.println("Received request for chat room number: " + chatRoomNo);
 
 	     List<ChatMemberListVO> memberList = chatRoomDao.chatMemberList(chatRoomNo);
 
-	     System.out.println("Retrieved member list: " + memberList);
+//	     System.out.println("Retrieved member list: " + memberList);
 
 	     return ResponseEntity.ok(memberList);
 	 }
@@ -106,7 +106,8 @@ public class ChatRestController {
 	 
 	 @PostMapping("/updateBlind")
 	 public void update(@RequestBody Map<String, Object> requestBody) {
-	     int chatNo = (int) requestBody.get("chatNo");
+		System.out.println("들어오나");
+		 int chatNo = (int) requestBody.get("chatNo");
 	     chatDao.chatBlindUpdate(chatNo);
 	 }
 	 
