@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +19,7 @@ import com.kh.springfinal.dao.ClubBoardDao;
 import com.kh.springfinal.dao.ClubBoardReplyDao;
 import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dto.ClubBoardAllDto;
+import com.kh.springfinal.dto.ClubBoardDto;
 import com.kh.springfinal.dto.ClubBoardReplyDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MemberDto;
@@ -46,6 +48,7 @@ public class ReplyRestController {
 	    Map<String, Object> responseMap = new HashMap<>();
 
 	    try {
+	    	log.debug("clubBoardNo = {}", clubBoardNo);
 	        ClubBoardReplyDto clubBoardReplyDto = new ClubBoardReplyDto();
 	        int clubBoardReplyNo = clubBoardReplyDao.sequence();
 	        String memberId = (String) session.getAttribute("name");
@@ -105,10 +108,25 @@ public class ReplyRestController {
 
 	@PostMapping("/list")
 	public List<ClubBoardReplyDto> list(@RequestParam int clubBoardNo){
-		List<ClubBoardReplyDto> list = clubBoardReplyDao.selectList(clubBoardNo);
+		List<ClubBoardReplyDto> list = clubBoardReplyDao.selectListByReply(clubBoardNo);
 		
 		return list;
 	}
+	
+//	@PostMapping("/list")
+//	public Map<String, Object> list(@RequestParam int clubBoardNo, HttpSession session){
+//		String memberId = (String)session.getAttribute("name");
+//		MemberDto memberDto = memberDao.loginId(memberId);
+//	
+//		List<ClubBoardReplyDto> list = clubBoardReplyDao.selectList(clubBoardNo);
+//		ClubBoardDto clubBoardDto = clubBoardDao.selectOnes(clubBoardNo);
+//		ClubMemberDto clubMemberDto = clubBoardDao.selectOneClubMemberNo(memberId, clubBoardDto.getClubNo());
+//		//로그인 한 사람의 memberNo
+//		int clubMemberNo = clubMemberDto.getClubMemberNo(); 
+//		
+//		Map params = Map.of("replyList", list, "clubMemberNo", clubMemberNo);
+//		return params;
+//	}
 	
 	@PostMapping("/delete")
 	public void delete(@RequestParam int clubBoardReplyNo) {
@@ -119,7 +137,7 @@ public class ReplyRestController {
 	}
 	
 	@PostMapping("/edit")
-	public void edit(@RequestParam int clubBoardReplyNo, @RequestParam String clubBoardReplyContent) {
-		clubBoardReplyDao.edit(clubBoardReplyNo, clubBoardReplyContent);
+	public void edit(@ModelAttribute ClubBoardReplyDto clubBoardreplyDto) {
+		clubBoardReplyDao.edit(clubBoardreplyDto.getClubBoardReplyNo(), clubBoardreplyDto.getClubBoardReplyContent());
 	}
 }

@@ -83,9 +83,9 @@ $(function(){
    				$(".image-attach").empty();
    				for(let i = 0; i < response.length; i++){
 	   				//console.log(response[i]);
-   					var wrapper = $("<div>").addClass("col-sm-6 col-md-4 col-lg-3 p-3")
-   					.append($("<img>").addClass("attached-image img-thumbnail").attr("data-photo-no", response[i].photoNo)
-   					.attr("src", window.contextPath + "/rest/photo/download/" + response[i].photoNo));
+   					//var wrapper = $("<div>").addClass("col-sm-6 col-md-4 col-lg-3 p-3")
+   					//.append($("<img>").addClass("attached-image img-thumbnail").attr("data-photo-no", response[i].photoNo)
+   					//.attr("src", window.contextPath + "/rest/photo/download/" + response[i].photoNo));
    					
    					//detail 모달을 열고
    					//$(".img-thumbnail").on("click", function(e){
@@ -103,8 +103,7 @@ $(function(){
 	   								photoNo: photoNo,
 	   							},
 	   							success: function(response){
-	   								console.log(response);
-	   								//또 마지막 사진 하나가 작동을 안한다..
+	   								//console.log(response);
 	   								$(".detail-image").attr("src", window.contextPath + "/rest/photo/download/" + photoNo);
 	   								$(".photo-like-count").empty().append(response.photoDto.photoLikecount);
 	   								$("#exampleModalLabel2").append(response.memberDto.memberName);
@@ -193,6 +192,32 @@ $(function(){
    		}
 });
 
+</script>
+<script id="reply-template" type="text/template">
+ <div class="col-12 for-reply-edit mt-2">
+	<div class="row">
+		<div class="col">
+			<h6 class="clubBoardReplyWriter">작성자</h6>
+		</div>
+		<div class="col">
+			<span class="clubBoardReplyDate">MM-dd E HH:mm</span>
+		</div>
+		<div class="col edit-delete">
+			<button type="button" class="btn btn-info btn-reply-edit" data-bs-toggle="modal" data-bs-target="#replyEditModal">수정</button>
+			<button type="button" class="btn btn-danger btn-reply-delete">삭제</button>
+		</div>
+	</div>
+	<div class="row mt-2">
+		<div class="col">
+			<pre class="clubBoardReplyContent fs-6">내용</pre>
+		</div>
+	</div>
+<hr>
+	<div class="row mt-2">
+		<div class="col">
+			<i class="fa-regular fa-thumbs-up"></i> 좋아요 | <button type="button" class="subReplyModal" data-bs-toggle="modal" data-bs-target="#subReplyModal"><i class="fa-solid fa-pen-to-square"></i>답글 달기</button>
+	</div>
+ </div>
 </script>
 
 <div class="container-fluid">
