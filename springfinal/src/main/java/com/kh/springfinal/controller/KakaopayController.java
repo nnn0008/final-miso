@@ -185,7 +185,7 @@ public class KakaopayController {
 	public String list(HttpSession session,Model model) {
 		String memberId=(String)session.getAttribute("name");
 		
-		model.addAttribute("list",paymentDao.selectTotalList());//전체내역
+//		model.addAttribute("list",paymentDao.selectTotalList());//전체내역
 		model.addAttribute("list",paymentDao.selectTotalListByMember(memberId));//나의 내역
 		
 		return"pay/list";
@@ -354,7 +354,7 @@ public class KakaopayController {
 				return"pay/regularSuccessResult";
 			}
 			
-			@RequestMapping("/pay/regularCancel")
+			@RequestMapping("/regularCancel")
 			public String regularCancel(@RequestParam int regularDetailNo)throws URISyntaxException{
 				//1
 				RegularDetailDto regularDetailDto = paymentRegularDao.selectDetail(regularDetailNo);
@@ -368,6 +368,7 @@ public class KakaopayController {
 				//3
 				KakaoPayRegularCancelRequestVO request = KakaoPayRegularCancelRequestVO.builder()
 						.sid(paymentRegularDto.getPaymentRegularSid())
+						.tid(paymentRegularDto.getPaymentRegularTid())
 						.cancelAmount(regularDetailDto.getRegularDetailProductPrice()*regularDetailDto.getRegularDetailProductQty())
 						.build();
 				//4
@@ -380,7 +381,7 @@ public class KakaopayController {
 						.build());
 	return "redirect:list2";
 }
-		@RequestMapping("/pay/regularCancelAll")
+		@RequestMapping("/regularCancelAll")
 		public String regularCancelAll(@RequestParam int paymentRegularNo)throws URISyntaxException{
 			
 			//1
@@ -392,6 +393,8 @@ public class KakaopayController {
 			//2
 			KakaoPayRegularCancelRequestVO request = KakaoPayRegularCancelRequestVO.builder()
 					.sid(paymentRegularDto.getPaymentRegularSid())
+					.tid(paymentRegularDto.getPaymentRegularTid())
+					.cancelAmount(paymentRegularDto.getPaymentRegularRemain())
 					.build();
 			 log.debug("sid={}",paymentRegularDto.getPaymentRegularSid());
 	         log.debug("vo sid={}", request);
@@ -410,8 +413,8 @@ public class KakaopayController {
 		public String list2(HttpSession session,Model model) {
 			String memberId = (String) session.getAttribute("name");
 			
-			model.addAttribute("list",paymentRegularDao.selectTotalList());//전체내경
-			model.addAttribute("list",paymentRegularDao.selectTotalListByMember(memberId));//나의내역
+//			model.addAttribute("list2",paymentRegularDao.selectTotalList());//전체내역
+			model.addAttribute("list2",paymentRegularDao.selectTotalListByMember(memberId));//나의내역
 			return"pay/list2";
 		}
 		}

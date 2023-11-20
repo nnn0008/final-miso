@@ -48,13 +48,13 @@
     		
     	
     		<!-- 결제 대표 목록 -->
-    		<select id="list" resultType="PaymentRegularDto">
-    			select * from paymentRegular order by payment_regular_no asc
+    		<select id="list2" resultType="paymentRegularDto">
+    			select * from payment_regular order by payment_regular_no asc
     		</select>
     		
     		<!-- 회원전체조회 -->
-	    	 <select id="listAll" resultMap="paymentRegularListVO">
-	    	select * from paymentRegular
+	    	 <select id="regularListAll" resultMap="paymentRegularListVO">
+	    	select * from payment_regular
 	    	<if test="paymentRegularMember != null">
 	    	where payment_regular_member = #{paymentRegularMember}
 	    	</if>
@@ -62,25 +62,37 @@
 	    	</select>
 	    	
 	    	<!-- 결제 상세정보를 조회(결제 대표번호별)  -->
-    	<select id="listDetail" resultType="RegularDetailDto">
+    	<select id="regularListDetail" resultType="regularDetailDto">
     		select * from regular_detail
     		where regular_detail_origin = #{regularDetailOrigin}
     		order by regular_detail_no asc
     	</select>
     	
     	<!-- paymentRegular 상세조회 -->
-    	<select id="find" resultType="PaymentRegularDto">
-    		select * from paymentRegular where payment_regular_no = #{paymentRegularNo}
+    	<select id="regularFind" resultType="paymentRegularDto">
+    		select * from payment_regular where payment_regular_no = #{paymentRegularNo}
+    	</select>
+    	
+    	<!--regular_detail 상세조회 -->
+    	<select id="regularSelectDetail" resultType="regularDetailDto">
+    		select * from regular_detail where regular_detail_no = #{regularDetailNo}
     	</select>
     	
     	<!-- payment 잔여금액처리 -->
-    	<update id="cancel">
-    		update paymentRegular
+    	<update id="regularCancel">
+    		update payment_regular
     		 set payment_regular_remain = #{paymentRegularRemain}
     		where payment_regular_no = #{paymentRegularNo}
     	</update>
+    	<!-- regula_detail 취소처리 -->
+    	<update id="regularCancelDetail">
+    		update regular_detail
+    		set regular_detail_status='비활성화'
+    		where regular_detail_no = #{regularDetailNo}
+    	</update>
+    	
     	<!-- 특정 payment_regular_no에 속한 regular_detail에 대한 취소처리 -->
-    	<update id="cancelDetailGroup">
+    	<update id="regularCancelDetailGroup">
     		update regular_detail
     		set regular_detail_status = '비활성화'
     		where regular_detail_origin = #{regularDetailOrigin}
@@ -91,7 +103,7 @@
     			<result column="payment_regular_no" property="paymentRegularNo"/>
     			<result column="payment_regular_member" property="paymentRegularMember"/>
     			<result column="payment_regular_tid" property="paymentRegularTid"/>
-    			<result column="payment_regular_sid" property="paymentRegularsid"/>
+    			<result column="payment_regular_sid" property="paymentRegularSid"/>
     			<result column="payment_regular_name" property="paymentRegularName"/>
     			<result column="payment_regular_price" property="paymentRegularPrice"/>
     			<result column="payment_regular_remain" property="paymentRegularRemain"/>
@@ -100,7 +112,7 @@
     			<result column="payment_regular_end" property="paymentRegularEnd"/>
     		</association>
     		
-    		<collection property="regularDetailList" select="listDetail" column="payment_regular_no"
+    		<collection property="regularDetailList" select="regularListDetail" column="payment_regular_no"
     			javaType="java.util.List" ofType="PaymentRegularDto">
     			<result column="regular_detail_no" property="regularDetailNo"/>
     			<result column="regular_detail_origin" property="regularDetailOrigin"/>
