@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.springfinal.dto.ChatDto;
 import com.kh.springfinal.dto.ChatRoomDto;
+import com.kh.springfinal.dto.MeetingDto;
 import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.vo.ChatListVO;
 import com.kh.springfinal.vo.ChatMemberListVO;
@@ -40,6 +41,13 @@ public class ChatRoomDaoImpl implements ChatRoomDao{
 	    return chatRooms;
 	}
 	
+	//회원 채팅방(정모) 목록 조회
+	@Override
+	public List<MeetingDto> meetingRoomList(String memberId) {
+		List<MeetingDto> meetingRooms = sqlSession.selectList("chatRoom.findMeeting", memberId);
+		return meetingRooms;
+	}
+	
 	//회원 채팅방(동호회) 상세 조회
 	@Override
 	public ChatRoomDto selectOne(String memberId) {
@@ -54,9 +62,11 @@ public class ChatRoomDaoImpl implements ChatRoomDao{
 	
 	//동호회 채팅방 목록 조회
 	@Override
-	public List<ChatListVO> chatRoomLIst(int chatRoomNo) {
+	public List<ChatListVO> chatRoomList(int chatRoomNo) {
 		return sqlSession.selectList("chatRoom.roomList", chatRoomNo);
 	}
+	
+	//정모 채팅방 목록 조회
 	
 	//동호회 채팅방 상세 조회
 	public ChatListVO selectOne(int chatRoomNo) {
@@ -79,6 +89,12 @@ public class ChatRoomDaoImpl implements ChatRoomDao{
 	@Override
 	public List<ChatVO> chatRoomMemberName(int chatRoomNo) {
 		return sqlSession.selectList("chatRoom.roomMemberName", chatRoomNo);
+	}
+	
+	//정모 채팅방 멤버 이름 조회
+	@Override
+	public List<ChatVO> meetingRoomMemberName(int chatRoomNo){
+		return sqlSession.selectList("chatRoom.meetingRoomMemberName", chatRoomNo);
 	}
 	
 	//멤버 프로필 조회
@@ -106,6 +122,7 @@ public class ChatRoomDaoImpl implements ChatRoomDao{
 	public List<ChatOneMemberListVO> chatOneMemberList(int chatRoomNo) {
 		return sqlSession.selectList("chatRoom.chatOneMemberListDetail", chatRoomNo);
 	}
+	
 	
 	@Override
 	public List<ChatRoomDto> chatRoomAllList(String memberId) {

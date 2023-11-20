@@ -50,6 +50,18 @@ select CHAT_CONTENT  from
 WHERE rownum = 1
 </select>
 
+<!-- 동호회 채팅 내역 -->
+<select id="getMeetingHistory" resultType="ChatDto">
+SELECT m.chat_room_no, m.MEETING_NAME, m.MEETING_LOCATION, m.MEETING_DATE, 
+m.MEETING_NO, c.CHAT_NO, c.CHAT_CONTENT, c.CHAT_SENDER, c.CHAT_TIME, c.ATTACH_NO, c.CHAT_BLIND, cm.JOIN_DATE 
+FROM meeting m
+JOIN meeting_member mm ON m.meeting_no = mm.meeting_no
+JOIN club_member cm ON mm.club_member_no = cm.club_member_no
+JOIN CHAT_ROOM cr ON cr.CHAT_ROOM_NO = m.chat_room_no
+JOIN CHAT c ON c.CHAT_ROOM_NO = cr.CHAT_ROOM_NO 
+WHERE cr.CHAT_ROOM_NO = #{chatRoomNo} AND c.CHAT_TIME >= cm.JOIN_DATE  AND cm.CLUB_MEMBER_ID = #{chatSender}
+</select>
+
 <select id="getChatHistoryDetail" resultType="ChatDto">
 SELECT cm.CLUB_MEMBER_NO, cm.CLUB_NO, cm.CLUB_MEMBER_RANK, cm.JOIN_DATE , club.chat_room_no, chat.CHAT_NO, 
 chat.CHAT_SENDER, chat.CHAT_RECEIVER, chat.CHAT_CONTENT, chat.CHAT_TIME, chat.ATTACH_NO, chat.chat_blind

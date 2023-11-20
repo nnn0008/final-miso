@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.kh.springfinal.dto.ChatDto;
 import com.kh.springfinal.dto.ChatRoomDto;
+import com.kh.springfinal.dto.MeetingDto;
 import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.vo.ChatListVO;
 import com.kh.springfinal.vo.ChatMemberListVO;
@@ -16,13 +17,16 @@ public interface ChatRoomDao {
 	List<ChatRoomDto> list(); 
 	ChatRoomDto selectOne(String memberId); 
 	List<ChatRoomDto> chatRoomList(String memberId);
+	List<MeetingDto> meetingRoomList(String memberId);
+	
 	List<Integer> selectRoomNoByMemberId(String memberId);
 	
-	List<ChatListVO> chatRoomLIst(int chatRoomNo);
+	List<ChatListVO> chatRoomList(int chatRoomNo);
 	ChatListVO selectOne(int chatRoomNo);
 	
 	List<ChatRoomDto> chatRoomMemberList(int chatRoomNo);
 	List<ChatVO> chatRoomMemberName(int chatRoomNo);
+	List<ChatVO> meetingRoomMemberName(int chatRoomNo);
 	
 	List<MemberDto> selectMemberProfile();
 	

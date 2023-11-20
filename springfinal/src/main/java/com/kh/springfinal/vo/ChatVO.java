@@ -8,8 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
-public class ChatVO {
-	
+public class ChatVO {	
 	private int chatNo;
 	private int clubNo;
 	private int chatRoomNo;
