@@ -14,12 +14,15 @@ $(function(){
 	
     loadList();
     //댓글 작성
+    
     $(".reply-insert-form").submit(function(e){
+    	var params = new URLSearchParams(location.search);
+        var clubBoardNo = params.get("clubBoardNo");
         e.preventDefault();
         if($(".reply-write").val().length == 0) return;
         var clubBoardReplyContent = $(".reply-write").val();
-        var params = new URLSearchParams(location.search);
-        var clubBoardNo = params.get("clubBoardNo");
+        //var params = new URLSearchParams(location.search);
+        //var clubBoardNo = params.get("clubBoardNo");
         //var clubBoardReplyParent = null;
 
         $.ajax({
@@ -34,7 +37,7 @@ $(function(){
                 $(".reply-write").val("");
                 loadList();
 
-//                 소켓 전송
+					//소켓 전송
                     var notifyType = "reply";
                     var replyWriterMember = response.replyWriterMember;
                     var boardWriterMember = response.boardWriterMember;
@@ -54,9 +57,9 @@ $(function(){
 
                         socket.send(socketMsg);                 
 		                } 
-		      }
-		    });
+		    }
 		});
+	});
 		//로그인 한 아이디
 		var memberId = "${sessionScope.name}";
 		
@@ -64,34 +67,43 @@ $(function(){
 		function loadList(){
 			var params = new URLSearchParams(location.search);
 			var clubBoardNo = params.get("clubBoardNo");
+			//var memberId = "${sessionScope.name}";
 			$.ajax({
-				url:window.contextPath+"/rest/reply/list",
+				url: window.contextPath+"/rest/reply/list",
 				method:"post",
 				data:{clubBoardNo : clubBoardNo},
 				//response를 댓글 목록으로 받아옴
 				success:function(response){
 					$(".reply-list").empty();
-					console.log(response);
+					//console.log(response);
 
 					for(var i = 0; i < response.length; i++){
-						console.log("몇 번 반복했니");
-
-                        if(response[i].clubBoardReplyParent == null){
-                            var wrapper = createReplyWrapper(response[i]);
-                            $(".reply-list").append(wrapper);
-                        }
-						else{
-                            var wrapper = createSubReplyWrapper(response[i]);
-                            $(".reply-list").append(wrapper);
-                        }
-                        //여기에 써야됨
+						console.log(response);
+						var template = $("#reply-template").html();
+						var htmlTemplate = $.parseHTML(template);
 						
-						 $(".for-reply-edit").find(".btn-reply-delete").click(function(e){
-							var clubBoardReplyNo = $(this).attr("data-board-reply-no");
+						$(htmlTemplate).find(".clubBoardReplyWriter").text(response[i].clubBoardReplyName);
+						$(htmlTemplate).find(".clubBoardReplyContent").text(response[i].clubBoardReplyContent);
+						$(htmlTemplate).find(".clubBoardReplyDate").text(response[i].clubBoardReplyDate);
+						
+						//내가 작성한 댓글인지 확인하여 수정/삭제 버튼을 안보이게
+						//if(memberId.length == 0 || memberId != response[i].clubBorad){
+						//	$(htmlTemplate).find(".edit-delete").empty();
+						//}
+						
+						
+						//대댓글 이라면
+                      	if(response[i].clubBoardReplyParent != null){
+                            $(htmlTemplate).addClass("ms-4");
+                            $(htmlTemplate).find(".only-attach-reply").remove();
+                        }
+						
+						$(htmlTemplate).find(".btn-reply-delete").attr("data-reply-no", response[i].clubBoardReplyNo).click(function(e){
+							var clubBoardReplyNo = $(this).attr("data-reply-no");
 							$.ajax({
 								url: window.contextPath + "/rest/reply/delete",
 								method:"post",
-								data:{clubBoardReplyNo : clubBoardReplyNo},
+								data:{clubBoardReplyNo: clubBoardReplyNo},
 								//삭제 성공하면
 								success:function(response){
 									loadList(); //목록을 갱신 
@@ -99,74 +111,105 @@ $(function(){
 							});
 						});
 						
-						//수정 버튼을 클릭하면 Modal을 띄우고 기존 내용이 적혀있어야 한다
-						$(".for-reply-edit").find(".btn-reply-edit").click(function(){
-							//console.log($(".btn-reply-edit").data("board-reply-no"));
-							$("#replyEditModal").show();
-							var clubBoardReplyNo = $(this).attr("data-board-reply-no");
-							var clubBoardReplyContent = $(this).parents().find(".clubBoardReplyContent").text();
+
+						$(htmlTemplate).find(".btn-open-reply-edit").attr("data-reply-no", response[i].clubBoardReplyNo).click(function(){
+							var editTemplate = $("#reply-edit-template").html();
+							var editHtmlTemplate = $.parseHTML(editTemplate);
+							
+							var clubBoardReplyNo = $(this).attr("data-reply-no");
+							var clubBoardReplyContent = $(this).parents(".for-reply-edit").find(".clubBoardReplyContent").text();
 							//console.log(clubBoardReplyContent);
+							$(editHtmlTemplate).find("[name=clubBoardReplyNo]").val(clubBoardReplyNo);
+							$(editHtmlTemplate).find("[name=clubBoardReplyContent]").val(clubBoardReplyContent);
 							
-							$("[name=clubBoardReplyContent]").val(clubBoardReplyContent);
-							$("[name=clubBoardReplyNo]").val(clubBoardReplyNo); //히든으로 날려보낼 번호
+							//취소버튼을 클릭한다면
+							$(editHtmlTemplate).find(".btn-cancel").click(function(e){
+								$(this).parents(".edit-container").prev(".for-reply-edit").show();
+								$(this).parents(".edit-container").remove();
+							});
 							
-							//Modal의 저장 버튼을 클릭했을 때, modal의 input에 있는 내용으로 바꾸기
-							$(".update-success-reply").unbind().click(function(){
+							//완료(등록)버튼 처리
+							$(editHtmlTemplate).submit(function(e){
+								e.preventDefault();
+								
 								$.ajax({
-									url:window.contextPath + "/rest/reply/edit",
-									method:"post",
-									data: {
-										clubBoardReplyNo : clubBoardReplyNo,
-										clubBoardReplyContent : $("[name=clubBoardReplyContent]").val()
-									},
-									//내용을 바꾸는게 성공했다면
-									success:function(response){
-										//console.log("성공");
-										loadList(); //목록을 갱신
-										$("#replyEditModal").hide(); //내용 변경 후 modal을 닫는다
+									url: window.contextPath + "/rest/reply/edit",
+									method: "post",
+									data: $(e.target).serialize(),
+									success: function(response){
+										loadList();
 									}
 								});
 							});
-							//Modal의 취소 버튼을 클릭했을 때, 기존 내용으로
-							$(".update-cancel-reply").unbind().click(function(){
-								$("#replyEditModal").hide(); //내용 변경 없이 Modal을 닫으면 된다
-							});
+							
+							//화면 배치
+							$(this).parents(".for-reply-edit").hide().after(editHtmlTemplate);
 						});
 						
-						//대댓글 작성
-						$(".btn-subReply-send").click(function(e){
-							e.preventDefault();
-							var clubBoardReplyNo = $(this).attr("data-board-reply-no");
-							var clubBoardSubReplyContent = $(this).parent(".receive-subReplyContent").find("[name=clubBoardSubReplyContent]").val();
-							//console.log(clubBoardSubReplyContent);
-							if(clubBoardSubReplyContent.val() == 0) return;
+						$(htmlTemplate).find(".btn-subReply").attr("data-reply-no", response[i].clubBoardReplyNo).click(function(){
+							var button = $(this);
+							button.hide();
+							var reReplyTemplate = $("#reReply-template").html();
+							var reReplyHtmlTemplate = $.parseHTML(reReplyTemplate);	
+							
+							var clubBoardReplyNo = $(this).attr("data-reply-no");
+							var clubBoardContent = $(reReplyHtmlTemplate).find(".clubBoardReReplyContent").text();
+							
+							//취소버튼을 클릭하면 기존의 버튼을 다시 복구해야됨
+							//$(reReplyHtmlTemplate).find(".btn-reReply-cancel").click(function(e){
+							$(document).on("click", ".btn-reReply-cancel", function(e){
+								//console.log("작동중");
+								$(this).closest(".reReply-edit-form").remove();
+								button.show();
+							});
+							//console.log($(reReplyHtmlTemplate).find(".btn-reReply-cancel").length);
+							
 							var params = new URLSearchParams(location.search);
-							var clubBoardNo = params.get("clubBoardNo");
+					        var clubBoardNo = params.get("clubBoardNo");
+							
+							var clubBoardReplyParent = clubBoardReplyNo;
+							var clubBoardReplyContent = clubBoardContent;	
+							
+							//console.log(clubBoardNo);
+							
+							$(reReplyTemplate).submit(function(e){
+								e.preventDefault();
 								
 								$.ajax({
-									url:window.contextPath+"/rest/reply/insert",
-									method:"post",
-									data:	
-									{
-										clubBoardReplyContent: clubBoardSubReplyContent,
+									url: window.contextPath + "/rest/reply/insert",
+									method: "post",
+									data: {
+										clubBoardReplyParent: clubBoardReplyParent,
 										clubBoardNo: clubBoardNo,
-										clubBoardReplyParent: clubBoardReplyNo,
-										clubBoardReplyGroup: clubBoardReplyNo,
-									},	
-									success:function(response){
-										console.log("성공");
-										$("[name=clubBoardSubReplyContent]").val("");
+										clubBoardReplyContent: clubBoardReplyContent,
+									},
+									success: function(response){
 										loadList();
-									}
-								});			
-						});
+									},
+								});
+							});	
+							$(this).parents(".for-reply-edit").after(reReplyTemplate);
+							
+						});  
+						
+						//댓글을 붙여
+						$(".reply-list").append(htmlTemplate);
+							
 						
 					}
+					
 				}
-			});
+				
+					
+				});//여기가 loadList의 최상위 ajax 끝낸 자리임
 			
+			
+		}
+		
+		
 			//좋아요 관련 처리
-			
+			var params = new URLSearchParams(location.search);
+  			var clubBoardNo = params.get("clubBoardNo");
 			//좋아요 여부를 체크
 			$.ajax({
 				url: window.contextPath + "/rest/clubBoard/check",
@@ -204,76 +247,79 @@ $(function(){
 				});
 			});
 			
-			
-			
-		}
-		
-		$("#subReplyModal").on("hidden.bs.modal", function(){
-			$("[name=clubBoardSubReplyContent]").val("");
-		});
-
 	});
 
-	/* //댓글을 붙이는 함수
-	function createReplyWrapper(response){
-	    return $("<div>").addClass("row for-reply-edit mt-2 reply-wrapper")
-	                                .append(createWriterDateButtonsWrapper(response))
-	                                //.append(createButtonsWrapper(response))
-	                                .append(createContentWrapper(response))
-	                                .append(createSubReplyWrapper(response))
-	                                .append(createSubReplyFormWrapper());                              
-	}
-	
-	function createSubReplyWrapper(response){
-	    return $("<div>").addClass("row for-reply-edit mt-2 reply-wrapper ms-3")
-	                                .append(createWriterDateButtonsWrapper(response))
-	                                .append(createButtonWrapper())
-	                                .append(createContentWrapper(response))
-	}
-	
-	function createWriterDateButtonsWrapper(response){
-	    return $("<div>").addClass("col").text(response.clubBoardReplyWriter)
-	        .$("<div>").addClass("col").text(response.clubBoardReplyDate)
-	        .append($("<div>").addClass("col"))
-	        .append(createDeleteButton(response.clubBoardReplyNo))
-	        .append(createEditButton(response.clubBoardReplyNo));
-	}
-	
-	// function createButtonsWrapper(response){
-	//     return $("<div>").addClass("row mt-2")
-	//         .append(createDeleteButton(response.clubBoardReplyNo))
-	//         .append(createEditButton(response.clubBoardReplyNo));
-	// }
-	
-	function createEditButton(response){
-	    return $("<button>").attr("type", "button").attr("data-board-reply-no", response.clubBoardReplyNo).addClass("btn btn-info btn-reply-edit").text("수정").click(function(){
-	        $("수정모달을 열어라");
-	    });
-	}
-	function createDeleteButton(response){
-	    return $("<button>").attr("type", "button").attr("data-board-reply-no", response.clubBoardReplyNo).addClass("btn btn-success btn-reply-delete").text("삭제").click(function(){
-	        $(this).closest(".reply-wrapper").remove();
-	    });
-	}
-	function createContentWrapper(response){
-	    return $("<div>").addClass("row mt-2")
-	        .append($("<div>").addClass("col clubBoardReplyContent").text(response.clubBoardReplyContent));
-	}
-	function createSubReplyWrapper(response){
-	    return $("<div>").addClass("row mt-2 hc-clubBoardSubReplyContent")
-	        .append($("<div>").addClass("col")
-	        .append($("<i>").addClass("fa-solid fa-pen fa-pen-to-square").text("답글달기").click(function(){
-	          $(this).closet(".댓글창을 열어").show();       
-	        })));
-	}
-	function createSubReplyFormWrapper(){
-	    return $("<form>").addClass("subReply-insert-form")
-	        .append($("<div>").addClass("row mt-2")
-	        .append($("<div>").addClass("col"))
-	        .append($("<input>").attr("type", "text").attr("name", "clubBoardSubReplyContent").addClass("form-control"))
-	        .append($("<div>").addClass("col"))
-	        .append($("<button>").attr("type", "submit").addClass("btn btn-subReply-send btn-success").text("전송")))
-	} */
+</script>
+<script id="reply-template" type="text/template">
+ <div class="col-12 for-reply-edit mt-2">
+	<div class="row">
+		<div class="col">
+			<h6 class="clubBoardReplyWriter">작성자</h6>
+		</div>
+		<div class="col">
+			<span class="clubBoardReplyDate">MM-dd E HH:mm</span>
+		</div>
+		<div class="col edit-delete">
+			<button type="button" class="btn btn-info btn-open-reply-edit">수정</button>
+			<button type="button" class="btn btn-danger btn-reply-delete">삭제</button>
+		</div>
+	</div>
+	<div class="row mt-2">
+		<div class="col">
+			<pre class="clubBoardReplyContent fs-6">내용</pre>
+		</div>
+	</div>
+<hr>
+	<div class="row mt-2 only-attach-reply">
+		<div class="col">
+			<button type="button" class="btn-subReply"><i class="fa-solid fa-pen-to-square"></i>답글 달기</button>
+		</div>
+	</div>
+ </div>
+</script>
+<script id="reply-edit-template" type="text/template">
+		<form class="reply-edit-form edit-container">
+		<input type="hidden" name="clubBoardReplyNo" value="?">
+		<div class="row flex-container">
+			<div class="col">
+				<input type="text" name="clubBoardReplyContent" class="form-control"></textarea>
+			</div>
+			<div class="col">
+				<button type="submit" class="btn btn-success btn-reply-edit">
+					<i class="fa-solid fa-check"></i>
+					수정
+				</button>
+			</div>
+			<div class="col">
+				<button type="button" class="btn btn-danger btn-cancel">
+					<i class="fa-solid fa-xmark"></i>
+					취소
+				</button>
+			</div>
+		</div>
+		</form>
+</script>
+<script id="reReply-template" type="text/template">
+	<form class="reReply-edit-form">
+		<input type="hidden" name="clubBoardReplyNo" value="?">
+		<div class="row flex-container">
+			<div class="col-6">
+				<input type="text" name="clubBoardReReplyContent" class="form-control"></textarea>
+			</div>
+			<div class="col">
+				<button type="submit" class="btn btn-success btn-reReply-send">
+					<i class="fa-solid fa-check"></i>
+					작성
+				</button>
+			</div>
+			<div class="col">
+				<button type="button" class="btn btn-danger btn-reReply-cancel">
+					<i class="fa-solid fa-xmark"></i>
+					취소
+				</button>
+			</div>
+		</div>
+		</form>
 </script>
 
 <div class="container-fluid">
@@ -310,25 +356,10 @@ $(function(){
 			</div>
 			
 			<div class="row">
-				<div class="col-6">
+				<div class="col">
 					<i class="fa-regular fa-heart photo-like" style="color: red"></i><p class="board-like-count">${clubBoardAllDto.clubBoardLikecount}</p>
 				</div>
-				<div class="col-6">
-					댓글달기 버튼
-				</div>
 			</div>
-			
-			<hr>
-			
-			<div class="row">
-				<div class="col">
-					좋아요 하트버튼
-				</div>
-				<div class="col">
-					${clubBoardAllDto.clubBoardLikecount}
-				</div>
-			</div>
-			
 			<hr>
 		<%-- <c:if test="${sessionScope.name != null }"> --%>
 			<form class="reply-insert-form">
@@ -359,7 +390,7 @@ $(function(){
   Launch demo modal
 </button> -->
 <!-- Modal -->
-<div class="modal fade" id="replyEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="replyEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -384,6 +415,6 @@ $(function(){
   </div>
 </div>
 
-</div>
+</div> -->
 
 <jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>

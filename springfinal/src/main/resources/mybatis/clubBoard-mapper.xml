@@ -72,6 +72,10 @@
 		) where rn between #{begin} and #{end}
 	</select>
 	
+	<select id="finds" resultType="clubBoardDto">
+		select * from club_board where club_board_no = #{clubBoardNo}
+	</select>
+	
 	<select id="find" resultType="clubBoardAllDto">
 		select * from club_board_all where club_board_no = #{clubBoardNo}
 	</select>
@@ -89,7 +93,6 @@
 	<update id="updateLikeCount">
 		update club_board set club_board_likecount = (select count(*) from club_board_like
 		where club_board_no = #{clubBoardNo}) where club_board_no = #{clubBoardNo}
-		
 	</update>
 	
 
