@@ -57,7 +57,7 @@ public class NotifyRestController {
 	    List<ChatListVO> roomList = new ArrayList<>();
 	    for (ChatRoomDto chatRoom : chatRoomList) {
 	        int chatRoomNo = chatRoom.getChatRoomNo();
-	        List<ChatListVO> chatRoomInfoList = chatRoomDao.chatRoomLIst(chatRoomNo);
+	        List<ChatListVO> chatRoomInfoList = chatRoomDao.chatRoomList(chatRoomNo);
 	        roomList.addAll(chatRoomInfoList);
 	    }
 

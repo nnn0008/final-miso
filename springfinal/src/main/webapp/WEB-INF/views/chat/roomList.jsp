@@ -34,11 +34,11 @@
 <body>
 
 	<div class="row">
-                            <div class="col text-start d-flex align-items-center ms-3 mt-3">
-                                <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
-                                <strong class="ms-2">모임채팅</strong>
-                            </div>
-                        </div>
+            <div class="col text-start d-flex align-items-center ms-3 mt-3">
+                <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+                <strong class="ms-2">모임채팅</strong>
+            </div>
+        </div>
     <c:forEach var="roomList" items="${roomList}">
        <div class="row mt-3 ms-2 d-flex align-items-center club-box" onclick="enterRoom(${roomList.chatRoomNo})">
     <div class="col-2">
@@ -87,6 +87,29 @@
     <br/>
 </c:forEach>
 
+<hr>
+<div class="row">
+            <div class="col text-start d-flex align-items-center ms-3 mt-3">
+                <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+                <strong class="ms-2">정모채팅</strong>
+            </div>
+        </div>
+        
+        <c:forEach var="meetingRoom" items="${meetingRoomList}">
+       <div class="row mt-3 ms-2 d-flex align-items-center club-box" onclick="enterRoom(${meetingRoom.chatRoomNo})">
+    <div class="col-2">
+        <img src="${pageContext.request.contextPath}/images/dog.png" class="club-image">
+    </div>
+    <div class="col">
+        <div class="col">
+            <span class="clubname-text">${meetingRoom.meetingName}</span> 
+        </div>
+        <div class="col">
+            <span class="explain-text">${meetingRoom.meetingLocation}</span> 
+        </div>
+    </div>
+</div>
+    </c:forEach>
 
 <script>
     function enterRoom(chatRoomNo) {

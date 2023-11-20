@@ -22,6 +22,26 @@
 		select * from chat_room order by chat_room_no asc
 	</select>
 	
+	<!-- 정모 채팅방 조회(회원별)-->
+	<select id="findMeeting" resultType="MeetingDto">
+	SELECT m.chat_room_no, m.MEETING_NAME, m.MEETING_LOCATION, m.MEETING_DATE, m.meeting_no
+	FROM meeting m
+	JOIN meeting_member mm ON m.meeting_no = mm.meeting_no
+	JOIN club_member cm ON mm.club_member_no = cm.club_member_no
+	JOIN CHAT_ROOM cr ON cr.CHAT_ROOM_NO = m.chat_room_no
+	WHERE cm.club_member_id = #{memberId}
+	</select>
+	
+	<!-- 정모 채팅방 정보 조회 -->
+	<select id="findMeetingInfo" resultType="MeetingDto">
+	SELECT m.chat_room_no, m.MEETING_NAME, m.MEETING_LOCATION, m.MEETING_DATE, m.MEETING_NO
+	FROM meeting m
+	JOIN meeting_member mm ON m.meeting_no = mm.meeting_no
+	JOIN club_member cm ON mm.club_member_no = cm.club_member_no
+	JOIN CHAT_ROOM cr ON cr.CHAT_ROOM_NO = m.chat_room_no
+	WHERE cr.CHAT_ROOM_NO = #{chatRoomNo}
+	</select>
+	
 	<select id="find" resultType="ChatRoomDto">
 	SELECT cr.chat_room_no
 	FROM chat_room cr
@@ -63,6 +83,16 @@
 	JOIN club_member cm ON c.club_no = cm.club_no
 	JOIN member m ON cm.club_member_id = m.member_id
 	WHERE c.chat_room_no = #{chatRoomNo}
+	</select>
+	
+	<select id="meetingRoomMemberName" resultType="ChatVO">
+	SELECT cm.CLUB_MEMBER_ID, m2.MEMBER_NAME 
+	FROM meeting m
+	JOIN meeting_member mm ON m.meeting_no = mm.meeting_no
+	JOIN club_member cm ON mm.club_member_no = cm.club_member_no
+	JOIN CHAT_ROOM cr ON cr.CHAT_ROOM_NO = m.chat_room_no
+	JOIN "MEMBER" m2 ON cm.CLUB_MEMBER_ID = m2.MEMBER_ID 
+	WHERE cr.CHAT_ROOM_NO = #{chatRoomNo}
 	</select>
 	
 	<select id="roomMemberProfile" resultType="MemberDto">

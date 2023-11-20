@@ -180,7 +180,13 @@
 	var oneChatMemberName;
 	var prevMessageDate;
 	var clubName;
+	
+	
+	
 
+// 	var mapToSend = ${mapToSend}
+//     console.log("mapToSend:", mapToSend);
+	 
 // 	// 클릭 이벤트 처리
 // 	$(".chat-more").click(function() {
 // 	    // 모달 표시
@@ -409,51 +415,52 @@
 	    ul.appendTo(".client-list");
 	}
 
-	$(document).ready(function() {
-	    // 페이지 로드 시 실행되는 코드
-	    var chatRoomNo = getRoomNoFromURL();
+// 	$(document).ready(function() {
+// 	    // 페이지 로드 시 실행되는 코드
+// 	    var chatRoomNo = getRoomNoFromURL();
 	    
-	    // getMemberList 호출
-	    $.ajax({
-	        url: window.contextPath +"/getMemberList",
-	        type: "GET",
-	        data: { chatRoomNo: chatRoomNo },
-	        success: function(data) {
-	            console.log("Member List:", data);
-	            // 업데이트 함수 호출
-	            updateChatRoomMembersUI(data, loggedInUserId);
-	        },
-	        error: function(xhr, status, error) {
-	            console.error("Error fetching member list:", status, error);
-	        }
-	    });
+// 	    // getMemberList 호출
+// 	    $.ajax({
+// 	        url: "/getMemberList",
+// 	        type: "GET",
+// 	        data: { chatRoomNo: chatRoomNo },
+// 	        success: function(data) {
+// 	            console.log("Member List:", data);
+// 	            // 업데이트 함수 호출
+// 	            updateChatRoomMembersUI(data, loggedInUserId);
+// 	        },
+// 	        error: function(xhr, status, error) {
+// 	            console.error("Error fetching member list:", status, error);
+// 	        }
+// 	    });
 	    
-	    // getChatOneMemberList 호출
-	    $.ajax({
-	        url: window.contextPath +"/getChatOneMemberList",
-	        type: "GET",
-	        data: { chatRoomNo: chatRoomNo },
-	        success: function(data) {
-	            console.log("Chat One Member List:", data);
-	            updateChatOneMembersUI(data, loggedInUserId);
-	        },
-	        error: function(xhr, status, error) {
-	            console.error("Error fetching chat one member list:", status, error);
-	        }
-	    });
+// 	    // getChatOneMemberList 호출
+// 	    $.ajax({
+// 	        url: "/getChatOneMemberList",
+// 	        type: "GET",
+// 	        data: { chatRoomNo: chatRoomNo },
+// 	        success: function(data) {
+// 	            console.log("Chat One Member List:", data);
+// 	            updateChatOneMembersUI(data, loggedInUserId);
+// 	        },
+// 	        error: function(xhr, status, error) {
+// 	            console.error("Error fetching chat one member list:", status, error);
+// 	        }
+// 	    });
 	    
-	});
+// 	});
 
 
 	
 		//메세지 처리
 		window.socket.onmessage = function(e){
-	
+		
 		
 		var data = JSON.parse(e.data);
-// 		console.log(data);
+		console.log(data);
 		clubName = data.clubName;
-		//console.log(data.clubName);
+// 		console.log(clubName);
+		
 		
 		$(".circle-name").text(clubName);
 
@@ -529,7 +536,6 @@
 		    var memberName = data.memberName;
 		    var oneChatMemberName = data.oneChatMemberName;
 // 			console.log("oneChatMemberName",oneChatMemberName);
-		   
 		   // console.log(memberName);
 		    
 		 // 새로운 메시지의 날짜 정보 가져오기
@@ -901,7 +907,7 @@
 		var imageContainer = $("<div>").addClass("img_cont");
 		var userImage = $("<img>").attr("src", "/images/circle.jpg").css("width", "60px").addClass("rounded-circle user_img");
 		var userInfo = $("<div>").addClass("user_info");
-		var roomName = $("<span>").addClass("circle-name").text(clubName);
+		var roomName = $("<span>").addClass("circle-name").text("");
 
 		// 버튼 엘리먼트 생성
 		var button = $("<button>").addClass("btn btn-outline-secondary");

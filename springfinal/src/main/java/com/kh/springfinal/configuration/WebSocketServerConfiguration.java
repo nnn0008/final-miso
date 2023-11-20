@@ -28,9 +28,9 @@ public class WebSocketServerConfiguration implements WebSocketConfigurer{
 		.addInterceptors(new HttpSessionHandshakeInterceptor())
 		.withSockJS(); //spring 표준
 		
-//		registry.addHandler(webSocketNotifyServer, "/ws/notify")
-//		.addInterceptors(new HttpSessionHandshakeInterceptor())
-//		.withSockJS();
+		registry.addHandler(webSocketNotifyServer, "/ws/notify")
+		.addInterceptors(new HttpSessionHandshakeInterceptor())
+		.withSockJS();
 	}
 	
 	//웹소켓 허용량을 늘리는 도구 추가

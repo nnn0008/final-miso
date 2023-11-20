@@ -41,7 +41,7 @@ public class ChatDaoImpl implements ChatDao{
 		return sqlSession.selectOne("chat.chatLastMsg", chatRoomNo);
 	}
 	
-	// 멤버별 채팅방 메시지
+	//동호회 멤버별 채팅방 메시지
 	@Override
 	public List<ChatDto> getChatHistoryDetail(int chatRoomNo, String chatSender) {
 	    Map<String, Object> params = new HashMap<>();
@@ -51,6 +51,14 @@ public class ChatDaoImpl implements ChatDao{
 	    return sqlSession.selectList("chat.getChatHistoryDetail", params);
 	}
 	
+	//정모 멤버별 채팅방 메시지
+	@Override
+	public List<ChatDto> getMeetingHistory(int chatRoomNo, String chatSender){
+		Map<String, Object> params = new HashMap<>();
+		params.put("chatSender", chatSender);
+		params.put("chatRoomNo", chatRoomNo);
+		return sqlSession.selectList("chat.getMeetingHistory", params);
+	}
 	
 	@Override
 	public List<ChatDto> getChatHistoryAfterDate(int chatRoomNo, String chatSender, LocalDateTime targetTime) {

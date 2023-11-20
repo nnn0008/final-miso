@@ -13,6 +13,7 @@ public interface ChatDao {
 	ChatDto chatLastMsg(int chatRoomNo); //채팅방 마지막 메세지
 	
 	List<ChatDto> getChatHistoryDetail(int chatRoomNo, String chatSender); //멤버별 채팅방 메시지
+	List<ChatDto> getMeetingHistory(int chatRoomNo, String chatSender); //정모 멤버별 채팅방 메시지
 	
 	List<ChatDto> getChatHistoryAfterDate(int chatRoomNo, String chatSender, LocalDateTime targetTime); //초기화 이후 내역 조회
 
