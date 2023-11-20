@@ -20,5 +20,6 @@ public class MeetingDto {
 	private int clubNo;
 	private String dateString;
 	private int dday;
+	private int chatRoomNo;
 	
 }

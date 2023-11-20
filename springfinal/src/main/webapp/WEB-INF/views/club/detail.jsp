@@ -11,6 +11,7 @@
 <script>
 $(function(){
 	
+    loadList();
 	
 	    if($(".meetingFix").prop("checked")){
 	        $("[name=meetingFix]").val('Y');
@@ -63,9 +64,6 @@ $(function(){
              alert("가입되었습니다.");
              
              location.reload();
-                
-            	
-                
                 
             }
         });
@@ -120,9 +118,60 @@ $(function(){
             }
         });
     });
+
+    
+    $(document).on('click', '.meetingEdit', function(){
+        console.log("눌러짐");
+        
+        var meetingNo = $(this).data("no");
+
+        console.log(meetingNo);
+        
+        $.ajax({
+            url: window.contextPath + "/rest/meeting/edit",
+            method: "get",
+            data: {meetingNo:meetingNo},
+            success: function(response) {
+            	
+            	console.log(response);
+            	
+            	fillModalWithData(response);
+                
+            }
+        });
+        
+        
+        
+        
+        
+        $("#meetingEditModal").modal('show');
+    });
+    
+ // 모달에 데이터를 채우는 함수
+    function fillModalWithData(meetingData) {
+        // 모달 내부의 필드에 데이터 채우기
+        $("#meetingEditModal .meetingName").val(meetingData.meetingName);
+        $("#meetingEditModal .meetingLocation").val(meetingData.meetingLocation); 
+        $("#meetingEditModal .meetingPrice").val(meetingData.meetingPrice); 
+        $("#meetingEditModal .meetingDate").val(meetingData.meetingDate); 
+        $("#meetingEditModal .meetingMaxPeople").val(meetingData.meetingNumber);
+        $("#meetingEditModal .img").attr("src","/rest/meeting/image?meetingNo=" + meetingData.meetingNo);
+        // 나머지 필드에 대해서도 필요한 데이터 채우기
+
+        // 예시에서는 meetingFix가 체크박스이므로, 체크 상태를 설정합니다.
+        if (meetingData.meetingFix === 'Y') {
+            $("#meetingEditModal .meetingFix").prop("checked", true);
+        } else {
+            $("#meetingEditModal .meetingFix").prop("checked", false);
+        }
+    }
+    
+    
+    
     
    	//동호회를 만들었을때 넣어줘야 할 목록
     function loadList() {
+      $(".attach-meeting-list").empty();
         var params = new URLSearchParams(location.search);
         var clubNo = params.get("clubNo");
         
@@ -133,33 +182,37 @@ $(function(){
                 clubNo: clubNo,
             },
             success: function (response) {
-            	$(".attach-meeting-list").empty();
             	
-                for (var i = 0; i < response.length; i++) {
-                    var img = $('<img>')
-                        .attr('src', "/rest/meeting/image?meetingNo=" + response[i].meetingNo)
-                        .attr('width', '100')
-                        .attr('height', '100');
-                    
-
-                    $(".attach-meeting-list").append(
-                        $('<div>').append(
-                        		$('<div>').append(
-                        				$('<div>').append(
-                        					$('<div>').append('<label>').text("D-"+response[i].dday)
-                        					.attr('class','font-weight-bold text-danger'),
-                        					img,
-                        					$('<div>').text("미팅이름: " + response[i].meetingName), 
-                        			        $('<div>').text(" 미팅날짜: " + response[i].dateString),
-                        			        $('<div>').text(" 미팅위치: " + response[i].meetingLocation),
-                        			        $('<div>').text(" 미팅비용: " + response[i].meetingPrice),
-                        			        $('<div>').text(" 미팅참석: " + response[i].meetingNumber)
-                        			        )
-                        			    .attr('class','alert alert-dismissible alert-light')
-                        ).attr('class','col')
-                        ).attr('class','row')
-                    )
+            	
+            	
+                for(var i=0; i<response.length; i++){
+                	var meeting = response[i];
+                	
+            	console.log(meeting+i);
+                	var template = $("#meeting-template").html();
+                	var htmlTemplate = $.parseHTML(template);
+                	
+                	var img = $('<img>')
+                    .attr('src', "/rest/meeting/image?meetingNo=" + meeting.meetingNo)
+                    .attr('width', '100')
+                    .attr('height', '100');
+                	
+                	$(htmlTemplate).find(".img").append(img);
+                	$(htmlTemplate).find(".ddayInput").text("D-"+meeting.dday);
+                	$(htmlTemplate).find(".meetingNoInput").text(meeting.meetingNo);
+                	$(htmlTemplate).find(".meetingNameInput").text(meeting.meetingName);
+                	$(htmlTemplate).find(".dateStringInput").text(meeting.dateString);
+                	$(htmlTemplate).find(".locationInput").text(meeting.meetingLocation);
+                	$(htmlTemplate).find(".meetingPriceInput").text(meeting.meetingPrice);
+                	$(htmlTemplate).find(".meetingNumberInput").text(meeting.meetingNumber);
+                	$(htmlTemplate).find(".meetingEdit").attr("data-no",meeting.meetingNo);
+                	
+                	$(".attach-meeting-list").append(htmlTemplate);
                 }
+                
+                
+                
+                
             }
         });
     }
@@ -196,6 +249,47 @@ $(function(){
    	
 });
     </script>
+    
+    <script id="meeting-template" type="text/template">
+
+   <div class="row">
+   	<div class="col">
+   	<div class="alert alert-dismissible alert-light">
+   	<div>
+     <label class="font-weight-bold text-danger ddayInput"></label>
+	</div>
+   	<div class="img"></div>
+   	<div class="meetingNo" data-no="${meetingDto.meetingNo}">
+	미팅이름: 
+	<label class="meetingNameInput">
+	</label>
+	</div>
+   	<div>미팅날짜: 
+	<label class="dateStringInput">
+	</label>
+	</div>
+   	<div>미팅위치: 
+	<label class="locationInput">
+	</label>
+	</div>
+   	<div>미팅비용: 
+	<label class="meetingPriceInput">
+	</label>
+	</div>
+   	<div>
+	미팅참석: /
+	<label class="meetingNumberInput">
+	</label>
+	</div>
+   	<button class="btn btn-primary attend">참석</button>
+   	<button class="btn btn-primary meetingEdit">수정</button>
+   	</div>
+   	</div>
+   </div>
+
+
+		
+</script>
     
 
 
@@ -255,24 +349,7 @@ $(function(){
    
    <!-- 동호회 만들면 올자리 -->
 	<div class="row attach-meeting-list">
-   <c:forEach var="meetingDto" items="${meetingList}">
-   <div class="row">
-   	<div class="col">
-   	<div class="alert alert-dismissible alert-light">
-   	<div>
-     <label class="font-weight-bold text-danger">D-${meetingDto.dday}</label>
-	</div>
-   	<img src="/rest/meeting/image?meetingNo=${meetingDto.meetingNo}" width="100" height="100">
-   	<div class="meetingNo" data-no="${meetingDto.meetingNo}">미팅이름: ${meetingDto.meetingName}</div>
-   	<div>미팅날짜: ${meetingDto.dateString}</div>
-   	<div>미팅위치: ${meetingDto.meetingLocation}</div>
-   	<div>미팅비용: ${meetingDto.meetingPrice}</div>
-   	<div>미팅참석: /${meetingDto.meetingNumber}</div>
-   	<button class="btn btn-primary attend">참석</button>
-   	</div>
-   	</div>
-   </div>
-   </c:forEach>
+
    </div>
    
 	
@@ -339,6 +416,7 @@ $(function(){
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+      		<img src="/images/noimage.jpg" width="200">
         	<input type="hidden" class="meetingClubNo" data-no="${clubDto.clubNo}" name="clubNo" value="${clubDto.clubNo}">
 			<input type="file" class="meetingImage" name="attach">
 			<input type="text" class="meetingName" name="meetingName" placeholder="정모 이름">        
@@ -358,6 +436,35 @@ $(function(){
   </div>
 </div>
         </form>
+        
+        
+<div class="modal fade" id="meetingEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">정모 만들기</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      		<img src="/images/noimage.jpg" width="200" class="img">
+        	<input type="hidden" class="meetingClubNo" data-no="${clubDto.clubNo}" name="clubNo" value="${clubDto.clubNo}">
+			<input type="file" class="meetingImage" name="attach">
+			<input type="text" class="meetingName" name="meetingName" placeholder="정모 이름" value="${meetingDto.meetingName}">        
+        	<input type="date" class="meetingDate" name="meetingDate" placeholder="12월 31일">
+        	<input type="time" class="meetingTime" name="meetingTime" placeholder="오후 12:00">
+        	<input type="text" class="meetingLocation" name="meetingLocation" placeholder="위치를 입력하세요">
+        	<input type="number" class="meetingPrice" name="meetingPrice" placeholder="모임비 15000원">원
+        	<input type="number" class="meetingMaxPeople" name="meetingNumber" placeholder="모임 정원">명
+        	모임공개여부<input class="form-check-input meetingFix" type="checkBox" name="meetingFix">
+        	
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+        <button type="submit" class="btn btn-primary btn-make-meeting" data-bs-dismiss="modal">만들기</button>
+      </div>
+    </div>
+  </div>
+</div>
         
         
           <div class="modal fade joinFinish">
