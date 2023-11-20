@@ -38,4 +38,9 @@ public class PhotoDaoImpl implements PhotoDao {
 	public List<PhotoDto> selectList(int clubNo) {
 		return sqlSession.selectList("photo.findAll", clubNo);
 	}
+	
+	@Override
+	public boolean update(int photoNo) {
+		return sqlSession.update("photo.updateLikeCount", photoNo) > 0;
+	}
 }

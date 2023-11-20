@@ -138,7 +138,7 @@ $(function(){
 							e.preventDefault();
 							var clubBoardReplyNo = $(this).attr("data-board-reply-no");
 							var clubBoardSubReplyContent = $(this).parent(".receive-subReplyContent").find("[name=clubBoardSubReplyContent]").val();
-							console.log(clubBoardSubReplyContent);
+							//console.log(clubBoardSubReplyContent);
 							if(clubBoardSubReplyContent.val() == 0) return;
 							var params = new URLSearchParams(location.search);
 							var clubBoardNo = params.get("clubBoardNo");
@@ -164,6 +164,48 @@ $(function(){
 					}
 				}
 			});
+			
+			//좋아요 관련 처리
+			
+			//좋아요 여부를 체크
+			$.ajax({
+				url: window.contextPath + "/rest/clubBoard/check",
+				method: "post",
+				data: {
+					clubBoardNo: clubBoardNo,
+				},
+				success: function(response){
+					//console.log(response)
+					if(response.check){
+						$(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-solid");
+					}
+					else{
+						$(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-regular");
+					}
+				},
+			});
+			
+			$(".fa-heart").click(function(){
+				$.ajax({
+					url: window.contextPath + "/rest/clubBoard/action",
+					method: "post",
+					data: {
+						clubBoardNo: clubBoardNo,
+					},
+					success: function(response){
+						if(response.check){
+							$(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-regular");
+						}
+						else{
+							$(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-solid");
+						}
+						$(".board-like-count").empty().append(response.count);
+					},
+				});
+			});
+			
+			
+			
 		}
 		
 		$("#subReplyModal").on("hidden.bs.modal", function(){
@@ -172,7 +214,7 @@ $(function(){
 
 	});
 
-	//댓글을 붙이는 함수
+	/* //댓글을 붙이는 함수
 	function createReplyWrapper(response){
 	    return $("<div>").addClass("row for-reply-edit mt-2 reply-wrapper")
 	                                .append(createWriterDateButtonsWrapper(response))
@@ -231,7 +273,7 @@ $(function(){
 	        .append($("<input>").attr("type", "text").attr("name", "clubBoardSubReplyContent").addClass("form-control"))
 	        .append($("<div>").addClass("col"))
 	        .append($("<button>").attr("type", "submit").addClass("btn btn-subReply-send btn-success").text("전송")))
-	}
+	} */
 </script>
 
 <div class="container-fluid">
@@ -269,7 +311,7 @@ $(function(){
 			
 			<div class="row">
 				<div class="col-6">
-					좋아요 버튼
+					<i class="fa-regular fa-heart photo-like" style="color: red"></i><p class="board-like-count">${clubBoardAllDto.clubBoardLikecount}</p>
 				</div>
 				<div class="col-6">
 					댓글달기 버튼
