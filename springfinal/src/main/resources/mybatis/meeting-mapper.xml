@@ -12,20 +12,24 @@
 	<insert id="add">
 		insert into meeting(
 			meeting_no, club_no,meeting_name, meeting_date, 
-			meeting_location, meeting_price, meeting_number,meeting_fix
+			meeting_location, meeting_price, meeting_number,meeting_fix,chat_room_no
 		) 
 		values(
 			#{meetingNo}, #{clubNo},#{meetingName}, #{meetingDate},
-			#{meetingLocation}, #{meetingPrice}, #{meetingNumber},#{meetingFix}
+			#{meetingLocation}, #{meetingPrice}, #{meetingNumber},#{meetingFix},#{chatRoomNo}
 		)	
 	</insert>
 	<update id="edit">
 		update meeting set
-		meeting_name = #{meetingName}
-		meeting_price = #{meetingPrice}
-		meeting_number = #{meetingNumber}
+		meeting_name = #{meetingName},
+		meeting_location = #{meetingLocation},
+		meeting_price = #{meetingPrice},
+		meeting_number = #{meetingNumber},
+		meeting_fix = #{meetingFix}
 		where meeting_no = #{meetingNo}
 	</update>
+	
+	
 	
 	<select id="find" resultType="MeetingDto">
 		select * from meeting where meeting_no = #{meetingNo}

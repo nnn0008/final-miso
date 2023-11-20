@@ -7,7 +7,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -18,6 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,15 +27,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.springfinal.dao.AttachDao;
+import com.kh.springfinal.dao.ChatRoomDao;
 import com.kh.springfinal.dao.ClubBoardDao;
 import com.kh.springfinal.dao.ClubMemberDao;
 import com.kh.springfinal.dao.MeetingDao;
 import com.kh.springfinal.dao.MeetingImageDao;
 import com.kh.springfinal.dao.MeetingMemberDao;
 import com.kh.springfinal.dto.AttachDto;
+import com.kh.springfinal.dto.ChatRoomDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MeetingDto;
-import com.kh.springfinal.dto.MeetingImageDto;
 import com.kh.springfinal.dto.MeetingMemberDto;
 import com.kh.springfinal.vo.FileLoadVO;
 
@@ -66,6 +67,9 @@ public class MeetingRestController {
 	@Autowired
 	private ClubMemberDao clubMemberDao;
 	
+	@Autowired
+	private ChatRoomDao chatRoomDao;
+	
 	@PostMapping("/insert")
 	public void insert(HttpSession session,
 			@RequestParam int clubNo, @RequestParam String meetingName,
@@ -75,6 +79,92 @@ public class MeetingRestController {
 			@RequestParam String meetingFix,
 			@RequestParam MultipartFile attach
 			) throws IllegalStateException, IOException {
+		
+		ChatRoomDto chatRoomDto = new ChatRoomDto();
+		
+		int chatRoomNo = chatRoomDao.sequence();
+		
+		chatRoomDto.setChatRoomNo(chatRoomNo);
+		
+		chatRoomDao.insert(chatRoomDto);
+		
+		//아이디가 필요하다
+		String memberId = (String)session.getAttribute("name");
+		ClubMemberDto clubMemberDto = clubBoardDao.selectOneClubMemberNo(memberId, clubNo);
+		
+		MeetingDto meetingDto = new MeetingDto();
+		int meetingNo = meetingDao.sequence();
+		
+		meetingDto.setMeetingDate(meetingTime); //날짜
+		meetingDto.setMeetingLocation(meetingLocation); //위치
+		meetingDto.setMeetingName(meetingName); //정모 제목
+		meetingDto.setMeetingNo(meetingNo); //정모 번호
+		meetingDto.setMeetingNumber(meetingNumber); //정모 인원
+		meetingDto.setMeetingPrice(meetingPrice); 
+		meetingDto.setClubNo(clubNo);
+		meetingDto.setMeetingFix(meetingFix);
+		meetingDto.setChatRoomNo(chatRoomNo);
+		
+		log.debug("meetingTime={}",meetingTime);
+		
+		meetingDao.insert(meetingDto);
+		
+		
+		
+		if(!attach.isEmpty()) {
+			int attachNo = attachDao.sequence();
+			
+			//첨부파일 등록(파일이 있을 때만)
+			String home = System.getProperty("user.home");
+			File dir = new File(home,"upload");
+			dir.mkdirs();
+			File target = new File(dir,String.valueOf(attachNo));
+			attach.transferTo(target);
+			AttachDto attachDto = new AttachDto();
+			attachDto.setAttachNo(attachNo);
+			attachDto.setAttachName(attach.getOriginalFilename());
+			attachDto.setAttachSize(attach.getSize());
+			attachDto.setAttachType(attach.getContentType());
+			attachDao.insert(attachDto);
+			
+			//연결(파일이 있을 때만)
+			
+			
+			
+			meetingImageDao.insert(attachNo,meetingNo);
+			
+		}
+		MeetingMemberDto meetingMemberDto = new MeetingMemberDto();
+		
+		meetingMemberDto.setClubMemberNo(clubMemberDto.getClubMemberNo());
+		meetingMemberDto.setMeetingNo(meetingNo);
+		meetingMemberDao.insert(meetingMemberDto);
+		
+	}
+	
+	@GetMapping("/edit")
+	public MeetingDto edit(int meetingNo) throws IllegalStateException, IOException {
+		
+		
+		MeetingDto meetingDto = meetingDao.selectOne(meetingNo);
+		
+		
+		return meetingDto;
+		
+		
+	}
+	
+	@PostMapping("/edit")
+	public void edit(HttpSession session,
+			@RequestParam int clubNo, @RequestParam String meetingName,
+			@RequestParam("meetingTime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date meetingTime,
+			@RequestParam String meetingLocation, @RequestParam int meetingPrice,
+			@RequestParam int meetingNumber,
+			@RequestParam String meetingFix,
+			@RequestParam MultipartFile attach
+			) throws IllegalStateException, IOException {
+		
+		
 		
 		//아이디가 필요하다
 		String memberId = (String)session.getAttribute("name");
@@ -127,11 +217,9 @@ public class MeetingRestController {
 		meetingMemberDto.setMeetingNo(meetingNo);
 		meetingMemberDao.insert(meetingMemberDto);
 		
-		
-		
-		
-		//파일
 	}
+	
+	
 	@GetMapping("/list")
 	public List<MeetingDto> list(int clubNo) throws ParseException{
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd E a hh:mm:ss");

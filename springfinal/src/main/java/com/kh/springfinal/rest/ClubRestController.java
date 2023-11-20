@@ -3,6 +3,8 @@ package com.kh.springfinal.rest;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -89,7 +91,9 @@ public class ClubRestController {
 	}
 	
 	@PostMapping("/clubMember")
-	public void join(@ModelAttribute ClubMemberDto clubMemberDto) {
+	public void join(@ModelAttribute ClubMemberDto clubMemberDto,HttpSession session) {
+		
+		boolean noMember =  session.getAttribute("name") ==null;
 		
 		
 		

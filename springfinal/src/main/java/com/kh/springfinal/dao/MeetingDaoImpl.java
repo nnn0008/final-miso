@@ -35,8 +35,8 @@ public class MeetingDaoImpl implements MeetingDao{
 		return sqlSession.selectList("meeting.selectByClubNo", clubNo);
 	}
 	@Override
-	public boolean update(int meetingNo) {
-		return sqlSession.update("meeting.edit", meetingNo) > 0;
+	public boolean update(MeetingDto meetingDto) {
+		return sqlSession.update("meeting.edit", meetingDto) > 0;
 	}
 	@Override
 	public AttachDto findImage(int meetingNo) {

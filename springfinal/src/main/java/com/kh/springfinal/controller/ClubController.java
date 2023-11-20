@@ -137,7 +137,7 @@ public class ClubController {
 		MajorCategoryDto major = categoryDao.findMajor(clubDto.getClubCategory());
 		ZipCodeDto zipDto = zipDao.findZip(clubNo);
 		
-		boolean joinButton = !clubMemberDao.existMember(clubNo, memberId);
+		boolean joinButton = !clubMemberDao.existMember(clubNo, memberId) && (memberId!=null);
 		boolean editPossible = clubMemberDao.editPossible(clubNo, memberId);
 		
 		List<ClubMemberVO> clubMemberList = clubMemberDao.memberInfo(clubNo);
