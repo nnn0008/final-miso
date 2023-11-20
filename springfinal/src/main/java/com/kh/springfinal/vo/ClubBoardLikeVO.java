@@ -6,4 +6,5 @@ import lombok.Data;
 public class ClubBoardLikeVO {
 	private boolean check;
 	private int count;
+	
 }
