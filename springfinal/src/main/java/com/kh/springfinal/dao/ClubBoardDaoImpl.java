@@ -54,4 +54,9 @@ public class ClubBoardDaoImpl implements ClubBoardDao{
 	public boolean updateReplyCount(int clubBoardNo) {
 		return sqlSession.update("clubBoard.replyCount", clubBoardNo) > 0;
 	}
+	
+	@Override
+	public boolean updateLikeCount(int clubBoardNo) {
+		return sqlSession.update("clubBoard.updateLikeCount", clubBoardNo) > 0;
+	}
 }
