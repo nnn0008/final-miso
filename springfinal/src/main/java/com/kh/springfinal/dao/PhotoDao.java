@@ -10,4 +10,5 @@ public interface PhotoDao {
 	boolean delete(int photoNo);
 	PhotoDto selectOne(int photoNo);
 	List<PhotoDto> selectList(int clubNo);
+	boolean update(int photoNo);
 }

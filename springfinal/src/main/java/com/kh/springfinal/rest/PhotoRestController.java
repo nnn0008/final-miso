@@ -152,12 +152,14 @@ public class PhotoRestController {
 		
 		if(isCheck) {//좋아요를 했다면
 			photoLikeDao.delete(photoNo); //체크를 해제
+			photoDao.update(photoNo);
 		}
 		else {
 			PhotoLikeDto photoLikeDto = new PhotoLikeDto();
 			photoLikeDto.setClubMemberNo(clubMemberNo);
 			photoLikeDto.setPhotoNo(photoNo);
 			photoLikeDao.insert(photoLikeDto);
+			photoDao.update(photoNo);
 		}
 		int count = photoLikeDao.count(photoNo);
 		
@@ -166,41 +168,6 @@ public class PhotoRestController {
 		vo.setCount(count);
 		return vo;
 	}
-	
-	
-	
-//	@PostMapping("/like")
-//	public String like(HttpSession session, @RequestParam int photoNo,
-//			@RequestParam int clubNo) {
-//		//로그인 한 회원과 관련된 처리
-//		String memberId = (String)session.getAttribute("name");
-//		ClubMemberDto loginClubMemberDto = clubBoardDao.selectOneClubMemberNo(memberId, clubNo);
-//		
-//		//기존 사진과 관련된 처리
-//		PhotoDto photoDto = photoDao.selectOne(photoNo);
-//		int clubMemberNo = photoDto.getClubMemberNo();
-//		ClubMemberDto clubMemberDto = clubMemberDao.selectOne(clubMemberNo);
-//		PhotoLikeDto photoLikeDto = photoLikeDao.selectOne(photoNo);
-//		
-////		boolean isLike = 
-////				loginClubMemberDto.getClubMemberNo();
-//		
-//		//3가지로 판단
-//		//1. 로그인한 회원과 글 작성자가 동일하다면 하트 버튼을 눌러도 아무일도 일어나선 안된다
-//		//2. 서로 다르고 좋아요를 한 적이 없다면 빈 하트를 눌렀을 때, 좋아요 수를 1개 올리고 좋아요 수 카운트 계산
-//		//3. 서로 다르고 좋아요를 한 글이라면 꽉 찬 하트를 눌렀을 때, 좋아요 수를 1개 감소시키고 좋아요 수 카운트 계산
-//		if(memberId.equals(clubMemberDto.getClubMemberId())) {
-//			return "2"; //꽉 찬 하트 + 버튼 클릭을 못하게 해야한다
-//		}
-////		else if() { //좋아요를 한 적이 없다
-////			
-////		}
-////		else {
-////			
-////		}
-//		
-//		
-//	}
 	
 	
 }
