@@ -86,5 +86,11 @@
 		where club_board_no = #{clubBoardNo}
 	</update>
 	
+	<update id="updateLikeCount">
+		update club_board set club_board_likecount = (select count(*) from club_board_like
+		where club_board_no = #{clubBoardNo}) where club_board_no = #{clubBoardNo}
+		
+	</update>
+	
 
 	</mapper>
