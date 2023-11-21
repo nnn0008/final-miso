@@ -36,8 +36,8 @@
             </script>
 
             <style>
-                .check {
-                    display: none;
+                .check, .choice {
+		              display: none;  
                 }
                 
                
@@ -70,7 +70,6 @@
                                         function () {
                                             var regex = /^[a-z][a-z0-9]{4,19}$/;
                                             var inputId = $(this).val(); // Updated to refer to $(this) directly
-                                            console.log(inputId);
                                             var isValid = regex.test(inputId); // Updated to use 'id' directly
                                             //긍정, 부정 class 제거
                                             $(this).removeClass(
@@ -94,13 +93,14 @@
                                                             $('.d-id-feedback').hide();
                                                             $("[name=memberId]").addClass("is-invalid");
                                                             $(".id-feedback").addClass("is-invalid")
-                                                            $("[name=check1]").prop("checked", false);
+                                                            $("[name=check1]").prop("checked", false).trigger("change");
                                                         }
                                                         else {
+                                                        	console.log("아이디 성공");
                                                             $('.d-id-feedback').hide();
                                                             $("[name=memberId]").addClass("is-valid");
                                                             $(".id-feedback").addClass("is-valid");
-                                                            $("#check1").prop("checked", true);
+                                                            $("#check1").prop("checked", true).trigger("change");
                                                         }
                                                     }
                                                 });
@@ -108,9 +108,9 @@
                                                 $(this).addClass("is-invalid");
                                                 $('.d-id-feedback').addClass(
                                                     "text-danger");
-                                                $("[name=check1]").prop(
-                                                    "checked", false);
-                                            }
+	                                                $("[name=check1]").prop(
+	                                                    "checked", false).trigger("change");
+	                                            }
                                         });
 
                                 //비밀번호 문자열 검사코드
@@ -129,7 +129,7 @@
                                                 "text-danger");
                                             if ($("[name=checkPw]").val() != "" && $("[name=checkPw]").val() != $(this).val()) {
                                                 $("[name=checkPw]").addClass("is-invalid");
-                                                $("[name=check2]").prop("checked", false);
+                                                $("[name=check2]").prop("checked", false).trigger("change");
                                                 $(".checkPw-feed").addClass("is-invalid");
                                             }
                                         }
@@ -137,7 +137,7 @@
                                             $(this).addClass("is-valid");
                                             if ($("[name=checkPw]").val() != "" && $("[name=checkPw]").val() != $(this).val()) {
                                                 $("[name=checkPw]").addClass("is-invalid");
-                                                $("[name=check2]").prop("checked", false);
+                                                $("[name=check2]").prop("checked", false).trigger("change");
                                                 $(".checkPw-feed").addClass("is-invalid");
                                             }
                                         }
@@ -150,12 +150,12 @@
                                     $(".checkPw-feed").removeClass("is-invalid");
                                     if($("[name=memberPw]").val()=="")return;
                                     if ($("[name=memberPw]").val() == $(this).val()) {
-                                        $("[name=check2]").prop("checked", true);
+                                        $("[name=check2]").prop("checked", true).trigger("change");
                                         $(this).addClass("is-valid");
                                     }
                                     else {
                                         $(this).addClass("is-invalid");
-                                        $("[name=check2]").prop("checked", false);
+                                        $("[name=check2]").prop("checked", false).trigger("change");
                                         $(".checkPw-feed").addClass("is-invalid");
                                     }
                                 });
@@ -163,9 +163,9 @@
                                 $("[name=memberName]").blur(function () {
                                     if ($("[name=memberName]").val() != "") {
                                         $(this).addClass("is-valid");
-                                        $("[name=check3]").prop("checked", true);
+                                        $("[name=check3]").prop("checked", true).trigger("change");
                                     } else {
-                                        $("[name=check3]").prop("checked", false);
+                                        $("[name=check3]").prop("checked", false).trigger("change");
                                     }
                                 });
 
@@ -195,8 +195,7 @@
                                         } 
                                         else {
                                             $(this).addClass("is-valid");
-                                            $("[name=check4]")
-                                                .prop("checked", true);
+                                            
                                             $(".email-check").css({
                                                 "pointer-events": "auto",
                                                 "opacity": "1" // 투명도를 1로 설정하여 다시 원래 상태로 만듭니다.
@@ -208,7 +207,7 @@
                                 $("[name=memberBirth]").blur(function () {
                                 	if($(this).val()=="") return;
                                     var inputContent = $(this).val();
-                                    var regex = /^\d{8}$/;
+                                    var regex = /^[1-2][0-9][0-9]{2}-[01][0-9]-[0-3][0-9]$/;
                                     var isValid = regex.test(inputContent)
                                     $(this).removeClass("is-invalid is-valid");
                                     $(".d-brith-feedback").removeClass("text-danger");
@@ -239,6 +238,8 @@
                                                 "text-danger");
                                         }
                                     });
+                                
+                                //필수 항목 전부 체크시 가입 버튼 활성화
                                 $(".check").change(function () {
                                             if ($(".check").length == $(".check:checked").length) {
                                                 $(".btn-join").css({
@@ -247,7 +248,8 @@
                                                 });
                                             } 
                                             else {
-                                                (".btn-join").css({
+                                            	console.log("바뀜");
+                                                $(".btn-join").css({
                                                     "pointer-events": "none",
                                                     "opacity": "0.5" // 투명도를 1로 설정하여 다시 원래 상태로 만듭니다.
                                                 });
@@ -282,7 +284,6 @@
                                         method: "post",
                                         data: { certEmail: memberEmail },
                                         success: function (response) {
-                                        	
                                         }
                                     });
                                 });
@@ -303,18 +304,172 @@
 										 success: function(response) {
 											if(response=="Y"){
 												$("#checkNumber").addClass("is-valid");
-												$(".check-number").prop("checked", true);
+												$(".check-number").prop("checked", true).trigger("change");
+												$("[name=check4]")
+                                                .prop("checked", true).trigger("change");
 											}
 											else{
 												$(".checkNumber-feed").addClass("is-invalid");
 												$("#checkNumber").addClass("is-invalid");
-												$(".check-number").prop("checked", false);
+												$("[name=check4]")
+                                                .prop("checked", false).trigger("change");
 											}
 										}
 									});
 								});
                                 
-                            });
+								//관심 카테고리 동작 코드 1
+								$("[name=mojor-s1]").change(function () {
+									$(".ds1").hide();
+									$(".choice1").css("display", "none");
+								    var mojor = $(this).val();
+								    if (mojor != "") {
+								        $("#monor1").prop("disabled", false);
+								        if ($(".choice1").hasClass(mojor)) {
+								            $(".choice1." + mojor).css("display", "inline-block");
+								        } else {
+								            // 해당 클래스가 없는 경우의 동작을 추가할 수 있습니다.
+								           $(".ds1").prop("selected", true).trigger("change");
+								    	 $(".choice1").css("display", "none");
+								    	$("#monor1").prop("disabled", true).trigger("change"); // 예시로 display를 none으로 설정
+								        }
+								    }
+								    else{
+								    	$(".ds1").prop("selected", true);
+								    	 $(".choice1").css("display", "none");
+								    	$("#monor1").prop("disabled", true);
+								    }
+								});
+								
+								//관심 카테고리 동작 코드 2
+								$("[name=mojor-s2]").change(function () {
+									$(".ds2").hide();
+									$(".choice2").css("display", "none");
+								    var mojor = $(this).val();
+								    if (mojor != "") {
+								        $("#monor2").prop("disabled", false);
+								        if ($(".choice2").hasClass(mojor)) {
+								            $(".choice2." + mojor).css("display", "inline-block");
+								        } else {
+								            // 해당 클래스가 없는 경우의 동작을 추가할 수 있습니다.
+								           $(".ds2").prop("selected", true);
+								    	 $(".choice2").css("display", "none");
+								    	$("#monor2").prop("disabled", true); // 예시로 display를 none으로 설정
+								        }
+								    }
+								    else{
+								    	$(".ds2").prop("selected", true);
+								    	 $(".choice2").css("display", "none");
+								    	$("#monor2").prop("disabled", true);
+								    }
+								});
+								
+								//관심 카테고리 동작 코드 3
+								$("[name=mojor-s3]").change(function () {
+									$(".ds3").hide();
+									$(".choice3").css("display", "none");
+								    var mojor = $(this).val();
+								    if (mojor != "") {
+								        $("#monor3").prop("disabled", false);
+								        if ($(".choice3").hasClass(mojor)) {
+								            $(".choice3." + mojor).css("display", "inline-block");
+								        } else {
+								            // 해당 클래스가 없는 경우의 동작을 추가할 수 있습니다.
+								           $(".ds3").prop("selected", true);
+								    	 $(".choice3").css("display", "none");
+								    	$("#monor3").prop("disabled", true); // 예시로 display를 none으로 설정
+								        }
+								    }
+								    else{
+								    	$(".ds3").prop("selected", true);
+								    	 $(".choice3").css("display", "none");
+								    	$("#monor3").prop("disabled", true);
+								    }
+								});
+						
+								//카테고리 값 유무 검사
+								$(".mojor-check").change(function () {
+									if($(this).val()!=null){
+										 $(".category-check")
+                                         .prop("checked", true).trigger("change");
+									}
+									else{
+										$(".category-check")
+                                        .prop("checked", false).trigger("change");
+									}
+								})
+
+								// [1] 모든 .zip 엘리먼트 숨기기
+
+						           // [2] 검색어 입력 처리
+						           $(".search-input").on('input', function () {
+						               console.log("검색중");
+
+						               if (!/^[가-힣]/.test($(this).val())) {
+						                   return;
+						               }
+
+						               var keyword = $(this).val();
+						               console.log(keyword);
+
+						               if (keyword.length === 0) {
+						                   $(".zip").hide();
+						                   return;
+						               }
+
+						               $.ajax({
+						                   url: "http://localhost:8080/rest/zip",
+						                   method: "get",
+						                   data: { keyword: keyword },
+						                   success: function (response) {
+						                       // 검색 결과를 처리
+						                       var zipList = $('.addr-list');
+						                       // 이전 검색 결과 지우기
+						                       zipList.empty();
+
+						                       for (var i = 0; i < response.length; i++) {
+						                           var text = (response[i].sido != null ? response[i].sido + ' ' : '') +
+						                               (response[i].sigungu != null ? response[i].sigungu + ' ' : '') +
+						                               (response[i].eupmyun != null ? response[i].eupmyun + ' ' : '') +
+						                               (response[i].hdongName != null ? response[i].hdongName + ' ' : '');
+
+						                           console.log(text);
+
+						                           zipList.append($("<li>")
+						                               .addClass("list-group-item zip")
+						                               .val(response[i].zipCodeNo)
+						                               .text(text));
+						                       }
+						          
+						                   }
+						               });
+						               
+						               // [3] 목록을 클릭하면 입력창에 채우고 .zip 엘리먼트 숨기기
+						               $(".addr-list").on("click", ".zip", function () {
+						                  
+						                  var form = $('.add');
+						                  
+						                   form.append($("<input>")
+						                        .addClass("newInput")
+						                         .prop("type", "hidden")
+						                         .attr("name", "zipCodeNo")
+						                         .val($(this).val())
+						                     ); 
+
+						                   var selectedAddress = $(this).text();
+						                   $(".search-input").val(selectedAddress);
+						                   $(".zip").hide();
+						                   
+						                   //console.log($('.newInput').val())
+						               });
+						               
+						               
+						           });
+
+									
+						});
+								
+								
                         </script>
 
                         <body>
@@ -371,7 +526,6 @@
                                                 <div class="col">
                                                     <div class="input-group has-validation">
                                                         <div class="form-floating checkPw-feed">
-                                                            <input type="checkbox" name="" class="check">
                                                             <input type="text" class="form-control" name="checkPw"
                                                                 id="checkPw" placeholder="비밀번호" required> <label
                                                                 for="checkPw">비밀번호 확인</label>
@@ -423,7 +577,6 @@
 		                                                <div class="form-floating checkNumber-feed">
 		                                                    <input type="text" class="form-control" id="checkNumber"
 		                                                        placeholder="인증번호" required>
-		                                                        <input type="text" class="check check-number">
 		                                                    <label for="checkNumber">인증번호</label>
 		                                                </div>
 		                                                <div class="invalid-feedback">
@@ -439,8 +592,8 @@
                                                     <div class="input-group has-validation">
                                                         <div class="form-floating">
                                                             <input type="text" class="form-control" name="memberContact"
-                                                                id="memberContect" placeholder="연락처" required> <label
-                                                                for="memberContect">연락처</label>
+                                                                id="memberContact" placeholder="연락처" required> <label
+                                                                for="memberContact">연락처</label>
                                                         </div>
                                                     </div>
                                                     <div class="d-content-feedback">'-'을 제외하고 숫자로만 적어주세요</div>
@@ -454,85 +607,200 @@
                                                             <input type="text" class="form-control" name="memberBirth"
                                                                 id="memberBirth" placeholder="생년월일" required> <label
                                                                 for="memberBirth">생년월일</label>
-                                                            <div class="d-brith-feedback">'-'을 제외하고 숫자로만
-                                                                적어주세요.ex->19901201</div>
+                                                            <div class="d-brith-feedback">'-'을 포함하여 
+                                                                적어주세요.ex->1990-01-01</div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
 
+											<div class="row mt-4">
+							                    <div class="col">
+							                       지역 <input type="search" name="StringmemberAddr" class="form-control search-input"
+							                            placeholder="동,읍,면을 입력해주세요">
+							                    </div>                    
+							                </div>
+							                <div class="row">
+							                    <div class="col">
+							                        <ul class="list-group addr-list">
+							                        </ul>
+							                    </div>
+							                </div>
+											
 
-
-                                            <div class="row mt-4">
-                                                <div class="col">
-                                                    <label>주소</label> <input type="search"
-                                                        class="form-control search-input" placeholder="검색할 주소 입력">
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <ul class="list-group addr-list">
-
-                                                    </ul>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mt-4">
-                                                <div class="col">
-                                                    <h1>다음내용</h1>
-                                                </div>
-                                            </div>
-                                            <script src="https://unpkg.com/hangul-js" type="text/javascript"></script>
-                                            <script>
-                                                $(function () {
-
-                                                    //[1] 다 숨겨
-                                                    $(".addr-list").hide();
-
-                                                    //[2] 검색하면 찾아서 보여줘
-                                                    $(".search-input").blur("input", function () {
-                                                        var keyword = $(this).val();
-                                                        console.log(keyword);
-                                                        //db에 있는 주소 비동기로 조회후 가져오는 구문
-                                                        $.ajax({
-                                                            url: "http://localhost:8080/zip/search",
-                                                            method: "post",
-                                                            data: {
-                                                                searchVal: keyword
-                                                            },
-                                                            success: function (
-                                                                response) {
-                                                                console.log(response);
-                                                            }
-                                                        });
-                                                        if (keyword.length == 0) {
-                                                            $(".addr-list").hide();
-                                                            return;
-                                                        }
-
-                                                        var count = 0;
-                                                        $(".addr-list").each(function (idx, el) {
-                                                            var text = $(el).text().trim();
-                                                            //var index = text.indexOf(keyword);
-                                                            //if(index >= 0) {
-                                                            if (count < 5 && Hangul.search(text, keyword) >= 0) {
-                                                                $(el).show();
-                                                                count++;
-                                                            } else {
-                                                                $(el).hide();
-                                                            }
-                                                        });
-                                                    });
-
-                                                    //[3] 목록 누르면 입력창에 넣어
-                                                    $(".addr-list").find(".list-group-item").click(
-                                                        function () {
-                                                            $(".search-input").val(
-                                                                $(this).text());
-                                                            $(".addr-list").hide();
-                                                        });
-                                                });
-                                            </script>
+                                            
+                                            <!-- 1. 관심 테이블 대분류 -->
+                                            <input type="checkbox" class="category-check check">
+                                            <div class="form-group"> 
+										      <label for="mojor1" class="form-label mt-4">무엇에 관심이 있으신가요?</label>
+										      <br>
+										      <span class="mt-1">관심 1</span>
+										      <select class="form-select" name="mojor-s1" id="mojor1">
+										        <option class="dj1" value=null>선택하지 않음</option>
+										        <option value="40">아웃도어/여행</option>
+										        <option value="41">업종/직무</option>
+										        <option value="42">인문학/책/글</option>
+										        <option value="43">운동/스포츠</option>
+										        <option value="61">외국/언어</option>
+										        <option value="62">문화/공연/축제</option>
+										        <option value="63">음악/악기</option>
+										        <option value="64">공예/만들기</option>
+										        <option value="65">댄스/무용</option>
+										        <option value="66">봉사활동</option>
+										        <option value="67">사교/인맥</option>
+										        <option value="68">차/오토바이</option>
+										        <option value="69">사진/영상</option>
+										        <option value="70">야구관람</option>
+										        <option value="71">게임/오락</option>
+										        <option value="72">요리/제조</option>
+										        <option value="73">반려동물</option>
+										        <option value="74">자유주제</option>
+										      </select>
+										    </div>
+										    
+										    
+										<!-- 
+											40=아웃도어/여행
+											41=업종/직무
+											42=인문학/책/글
+											43=운동/스포츠
+											61=외국/언어
+											62=문화/공연/축제
+											63=음악/악기
+											64=공예/만들기
+											65=댄스/무용
+											66=봉사활동
+											67=사교/인맥
+											68=차/오토바이
+											69=사진/영상
+											70=야구관람
+											71=게임/오락
+											72=요리/제조
+											73=반려동물
+											74=자유주제
+										-->
+<!-- 										관심 카테고리 소분류 -->
+										    <div class="form-group"> 
+										      <select class="form-select mojor-check" name="likeCategory" id="monor1" disabled>
+								                <option class="ds1" value=""></option>
+								                <option class="choice1 40" value="7">등산</option>
+								                <option class="choice1 40" value="8">산책/트래킹</option>
+								                <option class="choice1 40" value="9">캠핑/백패킹</option>
+								                <option class="choice1 40" value="10">국내여행</option>
+								                <option class="choice1 42" value="11">책/독서</option>
+								                <option class="choice1 42" value="12">인문학</option>
+								                <option class="choice1 42" value="13">심리학</option>
+								                <option class="choice1 42" value="14">철학</option>
+								                <option class="choice1 41" value="15">금융업</option>
+								                <option class="choice1 41" value="16">교육업</option>
+								                <option class="choice1 41" value="17">디자인업계</option>
+								                <option class="choice1 41" value="18">컨설팅</option>
+								                <option class="choice1 43" value="19">자전거</option>
+								                <option class="choice1 43" value="20">배드민턴</option>
+								                <option class="choice1 43" value="21">볼링</option>
+								                <option class="choice1 43" value="22">골프</option>
+										      </select>
+										    </div>
+										    
+                                            <!-- 2. 관심 테이블 대분류 -->
+                                            <div class="form-group"> 
+										      <label for="mojor2" class="form-label mt-4">관심 2</label>
+										      <select class="form-select" name="mojor-s2" id="mojor2">
+										        <option class="dj2" value=null>선택하지 않음</option>
+										        <option value="40">아웃도어/여행</option>
+										        <option value="41">업종/직무</option>
+										        <option value="42">인문학/책/글</option>
+										        <option value="43">운동/스포츠</option>
+										        <option value="61">외국/언어</option>
+										        <option value="62">문화/공연/축제</option>
+										        <option value="63">음악/악기</option>
+										        <option value="64">공예/만들기</option>
+										        <option value="65">댄스/무용</option>
+										        <option value="66">봉사활동</option>
+										        <option value="67">사교/인맥</option>
+										        <option value="68">차/오토바이</option>
+										        <option value="69">사진/영상</option>
+										        <option value="70">야구관람</option>
+										        <option value="71">게임/오락</option>
+										        <option value="72">요리/제조</option>
+										        <option value="73">반려동물</option>
+										        <option value="74">자유주제</option>
+										      </select>
+										    </div>
+										    
+										    
+<!-- 										관심 카테고리 소분류 -->
+										    <div class="form-group"> 
+										      <select class="form-select mojor-check" name="likeCategory" id="monor2" disabled>
+								                <option class="ds2" value=""></option>
+								                <option class="choice2 40" value="7">등산</option>
+								                <option class="choice2 40" value="8">산책/트래킹</option>
+								                <option class="choice2 40" value="9">캠핑/백패킹</option>
+								                <option class="choice2 40" value="10">국내여행</option>
+								                <option class="choice2 42" value="11">책/독서</option>
+								                <option class="choice2 42" value="12">인문학</option>
+								                <option class="choice2 42" value="13">심리학</option>
+								                <option class="choice2 42" value="14">철학</option>
+								                <option class="choice2 41" value="15">금융업</option>
+								                <option class="choice2 41" value="16">교육업</option>
+								                <option class="choice2 41" value="17">디자인업계</option>
+								                <option class="choice2 41" value="18">컨설팅</option>
+								                <option class="choice2 43" value="19">자전거</option>
+								                <option class="choice2 43" value="20">배드민턴</option>
+								                <option class="choice2 43" value="21">볼링</option>
+								                <option class="choice2 43" value="22">골프</option>
+										      </select>
+										    </div>
+										    
+                                          <!-- 3. 관심 테이블 대분류 -->
+                                            <div class="form-group"> 
+										      <label for="mojor3" class="form-label mt-4">관심 3</label>
+										      <select class="form-select" name="mojor-s3" id="mojor3">
+										        <option class="dj3" value=null>선택하지 않음</option>
+										        <option value="40">아웃도어/여행</option>
+										        <option value="41">업종/직무</option>
+										        <option value="42">인문학/책/글</option>
+										        <option value="43">운동/스포츠</option>
+										        <option value="61">외국/언어</option>
+										        <option value="62">문화/공연/축제</option>
+										        <option value="63">음악/악기</option>
+										        <option value="64">공예/만들기</option>
+										        <option value="65">댄스/무용</option>
+										        <option value="66">봉사활동</option>
+										        <option value="67">사교/인맥</option>
+										        <option value="68">차/오토바이</option>
+										        <option value="69">사진/영상</option>
+										        <option value="70">야구관람</option>
+										        <option value="71">게임/오락</option>
+										        <option value="72">요리/제조</option>
+										        <option value="73">반려동물</option>
+										        <option value="74">자유주제</option>
+										      </select>
+										    </div>
+										    
+										    
+<!-- 										관심 카테고리 소분류 -->
+										    <div class="form-group"> 
+										      <select class="form-select mojor-check" name="likeCategory" id="monor3" disabled>
+								                <option class="ds3" value=""></option>
+								                <option class="choice3 40" value="7">등산</option>
+								                <option class="choice3 40" value="8">산책/트래킹</option>
+								                <option class="choice3 40" value="9">캠핑/백패킹</option>
+								                <option class="choice3 40" value="10">국내여행</option>
+								                <option class="choice3 42" value="11">책/독서</option>
+								                <option class="choice3 42" value="12">인문학</option>
+								                <option class="choice3 42" value="13">심리학</option>
+								                <option class="choice3 42" value="14">철학</option>
+								                <option class="choice3 41" value="15">금융업</option>
+								                <option class="choice3 41" value="16">교육업</option>
+								                <option class="choice3 41" value="17">디자인업계</option>
+								                <option class="choice3 41" value="18">컨설팅</option>
+								                <option class="choice3 43" value="19">자전거</option>
+								                <option class="choice3 43" value="20">배드민턴</option>
+								                <option class="choice3 43" value="21">볼링</option>
+								                <option class="choice3 43" value="22">골프</option>
+										      </select>
+										    </div>
 
                                             <div class="row mt-4">
                                                 <div class="col">

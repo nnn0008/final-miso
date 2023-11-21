@@ -5,10 +5,18 @@
     
     <mapper namespace="member">
     	
-    	<insert id="join">
-    		insert into member(member_id, member_pw, member_name, member_email, member_addr, member_level)
-    		values(#{memberId}, #{memberPw}, #{memberName}, #{memberEmail}, '서울 뭐시기', #{memberLevel})
-    	</insert>
+  		<insert id="join">
+	   		insert into member(member_id, member_pw, member_name, member_email, member_contact, member_birth, member_level, member_addr)
+		    values(#{memberId}, #{memberPw}, #{memberName}, #{memberEmail}, #{memberContact}, #{memberBirth, jdbcType=VARCHAR}, #{memberLevel}, #{memberAddr})
+		</insert>
+		
+		<select id="memberListByNew" resultType="MemberDto">
+			select * from member order by member_join asc
+		</select>
+		
+		<select id="memberListByOld" resultType="MemberDto">
+			select * from member order by member_join desc
+		</select>
     	
     	<select id="loginId" resultType="MemberDto">
     		select * from member where member_id=#{memberId}

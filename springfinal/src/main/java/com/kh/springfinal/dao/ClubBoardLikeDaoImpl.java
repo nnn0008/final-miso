@@ -25,6 +25,11 @@ public class ClubBoardLikeDaoImpl implements ClubBoardLikeDao{
 	}
 	
 	@Override
+	public boolean deleteByClubMemberNo(int clubMemberNo) {
+		return sqlSession.delete("clubBoardLike.removeByClubMemberNo", clubMemberNo) > 0;
+	}
+	
+	@Override
 	public ClubBoardLikeDto selectOne(int clubBoardNo) {
 		return sqlSession.selectOne("clubBoardLike.find", clubBoardNo);
 	}

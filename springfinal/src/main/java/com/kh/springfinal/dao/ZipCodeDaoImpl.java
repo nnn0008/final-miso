@@ -56,6 +56,21 @@ public class ZipCodeDaoImpl implements ZipCodeDao{
 	}
 	
 	@Override
+	public ZipCodeDto selectOneAddrNo(String StringmemberAddr) {
+		 
+	        // 주소 문자열을 단어로 나누기
+	        String[] words = StringmemberAddr.split("\\s+");
+
+	        // Address 객체에 할당
+	        ZipCodeDto zipCodeDto = new ZipCodeDto();
+	        zipCodeDto.setSido(words[0]);
+	        zipCodeDto.setSigungu(words[1]);
+	        zipCodeDto.setHdongName(words[2]);
+	        zipCodeDto.setEupmyun(words[2]);
+		
+		
+		return sqlSession.selectOne("zipcode.selectOneMemberCN", zipCodeDto);
+	}
 	public List<ZipCodeDto> selectListByPage(PaginationVO vo) {
 		
 			List<ZipCodeDto>list=sqlSession.selectList("zipcode.selectListByPage",vo);
