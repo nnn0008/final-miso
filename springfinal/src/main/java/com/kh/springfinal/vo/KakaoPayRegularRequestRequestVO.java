@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Data @AllArgsConstructor @NoArgsConstructor @Builder
 public class KakaoPayRegularRequestRequestVO {
 	private String cid; //가맹점 코드
+	private String tid;
 	private String sid; // 정기결제 키
 	private String partnerOrderId; //가맹점 주분번호
 	private String partnerUserId; // 가맹점 회원아이디

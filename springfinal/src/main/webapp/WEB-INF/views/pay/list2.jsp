@@ -17,11 +17,11 @@
 	<hr>
 	<%--전체취소 버튼은 잔여금액이 있을 떄만 출력되어야 한다 --%>
 	<c:if test="${paymentRegularListVO.paymentRegularDto.paymentRegularRemain > 0 }">
-	<a href="regularCancelAll?paymentRegularNo=${paymentRegularListVO.paymentRegularDto.paymentRegularNo}">전체(잔여)금액 취소</a>
+	<a href="regularCancelAll?paymentRegularNo=${paymentRegularListVO.paymentRegularDto.paymentRegularNo}">구독 취소</a>
 	</c:if>
 	</div>
 	
-	<!-- 상세 목록 정보 -->
+	<!-- 상세 목록 정보(못쓸듯) -->
 	<div style="border:1px solid red; padding:10px; margin-top:10px">
 		<c:forEach var="regularDetailDto" items="${paymentRegularListVO.regularDetailList}">
 			<div style="border:1px solid gray; padding:10px; margin-top:10px;">

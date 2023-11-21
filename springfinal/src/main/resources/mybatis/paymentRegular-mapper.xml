@@ -6,18 +6,25 @@
     
     <mapper namespace="paymentRegular">
     
-    <!-- 정기결제 스케쥴러 테스트 -->
+    <!-- 정기결제 스케줄러 -->
     <update id="scheduler">
     UPDATE payment_regular
-    SET payment_regular_tid = #{paymentRegularTid}, payment_regular_sid= #{paymentRegularSid}
-    where payment_regular_no = #{paymentRegularNo}
-	</update>
+    SET 
+        payment_regular_end = 
+            CASE 
+                WHEN payment_regular_name IN ('파워 유저 정기 이용권(1달)', '프리미엄 모임 정기 이용권(1달)')
+                    THEN ADD_MONTHS(#{paymentRegularEnd}, 1)
+                WHEN payment_regular_name IN ('파워 유저 정기 이용권(1년)', '프리미엄 모임 정기 이용권(1년)')
+                    THEN ADD_MONTHS(#{paymentRegularEnd}, 12)
+            END
+    WHERE payment_regular_no = #{paymentRegularNo}
+</update>
 	
     	<select id="sequence" resultType="int">
     		select payment_regular_seq.nextval from dual
     	</select>
     	
-    	<!-- 결제 등록 -->
+    	<!-- 결제 등록 
     	<insert id="insert">
     		insert into payment_regular(
     			payment_regular_no,payment_regular_member,
@@ -32,6 +39,28 @@
     			#{paymentRegularRemain}
     			)
     	</insert>
+    	-->
+    	
+    	<insert id="insert">
+   		insert into payment_regular (
+        payment_regular_no, payment_regular_member,
+        payment_regular_tid, payment_regular_sid,
+        payment_regular_name, payment_regular_price,
+        payment_regular_remain, payment_regular_end
+   		 )
+    	values (
+        #{paymentRegularNo}, #{paymentRegularMember},
+        #{paymentRegularTid}, #{paymentRegularSid},
+        #{paymentRegularName}, #{paymentRegularPrice},
+        #{paymentRegularRemain}, 
+        CASE 
+            WHEN #{paymentRegularName} IN ('파워 유저 정기 이용권(1달)', '프리미엄 모임 정기 이용권(1달)')
+            THEN ADD_MONTHS(SYSDATE, 1)
+            WHEN #{paymentRegularName} IN ('파워 유저 정기 이용권(1년)', '프리미엄 모임 정기 이용권(1년)')
+            THEN ADD_MONTHS(SYSDATE, 12)
+        END
+   		 )
+		</insert>
     	
     	<!-- 결제 상세등록 -->
     	<insert id="insertDetail">
@@ -46,6 +75,12 @@
     		)
     		</insert>
     		
+    		<!-- 결제 등록 후, tid 업데이트 -->
+			<update id="updateTid">
+			    UPDATE payment_regular
+			    SET payment_regular_tid = #{paymentRegularTid}
+			    WHERE payment_regular_no = #{paymentRegularNo}
+			</update>
     	
     		<!-- 결제 대표 목록 -->
     		<select id="list2" resultType="paymentRegularDto">

@@ -169,62 +169,62 @@ public class KakaoPayRegularServiceImpl implements KakaoPayRegularService {
 	}
 	
 
-	@Override
-	public KakaoPayRegularReadyResponseVO ready2(KakaoPayRegularReadyRequestVO request) throws URISyntaxException {
-		
-		//주소 설정
-		URI uri = new URI("https://kapi.kakao.com/v1/payment/ready");
-		
-		//바디 설정
-		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-		body.add("cid", kakaoPayProperties.getRegularCid());
-		body.add("partner_order_id", request.getPartnerOrderId());
-		body.add("partner_user_id", request.getPartnerUserId());
-		body.add("item_name", request.getItemName());
-		body.add("quantity", "1");
-		body.add("total_amount", String.valueOf(request.getItemPrice()));
-		body.add("vat_amount", "0");
-		body.add("tax_free_amount", "0");
-		
-		//현재 페이지 주소 계산
-		String path = ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString();
-		body.add("approval_url",path+"/regularSuccess");
-		body.add("cancel_url",path+"/cancelPage");
-		body.add("fail_url",path+"/failPage");
-		
-		//요청 발송
-		HttpEntity entity = new HttpEntity(body,headers);//요청객체
-				
-		KakaoPayRegularReadyResponseVO response = template.postForObject(uri, entity, KakaoPayRegularReadyResponseVO.class);
-		
-		return response;
-	}
-
-	@Override
-	public KakaoPayRegularApproveResponseVO approve2(KakaoPayRegularApproveRequestVO request)
-			throws URISyntaxException {
-		
-		//주소 설정
-		URI uri = new URI("https://kapi.kakao.com/v1/payment/subscription");
-		
-		//바디설정
-		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-		body.add("cid", kakaoPayProperties.getRegularCid());
-		body.add("sid", request.getSid());
-		body.add("partner_order_id", request.getPartnerOrderId()); 
-		body.add("partner_user_id", request.getPartnerUserId());
-		body.add("quantity", "1");
-		body.add("total_amount",String.valueOf(request.getItemPrice()));
-		body.add("tax_free_amount", "0");
-				
-		HttpEntity entity = new HttpEntity(body,headers);//요청 객체
-				
-		KakaoPayRegularApproveResponseVO response = template.postForObject(uri, entity, KakaoPayRegularApproveResponseVO.class);
-				
-		log.debug("결제 2차승인 완료 = {}",response.getTid());
-				
-		return response;
-	}
+//	@Override
+//	public KakaoPayRegularReadyResponseVO ready2(KakaoPayRegularReadyRequestVO request) throws URISyntaxException {
+//		
+//		//주소 설정
+//		URI uri = new URI("https://kapi.kakao.com/v1/payment/ready");
+//		
+//		//바디 설정
+//		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+//		body.add("cid", kakaoPayProperties.getRegularCid());
+//		body.add("partner_order_id", request.getPartnerOrderId());
+//		body.add("partner_user_id", request.getPartnerUserId());
+//		body.add("item_name", request.getItemName());
+//		body.add("quantity", "1");
+//		body.add("total_amount", String.valueOf(request.getItemPrice()));
+//		body.add("vat_amount", "0");
+//		body.add("tax_free_amount", "0");
+//		
+//		//현재 페이지 주소 계산
+//		String path = ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString();
+//		body.add("approval_url",path+"/regularSuccess");
+//		body.add("cancel_url",path+"/cancelPage");
+//		body.add("fail_url",path+"/failPage");
+//		
+//		//요청 발송
+//		HttpEntity entity = new HttpEntity(body,headers);//요청객체
+//				
+//		KakaoPayRegularReadyResponseVO response = template.postForObject(uri, entity, KakaoPayRegularReadyResponseVO.class);
+//		
+//		return response;
+//	}
+//
+//	@Override
+//	public KakaoPayRegularApproveResponseVO approve2(KakaoPayRegularApproveRequestVO request)
+//			throws URISyntaxException {
+//		
+//		//주소 설정
+//		URI uri = new URI("https://kapi.kakao.com/v1/payment/subscription");
+//		
+//		//바디설정
+//		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+//		body.add("cid", kakaoPayProperties.getRegularCid());
+//		body.add("tid", request.getTid());
+//		body.add("sid", request.getSid());
+//		body.add("partner_order_id", request.getPartnerOrderId()); 
+//		body.add("partner_user_id", request.getPartnerUserId());
+//		body.add("quantity", "1");
+//		body.add("total_amount",String.valueOf(request.getItemPrice()));
+//		body.add("tax_free_amount", "0");
+//				
+//		HttpEntity entity = new HttpEntity(body,headers);//요청 객체
+//				
+//		KakaoPayRegularApproveResponseVO response = template.postForObject(uri, entity, KakaoPayRegularApproveResponseVO.class);
+//				
+//				
+//		return response;
+//	}
 
 	
 	@Override

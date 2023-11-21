@@ -39,10 +39,18 @@
                 <strong class="ms-2">모임채팅</strong>
             </div>
         </div>
+        
     <c:forEach var="roomList" items="${roomList}">
        <div class="row mt-3 ms-2 d-flex align-items-center club-box" onclick="enterRoom(${roomList.chatRoomNo})">
     <div class="col-2">
-        <img src="${pageContext.request.contextPath}/images/dog.png" class="club-image">
+	<c:choose>
+                 <c:when test="${roomList.attachNo > 0}">
+                    <img src="${pageContext.request.contextPath}/club/image?clubNo=${roomList.clubNo}" class="rounded-circle" width="80" height="80">
+                </c:when>
+                <c:otherwise>
+                    <img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="80" height="80">
+                </c:otherwise>
+            </c:choose>
     </div>
     <div class="col">
         <div class="col">
@@ -53,7 +61,6 @@
         </div>
     </div>
 </div>
-
     </c:forEach>
     
 <hr>
@@ -67,7 +74,29 @@
  <c:forEach var="oneChatRoom" items="${oneChatRoomList}">
     <div class="row mt-3 ms-2 d-flex align-items-center club-box" onclick="enterRoom(${oneChatRoom.chatRoomNo})" onmouseover="hoverEffect(this)" onmouseout="removeHoverEffect(this)">
         <div class="col-2">
-            <img src="${pageContext.request.contextPath}/images/dog.png" class="club-image">
+        <c:choose>
+    <c:when test="${sessionScope.name eq oneChatRoom.chatSender}">
+        <c:choose>
+            <c:when test="${oneChatRoom.receiverAttachNo eq 0}">
+                <img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="80" height="80">
+            </c:when>
+            <c:otherwise>
+                <img src="/rest/member/profileShow?memberId=${oneChatRoom.chatReceiver}" class="rounded-circle" width="80" height="80">
+            </c:otherwise>
+        </c:choose>
+    </c:when>
+    <c:otherwise>
+        <c:choose>
+            <c:when test="${oneChatRoom.senderAttachNo eq 0}">
+                <img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="80" height="80">
+            </c:when>
+            <c:otherwise>
+                <img src="/rest/member/profileShow?memberId=${oneChatRoom.chatSender}" class="rounded-circle" width="80" height="80">
+            </c:otherwise>
+        </c:choose>
+    </c:otherwise>
+</c:choose>
+
         </div>
         <div class="col">
             <div class="col">
@@ -98,7 +127,14 @@
         <c:forEach var="meetingRoom" items="${meetingRoomList}">
        <div class="row mt-3 ms-2 d-flex align-items-center club-box" onclick="enterRoom(${meetingRoom.chatRoomNo})">
     <div class="col-2">
-        <img src="${pageContext.request.contextPath}/images/dog.png" class="club-image">
+    <c:choose>
+                 <c:when test="${meetingRoom.attachNo > 0}">
+                    <img src="${pageContext.request.contextPath}/club/image?clubNo=${meetingRoom.clubNo}" class="rounded-circle" width="80" height="80">
+                </c:when>
+                <c:otherwise>
+                    <img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="80" height="80">
+                </c:otherwise>
+            </c:choose>  
     </div>
     <div class="col">
         <div class="col">

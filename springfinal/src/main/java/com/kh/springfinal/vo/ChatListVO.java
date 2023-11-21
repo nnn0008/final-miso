@@ -13,4 +13,5 @@ public class ChatListVO {
 	private String clubName; //동호회 이름
 	private String clubExplain; //동호회 설명
 
+	private int attachNo; //동호회 사진 번호
 }

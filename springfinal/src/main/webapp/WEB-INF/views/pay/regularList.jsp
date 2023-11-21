@@ -17,22 +17,7 @@
    <h1>정기 상품</h1>
 </div>
 
-<div class="row mt-4">
-   <div class="col">
-      <div class="form-check">
-           <input class="form-check-input check-all" type="checkbox" value="" id="flexCheckDefault">
-           <label class="form-check-label" for="flexCheckDefault">
-                전체 선택
-           </label>
-       </div>
-   </div>
-   <div class="col text-end">
-      <button class="btn btn-primary purchase-btn" type="button">
-         <i class="fa-solid fa-cart-shopping"></i>
-         구매하기
-      </button> 
-   </div>
-</div>
+
 
 <hr>
 
@@ -71,15 +56,15 @@
 
 <script>
 $(function(){
-   $(".check-all").change(function(){
-      var check = $(this).prop("checked");
-      $("[name=productNo]").prop("checked", check);
-      $("[name=productNo]").change();
-   });
+   
    $("[name=productNo]").change(function(){
-      $(this).parents(".product-item").find("[name=qty]").prop("disabled", !$(this).prop("checked"));
-      calculateUnit($(this).parents(".product-item"));
-   });
+	    var checked = $(this).prop("checked");
+	    if (checked) {
+	        $("[name=productNo]").not(this).prop("checked", false);
+	    }
+	    $(this).parents(".product-item").find("[name=qty]").prop("disabled", !checked);
+	    calculateUnit($(this).parents(".product-item"));
+	});
    $("[name=qty]").on("input", function(){
       calculateUnit($(this).parents(".product-item"));
    });

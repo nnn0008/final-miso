@@ -11,5 +11,5 @@ public class ChatOneVO {
 	private String memberId;
 	private String memberName;
 	private String memberLevel;
-
+	
 }

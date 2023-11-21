@@ -6,13 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data @AllArgsConstructor @NoArgsConstructor @Builder
-public class ChatMemberListVO {
-
-	private String clubMemberId;
-	private String memberName;
-	private String clubMemberRank;
-	private int chatRoomNo;
-	private int clubNo;
+public class ChatOneMemberVO {
 	
-	private int meetingNo;
+	private int chatRoomNo;
+	private String chatSender;
+	private String chatReceiver;
+	private int senderAttachNo;
+	private int receiverAttachNo;
+
 }
