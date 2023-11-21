@@ -35,8 +35,25 @@
         OR instr(sigungu, #{keyword})>0 
         OR instr(eupmyun, #{keyword})>0 
         OR instr(hdong_name, #{keyword})>0  
+   
 
 
+	
+	</select>
+	
+	<select id="selectListByPage" resultType="zipCodeDto">
+		
+		   select * from (
+			        select rownum rn, TMP.* from (
+			        select * from zip_code
+			        WHERE instr(sido, #{keyword})>0 
+        			OR instr(sigungu, #{keyword})>0 
+        			OR instr(eupmyun, #{keyword})>0 
+        			OR instr(hdong_name, #{keyword})>0
+			        ) TMP
+			    )
+			    where rn between #{startRow} and #{finishRow}
+	
 	
 	</select>
 	
@@ -55,14 +72,22 @@
 	
 	</select>
 	
-	<select id="selectOneMemberCN" resultType="zipCodeDto">
-		
 		select * from zip_code where sido=#{sido} and 
 		hdong_name=#{hdongName} and
 		sigungu=#{sigungu} or
 		eupmyun=#{eupmyun}
 		
 	</select> 
+	
+	 				select count(*) from zip_code
+	 				WHERE instr(sido, #{keyword})>0 
+        			OR instr(sigungu, #{keyword})>0 
+        			OR instr(eupmyun, #{keyword})>0 
+        			OR instr(hdong_name, #{keyword})>0
+	 				
+	 	</select>
+	
+	
 	
 	
 		

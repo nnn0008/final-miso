@@ -5,6 +5,9 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
     
 <mapper namespace="chat">
+		<select id="sequence" resultType="int">
+	select chat_seq.nextval from dual
+	</select>
 	
 	<insert id="add">
 	insert into chat(
@@ -16,7 +19,7 @@
 	attach_no
 	) 
 	values(
-	chat_seq.nextval,
+	#{chatNo},
 	#{chatRoomNo},
 	#{chatSender},
 	#{chatReceiver},
@@ -34,6 +37,76 @@
     FROM chat
     WHERE chat_room_no = #{chatRoomNo}
     ORDER BY chat_time asc
+</select>
+
+<select id="chatLastMsg" resultType="ChatDto">
+select CHAT_CONTENT  from 
+(
+	select CHAT_CONTENT
+	from CHAT
+	WHERE CHAT_ROOM_NO = #{chatRoomNo}
+	order BY CHAT_TIME  DESC
+)
+WHERE rownum = 1
+</select>
+
+<!-- 동호회 채팅 내역 -->
+<select id="getMeetingHistory" resultType="ChatDto">
+SELECT m.chat_room_no, m.MEETING_NAME, m.MEETING_LOCATION, m.MEETING_DATE, 
+m.MEETING_NO, c.CHAT_NO, c.CHAT_CONTENT, c.CHAT_SENDER, c.CHAT_TIME, c.ATTACH_NO, c.CHAT_BLIND, cm.JOIN_DATE 
+FROM meeting m
+JOIN meeting_member mm ON m.meeting_no = mm.meeting_no
+JOIN club_member cm ON mm.club_member_no = cm.club_member_no
+JOIN CHAT_ROOM cr ON cr.CHAT_ROOM_NO = m.chat_room_no
+JOIN CHAT c ON c.CHAT_ROOM_NO = cr.CHAT_ROOM_NO 
+WHERE cr.CHAT_ROOM_NO = #{chatRoomNo} AND c.CHAT_TIME >= cm.JOIN_DATE  AND cm.CLUB_MEMBER_ID = #{chatSender}
+</select>
+
+<select id="getChatHistoryDetail" resultType="ChatDto">
+SELECT cm.CLUB_MEMBER_NO, cm.CLUB_NO, cm.CLUB_MEMBER_RANK, cm.JOIN_DATE , club.chat_room_no, chat.CHAT_NO, 
+chat.CHAT_SENDER, chat.CHAT_RECEIVER, chat.CHAT_CONTENT, chat.CHAT_TIME, chat.ATTACH_NO, chat.chat_blind
+FROM club_member cm
+JOIN club ON cm.club_no = club.club_no
+JOIN chat ON club.chat_room_no = chat.chat_room_no
+WHERE chat.chat_room_no = #{chatRoomNo} AND chat.chat_time >= cm.JOIN_DATE AND cm.CLUB_MEMBER_ID = #{chatSender}
+ORDER BY chat.chat_time ASC
+</select>
+
+<select id="getChatHistoryReset" resultType="ChatDto">
+SELECT
+    cm.CLUB_MEMBER_NO,
+    cm.CLUB_NO,
+    cm.CLUB_MEMBER_RANK,
+    cm.JOIN_DATE,
+    club.chat_room_no,
+    chat.CHAT_NO,
+    chat.CHAT_SENDER,
+    chat.CHAT_RECEIVER,
+    chat.CHAT_CONTENT,
+    chat.CHAT_TIME,
+    chat.ATTACH_NO
+FROM
+    club_member cm
+JOIN
+    club ON cm.club_no = club.club_no
+JOIN
+    chat ON club.chat_room_no = chat.chat_room_no
+WHERE
+    chat.chat_room_no = #{chatRoomNo}
+    AND chat.CHAT_TIME >= cm.JOIN_DATE
+    AND chat.CHAT_TIME >= #{targetTime}
+    AND cm.CLUB_MEMBER_ID =#{chatSender}
+ORDER BY
+    chat.chat_time ASC
+
+</select>
+
+<update id="chatBlindUpdate">
+UPDATE chat SET chat_blind = 'Y' WHERE chat_no = #{chatNo}
+</update>
+
+<select id="chatBliindCheck" resultType="boolean">
+    SELECT CHAT_BLIND FROM chat WHERE CHAT_no = #{chatNo}
 </select>
 
 </mapper>

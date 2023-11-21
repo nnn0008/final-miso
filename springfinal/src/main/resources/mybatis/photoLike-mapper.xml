@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="photoLike">
+	
+	<insert id="add">
+		insert into photo_like(photo_no, club_member_no)
+		values(#{photoNo}, #{clubMemberNo})
+	</insert>
+
+	<delete id="remove">
+		delete photo_like where photo_no = #{photoNo}
+	</delete>
+	
+	<select id="find" resultType="PhotoLikeDto">
+		select * from photo_like where photo_no = #{photoNo}
+	</select>
+	
+	<select id="check" resultType="PhotoLikeDto">
+		select * from photo_like where photo_no = #{photoNo}
+		and club_member_no = #{clubMemberNo}
+	</select>
+	
+	<select id="count" resultType="int">
+		select count(*) from photo_like where photo_no = #{photoNo}
+	</select>
+	
+	
+	
+</mapper>    

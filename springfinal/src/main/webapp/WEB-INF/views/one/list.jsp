@@ -10,21 +10,19 @@
     }
 </script>
     <style>
-.pagination .page-link {
+.pagination .page-link, .pagination .page-item.active .page-link {
     background-color: #ACCEFF;
 }
 
-/* 활성화된 페이지 버튼에 대한 배경색을 변경합니다. */
-.pagination .page-item.active .page-link {
-    background-color:#ACCEFF;
-}
+
     </style>
 	<div class="container">
-		<div class="row mt-4">
-			<div class="col">
-				<h2>1대1 문의</h2>			
-			</div>		
-		</div>
+	<div class="row mt-4">
+                            <div class="col text-start d-flex align-items-center ms-3 mt-3">
+                                <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+                                <strong class="ms-2">1대 1 문의</strong>
+                            </div>
+                        </div>
 		
 		<c:if test="${vo.search}">
 	<div class="row mt-4">
@@ -39,11 +37,11 @@
 				<table class="table table-hover">
 					<thead>
 						<tr class="table-secondary">
-							<th>카테고리</th>
-							<th>게시글번호</th>
-							<th width="30%">제목</th>
-							<th >작성일</th>
-							<th>작성자</th>
+							<th style="background-color:#ACCEFF;">카테고리</th>
+							<th style="background-color:#ACCEFF;">게시글번호</th>
+							<th  style="background-color:#ACCEFF;" width="30%">제목</th>
+							<th  style="background-color:#ACCEFF;">작성일</th>
+							<th  style="background-color:#ACCEFF;">작성자</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -74,7 +72,7 @@
 		<!-- 페이지네이션 -->
 		<div class="row mt-4">
    		 <div class="col">
-			       <ul class="pagination pagination-lg justify-content-center">
+			       <ul class="pagination pagination-md justify-content-center">
 			   			<!-- 이전 버튼 -->
 		<c:if test="${!vo.first}">
 			<li class="page-item">
@@ -99,33 +97,41 @@
 			  			</ul>
     		</div>
 		</div>
-		<!-- 검색창 -->
-	<form action="list" method="get">
-	<div class="row mt-4 justify-content-center">
-	<div class="col input-group">
-		<c:choose>
-			<c:when test="${param.type == 'one_member'}">
-				<select name="type" required class="form-select">
-					<option value="one_title">제목</option>
-					<option value="one_member" selected>작성자</option>
-				</select>
-			</c:when>
-			<c:otherwise>
-				<select name="type" required class="form-select">
-					<option value="one_title">제목</option>
-					<option value="one_member">작성자</option>
-				</select>
-			</c:otherwise>
-		</c:choose>
-		
-		<input type="search" name="keyword" class="form-control"
-					placeholder="검색어 입력" value="${param.keyword}">
-		<button type="submit" name="search" class="btn btn-outline-primary rounded-pill">
-			<i class="fa-solid fa-magnifying-glass"></i>
-		</button>
-	</div>	
-	</div>
-	</form>
+<!-- 검색창 -->
+<form action="list" method="get">
+    <div class="row mt-4 justify-content-center">
+        <div class="col-3 p-1">
+            <div class="input-group">
+                <c:choose>
+                    <c:when test="${param.type == 'one_member'}">
+                        <select name="type" required class="form-select rounded-pill">
+                            <option value="one_title">제목</option>
+                            <option value="one_member" selected>작성자</option>
+                        </select>
+                    </c:when>
+                    <c:otherwise>
+                        <select name="type" required class="form-select rounded-pill">
+                            <option value="one_title">제목</option>
+                            <option value="one_member">작성자</option>
+                        </select>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </div>
+
+        <div class="col-9 p-1">
+            <div class="input-group">
+                <input type="search" name="keyword" class="form-control rounded-pill me-2"  placeholder="검색어 입력" value="${param.keyword}">
+                <div class="input-group-append">
+                    <button type="submit" name="search" class="btn btn-outline-primary rounded-pill">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
 		
 	</div>
 	

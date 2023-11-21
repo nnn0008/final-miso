@@ -21,14 +21,13 @@ import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dto.ChatDto;
 import com.kh.springfinal.dto.ChatOneDto;
 import com.kh.springfinal.dto.ChatRoomDto;
+import com.kh.springfinal.dto.MeetingDto;
 import com.kh.springfinal.vo.ChatListVO;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequiredArgsConstructor
 @RequestMapping("/chat")
 public class WebsocketController {
 	
@@ -46,10 +45,10 @@ public class WebsocketController {
 	
 	private int chatRoomNo = 0;
 	
-	@RequestMapping("/chat")
-	public String chat() {
-		return "chat/sockjs";
-	}
+//	@RequestMapping("/chat")
+//	public String chat() {
+//		return "chat/sockjs2";
+//	}
 	
 	//채팅방 리스트
 	@RequestMapping("/roomList")
@@ -61,41 +60,33 @@ public class WebsocketController {
 	    List<ChatRoomDto> chatRoomList = chatRoomDao.chatRoomList(memberId);
 	    //해당 사용자가 가지고 있는 1:1룸 목록 조회
 	    List<ChatOneDto> oneChatRoomList = chatOneDao.oneChatRoomList(memberId, memberId);
-	    log.debug("oneChatRoomList={}",oneChatRoomList);
+	    //해당 사용자가 가지고 있는 정모 목록 조회
+	    List<MeetingDto> meetingRoomList = chatRoomDao.meetingRoomList(memberId); 
 	    
+//	    ChatDto lastMessage = chatDao.chatLastMsg(chatRoomNo); //채팅방 마지막 메세지
+//	    log.debug("lastMessage={}",lastMessage);
 	    
 	    // 해당 동호회의 번호, 이름, 내용 조회
 	    List<ChatListVO> roomList = new ArrayList<>();
 	    for (ChatRoomDto chatRoom : chatRoomList) {
 	        int chatRoomNo = chatRoom.getChatRoomNo();
-	        List<ChatListVO> chatRoomInfoList = chatRoomDao.chatRoomLIst(chatRoomNo);
+	        List<ChatListVO> chatRoomInfoList = chatRoomDao.chatRoomList(chatRoomNo);
 	        roomList.addAll(chatRoomInfoList);
 	    }
 
 	    model.addAttribute("list", chatRoomList);
 	    model.addAttribute("roomList", roomList);
 	    model.addAttribute("oneChatRoomList", oneChatRoomList);
+	    model.addAttribute("meetingRoomList", meetingRoomList);
+//	    model.addAttribute("lastMessage", lastMessage);
 
 	    return "chat/roomList";
 	}
 	
 	//채팅방
 	@RequestMapping("/enterRoom/{chatRoomNo}")
-	public String enterRoom(@PathVariable int chatRoomNo, Model model) {
-	    // 특정 채팅방으로 이동하는 로직을 추가
-
-//	    // 여기서 chatRoomNo를 사용하여 채팅방 정보를 조회(단일)
-//	    ChatListVO chatRoomInfo = chatRoomDao.selectOne(chatRoomNo);
-//
-//	    // 모델에 채팅방 정보 추가
-//	    model.addAttribute("chatRoomNo", chatRoomNo);
-//	    model.addAttribute("chatRoomInfo", chatRoomInfo);
-	    
-//	    //해당 채팅방의 메세지 이력을 조회
-//	    List<ChatDto> chatHistory = chatDao.getChatHistory(chatRoomNo);
-//	    model.addAttribute("chatHistory", chatHistory);
-
-	    return "chat/sockjs";
+	public String enterRoom(@PathVariable int chatRoomNo) {
+	    return "chat/sockjs2";
 	}
 	
 	

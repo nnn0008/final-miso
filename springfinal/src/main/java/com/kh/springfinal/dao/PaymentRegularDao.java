@@ -10,7 +10,7 @@ import com.kh.springfinal.vo.PaymentRegularListVO;
 public interface PaymentRegularDao {
 	int sequence();
 	void insert(PaymentRegularDto paymentRegularDto);
-	List<PaymentDto>selectList();
+	List<PaymentRegularDto>selectList();
 	PaymentRegularDto selectOne(int paymentRegularNo);
 	
 	void insertDetail(RegularDetailDto regularDetailDto);
@@ -23,5 +23,8 @@ public interface PaymentRegularDao {
 	void cancel(PaymentRegularDto paymentRegularDto);
 	void cancelDetailGroup(int regularDetailOrigin);
 	
+	
+	//5분마다 정기결제 테스트
+	void updatePaymentRegularTime();
 	
 }

@@ -57,6 +57,7 @@ public class OneDaoImpl implements OneDao {
 	public List<OneDto> selectListByPage(PaginationVO vo) {
 		
 			List<OneDto>list=sqlSession.selectList("one.selectListByPage",vo);
+			
 		    return list;
 	}
 

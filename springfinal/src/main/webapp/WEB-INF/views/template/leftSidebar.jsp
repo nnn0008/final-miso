@@ -31,45 +31,45 @@
                         </div>
                     </div>
 
-                    <div class="row mt-3 p-2">
+                    <div class="row mt-3 p-2 align-items-center">
                         <div class="col">
-                            <a href="/" class="link">
+                            <a href="/" class="link d-flex align-items-center">
                                 <img src="${pageContext.request.contextPath}/images/Vector-3.png" width="20%">
-                                <strong class="ms-2">홈</strong> 
+                                <strong class="ms-3">홈</strong> 
                             </a>
                         </div>
                     </div>
 
-                    <div class="row p-2">
+                    <div class="row p-2 align-items-center">
                         <div class="col">
-                            <a href="#" class="link">
+                            <a href="/club/list" class="link d-flex align-items-center">
                                 <img src="${pageContext.request.contextPath}/images/Vector.png" width="20%">
-                                <strong class="ms-2">모임 찾기</strong> 
+                                <strong class="ms-3">모임 찾기</strong> 
                             </a>
                         </div>
                     </div>
 
-                    <div class="row p-2">
+                    <div class="row p-2 align-items-center">
                         <div class="col">
-                            <a href="${pageContext.request.contextPath}/chat/roomList" class="link">
+                            <a href="/chat/roomList" class="link d-flex align-items-center">
                                 <img src="${pageContext.request.contextPath}/images/Vector-1.png" width="20%">
-                                <strong class="ms-2">채팅</strong> 
+                                <strong class="ms-3">채팅</strong> 
                             </a>
                         </div>
                     </div>
 
-                    <div class="row p-2">
+                    <div class="row p-2 align-items-center">
                         <div class="col">
-                            <a href="/member/mypage" class="link">
+                            <a href="/member/mypage" class="link d-flex align-items-center">
                                 <img src="${pageContext.request.contextPath}/images/Vector-2.png" width="20%">
-                                <strong class="ms-2">프로필</strong>
+                                <strong class="ms-3">프로필</strong>
                             </a>
                         </div>
                     </div>
 
                     <div class="row p-1 mt-4">
                         <div class="col">
-                            <a href="#" class="badge rounded-pill bg-miso btn-miso p-3 link">
+                            <a href="/club/insert" class="badge rounded-pill bg-miso btn-miso p-3 link">
                                 모임 만들기
                             </a>
                         </div>

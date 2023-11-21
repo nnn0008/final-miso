@@ -3,6 +3,7 @@ package com.kh.springfinal.dao;
 import java.util.List;
 
 import com.kh.springfinal.dto.ZipCodeDto;
+import com.kh.springfinal.vo.PaginationVO;
 import com.kh.springfinal.vo.ZipCodeSearchVO;
 
 public interface ZipCodeDao {
@@ -16,4 +17,6 @@ public interface ZipCodeDao {
 	ZipCodeDto findZip(int zipCodeNo);
 	
 	public ZipCodeDto selectOneAddrNo(String StringmemberAddr);
+	List<ZipCodeDto> selectListByPage(PaginationVO vo);
+	int countList(PaginationVO vo);
 }

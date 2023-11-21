@@ -60,9 +60,8 @@
 		where club_board_no = #{club_board_no}
 	</update>
 	
-
 	<select id="findClubMemberNo" resultType="clubMemberDto">
-		select club_member_no from club_member where club_no = #{clubNo} and club_member_id = #{clubMemberId}
+		select * from club_member where club_no = #{clubNo} and club_member_id = #{clubMemberId}
 	</select>
 	
 	<select id="selectListByPage" resultType="clubBoardAllDto">
@@ -71,6 +70,10 @@
 				select * from club_board_all where club_no = #{clubNo}
 			) TMP
 		) where rn between #{begin} and #{end}
+	</select>
+	
+	<select id="finds" resultType="clubBoardDto">
+		select * from club_board where club_board_no = #{clubBoardNo}
 	</select>
 	
 	<select id="find" resultType="clubBoardAllDto">
@@ -84,7 +87,12 @@
 	<update id="replyCount">
 		update club_board set club_board_reply_count = 
 		(select count(*) from club_board_reply where club_board_no = #{clubBoardNo}) 
-		where club_board_no = #{clubBoardNo} 
+		where club_board_no = #{clubBoardNo}
+	</update>
+	
+	<update id="updateLikeCount">
+		update club_board set club_board_likecount = (select count(*) from club_board_like
+		where club_board_no = #{clubBoardNo}) where club_board_no = #{clubBoardNo}
 	</update>
 	
 

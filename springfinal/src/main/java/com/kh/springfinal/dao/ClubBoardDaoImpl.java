@@ -41,6 +41,11 @@ public class ClubBoardDaoImpl implements ClubBoardDao{
 	}
 	
 	@Override
+	public ClubBoardDto selectOnes(int clubBoardNo) {
+		return sqlSession.selectOne("clubBoard.finds", clubBoardNo);
+	}
+	
+	@Override
 	public ClubBoardAllDto selectOne(int clubBoardNo) {
 		return sqlSession.selectOne("clubBoard.find", clubBoardNo);
 	}
@@ -53,5 +58,10 @@ public class ClubBoardDaoImpl implements ClubBoardDao{
 	@Override
 	public boolean updateReplyCount(int clubBoardNo) {
 		return sqlSession.update("clubBoard.replyCount", clubBoardNo) > 0;
+	}
+	
+	@Override
+	public boolean updateLikeCount(int clubBoardNo) {
+		return sqlSession.update("clubBoard.updateLikeCount", clubBoardNo) > 0;
 	}
 }

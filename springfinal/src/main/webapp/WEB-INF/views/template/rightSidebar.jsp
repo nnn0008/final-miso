@@ -39,7 +39,7 @@
 
 
 <script>
-	
+function connect() {	
 	window.notifySocket = new SockJS("${pageContext.request.contextPath}/ws/notify");
 	
 	notifySocket.onopen = function (e) {
@@ -80,14 +80,16 @@
 	     showNotification(e.data);
 	 }
 
-
-
 	 
-	 notifySocket.onclose = function (e) {
-		    console.log('Info: connection close.');
-		}
+// 	 notifySocket.onclose = function (e) {
+// 		 setTimeout(function() {
+// 		      connect();
+// 		    }, 1000); // 웹소켓을 재연결하는 코드 삽입
+// 		}
 
-	 
+	}
+
+	connect();
 	 
 	 </script>
     

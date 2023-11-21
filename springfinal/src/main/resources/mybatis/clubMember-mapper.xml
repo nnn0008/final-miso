@@ -33,7 +33,7 @@
 
     	</insert>
     	
-    	<select id="detail" >
+    	<select id="detail" resultType="clubMemberDto">
     		
     		select * from club_member where club_member_no=#{clubMemberNo}
     		
@@ -57,6 +57,24 @@
     		ON m.MEMBER_ID=cm.CLUB_MEMBER_ID WHERE cm.CLUB_NO=#{clubNo}
     	
     	</select>
+    	
+    	 <select id="count" resultType="int">
+    	
+    	select count(*) from club_member where club_no=#{clubNo}
+    
+    </select>
+    
+    <select id="memberRank" resultType="String">
+    	
+    	SELECT club_member_rank FROM club_member WHERE club_no=#{clubNo} AND club_member_id=#{clubMemberId}
+    
+    </select>
+    
+    <select id="findClubMemberNo" resultType="int">
+    	
+    	select club_member_no from club_member where club_no=#{clubNo} and club_member_id=#{memberId}
+    
+    </select>
     
     
     </mapper>

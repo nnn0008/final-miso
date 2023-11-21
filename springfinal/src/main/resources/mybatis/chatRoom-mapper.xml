@@ -22,6 +22,26 @@
 		select * from chat_room order by chat_room_no asc
 	</select>
 	
+	<!-- 정모 채팅방 조회(회원별)-->
+	<select id="findMeeting" resultType="MeetingDto">
+	SELECT m.chat_room_no, m.MEETING_NAME, m.MEETING_LOCATION, m.MEETING_DATE, m.meeting_no
+	FROM meeting m
+	JOIN meeting_member mm ON m.meeting_no = mm.meeting_no
+	JOIN club_member cm ON mm.club_member_no = cm.club_member_no
+	JOIN CHAT_ROOM cr ON cr.CHAT_ROOM_NO = m.chat_room_no
+	WHERE cm.club_member_id = #{memberId}
+	</select>
+	
+	<!-- 정모 채팅방 정보 조회 -->
+	<select id="findMeetingInfo" resultType="MeetingDto">
+	SELECT m.chat_room_no, m.MEETING_NAME, m.MEETING_LOCATION, m.MEETING_DATE, m.MEETING_NO
+	FROM meeting m
+	JOIN meeting_member mm ON m.meeting_no = mm.meeting_no
+	JOIN club_member cm ON mm.club_member_no = cm.club_member_no
+	JOIN CHAT_ROOM cr ON cr.CHAT_ROOM_NO = m.chat_room_no
+	WHERE cr.CHAT_ROOM_NO = #{chatRoomNo}
+	</select>
+	
 	<select id="find" resultType="ChatRoomDto">
 	SELECT cr.chat_room_no
 	FROM chat_room cr
@@ -65,6 +85,16 @@
 	WHERE c.chat_room_no = #{chatRoomNo}
 	</select>
 	
+	<select id="meetingRoomMemberName" resultType="ChatVO">
+	SELECT cm.CLUB_MEMBER_ID, m2.MEMBER_NAME 
+	FROM meeting m
+	JOIN meeting_member mm ON m.meeting_no = mm.meeting_no
+	JOIN club_member cm ON mm.club_member_no = cm.club_member_no
+	JOIN CHAT_ROOM cr ON cr.CHAT_ROOM_NO = m.chat_room_no
+	JOIN "MEMBER" m2 ON cm.CLUB_MEMBER_ID = m2.MEMBER_ID 
+	WHERE cr.CHAT_ROOM_NO = #{chatRoomNo}
+	</select>
+	
 	<select id="roomMemberProfile" resultType="MemberDto">
 	SELECT m.member_id, m.member_name, m.member_level
 	FROM member m
@@ -77,5 +107,64 @@
         WHERE (chat_sender = #{chatSender} AND chat_receiver = #{chatReceiver})
         OR (chat_sender = #{chatReceiver} AND chat_receiver = #{chatSender})
     </select>
-
+    
+     <!-- 동호회 회원 목록을 가져오기 위한 조회 -->
+    <select id="roomMemberListDetail" resultType="ChatMemberListVO">
+    SELECT
+    cm.CLUB_MEMBER_ID,
+    m.MEMBER_NAME,
+    cm.CLUB_MEMBER_RANK,
+    c.CHAT_ROOM_NO,
+    c.CLUB_NO
+	FROM
+	    club_member cm
+	JOIN
+	    club c ON cm.CLUB_NO = c.CLUB_NO
+	JOIN
+	    chat_room cr ON c.CHAT_ROOM_NO = cr.CHAT_ROOM_NO
+	JOIN
+	    member m ON cm.CLUB_MEMBER_ID = m.MEMBER_ID
+	WHERE
+	    cr.CHAT_ROOM_NO = #{chatRoomNo}
+    </select>
+    
+    <!-- 1:1 회원 목록을 가져오기 위한 조회 -->
+    <select id="chatOneMemberListDetail" resultType="ChatOneMemberListVO">
+    SELECT
+    co.CHAT_SENDER,
+    sender.MEMBER_NAME AS SENDER_NAME,
+    sender.MEMBER_LEVEL AS SENDER_LEVEL,
+    co.CHAT_RECEIVER,
+    receiver.MEMBER_NAME AS RECEIVER_NAME,
+    receiver.MEMBER_LEVEL AS RECEIVER_LEVEL,
+    co.CHAT_ROOM_NO
+FROM
+    chat_one co
+LEFT JOIN
+    member sender ON co.CHAT_SENDER = sender.MEMBER_ID
+LEFT JOIN
+    member receiver ON co.CHAT_RECEIVER = receiver.MEMBER_ID
+WHERE
+    co.CHAT_ROOM_NO = #{chatRoomNo}
+    </select>
+    
+    <!-- 채팅 이력 초기화를 위한 구문 -->
+    <select id="chatReset" resultType="ChatDto">
+ 	SELECT * FROM chat 
+    WHERE chat_room_no = #{chatRoomNo} AND chat_time > sysdate
+    ORDER BY chat_time
+    </select>
+    
+    <!-- 채팅방 조회 구문 -->
+    <select id="chatRoomAllList" resultType="ChatRoomDto">
+    SELECT cr.chat_room_no
+	FROM chat_room cr
+	INNER JOIN club c ON c.chat_room_no = cr.chat_room_no
+	INNER JOIN club_member cm ON c.club_no = cm.club_no
+	WHERE cm.club_member_id = #{memberId}
+	UNION
+	SELECT chat_room_no
+	FROM CHAT_ONE co 
+	WHERE chat_sender = #{memberId} OR chat_receiver = #{memberId}
+    </select>
 </mapper>

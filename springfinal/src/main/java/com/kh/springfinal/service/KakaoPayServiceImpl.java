@@ -56,8 +56,6 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 	@Autowired
 	private PaymentDao paymentDao;
 	
-	@Autowired
-	private PaymentRegularDao paymentRegularDao;
 	
 	@Override
 	public KakaoPayReadyResponseVO ready(KakaoPayReadyRequestVO request) throws URISyntaxException {
@@ -77,9 +75,9 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 		
 		//현재 페이지 주소 계산
 		String path = ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString();
-		body.add("approval_url",path+"/success");
-		body.add("cancel_url",path+"/cancel");
-		body.add("fail_url",path+"/fail");
+		body.add("approval_url",path+"/successResult");
+		body.add("cancel_url",path+"/cancelPage");
+		body.add("fail_url",path+"/failPage");
 		
 		//요청 발송
 		HttpEntity entity = new HttpEntity(body,headers);//요청 객체

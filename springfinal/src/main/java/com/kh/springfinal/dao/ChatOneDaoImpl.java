@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.springfinal.dto.ChatDto;
 import com.kh.springfinal.dto.ChatOneDto;
 import com.kh.springfinal.vo.ChatOneVO;
 
@@ -52,6 +53,11 @@ public class ChatOneDaoImpl implements ChatOneDao{
 	//1:1룸 번호별 회원 닉네임 조회
 	public List<ChatOneVO> chatOneMemberName(int chatRoomNo){
 		return sqlSession.selectList("chatOne.oneChatMemberName", chatRoomNo);
+	}
+	
+	@Override
+	public List<ChatDto> getChatOnetHistory(int chatRoomNo) {
+		return sqlSession.selectList("chatOne.oneChatHistory", chatRoomNo);
 	}
 	
 }

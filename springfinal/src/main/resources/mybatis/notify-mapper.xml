@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+  <mapper namespace="notify">
+  
+  <insert id="add">
+  	insert into notify(
+  	notify_no, notify_sender, notify_receiver, notify_club_board_no, notify_club_board_title, notify_type
+  	) values(notify_seq.nextval, #{notifySender}, #{notifyReceiver}, #{notifyClubBoardNo}, #{notifyClubBoardTitle}, #{notifyType})  
+  </insert>
+  
+  <select id="notifyList" resultType="NotifyDto">
+  	select * from notify where notify_receiver=#{notifyReceiver} order by notify_date
+  </select>
+  
+  <select id="notifyListWithNames" resultMap="notifyResultMap">
+      SELECT n.*, c.club_name, m.member_name
+    FROM notify n
+    JOIN club_member cm ON n.notify_receiver = cm.club_member_id
+    JOIN club c ON cm.club_no = c.club_no
+    JOIN member m ON cm.club_member_id = m.member_id
+    WHERE n.notify_receiver = #{notifyReceiver}
+    ORDER BY n.notify_date DESC
+  </select>
+  
+  <resultMap id="notifyResultMap" type="NotifyVO">
+    <result property="clubName" column="clubName"/>
+    <result property="memberName" column="memberName"/>
+</resultMap>
+  
+  <delete id="del">
+  	delete notify where notify_no=#{notifyNo}
+  </delete>
+  
+  </mapper>

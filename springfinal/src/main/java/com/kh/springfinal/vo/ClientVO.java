@@ -14,11 +14,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 //웹소켓 통신에서 사용자를 조금 더 편하게 관리하기 위한 클래스
 @Data 
 @EqualsAndHashCode(of = "session") //session이라는 필드가 같으면 같은 객체라고 생각해라
-@ToString(of = {"memberId", "memberLevel", "chatRoomNos", "memberName"}) //출력할 때 작성한 항목만 출력해라
+@ToString(of = {"memberId", "memberLevel", "chatRoomNos", "memberName", "currentChatRoomNo"}) //출력할 때 작성한 항목만 출력해라
 public class ClientVO {
 	@JsonIgnore //Json으로 변환하는 과정에서 이 필드는 제외한다
 	private WebSocketSession session;
@@ -33,8 +35,6 @@ public class ClientVO {
 		this.memberLevel = (String) attr.get("level");
 		this.chatRoomNos = new HashSet<>(); // 초기화
 		this.memberName = (String) attr.get("memberName");
-		
-//		this.clubNo = (Integer) attr.get("clubNo");
 	}
 
 	public void addChatRoomNo(Integer chatRoomNo) {
@@ -65,16 +65,19 @@ public class ClientVO {
 	    }
 
 
-	    @Override
-	    public boolean equals(Object o) {
-	        if (this == o) return true;
-	        if (o == null || getClass() != o.getClass()) return false;
-	        ClientVO clientVO = (ClientVO) o;
-	        return Objects.equals(session.getId(), clientVO.session.getId());
-	    }
+	 @Override
+	 public boolean equals(Object o) {
+	     if (this == o) return true;
+	     if (o == null || getClass() != o.getClass()) return false;
+	     ClientVO clientVO = (ClientVO) o;
+	     return Objects.equals(memberId, clientVO.memberId);
+	 }
 
-	    @Override
-	    public int hashCode() {
-	        return Objects.hash(session.getId());
-	    }
+	 @Override
+	 public int hashCode() {
+	     return Objects.hash(memberId);
+	 }
+	 
+
+
 }

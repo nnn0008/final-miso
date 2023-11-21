@@ -1,9 +1,7 @@
 package com.kh.springfinal.dto;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 
-import com.kh.springfinal.vo.ClientVO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,14 +17,8 @@ public class ChatDto {
 	private String chatReceiver;
 	private String chatContent;
 	private int attachNo;
-	
+	private String chatBlind;
 	private LocalDateTime chatTime;
 	
-	 public LocalDateTime getChatTime() {
-	        return chatTime;
-	    }
 
-	    public void setChatTime(LocalDateTime chatTime) {
-	        this.chatTime = chatTime;
-	    }
 }

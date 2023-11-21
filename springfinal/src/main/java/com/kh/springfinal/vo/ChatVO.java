@@ -8,8 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
-public class ChatVO {
-	
+public class ChatVO {	
 	private int chatNo;
 	private int clubNo;
 	private int chatRoomNo;
@@ -20,12 +19,4 @@ public class ChatVO {
 	private String memberName;
 	
 	private LocalDateTime chatTime;
-	
-	 public LocalDateTime getChatTime() {
-	        return chatTime;
-	    }
-
-	    public void setChatTime(LocalDateTime chatTime) {
-	        this.chatTime = chatTime;
-	    }
 }

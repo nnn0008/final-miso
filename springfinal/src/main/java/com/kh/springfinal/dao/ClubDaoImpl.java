@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.ClubDto;
 import com.kh.springfinal.vo.ClubImageVO;
+import com.kh.springfinal.vo.ClubListVO;
 
 @Repository
 public class ClubDaoImpl implements ClubDao{
@@ -76,6 +77,40 @@ public class ClubDaoImpl implements ClubDao{
 		
 		return sqlSession.selectOne("club.findImage",clubNo);
 	}
+
+	@Override
+	public List<ClubListVO> clubList(String memberId) {
+		
+		return sqlSession.selectList("club.clubList",memberId);
+		
+	}
+
+	@Override
+	public List<ClubListVO> majorClubList
+	(String memberId, int majorCategoryNo) {
+		
+		Map<String,Object> params = new HashMap<>();
+		
+		params.put("memberId", memberId);
+		params.put("majorCategoryNo", majorCategoryNo);
+		
+		return sqlSession.selectList("club.majorClubList",params);
+	}
+
+	@Override
+	public List<ClubListVO> minorClubList(String memberId, int minorCategoryNo) {
+		
+	Map<String,Object> params = new HashMap<>();
+		
+		params.put("memberId", memberId);
+		params.put("minorCategoryNo", minorCategoryNo);
+		
+		return sqlSession.selectList("club.minorClubList",params);
+		
+		
+	}
+	
+	
 	
 	
 

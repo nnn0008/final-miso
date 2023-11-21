@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kh.springfinal.dto.ClubMemberDto;
-import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.vo.ClubMemberVO;
 
 @Repository
@@ -63,6 +62,39 @@ public class ClubMemberDaoImpl implements ClubMemberDao{
 		
 		return sqlSession.selectList("clubMember.memberInfo",clubNo);
 	}
+
+	@Override
+	public int memberCount(int clubNo) {
+		return sqlSession.selectOne("clubMember.count",clubNo);
+	}
+
+	@Override
+	public boolean editPossible(int clubNo, String clubMemberId) {
+		
+		Map<String,Object> params = new HashMap<>();
+		
+		params.put("clubNo", clubNo);
+		params.put("clubMemberId", clubMemberId);
+		
+		String memberRank =  sqlSession.selectOne("clubMember.memberRank",params);
+		
+		boolean editPossible = "운영진".equals(memberRank) && memberRank != null;
+
+		return editPossible;
+		
+	}
+
+	@Override
+	public int findClubMemberNo(int clubNo, String memberId) {
+		
+		Map<String,Object> params = new HashMap<>();
+		
+		params.put("clubNo", clubNo);
+		params.put("memberId", memberId);
+		
+		return sqlSession.selectOne("clubMember.findClubMemberNo",params);
+	}
+	
 	
 	
 

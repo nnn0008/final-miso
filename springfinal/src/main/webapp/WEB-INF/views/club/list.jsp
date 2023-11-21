@@ -10,18 +10,36 @@
     
     
 
-
 	<div class="container text-center">
   <div class="row align-items-start">
   <c:forEach var="majorCategory" items="${categoryList}" varStatus="loopStatus">
     <div class="col-3">
-      <img src="../images/${majorCategory.imageName}" width="30%">
+      <a href="list2?majorCategoryNo=${majorCategory.majorCategoryNo}"><img src="../images/${majorCategory.imageName}" width="30%"></a>
       ${majorCategory.majorCategoryName}
     </div>
   </c:forEach>
     </div>
 </div>
 <hr>
+	<h1>추천 동호회 리스트</h1>
+	<c:forEach var="clubListVO" items="${clubList}">
+	<div class="row">
+		<div class="col">
+       <div class="alert alert-dismissible alert-light">
+        <a href="/club/detail?clubNo=${clubListVO.clubNo}">
+		<img src="${pageContext.request.contextPath}/club/image?clubNo=${clubListVO.clubNo}" class="rounded-circle" width="100" height="100">
+		</a>
+		클럽 이름 : ${clubListVO.clubName}
+		클럽 설명 : ${clubListVO.clubExplain}
+		지역 : ${clubListVO.sigungu}
+		카테고리 이름 : ${clubListVO.majorCategoryName}
+		멤버 수 : ${clubListVO.memberCount}
+         </div>
+          </div>
+		
+		
+	</div>
+	</c:forEach>
 
 
 

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="clubBoardLike">
+	
+	<insert id="add">
+		insert into club_board_like(club_member_no, club_board_no)
+		values(#{clubMemberNo}, #{clubBoardNo})
+	</insert>
+	
+	<delete id="remove">
+		delete club_board_like where club_board_no = #{clubBoardNo}
+	</delete>
+	
+	<select id="find" resultType="ClubBoardLikeDto">
+		select * from club_board_like where club_board_no = #{clubBoardNo}
+	</select>
+	
+	<select id="check" resultType="ClubBoardLikeDto">
+		select * from club_board_like where club_board_no = #{clubBoardNo}
+		and club_member_no = #{clubMemberNo}
+	</select>
+	
+	<select id="count" resultType="int">
+		select count(*) from club_board_like where club_board_no = #{clubBoardNo}
+	</select>
+	
+</mapper>    

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="photo">
+
+	<select id="sequence" resultType="int">
+		select photo_seq.nextval from dual
+	</select>
+	
+	<insert id="add">
+		insert into photo(
+			photo_no, club_member_no, club_no
+		) 
+		values(
+			#{photoNo}, #{clubMemberNo}, #{clubNo}
+		)
+	</insert>
+	
+	<delete id="remove">
+		delete photo where photo_no = #{photoNo}
+	</delete>
+	
+	<select id="find" resultType="PhotoDto">
+		select * from photo where photo_no = #{photoNo}
+	</select>
+	
+	<select id="findAll" resultType="PhotoDto">
+		select * from photo where club_no = #{clubNo} order by photo_no desc
+	</select>
+	
+	<!-- 좋아요 수를 업데이트 하는 구문 -->
+	<update id="updateLikeCount">
+		update photo set photo_likecount = (select count(*) from photo_like where photo_no = #{photoNo})
+		where photo_no = #{photoNo}
+	</update>	
+	
+	
+</mapper>
