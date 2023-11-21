@@ -10,7 +10,7 @@
 //댓글 작성 시 비동기처리로 댓글 작성 + 댓글 목록 비동기처리
 $(function(){
 	
-	window.socket = new SockJS("${pageContext.request.contextPath}/ws/notify");
+	window.notifySocket = new SockJS("${pageContext.request.contextPath}/ws/notify");
 	
     loadList();
     //댓글 작성
@@ -55,11 +55,12 @@ $(function(){
                             replyWriterName : replyWriterName
                         });
 
-                        socket.send(socketMsg);                 
-		                } 
-		    }
+                        notifySocket.send(socketMsg);                 
+		     	} 
+		      }
+		    });
 		});
-	});
+
 		//로그인 한 아이디
 		var memberId = "${sessionScope.name}";
 		

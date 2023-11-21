@@ -40,7 +40,7 @@
 
 <script>
 function connect() {	
-	window.notifySocket = new SockJS("/ws/notify");
+	window.notifySocket = new SockJS("${pageContext.request.contextPath}/ws/notify");
 	
 	notifySocket.onopen = function (e) {
 	     console.log('Info: connection opened.');

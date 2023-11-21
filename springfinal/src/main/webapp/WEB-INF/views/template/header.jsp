@@ -112,11 +112,11 @@
     .clubname-text{
     font-size: 15px;
     }
-	.explain-text{
-	color: A69D9D;
-	font-size: 12px;
-	}
-	.club-box2:hover {
+   .explain-text{
+   color: A69D9D;
+   font-size: 12px;
+   }
+   .club-box2:hover {
         background-color: #f0f0f0; /* 호버 효과 배경색 설정 */
         cursor: pointer; /* 호버 시 커서 모양 변경 */
     }
@@ -131,14 +131,14 @@
 </style>
 
 <%-- 
-	절대경로를 설정하기 위한 스크립트 작성
-	- 절대경로라는 개념은 백엔드에만 있다
-	- 자바스크립트에서 절대경로를 알 수 있는 방법이 없다
-	- window에 절대경로 값을 탑재시켜 사용
+   절대경로를 설정하기 위한 스크립트 작성
+   - 절대경로라는 개념은 백엔드에만 있다
+   - 자바스크립트에서 절대경로를 알 수 있는 방법이 없다
+   - window에 절대경로 값을 탑재시켜 사용
 --%>
     
 <script>
-	window.contextPath = "${pageContext.request.contextPath}";
+   window.contextPath = "${pageContext.request.contextPath}";
 </script>
 
 <script>
@@ -198,7 +198,7 @@ $(document).click(function (event) {
     });
 });
 
-	
+   
 function enterRoom(chatRoomNo) {
     window.location.href = "/chat/enterRoom/" + chatRoomNo;
 }
@@ -252,7 +252,7 @@ $(document).on('click', '.delete-button', function () {
 
     // 서버에 삭제 요청 보내기
     $.ajax({
-    	type: 'GET',
+       type: 'GET',
         url: '/rest/notify/delete',
         contentType: 'application/json',
         data: { notifyNo: notifyNo },
@@ -364,17 +364,17 @@ function populateChatModal(data) {
     // 예시: 채팅 모달에는 사용자의 채팅방 리스트를 표시
 // roomList 스타일 적용
 if (Array.isArray(data.roomList)) {
-    	var sectionHeader =
-    	    '<div class="row">' +
-    	    '<div class="col text-start d-flex align-items-center ms-3 mt-3">' +
-    	    '<img src="' + contextPath + '/images/logo-door.png" width="10%">' +
-    	    '<strong class="ms-2">모임채팅</strong>' +
-    	    '</div>' +
-    	    '</div>';
+       var sectionHeader =
+           '<div class="row">' +
+           '<div class="col text-start d-flex align-items-center ms-3 mt-3">' +
+           '<img src="' + contextPath + '/images/logo-door.png" width="10%">' +
+           '<strong class="ms-2">모임채팅</strong>' +
+           '</div>' +
+           '</div>';
 
-    	var sectionHeaderItem = $("<div class='col-12 mb-2'>" + sectionHeader + "</div>");
-    	modalContent.append(sectionHeaderItem);	
-    	
+       var sectionHeaderItem = $("<div class='col-12 mb-2'>" + sectionHeader + "</div>");
+       modalContent.append(sectionHeaderItem);   
+       
     data.roomList.forEach(function (chatRoom) {
 
         var message =
@@ -401,18 +401,18 @@ if (Array.isArray(data.roomList)) {
 
 // oneChatRoomList 스타일 적용
 if (Array.isArray(data.oneChatRoomList)) {
-	
-	var sectionHeader =
-	    '<div class="row">' +
-	    '<div class="col text-start d-flex align-items-center ms-3 mt-3">' +
-	    '<img src="' + contextPath + '/images/logo-door.png" width="10%">' +
-	    '<strong class="ms-2">개인채팅</strong>' +
-	    '</div>' +
-	    '</div>';
+   
+   var sectionHeader =
+       '<div class="row">' +
+       '<div class="col text-start d-flex align-items-center ms-3 mt-3">' +
+       '<img src="' + contextPath + '/images/logo-door.png" width="10%">' +
+       '<strong class="ms-2">개인채팅</strong>' +
+       '</div>' +
+       '</div>';
 
-	var sectionHeaderItem = $("<div class='col-12 mb-2'>" + sectionHeader + "</div>");
-	modalContent.append(sectionHeaderItem);	
-	
+   var sectionHeaderItem = $("<div class='col-12 mb-2'>" + sectionHeader + "</div>");
+   modalContent.append(sectionHeaderItem);   
+   
     data.oneChatRoomList.forEach(function (oneChatRoom) {
         var otherUser = (oneChatRoom.chatSender === "${sessionScope.name}") ? oneChatRoom.chatReceiver : oneChatRoom.chatSender;
 
@@ -448,8 +448,8 @@ if (Array.isArray(data.oneChatRoomList)) {
 <main>
  <header>
             <div class="col mt-2">
-	
-		<a href="#" class="link logo"><img src="${pageContext.request.contextPath}/images/miso_logo.png" width="200px"></a>
+   
+      <a href="#" class="link logo"><img src="${pageContext.request.contextPath}/images/miso_logo.png" width="200px"></a>
 
             </div>
             <div class="title">
@@ -463,7 +463,7 @@ if (Array.isArray(data.oneChatRoomList)) {
                    </div>  
             </div>
            <div class="etc container">
-		    <div class="col-4 ms-4" id="notifyContainer">
+          <div class="col-4 ms-4" id="notifyContainer">
         <i class="fa-regular fa-bell fa-2xl notifyContainer showNotifyButton" data-modal="notifyModal"></i>
        
        <div class="col">
@@ -477,26 +477,26 @@ if (Array.isArray(data.oneChatRoomList)) {
             <i class="fa-regular fa-comments fa-2xl showNotifyButton" data-modal="chatModal" ></i>
 
     </div>
-		    <div class="col-4 ms-2">
-		        <a href="${pageContext.request.contextPath}/member/logout" class="link-body-emphasis link-underline link-underline-opacity-0 showNotifyButton">
-		            <i class="fa-solid fa-power-off fa-2xl"></i>
-		        </a>
-		    </div>
+          <div class="col-4 ms-2">
+              <a href="${pageContext.request.contextPath}/member/logout" class="link-body-emphasis link-underline link-underline-opacity-0 showNotifyButton">
+                  <i class="fa-solid fa-power-off fa-2xl"></i>
+              </a>
+          </div>
 
-	   <!-- 각 모달창 -->
-	<div id="notifyModal" class="notifyLayer">
-	    <div class="alert alert-dismissible alert-light notifyAlert">
-	        <div class="row d-flex justify-content-center">
-	        </div>
-	    </div>
-	</div>
-	
-	<div id="chatModal" class="notifyLayer">
-	    <div class="alert alert-dismissible alert-light notifyAlert">
-	        <div class="row d-flex justify-content-center">
-	        </div>
-	    </div>
-	</div>
+      <!-- 각 모달창 -->
+   <div id="notifyModal" class="notifyLayer">
+       <div class="alert alert-dismissible alert-light notifyAlert">
+           <div class="row d-flex justify-content-center">
+           </div>
+       </div>
+   </div>
+   
+   <div id="chatModal" class="notifyLayer">
+       <div class="alert alert-dismissible alert-light notifyAlert">
+           <div class="row d-flex justify-content-center">
+           </div>
+       </div>
+   </div>
     
     
 </div>

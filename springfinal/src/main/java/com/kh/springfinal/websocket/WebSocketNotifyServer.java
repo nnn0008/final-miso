@@ -65,19 +65,19 @@ public class WebSocketNotifyServer extends TextWebSocketHandler{
             log.debug("msg = {}", params);
             
             String notifyType = (String) params.get("notifyType"); //알림 종류 
-            String replyWriterMember = (String) params.get("replyWriterMember"); //댓글 작성자
-            String boardWriterMember = (String) params.get("boardWriterMember"); //게시글 작성자
-            int boardNo = (int) params.get("boardNo"); //게시판 번호
+            String replyWriterMember = (String) params.get("replyWriterMember"); //댓글 작성자 or 좋아요 누른 멤버
+            String boardWriterMember = (String) params.get("boardWriterMember"); //게시글 작성자 
+            int clubBoardNo = (int) params.get("clubBoardNo"); //게시글 번호
             String boardTitle = (String) params.get("boardTitle"); //게시판 제목
-            String replyWriterName = (String) params.get("replyWriterName"); //댓글 작성자 닉네임
-            
+            String replyWriterName = (String) params.get("replyWriterName"); //댓글 작성자 닉네임 or 좋아요 누른 멤버 닉네임
+                       
             log.debug("notifyType = {}", notifyType);
             log.debug("replyWriterMember = {}", replyWriterMember); 
             log.debug("boardWriterMember = {}", boardWriterMember);
-            log.debug("boardNo = {}", boardNo);
+            log.debug("boardNo = {}", clubBoardNo);
             log.debug("boardTitle = {}", boardTitle);
+            log.debug("replyWriterName = {}", replyWriterName);
             
-//            log.debug("replyWriterMember contains = {}", clientsMap.containsKey(replyWriterMember));
             WebSocketSession replyWriterMemberClient = clientsMap.get(replyWriterMember); //댓글 작성자 세션
             WebSocketSession boardWriterMemberClient = clientsMap.get(boardWriterMember); //게시글 작성자 세션
             log.debug("replyWriterMemberClient={}",replyWriterMemberClient);
@@ -85,23 +85,28 @@ public class WebSocketNotifyServer extends TextWebSocketHandler{
 
             
          // 게시글 작성자 세션이 존재하면 메시지 발송
-            if ("reply".equals(notifyType) && replyWriterMemberClient != null) {
+            if ("reply".equals(notifyType) && boardWriterMemberClient != null) {
                 TextMessage tm = new TextMessage(replyWriterName + "님이 "
-                        + "<a href='/clubBoard/detail?clubBoardNo=" + boardNo + "' class='link-body-emphasis link-underline link-underline-opacity-0' style='color: black'>"
+                        + "<a href='/clubBoard/detail?clubBoardNo=" + clubBoardNo + "' class='link-body-emphasis link-underline link-underline-opacity-0' style='color: black'>"
                         + boardTitle + " 글에 댓글을 달았습니다!</a>");
 
-                try {
                     boardWriterMemberClient.sendMessage(tm); // 게시글 작성자에게 발송
-                } catch (IOException e) {
-                    log.error("Failed to send message to boardWriterMember", e);
-                }
+            }
+            
+            //좋아요
+            else if("like".equals(notifyType) && boardWriterMemberClient != null){
+            	TextMessage tm = new TextMessage(replyWriterName + "님이 "
+                        + "<a href='/clubBoard/detail?clubBoardNo=" + clubBoardNo + "' class='link-body-emphasis link-underline link-underline-opacity-0' style='color: black'>"
+                        + boardTitle + " 글에 좋아요를 눌렀습니다!</a>");
+
+                    boardWriterMemberClient.sendMessage(tm); // 게시글 작성자에게 발송
             }
 
             // DB에 알림 저장
             notifyDao.insert(NotifyDto.builder()
                     .notifySender(replyWriterMember) // 댓글 작성자(발신자)
                     .notifyReceiver(boardWriterMember) // 게시글 작성자(수신자)
-                    .notifyClubBoardNo(boardNo) // 게시글 번호
+                    .notifyClubBoardNo(clubBoardNo) // 게시글 번호
                     .notifyClubBoardTitle(boardTitle) // 게시글 제목
                     .notifyType(notifyType) // 알림 종류(reply)
                     .build());
