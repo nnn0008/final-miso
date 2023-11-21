@@ -33,6 +33,7 @@ import com.kh.springfinal.dao.AttachDao;
 import com.kh.springfinal.dao.ChatDao;
 import com.kh.springfinal.dao.ChatOneDao;
 import com.kh.springfinal.dao.ChatRoomDao;
+import com.kh.springfinal.dao.MemberProfileDao;
 import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.ChatDto;
 import com.kh.springfinal.dto.ChatOneDto;
@@ -71,6 +72,9 @@ public class WebSocketServer extends TextWebSocketHandler{
 	
 	@Autowired
 	private AttachDao attachDao;
+	
+	@Autowired
+	private MemberProfileDao profileDao;
 
     // 초기 디렉터리 설정
     @Autowired
@@ -126,7 +130,6 @@ public class WebSocketServer extends TextWebSocketHandler{
 	    log.debug("chatSender:{}", chatSender);
 	    
 	    LocalDateTime targetTime = LocalDateTime.now();
-
 	    
 	    log.debug("Before executing the query for chatRoomNo {} and chatSender {}", chatRoomNo, chatSender);
 	    List<ChatDto> chatHistory = chatDao.getChatHistoryDetail(chatRoomNo, chatSender); // 동호회 채팅 내역
@@ -152,6 +155,13 @@ public class WebSocketServer extends TextWebSocketHandler{
 
 		LocalDateTime chatTime = chatDto.getChatTime();
 
+		AttachDto profileImage = profileDao.profileFindOne(chatDto.getChatSender());
+        String profileImageUrl = null;
+        
+        if(profileImage != null) {
+        	profileImageUrl = "/getProfileImage?memberId=" + chatDto.getChatSender();
+        }
+		
 	    Map<String, Object> map = new HashMap<>();
 	    map.put("memberId", chatDto.getChatSender());
 	    map.put("chatTime", chatTime.toString());
@@ -159,6 +169,10 @@ public class WebSocketServer extends TextWebSocketHandler{
 	    map.put("chatNo", chatDto.getChatNo());
 	    map.put("chatBlind", chatDto.getChatBlind());
 
+	    if(profileImageUrl != null) {
+	    	map.put("profileImageUrl", profileImageUrl);
+        }
+	    
 	    if ("Y".equals(chatDto.getChatBlind())) {
 	        map.put("content", "삭제된 메시지입니다");
 	    } else {
@@ -169,7 +183,6 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            map.put("content", chatDto.getChatContent());
 	        }
 	    }
-
 
 	    // 기존 채팅방 멤버의 닉네임 가져오기
 	    List<ChatVO> roomMembers = chatRoomDao.chatRoomMemberName(chatRoomNo);
@@ -238,6 +251,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	        // 해당 룸번호를 가져옴 
 	        Integer chatRoomNo = messageDto.getChatRoomNo();
 	        
+	        //map에 룸번호, 세션 정보를 담는다
 	        Map<String, Object> map = new HashMap<>();
 	        map.put("chatRoomNo", chatRoomNo);        
 	        map.put("session", session);
@@ -245,6 +259,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 
 	        System.out.println("Current sessionList: " + sessionList);
 	        
+	        //채팅 목록을 검색
 	        List<ChatListVO> chatList = chatRoomDao.chatRoomList(chatRoomNo);
 
 	        if (!chatList.isEmpty()) {
@@ -294,6 +309,13 @@ public class WebSocketServer extends TextWebSocketHandler{
 	        String chatContent = messageDto.getChatContent();
 	        String chatSender = messageDto.getChatSender();
 	        
+	        AttachDto profileImage = profileDao.profileFindOne(chatSender);
+	        String profileImageUrl = null;
+	        
+	        if(profileImage != null) {
+	        	profileImageUrl = "/getProfileImage?memberId=" + chatSender;
+	        }
+	        
 	        //채팅 삭제 업데이트를 위한
 	        String chatBlind = "N";
 	        int chatNo = chatDao.sequence();
@@ -318,6 +340,10 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            data.put("memberName", client.getMemberName());
 	            data.put("chatBlind", chatBlind);
 	            data.put("chatNo", chatNo);
+	            
+	            if(profileImageUrl != null) {
+	            	data.put("profileImageUrl", profileImageUrl);
+	            }
 	            
 	            String messageJson = mapper.writeValueAsString(data);
 	            TextMessage tm = new TextMessage(messageJson);
@@ -345,6 +371,13 @@ public class WebSocketServer extends TextWebSocketHandler{
 	        String chatSender = messageDto.getChatSender();
 	        String chatReceiver = messageDto.getChatReceiver();
 	        String chatContent = messageDto.getChatContent();
+	        
+	        AttachDto profileImage = profileDao.profileFindOne(chatSender);
+	        String profileImageUrl = null;
+	        
+	        if(profileImage != null) {
+	        	profileImageUrl = "/getProfileImage?memberId=" + chatSender;
+	        }
 	        
 	        //채팅 삭제 업데이트를 위한
 	        String chatBlind = "N";
@@ -390,6 +423,10 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            data.put("chatBlind", chatBlind);
 	            data.put("chatNo", chatNo);
 	            
+	            if(profileImageUrl != null) {
+	            	data.put("profileImageUrl", profileImageUrl);
+	            }
+	            
 	            String messageJson = mapper.writeValueAsString(data);
 	            TextMessage tm = new TextMessage(messageJson);
 
@@ -428,6 +465,13 @@ public class WebSocketServer extends TextWebSocketHandler{
 	        String fileName = messageDto.getFileName();
 	        long fileSize = messageDto.getFileSize();
 	        String fileType = messageDto.getFileType(); 
+	        
+	        AttachDto profileImage = profileDao.profileFindOne(chatSender);
+	        String profileImageUrl = null;
+	        
+	        if(profileImage != null) {
+	        	profileImageUrl = "/getProfileImage?memberId=" + chatSender;
+	        }
 	        
 	        //채팅 삭제 업데이트를 위한
 	        String chatBlind = "N";
@@ -493,6 +537,10 @@ public class WebSocketServer extends TextWebSocketHandler{
             FileChat.put("memberName", client.getMemberName());
             FileChat.put("chatBlind", chatBlind);
             FileChat.put("chatNo", chatNo);
+            
+            if(profileImageUrl != null) {
+            	FileChat.put("profileImageUrl", profileImageUrl);
+            }
                            
             String messageJson = mapper.writeValueAsString(FileChat);
             TextMessage tm = new TextMessage(messageJson);

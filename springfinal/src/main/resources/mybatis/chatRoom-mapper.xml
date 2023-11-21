@@ -100,6 +100,11 @@
 	FROM member m
 	</select>
 	
+		<select id="roomMemberProfile2" resultType="MemberVO">
+	SELECT m.member_id, m.member_name, m.member_level
+	FROM member m
+	</select>
+	
 	 <!-- 이미 존재하는 1:1 채팅 룸 조회 -->
     <select id="getExistingChatRoom" resultType="ChatDto">
         SELECT chat_room_no
@@ -147,6 +152,18 @@ LEFT JOIN
 WHERE
     co.CHAT_ROOM_NO = #{chatRoomNo}
     </select>
+    
+    <!-- 정모 회원 목록을 가져오기 위한 조회 -->
+    
+    <select id="meetingMemberList" resultType="ChatMemberListVO">
+    SELECT cm.CLUB_MEMBER_ID, m2.MEMBER_NAME, cm.CLUB_MEMBER_RANK, cr.CHAT_ROOM_NO, m.MEETING_NO 
+FROM meeting m
+JOIN meeting_member mm ON m.meeting_no = mm.meeting_no
+JOIN club_member cm ON mm.club_member_no = cm.club_member_no
+JOIN CHAT_ROOM cr ON cr.CHAT_ROOM_NO = m.chat_room_no
+JOIN "MEMBER" m2 ON cm.CLUB_MEMBER_ID = m2.MEMBER_ID 
+WHERE cr.CHAT_ROOM_NO = #{chatRoomNo}
+</select>
     
     <!-- 채팅 이력 초기화를 위한 구문 -->
     <select id="chatReset" resultType="ChatDto">
