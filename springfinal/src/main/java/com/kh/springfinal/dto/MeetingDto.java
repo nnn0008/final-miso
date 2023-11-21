@@ -19,7 +19,12 @@ public class MeetingDto {
 	private String meetingFix;
 	private int clubNo;
 	private String dateString;
+	private String date;
+	private String time;
 	private int dday;
 	private int chatRoomNo;
+	private int attachNo;
+	private boolean isManager;
+	private boolean didAttend;
 	
 }

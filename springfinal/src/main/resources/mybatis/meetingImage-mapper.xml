@@ -21,5 +21,15 @@
 	<select id="findAll">
 		select * from meeting_image order by meeting_no desc
 	</select>
+	
+	<select id="findImageByAttachNo" resultType="attachDto">
+	
+	select * from attach where attach_no=#{attachNo}
+	
+	</select>
+	
+	
+	
+	
 
 </mapper>    

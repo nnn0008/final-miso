@@ -94,6 +94,15 @@ public class ClubMemberDaoImpl implements ClubMemberDao{
 		
 		return sqlSession.selectOne("clubMember.findClubMemberNo",params);
 	}
+
+	@Override
+	public boolean isManeger(int clubMemberNo) {
+		
+		String level = sqlSession.selectOne("clubMember.memberLevel",clubMemberNo);
+		
+		return level.equals("운영진") ? true : false;
+	
+	}
 	
 	
 	

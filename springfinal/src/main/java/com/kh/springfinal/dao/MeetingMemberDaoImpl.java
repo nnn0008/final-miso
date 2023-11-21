@@ -1,6 +1,8 @@
 package com.kh.springfinal.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +31,29 @@ public class MeetingMemberDaoImpl implements MeetingMemberDao{
 	@Override
 	public List<MeetingMemberDto> selectList() {
 		return sqlSession.selectList("meetingMember.findAll");
+	}
+	@Override
+	public boolean didAttend(int meetingNo, int clubMemberNo) {
+		
+		Map<String, Object> params = new HashMap<>();
+		
+		params.put("meetingNo", meetingNo);
+		params.put("clubMemberNo", clubMemberNo);
+		
+		int result = sqlSession.selectOne("meetingMember.didAttend",params);
+		
+		return  result>0;
+	}
+	@Override
+	public boolean deleteAttend(int meetingNo, int clubMemberNo) {
+		
+			Map<String, Object> params = new HashMap<>();
+		
+		params.put("meetingNo", meetingNo);
+		params.put("clubMemberNo", clubMemberNo);
+		
+		int result = sqlSession.delete("meetingMember.deleteAttend",params);
+		
+		return result>0;
 	}
 }

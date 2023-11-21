@@ -21,5 +21,17 @@
 	<select id="findAll">
 		select * from meeting_member order by meeting_no desc
 	</select>
+	
+	<select id="didAttend" resultType="int">
+		
+		select count(*) from meeting_member where meeting_no=#{meetingNo} and club_member_no=#{clubMemberNo}
+	
+	</select>
+	
+	<delete id="deleteAttend">
+		
+		delete meeting_member where meeting_no=#{meetingNo} and club_member_no=#{clubMemberNo}
+	
+	</delete>
 
 </mapper> 

@@ -77,7 +77,7 @@ public class MeetingRestController {
 			@RequestParam String meetingLocation, @RequestParam int meetingPrice,
 			@RequestParam int meetingNumber,
 			@RequestParam String meetingFix,
-			@RequestParam MultipartFile attach
+			@RequestParam(required = false) MultipartFile attach
 			) throws IllegalStateException, IOException {
 		
 		ChatRoomDto chatRoomDto = new ChatRoomDto();
@@ -105,13 +105,12 @@ public class MeetingRestController {
 		meetingDto.setMeetingFix(meetingFix);
 		meetingDto.setChatRoomNo(chatRoomNo);
 		
-		log.debug("meetingTime={}",meetingTime);
 		
 		meetingDao.insert(meetingDto);
 		
 		
 		
-		if(!attach.isEmpty()) {
+		if(attach!=null) {
 			int attachNo = attachDao.sequence();
 			
 			//첨부파일 등록(파일이 있을 때만)
@@ -148,6 +147,27 @@ public class MeetingRestController {
 		
 		MeetingDto meetingDto = meetingDao.selectOne(meetingNo);
 		
+		int attachNo = meetingImageDao.findAttachNo(meetingDto.getMeetingNo());
+		
+		if(attachNo!=0) {
+		
+			meetingDto.setAttachNo(attachNo);
+		
+		}
+		
+		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat fullDateFormat = new SimpleDateFormat("yyyy-MM-dd E a hh:mm:ss");
+		
+		Date date = meetingDto.getMeetingDate();
+        String date2 = dateFormat.format(date);
+        String time = timeFormat.format(date);
+        String fullDate = fullDateFormat.format(date);
+        meetingDto.setDateString(fullDate); 
+        meetingDto.setDate(date2);
+        meetingDto.setTime(time);
+		
+		
 		
 		return meetingDto;
 		
@@ -156,76 +176,98 @@ public class MeetingRestController {
 	
 	@PostMapping("/edit")
 	public void edit(HttpSession session,
-			@RequestParam int clubNo, @RequestParam String meetingName,
+			@RequestParam int meetingNo,
+			@RequestParam String meetingName,
 			@RequestParam("meetingTime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date meetingTime,
 			@RequestParam String meetingLocation, @RequestParam int meetingPrice,
 			@RequestParam int meetingNumber,
 			@RequestParam String meetingFix,
-			@RequestParam MultipartFile attach
+			@RequestParam(required = false) MultipartFile attach
 			) throws IllegalStateException, IOException {
 		
 		
 		
-		//아이디가 필요하다
-		String memberId = (String)session.getAttribute("name");
-		ClubMemberDto clubMemberDto = clubBoardDao.selectOneClubMemberNo(memberId, clubNo);
-		
 		MeetingDto meetingDto = new MeetingDto();
-		int meetingNo = meetingDao.sequence();
 		
 		meetingDto.setMeetingDate(meetingTime); //날짜
 		meetingDto.setMeetingLocation(meetingLocation); //위치
 		meetingDto.setMeetingName(meetingName); //정모 제목
-		meetingDto.setMeetingNo(meetingNo); //정모 번호
 		meetingDto.setMeetingNumber(meetingNumber); //정모 인원
 		meetingDto.setMeetingPrice(meetingPrice); 
-		meetingDto.setClubNo(clubNo);
 		meetingDto.setMeetingFix(meetingFix);
+		meetingDto.setMeetingNo(meetingNo);
 		
-		log.debug("meetingTime={}",meetingTime);
+		meetingDao.update(meetingDto);
 		
-		meetingDao.insert(meetingDto);
-		
-		
-		
-		if(!attach.isEmpty()) {
-			int attachNo = attachDao.sequence();
-			
-			//첨부파일 등록(파일이 있을 때만)
+		if(attach!=null) {//파일이 있으면
+			//파일 삭제 - 기존 파일이 있을 경우에만 처리
+			AttachDto attachDto = meetingDao.findImage(meetingNo);
 			String home = System.getProperty("user.home");
 			File dir = new File(home,"upload");
-			dir.mkdirs();
-			File target = new File(dir,String.valueOf(attachNo));
-			attach.transferTo(target);
-			AttachDto attachDto = new AttachDto();
-			attachDto.setAttachNo(attachNo);
-			attachDto.setAttachName(attach.getOriginalFilename());
-			attachDto.setAttachSize(attach.getSize());
-			attachDto.setAttachType(attach.getContentType());
-			attachDao.insert(attachDto);
 			
-			//연결(파일이 있을 때만)
+			if(attachDto != null) {
 			
+				attachDao.delete(attachDto.getAttachNo());
+			File target = new File(dir,String.valueOf(attachDto.getAttachNo()));
+			target.delete();
+			}
+			
+			//파일 추가 및 연결
+			int attachNo = attachDao.sequence();
 			
 			
-			meetingImageDao.insert(attachNo,meetingNo);
+			File insertTarget = new File(dir,String.valueOf(attachNo));
+			attach.transferTo(insertTarget);
 			
+			AttachDto insertDto = new AttachDto();
+			insertDto.setAttachNo(attachNo);
+			insertDto.setAttachName(attach.getOriginalFilename());
+			insertDto.setAttachSize(attach.getSize());
+			insertDto.setAttachType(attach.getContentType());
+			attachDao.insert(insertDto);
+			
+			meetingImageDao.insert(attachNo, meetingNo);
 		}
-		MeetingMemberDto meetingMemberDto = new MeetingMemberDto();
 		
-		meetingMemberDto.setClubMemberNo(clubMemberDto.getClubMemberNo());
-		meetingMemberDto.setMeetingNo(meetingNo);
-		meetingMemberDao.insert(meetingMemberDto);
+		
+		
+		
+		
+		
+		
+		
 		
 	}
 	
 	
 	@GetMapping("/list")
-	public List<MeetingDto> list(int clubNo) throws ParseException{
+	public List<MeetingDto> list(int clubNo,HttpSession session) throws ParseException{
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd E a hh:mm:ss");
 		List<MeetingDto> meetingList = meetingDao.selectList(clubNo);
 		
+		String memberId = (String) session.getAttribute("name");
+		
+		int presentClubMemberNo = clubMemberDao.findClubMemberNo(clubNo, memberId);
+		
 		for(MeetingDto dto : meetingList) {
+			
+			
+			Integer attachNo = meetingImageDao.findAttachNo(dto.getMeetingNo());
+			dto.setAttachNo(attachNo != null ? attachNo : 0);
+
+			
+			if(attachNo!=0) {
+			
+			dto.setAttachNo(attachNo);
+			
+			}
+			
+			boolean isManager = clubMemberDao.isManeger(presentClubMemberNo);
+			boolean didAttend = meetingMemberDao.didAttend(dto.getMeetingNo(), presentClubMemberNo);
+			
+			dto.setDidAttend(didAttend);
+			dto.setManager(isManager);
+			
 
 			//스트링 날짜 설정
 		 	Date date = dto.getMeetingDate();
@@ -264,6 +306,57 @@ public class MeetingRestController {
 		
 		//1,2
 		AttachDto attachDto = meetingDao.findImage(meetingNo);
+		
+		
+		if(attachDto == null) {
+//			throw new NoTargetException("파일 없음");
+			//내가 만든 예외로 통합
+			
+			return ResponseEntity.notFound().build();
+			//404로 반환
+			
+		}
+		
+		//3
+		String home = System.getProperty("user.home");
+		File dir = new File(home,"upload");
+		File target = new File(dir, String.valueOf(attachDto.getAttachNo()));
+		
+		byte[] data = FileUtils.readFileToByteArray(target);// 실제파일정보 불러오기
+		ByteArrayResource resource = new ByteArrayResource(data);
+		
+		//4,5 - header(정보), body(내용)
+		return ResponseEntity.ok()
+//				.header("Content-Encoding","UTF-8")
+				.header(HttpHeaders.CONTENT_ENCODING, StandardCharsets.UTF_8.name())
+//				.header("Content-Length",String.valueOf(attachDto.getAttachSize()))
+				.contentLength(attachDto.getAttachSize())
+//				.header("Content-Type",attachDto.getAttachType())//저장된 유형
+				.header(HttpHeaders.CONTENT_TYPE,attachDto.getAttachType())
+//				.header("Content-Type","application/octet-stream")//무조건 다운로드
+//				.contentType(MediaType.APPLICATION_OCTET_STREAM)
+//				.header("Content-Disposition","attachment; filename="+attachDto.getAttachName())
+				.header(HttpHeaders.CONTENT_DISPOSITION,
+					ContentDisposition.attachment().filename(attachDto.getAttachName(),StandardCharsets.UTF_8)
+					.build().toString()
+						)
+				
+			.body(resource);	
+	}
+	
+	@ResponseBody
+	@RequestMapping("/attchImage")
+	public ResponseEntity<ByteArrayResource> 
+	attchImage(@RequestParam int attachNo) throws IOException {
+		//[1] 클럽 번호로 파일 번호를 찾아야 한다
+		//[2] 파일 번호로 파일 정보를 불러와야 한다
+		//[3] 실제 파일을 불러와야 한다
+		//[4] 앞에서 불러온 모든 정보로 ResponseEntity를 생성한다
+		//[5] 사용자한테 준다
+		
+		//1,2
+		AttachDto attachDto = meetingImageDao.findImageByAttachNo(attachNo);
+		
 		
 		if(attachDto == null) {
 //			throw new NoTargetException("파일 없음");
@@ -318,6 +411,45 @@ public class MeetingRestController {
 		
 		
 	}
+	
+	
+	@PostMapping("/attendDelete")
+	public boolean attendDelete(@RequestParam int clubNo, @RequestParam int meetingNo,HttpSession session) {
+		
+		
+		String memberId= (String) session.getAttribute("name");
+		
+		int clubMemberNo = clubMemberDao.findClubMemberNo(clubNo, memberId);
+		
+		
+		
+		
+		
+		return meetingMemberDao.deleteAttend(clubMemberNo,meetingNo);
+		
+	}
+	
+	@PostMapping("/delete")
+	public void delete(@RequestParam int meetingNo) {
+		
+		AttachDto attachDto = meetingDao.findImage(meetingNo);
+//		MeetingDto meetingDto= meetingDao.selectOne(meetingNo);
+		
+		//이미지 있는 경우 이미지 삭제 처리 추가
+		if(attachDto!=null) {
+		String home=System.getProperty("user.home");
+		File dir = new File(home,"upload");
+		File target = new File(dir,String.valueOf(attachDto.getAttachNo()));
+		target.delete();	//실제파일 삭제
+
+		attachDao.delete(attachDto.getAttachNo());	//파일정보 삭제
+		}
+		meetingDao.delete(meetingNo);	//포켓몬 + 이미지연결정보 삭제
+		
+	} 
+	
+	
+	
 	
 	
 	

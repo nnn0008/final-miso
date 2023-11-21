@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.MeetingImageDto;
 
 @Repository
@@ -37,4 +38,16 @@ public class MeetingImageDaoImpl implements MeetingImageDao {
 	public List<MeetingImageDto> selectList() {
 		return sqlSession.selectList("meetingImage.findAll");
 	}
+	@Override
+	public AttachDto findImageByAttachNo(int attchNo) {
+		return sqlSession.selectOne("meetingImage.findImageByAttachNo",attchNo);
+	}
+	@Override
+	public int findAttachNo(int meetingNo) {
+	    Integer attachNo = sqlSession.selectOne("meeting.findAttachNo", meetingNo);
+	    return (attachNo != null) ? attachNo.intValue() : 0;
+	}
+
+	
+	
 }
