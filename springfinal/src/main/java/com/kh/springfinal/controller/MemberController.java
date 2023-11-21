@@ -267,13 +267,6 @@ public class MemberController {
 		return "member/mypage";
 	}
 	
-	@RequestMapping("/logout")
-	public String logout(HttpSession session) {
-		session.removeAttribute("name");
-		session.removeAttribute("level");
-		session.removeAttribute("memberName");
-		return "redirect:./login";
-	}
 	
 	@GetMapping("/edit")
 	public String edit(HttpSession session, Model model) {
