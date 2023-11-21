@@ -32,9 +32,8 @@ public class RegularSchedulerServiceImpl implements RegularSchedulerService {
 	IsToday isToday;
 	
 	
-	@Scheduled(cron = "0 0 9 * * *")//매일 9시 마다
-//	@Scheduled(cron = "0 10 16 * * *") // 매일 오후 3시 5분에 실행
-//	 @Scheduled(fixedRate = 300000) // 5분
+	@Scheduled(cron = "0 0 9 * * *")//매일 9시 마다 데이터확인
+
 	
 
 
@@ -59,6 +58,12 @@ public class RegularSchedulerServiceImpl implements RegularSchedulerService {
 				            .quantity(1)
 				            .build();
 				 KakaoPayRegularRequestResponseVO response = kakaoPayRegularService.request(request);
+				 request.setTid(response.getTid());
+				 paymentRegularDto.setPaymentRegularTid(response.getTid());
+				 paymentRegularDao.updatePaymentRegularTime(paymentRegularDto);
+				 log.debug("response={}",response);
+				 log.debug("dto={}",paymentRegularDto);
+				 log.debug("request{}",request);
 				 log.debug("1달 완료");
 				}
 				else if(isToday.regularYear(paymentRegularDto)) {//1년
@@ -72,6 +77,9 @@ public class RegularSchedulerServiceImpl implements RegularSchedulerService {
 				            .quantity(1)
 				            .build();
 				 KakaoPayRegularRequestResponseVO response = kakaoPayRegularService.request(request);
+				 request.setTid(response.getTid());
+				 paymentRegularDto.setPaymentRegularTid(response.getTid());
+				 paymentRegularDao.updatePaymentRegularTime(paymentRegularDto);
 				 log.debug("1년 완료");
 				}
 			}

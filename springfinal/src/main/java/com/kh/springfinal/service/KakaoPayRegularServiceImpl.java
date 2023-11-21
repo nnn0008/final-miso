@@ -115,6 +115,7 @@ public class KakaoPayRegularServiceImpl implements KakaoPayRegularService {
 		//바디설정
 		MultiValueMap<String, String> body = new LinkedMultiValueMap<String, String>();
 		body.add("cid", kakaoPayProperties.getRegularCid());
+		body.add("tid", request.getTid());
 		body.add("sid", request.getSid());
 		body.add("partner_order_id", request.getPartnerOrderId());
 		body.add("partner_user_id", request.getPartnerUserId());

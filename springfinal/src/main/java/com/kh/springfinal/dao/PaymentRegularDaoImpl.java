@@ -68,13 +68,8 @@ public class PaymentRegularDaoImpl implements PaymentRegularDao {
 	}
 
 	@Override
-	public void updatePaymentRegularTime() {
-		sqlSession.update("paymentRegular.scheduler");
+	public void updatePaymentRegularTime(PaymentRegularDto paymentRegularDto) {
+		sqlSession.update("paymentRegular.scheduler",paymentRegularDto);
 	}
 
-	@Override
-	public void updateTid(int paymentRegularNo) {
-		sqlSession.update("paymentRegular.updateTid");
-		
-	}
 }
