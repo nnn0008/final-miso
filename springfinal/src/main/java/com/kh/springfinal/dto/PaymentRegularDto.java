@@ -2,6 +2,8 @@ package com.kh.springfinal.dto;
 
 import java.sql.Date;
 
+import org.springframework.stereotype.Component;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
