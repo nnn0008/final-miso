@@ -23,6 +23,8 @@ public interface PaymentRegularDao {
 	void cancel(PaymentRegularDto paymentRegularDto);
 	void cancelDetailGroup(int regularDetailOrigin);
 	
+	void updateTid(int paymentRegularNo);
+	
 	
 	void updatePaymentRegularTime();
 	
