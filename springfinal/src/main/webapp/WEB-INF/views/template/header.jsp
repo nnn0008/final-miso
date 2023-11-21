@@ -225,22 +225,46 @@ function getNotifyList() {
 
 //알림 메시지 생성 함수
 function createNotificationMessage(item) {
-    return (
-        '<div class="row">' +
-        '<div class="col">' +
-        item.notifySender + ' | ' + item.notifyDate +
-        '</div>' +
-        '</div>' +
-        '<div class="row">' +
-        '<div class="col-10">' +
-        '<a href="/clubBoard/detail?clubBoardNo=' + item.notifyClubBoardNo + '" class="link-body-emphasis link-underline link-underline-opacity-0" style="color: black;">' +
-        item.notifySender + '님이 ' + item.notifyClubBoardTitle + ' 글에 댓글을 달았습니다</a>' +
-        '</div>' +
-        '<div class="col-2">' +
-        '<i class="fa-solid fa-xmark delete-button" data-notify-no="' + item.notifyNo + '"></i>' +
-        '</div>' +
-        '</div>'
-    );
+    if (item.notifyType === 'reply') {
+        // 댓글 알림 메시지
+        return (
+            '<div class="row">' +
+            '<div class="col">' +
+            item.notifySender + ' | ' + item.notifyDate +
+            '</div>' +
+            '</div>' +
+            '<div class="row">' +
+            '<div class="col-10">' +
+            '<a href="/clubBoard/detail?clubBoardNo=' + item.notifyClubBoardNo + '" class="link-body-emphasis link-underline link-underline-opacity-0" style="color: black;">' +
+            item.notifySender + '님이 ' + item.notifyClubBoardTitle + ' 글에 댓글을 달았습니다</a>' +
+            '</div>' +
+            '<div class="col-2">' +
+            '<i class="fa-solid fa-xmark delete-button" data-notify-no="' + item.notifyNo + '"></i>' +
+            '</div>' +
+            '</div>'
+        );
+    } else if (item.notifyType === 'like') {
+        // 좋아요 알림 메시지
+        return (
+            '<div class="row">' +
+            '<div class="col">' +
+            item.notifySender + ' | ' + item.notifyDate +
+            '</div>' +
+            '</div>' +
+            '<div class="row">' +
+            '<div class="col-10">' +
+            '<a href="/clubBoard/detail?clubBoardNo=' + item.notifyClubBoardNo + '" class="link-body-emphasis link-underline link-underline-opacity-0" style="color: black;">' +
+            item.notifySender + '님이 ' + item.notifyClubBoardTitle + ' 글을 좋아합니다</a>' +
+            '</div>' +
+            '<div class="col-2">' +
+            '<i class="fa-solid fa-xmark delete-button" data-notify-no="' + item.notifyNo + '"></i>' +
+            '</div>' +
+            '</div>'
+        );
+    } else {
+        // 그 외의 알림 타입에 대한 처리
+        return '<p>알 수 없는 알림 타입입니다</p>';
+    }
 }
 
 // 삭제 버튼 클릭 이벤트 처리

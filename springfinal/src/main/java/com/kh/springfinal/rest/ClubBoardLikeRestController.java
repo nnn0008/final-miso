@@ -118,9 +118,10 @@ public class ClubBoardLikeRestController {
 
 	        if (isCheck) { //이미 좋아요를 눌렀다면
 	            clubBoardLikeDao.delete(clubBoardNo);
+	            clubBoardDao.updateLikeCount(clubBoardNo);
 	        } else { //좋아요를 누르지 않았따면
 	            clubBoardLikeDao.insert(clubBoardLikeDto);
-	       
+	            clubBoardDao.updateLikeCount(clubBoardNo);
 	        }
 	        int count = clubBoardLikeDao.count(clubBoardNo);
 
@@ -145,7 +146,7 @@ public class ClubBoardLikeRestController {
 	        responseMap.put("success", false);
 	        return responseMap;
 	    
-
-	
+	    }
+	}
 	
 }
