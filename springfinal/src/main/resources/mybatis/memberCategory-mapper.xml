@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="memberCategory">
+    
+    	<insert id="addCategory">
+    		insert into member_category(member_id, like_category) values(#{memberId}, #{likeCategory})
+    	</insert>
+    	
+    	<select id="fineLikeCategory">
+
+    	</select>
+    	
+    </mapper>

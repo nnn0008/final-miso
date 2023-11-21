@@ -72,7 +72,12 @@
 	
 	</select>
 	
-	<select id="countListByPage" resultType="int">
+		select * from zip_code where sido=#{sido} and 
+		hdong_name=#{hdongName} and
+		sigungu=#{sigungu} or
+		eupmyun=#{eupmyun}
+		
+	</select> 
 	
 	 				select count(*) from zip_code
 	 				WHERE instr(sido, #{keyword})>0 

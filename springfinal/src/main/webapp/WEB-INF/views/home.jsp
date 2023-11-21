@@ -37,7 +37,6 @@ $(document).ready(function() {
  <div id="iconContainer" class="d-flex justify-content-end ">
 			<i class="fa-solid fa-bars fa-xl iconContainer showCategoryButton"></i>
 				</div>
-				
 				<div class="row mb-3">
    				 <div class="col d-flex justify-content-end">
 				<div class="alert alert-dismissible alert-light categoryAlert">

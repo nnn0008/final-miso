@@ -86,7 +86,7 @@ public class MemberRestController {
 		memberProfileDto.setAttachNo(attachNo);
 		memberProfileDto.setMemberId(memberId);
 		profileDao.profileUpload(memberProfileDto);
-		return Map.of("attachNo", attachNo);
+		return Map.of("memberId", memberId);
 	}
 	
 	//프로필 띄우는 코드
@@ -106,6 +106,7 @@ public class MemberRestController {
 
 		byte[] data = FileUtils.readFileToByteArray(target);//실제파일정보 불러오기
 		ByteArrayResource resource = new ByteArrayResource(data);
+		
 
 		return ResponseEntity.ok()
 				.header(HttpHeaders.CONTENT_ENCODING, StandardCharsets.UTF_8.name())

@@ -16,7 +16,14 @@
                     <div class="row mt-3">
                         <div class="col">
                             <div class="col d-flex justify-content-center">
-                                <img src="${pageContext.request.contextPath}/images/avatar50.png" width="35%">
+                                <c:choose>
+			                    	<c:when test="${sessionScope.name==null}">
+		                                <img src="${pageContext.request.contextPath}/images/avatar50.png" width="35%">
+			                    	</c:when>
+			                    	<c:otherwise>
+				                        <img src="/rest/member/profileShow?memberId=${sessionScope.name}" class="rounded-circle profile" style="width:80px; height: 80px;">
+			                    	</c:otherwise>
+			                    </c:choose>
                             </div>
                             <div class="col d-flex justify-content-center">
                                <strong class="ms-2">프로필</strong>

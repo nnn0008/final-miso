@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
@@ -23,10 +25,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.springfinal.dao.AttachDao;
+import com.kh.springfinal.dao.MemberCategoryDao;
 import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dao.MemberProfileDao;
+import com.kh.springfinal.dao.ZipCodeDao;
 import com.kh.springfinal.dto.AttachDto;
+import com.kh.springfinal.dto.MemberCategoryDto;
 import com.kh.springfinal.dto.MemberDto;
+import com.kh.springfinal.dto.ZipCodeDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,10 +44,13 @@ public class MemberController {
 	private MemberDao memberDao;
 	
 	@Autowired
-	private AttachDao attachDao;
+	private ZipCodeDao codeDao;
 	
 	@Autowired
 	private MemberProfileDao memberProfileDao;
+	
+	@Autowired
+	private MemberCategoryDao memberCategoryDao;
 	
 	@Autowired
 	private JavaMailSender sender;
@@ -51,9 +60,31 @@ public class MemberController {
 		return "member/join";
 	}
 	@PostMapping("/join")
-	public String join(@ModelAttribute MemberDto memberDto) {
+	public String join(@ModelAttribute MemberDto memberDto,@RequestParam String StringmemberAddr, @RequestParam List<Integer> likeCategory) {
 		//회원 정보 DB저장
+		log.info(memberDto.toString());
+		log.info(likeCategory.toString());
+		ZipCodeDto codeDto=codeDao.selectOneAddrNo(StringmemberAddr);
+		memberDto.setMemberAddr(codeDto.getZipCodeNo());
+		// 예제로 사용할 날짜 문자열
+        String dateString = memberDto.getMemberBirth();
+
+        // DateTimeFormatter를 사용하여 문자열을 LocalDate로 파싱
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(dateString, formatter);
+
+        // LocalDate를 다시 원하는 형식의 문자열로 변환
+        String formattedDate = localDate.format(formatter);
+        memberDto.setMemberBirth(formattedDate);
 		memberDao.join(memberDto);
+		MemberCategoryDto memberCategoryDto = new MemberCategoryDto();
+		memberCategoryDto.setMemberId(memberDto.getMemberId());
+		//관심 카테고리 저장
+		for(int i = 0; i<likeCategory.size(); i++) {
+			Integer likecategory = likeCategory.get(i);
+			memberCategoryDto.setLikeCategory(likecategory);
+			memberCategoryDao.insert(memberCategoryDto);
+		}
 		return "redirect:./login";
 	}
 	
@@ -234,5 +265,28 @@ public class MemberController {
 		model.addAttribute("attachDto", attachDto);
 		model.addAttribute("memberDto", memberDto);
 		return "member/mypage";
+	}
+	
+	@RequestMapping("/logout")
+	public String logout(HttpSession session) {
+		session.removeAttribute("name");
+		session.removeAttribute("level");
+		session.removeAttribute("memberName");
+		return "redirect:./login";
+	}
+	
+	@GetMapping("/edit")
+	public String edit(HttpSession session, Model model) {
+		String memberId = (String) session.getAttribute("name");
+		MemberDto memberDto = memberDao.loginId(memberId);
+		AttachDto attachDto = memberProfileDao.profileFindOne(memberId);
+		model.addAttribute("attachDto", attachDto);
+		model.addAttribute("memberDto", memberDto);
+		return "member/edit";
+	}
+	
+	@PostMapping("/edit")
+	public String edit2(@ModelAttribute MemberDto memberDto, @ModelAttribute MemberDto attachDto) {
+		return "redirect:./mypage";
 	}
 }
