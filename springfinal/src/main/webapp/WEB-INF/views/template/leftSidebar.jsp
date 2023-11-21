@@ -21,7 +21,7 @@
 		                                <img src="${pageContext.request.contextPath}/images/avatar50.png" width="35%">
 			                    	</c:when>
 			                    	<c:otherwise>
-				                        <img src="/rest/member/profileShow?memberId=${memberDto.memberId}" class="rounded-circle profile" style="width:80px; height: 80px;">
+				                        <img src="/rest/member/profileShow?memberId=${sessionScope.name}" class="rounded-circle profile" style="width:80px; height: 80px;">
 			                    	</c:otherwise>
 			                    </c:choose>
                             </div>
