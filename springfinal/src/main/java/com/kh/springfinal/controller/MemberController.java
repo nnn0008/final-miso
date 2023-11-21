@@ -261,4 +261,27 @@ public class MemberController {
 		model.addAttribute("memberDto", memberDto);
 		return "member/mypage";
 	}
+	
+	@RequestMapping("/logout")
+	public String logout(HttpSession session) {
+		session.removeAttribute("name");
+		session.removeAttribute("level");
+		session.removeAttribute("memberName");
+		return "redirect:./login";
+	}
+	
+	@GetMapping("/edit")
+	public String edit(HttpSession session, Model model) {
+		String memberId = (String) session.getAttribute("name");
+		MemberDto memberDto = memberDao.loginId(memberId);
+		AttachDto attachDto = memberProfileDao.profileFindOne(memberId);
+		model.addAttribute("attachDto", attachDto);
+		model.addAttribute("memberDto", memberDto);
+		return "member/edit";
+	}
+	
+	@PostMapping("/edit")
+	public String edit2(@ModelAttribute MemberDto memberDto, @ModelAttribute MemberDto attachDto) {
+		return "redirect:./mypage";
+	}
 }

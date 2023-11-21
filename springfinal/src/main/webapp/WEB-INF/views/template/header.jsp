@@ -131,7 +131,7 @@
             
             	<div class="col-4 ms-4">
             	<a href="${pageContext.request.contextPath}/#" class="link-body-emphasis link-underline link-underline-opacity-0">
-            	<i class="fa-regular fa-bell fa-2xl"></i></i>
+            	<i class="fa-regular fa-bell fa-2xl"></i>
             	</a>
             	</div>
             	
@@ -141,8 +141,8 @@
             	</a>
             	</div>
             	<div class="col-4">
-            	<a href="${pageContext.request.contextPath}/member/login" class="link-body-emphasis link-underline link-underline-opacity-0">
-            	<i class="fa-solid fa-power-off fa-2xl"></i>
+            	<a href="${pageContext.request.contextPath}/member/logout" class="link-body-emphasis link-underline link-underline-opacity-0">
+            	<i class="fa-solid fa-power-off fa-2xl" id="logout"></i>
             	</a>
             	</div>
             </div>

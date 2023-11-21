@@ -68,4 +68,12 @@ public class MemberDaoImpl implements MemberDao{
 		}
 		return false;
 	}
+	@Override
+	public List<MemberDto> selectListOld() {
+		return sqlSession.selectList("member.memberListByOld");
+	}
+	@Override
+	public List<MemberDto> selectListNew() {
+		return sqlSession.selectList("member.memberListByNew");
+	}
 }

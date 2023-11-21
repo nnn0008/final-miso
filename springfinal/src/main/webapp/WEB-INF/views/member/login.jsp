@@ -54,7 +54,6 @@
 	<div class="contain-fluid">
             <div class="row">
                 <div class="col">
-
                     <div class="row mt-5 pt-5">
                         <div class="col-sm-6 offset-sm-3 col-lg-10 offset-lg-1 text-center">
                      <img src="${pageContext.request.contextPath}/images/miso_logo.png" width="70%">

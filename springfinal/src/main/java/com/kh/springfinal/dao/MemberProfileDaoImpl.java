@@ -33,5 +33,6 @@ public class MemberProfileDaoImpl implements MemberProfileDao{
 		boolean result = count>0;
 		return result;
 	}
+	
 
 }

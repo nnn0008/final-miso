@@ -10,4 +10,6 @@ public interface MemberDao {
 	MemberDto selectOne(String memberId, String memberPw);
 	List<MemberDto> memberIdListByEmail(String memberName, String memberEmail);
 	boolean changePw(String memberId, String memberPw);
+	List<MemberDto> selectListOld();
+	List<MemberDto> selectListNew();
 }
