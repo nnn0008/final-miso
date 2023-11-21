@@ -83,9 +83,9 @@ $(function(){
    				$(".image-attach").empty();
    				for(let i = 0; i < response.length; i++){
 	   				//console.log(response[i]);
-   					//var wrapper = $("<div>").addClass("col-sm-6 col-md-4 col-lg-3 p-3")
-   					//.append($("<img>").addClass("attached-image img-thumbnail").attr("data-photo-no", response[i].photoNo)
-   					//.attr("src", window.contextPath + "/rest/photo/download/" + response[i].photoNo));
+   					var wrapper = $("<div>").addClass("col-sm-6 col-md-4 col-lg-3 p-3")
+   					.append($("<img>").addClass("attached-image img-thumbnail").attr("data-photo-no", response[i].photoNo)
+   					.attr("src", window.contextPath + "/rest/photo/download/" + response[i].photoNo));
    					
    					//detail 모달을 열고
    					//$(".img-thumbnail").on("click", function(e){
@@ -193,6 +193,11 @@ $(function(){
 });
 
 </script>
+<script>
+	
+	
+
+</script>
 <script id="reply-template" type="text/template">
  <div class="col-12 for-reply-edit mt-2">
 	<div class="row">
@@ -203,7 +208,7 @@ $(function(){
 			<span class="clubBoardReplyDate">MM-dd E HH:mm</span>
 		</div>
 		<div class="col edit-delete">
-			<button type="button" class="btn btn-info btn-reply-edit" data-bs-toggle="modal" data-bs-target="#replyEditModal">수정</button>
+			<button type="button" class="btn btn-info btn-open-reply-edit">수정</button>
 			<button type="button" class="btn btn-danger btn-reply-delete">삭제</button>
 		</div>
 	</div>
@@ -213,11 +218,56 @@ $(function(){
 		</div>
 	</div>
 <hr>
-	<div class="row mt-2">
+	<div class="row mt-2 only-attach-reply">
 		<div class="col">
-			<i class="fa-regular fa-thumbs-up"></i> 좋아요 | <button type="button" class="subReplyModal" data-bs-toggle="modal" data-bs-target="#subReplyModal"><i class="fa-solid fa-pen-to-square"></i>답글 달기</button>
+			<button type="button" class="btn-subReply"><i class="fa-solid fa-pen-to-square"></i>답글 달기</button>
+		</div>
 	</div>
  </div>
+</script>
+<script id="reply-edit-template" type="text/template">
+		<form class="reply-edit-form edit-container">
+		<input type="hidden" name="clubBoardReplyNo" value="?">
+		<div class="row flex-container">
+			<div class="col">
+				<input type="text" name="clubBoardReplyContent" class="form-control"></textarea>
+			</div>
+			<div class="col">
+				<button type="submit" class="btn btn-success btn-reply-edit">
+					<i class="fa-solid fa-check"></i>
+					수정
+				</button>
+			</div>
+			<div class="col">
+				<button type="button" class="btn btn-danger btn-cancel">
+					<i class="fa-solid fa-xmark"></i>
+					취소
+				</button>
+			</div>
+		</div>
+		</form>
+</script>
+<script id="reReply-template" type="text/template">
+	<form class="reReply-edit-form">
+		<input type="hidden" name="clubBoardReplyNo" value="?">
+		<div class="row flex-container">
+			<div class="col-6">
+				<input type="text" name="clubBoardReReplyContent" class="form-control"></textarea>
+			</div>
+			<div class="col">
+				<button type="submit" class="btn btn-success btn-reReply-send">
+					<i class="fa-solid fa-check"></i>
+					작성
+				</button>
+			</div>
+			<div class="col">
+				<button type="button" class="btn btn-danger btn-reReply-cancel">
+					<i class="fa-solid fa-xmark"></i>
+					취소
+				</button>
+			</div>
+		</div>
+		</form>
 </script>
 
 <div class="container-fluid">
@@ -325,7 +375,7 @@ $(function(){
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary"
 					data-bs-dismiss="modal">닫기</button>
-				<button type="button" class="btn btn-primary">Save changes</button>
+				<!-- <button type="button" class="btn btn-primary">Save changes</button> -->
 			</div>
 		</div>
 	</div>
