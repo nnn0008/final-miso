@@ -415,40 +415,40 @@
 	    ul.appendTo(".client-list");
 	}
 
-// 	$(document).ready(function() {
-// 	    // 페이지 로드 시 실행되는 코드
-// 	    var chatRoomNo = getRoomNoFromURL();
+	$(document).ready(function() {
+	    // 페이지 로드 시 실행되는 코드
+	    var chatRoomNo = getRoomNoFromURL();
 	    
-// 	    // getMemberList 호출
-// 	    $.ajax({
-// 	        url: "/getMemberList",
-// 	        type: "GET",
-// 	        data: { chatRoomNo: chatRoomNo },
-// 	        success: function(data) {
-// 	            console.log("Member List:", data);
-// 	            // 업데이트 함수 호출
-// 	            updateChatRoomMembersUI(data, loggedInUserId);
-// 	        },
-// 	        error: function(xhr, status, error) {
-// 	            console.error("Error fetching member list:", status, error);
-// 	        }
-// 	    });
+	    // getMemberList 호출
+	    $.ajax({
+	        url: "/getMemberList",
+	        type: "GET",
+	        data: { chatRoomNo: chatRoomNo },
+	        success: function(data) {
+	            console.log("Member List:", data);
+	            // 업데이트 함수 호출
+	            updateChatRoomMembersUI(data, loggedInUserId);
+	        },
+	        error: function(xhr, status, error) {
+	            console.error("Error fetching member list:", status, error);
+	        }
+	    });
 	    
-// 	    // getChatOneMemberList 호출
-// 	    $.ajax({
-// 	        url: "/getChatOneMemberList",
-// 	        type: "GET",
-// 	        data: { chatRoomNo: chatRoomNo },
-// 	        success: function(data) {
-// 	            console.log("Chat One Member List:", data);
-// 	            updateChatOneMembersUI(data, loggedInUserId);
-// 	        },
-// 	        error: function(xhr, status, error) {
-// 	            console.error("Error fetching chat one member list:", status, error);
-// 	        }
-// 	    });
+	    // getChatOneMemberList 호출
+	    $.ajax({
+	        url: "/getChatOneMemberList",
+	        type: "GET",
+	        data: { chatRoomNo: chatRoomNo },
+	        success: function(data) {
+	            console.log("Chat One Member List:", data);
+	            updateChatOneMembersUI(data, loggedInUserId);
+	        },
+	        error: function(xhr, status, error) {
+	            console.error("Error fetching chat one member list:", status, error);
+	        }
+	    });
 	    
-// 	});
+	});
 
 
 	

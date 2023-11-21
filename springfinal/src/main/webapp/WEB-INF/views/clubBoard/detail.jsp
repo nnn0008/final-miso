@@ -10,7 +10,7 @@
 //댓글 작성 시 비동기처리로 댓글 작성 + 댓글 목록 비동기처리
 $(function(){
 	
-	window.socket = new SockJS("${pageContext.request.contextPath}/ws/notify");
+	window.notifySocket = new SockJS("${pageContext.request.contextPath}/ws/notify");
 	
     loadList();
     //댓글 작성
@@ -55,11 +55,12 @@ $(function(){
                             replyWriterName : replyWriterName
                         });
 
-                        socket.send(socketMsg);                 
-		                } 
-		    }
+                        notifySocket.send(socketMsg);                 
+		     	} 
+		      }
+		    });
 		});
-	});
+
 		//로그인 한 아이디
 		var memberId = "${sessionScope.name}";
 		
@@ -237,16 +238,41 @@ $(function(){
 					},
 					success: function(response){
 						if(response.check){
-							$(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-regular");
+							$(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-regular");             
 						}
 						else{
 							$(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-solid");
+							//소켓 전송
+							 var notifyType = "like";
+			                    var replyWriterMember = response.replyWriterMember;
+			                    var boardWriterMember = response.boardWriterMember;
+			                    var clubBoardNo = response.clubBoardNo;
+			                    var boardTitle = response.boardTitle;
+			                    var replyWriterName = response.replyWriterName;
+
+			                    if(boardWriterMember != replyWriterMember){
+			                        let socketMsg = JSON.stringify({
+			                            notifyType: notifyType,
+			                            replyWriterMember: replyWriterMember,
+			                            boardWriterMember: boardWriterMember,
+			                            clubBoardNo: clubBoardNo,
+			                            boardTitle: boardTitle,
+			                            replyWriterName : replyWriterName
+			                        });
+
+			                        notifySocket.send(socketMsg);
 						}
-						$(".board-like-count").empty().append(response.count);
+			                   
+					 }
+						$(".board-like-count").empty().append(response.count);			                    
 					},
 				});
-			});
-			
+			});		
+		}
+		
+		$("#subReplyModal").on("hidden.bs.modal", function(){
+			$("[name=clubBoardSubReplyContent]").val("");
+			});		
 	});
 
 </script>

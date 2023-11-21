@@ -86,22 +86,22 @@ public class ChatRestController {
 	 }
 
 	 
-//	 @GetMapping("/getMemberList")
-//	 public ResponseEntity<List<ChatMemberListVO>> getMemberList(@RequestParam  int chatRoomNo) {
-////	     System.out.println("Received request for chat room number: " + chatRoomNo);
-//
-//	     List<ChatMemberListVO> memberList = chatRoomDao.chatMemberList(chatRoomNo);
-//
-////	     System.out.println("Retrieved member list: " + memberList);
-//
-//	     return ResponseEntity.ok(memberList);
-//	 }
-//
-//	 @GetMapping("/getChatOneMemberList")
-//	 public ResponseEntity<List<ChatOneMemberListVO>> getChatOneMemberList(@RequestParam int chatRoomNo) {
-//	     List<ChatOneMemberListVO> chatOneMemberList = chatRoomDao.chatOneMemberList(chatRoomNo);
-//	     return ResponseEntity.ok(chatOneMemberList);
-//	 }
+	 @GetMapping("/getMemberList")
+	 public ResponseEntity<List<ChatMemberListVO>> getMemberList(@RequestParam  int chatRoomNo) {
+//	     System.out.println("Received request for chat room number: " + chatRoomNo);
+
+	     List<ChatMemberListVO> memberList = chatRoomDao.chatMemberList(chatRoomNo);
+
+//	     System.out.println("Retrieved member list: " + memberList);
+
+	     return ResponseEntity.ok(memberList);
+	 }
+
+	 @GetMapping("/getChatOneMemberList")
+	 public ResponseEntity<List<ChatOneMemberListVO>> getChatOneMemberList(@RequestParam int chatRoomNo) {
+	     List<ChatOneMemberListVO> chatOneMemberList = chatRoomDao.chatOneMemberList(chatRoomNo);
+	     return ResponseEntity.ok(chatOneMemberList);
+	 }
 
 	 
 	 @PostMapping("/updateBlind")
