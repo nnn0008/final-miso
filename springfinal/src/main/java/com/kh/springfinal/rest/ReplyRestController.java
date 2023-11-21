@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kh.springfinal.dao.ClubBoardDao;
 import com.kh.springfinal.dao.ClubBoardReplyDao;
 import com.kh.springfinal.dao.MemberDao;
-import com.kh.springfinal.dto.ClubBoardAllDto;
 import com.kh.springfinal.dto.ClubBoardDto;
 import com.kh.springfinal.dto.ClubBoardReplyDto;
 import com.kh.springfinal.dto.ClubMemberDto;

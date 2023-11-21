@@ -17,20 +17,24 @@
 $(function(){
 	
 	window.notifySocket = new SockJS("${pageContext.request.contextPath}/ws/notify");
+	//전역변수로 설정
+	var replyHtmlTemplate = $.parseHTML($("#reply-insert-form").html());
 	
     loadList();
     //댓글 작성
     
-    $(".reply-insert-form").submit(function(e){
+    $(replyHtmlTemplate).submit(function(e){
     	var params = new URLSearchParams(location.search);
         var clubBoardNo = params.get("clubBoardNo");
+        
         e.preventDefault();
-        if($(".reply-write").val().length == 0) return;
-        var clubBoardReplyContent = $(".reply-write").val();
-        //var params = new URLSearchParams(location.search);
-        //var clubBoardNo = params.get("clubBoardNo");
-        //var clubBoardReplyParent = null;
+        
+        var clubBoardReplyContent = $(this).find(".reply-write").val();
+        console.log(clubBoardReplyContent);
+        if(clubBoardReplyContent.length == 0) return;
 
+		//console.log("성공3");
+		
         $.ajax({
             url: window.contextPath + "/rest/reply/insert",
             method: "post",
@@ -40,7 +44,8 @@ $(function(){
                 //clubBoardReplyParent : clubBoardReplyParent,
             },
             success: function(response){
-                $(".reply-write").val("");
+                //console.log("성공2");
+            	$(".reply-write").val("");
                 loadList();
 
 					//소켓 전송
@@ -62,8 +67,8 @@ $(function(){
                         });
 
                         notifySocket.send(socketMsg);                 
-		     	} 
-		      }
+		     		} 
+		      },
 		    });
 		});
 
@@ -173,16 +178,15 @@ $(function(){
 							/* var params = new URLSearchParams(location.search);
 					        var clubBoardNo = params.get("clubBoardNo"); */
 							
-							//$(reReplyTemplate).submit(function(e){
-							$(reReplyTemplate).find(".btn-reReply-send").on("click", function(){	
+							//$(reReplyTemplate).find(".btn-reReply-send").on("click", function(){	
+							$(reReplyTemplate).submit(function(e){
 								e.preventDefault();
-								
 								
 								var params = new URLSearchParams(location.search);
 						        var clubBoardNo = params.get("clubBoardNo");
 						        var clubBoardReplyNo = $(this).closest(".for-reply-edit").find(".btn-reply-delete").attr("data-reply-no"); 
 								var clubBoardReplyContent = $(reReplyHtmlTemplate).find(".clubBoardReReplyContent").text();
-								
+								console.log(params);
 								console.log(clubBoardNo);
 								console.log(clubBoardReplyNo);
 								console.log(clubBoardReplyContent);
@@ -203,6 +207,7 @@ $(function(){
 									}
 								});
 							});	
+							
 							$(this).parents(".for-reply-edit").after(reReplyTemplate);
 							
 						});  
@@ -213,6 +218,8 @@ $(function(){
 						
 					}
 					
+					//여기에 댓글 입력창 붙이면 됨
+					$(".reply-list").append(replyHtmlTemplate);		
 				}
 				
 				
@@ -417,6 +424,20 @@ $(function(){
 		</div>
 		</form>
 </script>
+<!-- 댓글 작성용 템플릿 -->
+<script id="reply-insert-form" type="text/template">
+<form class="reply-insert-form">
+	<input type="hidden" name="clubBoardNo" value="${clubBoardDto.clubBoardNo}">
+	<div class="row mt-5">
+		<div class="col-10">
+			<input type="text" class="form-control w-100 reply-write" placeholder="댓글을 달아주세요">
+		</div>
+		<div class="col">
+			<button type="submit" class="btn btn-reply-send btn-success">전송</button>
+		</div>
+	</div>
+</form>
+</script>
 
 <div class="container-fluid">
 	<div class="row">
@@ -486,14 +507,13 @@ $(function(){
 				<div class="col">
 					<i class="fa-regular fa-heart photo-like" style="color: red"></i>
 					<p class="board-like-count">
-						<%--좋아요 개수를 넣어줄려고 해 --%>
 						${clubBoardDto.clubBoardLikecount}
 					</p>
 				</div>
 			</div>
 			<hr>
 		<%-- <c:if test="${sessionScope.name != null }"> --%>
-			<form class="reply-insert-form">
+			<%-- <form class="reply-insert-form">
 				<input type="hidden" name="clubBoardNo" value="${clubBoardDto.clubBoardNo}">
 				<div class="row mt-5">
 					<div class="col-10">
@@ -503,7 +523,7 @@ $(function(){
 						<button type="submit" class="btn btn-reply-send btn-success">전송</button>
 					</div>
 				</div>
-			</form>
+			</form> --%>
 		<%-- </c:if> --%>
 			
 		
