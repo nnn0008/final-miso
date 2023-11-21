@@ -10,6 +10,7 @@ import com.kh.springfinal.vo.ChatListVO;
 import com.kh.springfinal.vo.ChatMemberListVO;
 import com.kh.springfinal.vo.ChatOneMemberListVO;
 import com.kh.springfinal.vo.ChatVO;
+import com.kh.springfinal.vo.MeetingVO;
 import com.kh.springfinal.vo.MemberVO;
 
 public interface ChatRoomDao {
@@ -19,6 +20,7 @@ public interface ChatRoomDao {
 	ChatRoomDto selectOne(String memberId); 
 	List<ChatRoomDto> chatRoomList(String memberId);
 	List<MeetingDto> meetingRoomList(String memberId);
+	List<MeetingVO> meetingRoomList2(String memberId);
 	
 	List<Integer> selectRoomNoByMemberId(String memberId);
 	

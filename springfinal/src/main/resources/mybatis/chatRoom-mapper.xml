@@ -24,12 +24,32 @@
 	
 	<!-- 정모 채팅방 조회(회원별)-->
 	<select id="findMeeting" resultType="MeetingDto">
-	SELECT m.chat_room_no, m.MEETING_NAME, m.MEETING_LOCATION, m.MEETING_DATE, m.meeting_no
+	SELECT m.chat_room_no, m.MEETING_NAME, m.MEETING_LOCATION, m.MEETING_DATE, m.meeting_no, c.CLUB_NO 
 	FROM meeting m
 	JOIN meeting_member mm ON m.meeting_no = mm.meeting_no
+	JOIN CLUB c ON c.CLUB_NO = m.CLUB_NO 
 	JOIN club_member cm ON mm.club_member_no = cm.club_member_no
 	JOIN CHAT_ROOM cr ON cr.CHAT_ROOM_NO = m.chat_room_no
 	WHERE cm.club_member_id = #{memberId}
+	</select>
+	
+	<!-- 정모 채팅방 조회(회원별) +attach_no -->
+	<select id="findMeetingAttach" resultType="MeetingVO">
+SELECT 
+    m.chat_room_no,
+    m.MEETING_NAME,
+    m.MEETING_LOCATION,
+    m.MEETING_DATE,
+    m.meeting_no,
+    c.CLUB_NO,
+    ci.attach_no AS club_attach_no
+FROM meeting m
+JOIN meeting_member mm ON m.meeting_no = mm.meeting_no
+JOIN CLUB c ON c.CLUB_NO = m.CLUB_NO 
+JOIN club_member cm ON mm.club_member_no = cm.club_member_no
+JOIN CHAT_ROOM cr ON cr.CHAT_ROOM_NO = m.chat_room_no
+LEFT JOIN club_image ci ON ci.club_no = c.CLUB_NO
+WHERE cm.club_member_id = #{memberId}
 	</select>
 	
 	<!-- 정모 채팅방 정보 조회 -->
@@ -59,14 +79,17 @@
 </select>
 
 	<select id="roomList" resultType="ChatListVO">
-		 SELECT
-           cr.chat_room_no AS chatRoomNo,
-           c.club_no AS clubNo,
-           c.club_name AS clubName,
-           c.club_explain AS clubExplain
-        FROM chat_room cr
-        INNER JOIN club c ON c.chat_room_no = cr.chat_room_no
-        WHERE cr.chat_room_no = #{chatRoomNo}
+	SELECT
+	   cr.chat_room_no,
+	   c.club_no,
+	   c.club_name,
+	   c.club_explain,
+	   ci.attach_no 
+	FROM chat_room cr
+	INNER JOIN club c ON c.chat_room_no = cr.chat_room_no
+	LEFT JOIN club_image ci ON c.club_no = ci.club_no
+	WHERE cr.chat_room_no = #{chatRoomNo}
+
 	</select>
 
 	<select id="roomMemberList" resultType="ChatRoomDto">
