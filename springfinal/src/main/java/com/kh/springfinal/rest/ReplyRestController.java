@@ -47,17 +47,17 @@ public class ReplyRestController {
 	        @RequestParam int clubBoardNo) {
 	    Map<String, Object> responseMap = new HashMap<>();
 
-	    log.debug("clubBoardReplyContent = {}", clubBoardReplyContent);
-	    log.debug("clubBoardReplyParent = {}", clubBoardReplyParent);
-	    log.debug("clubBoardNo = {}", clubBoardNo);
+	    //log.debug("clubBoardReplyContent = {}", clubBoardReplyContent);
+	    //log.debug("clubBoardReplyParent = {}", clubBoardReplyParent);
+	    //log.debug("clubBoardNo = {}", clubBoardNo);
 	    try {
 	        ClubBoardReplyDto clubBoardReplyDto = new ClubBoardReplyDto();
 	        int clubBoardReplyNo = clubBoardReplyDao.sequence();
 	        String memberId = (String) session.getAttribute("name");
 
 	        MemberDto memberDto = memberDao.loginId(memberId);
-	        ClubBoardAllDto clubBoardAllDto = clubBoardDao.selectOne(clubBoardNo);
-	        int clubNo = clubBoardAllDto.getClubNo();
+	        ClubBoardDto clubBoardDto = clubBoardDao.selectOnes(clubBoardNo);
+	        int clubNo = clubBoardDto.getClubNo();
 	        ClubMemberDto clubMemberDto = clubBoardReplyDao.selectOne(clubNo, memberId);
 
 	        clubBoardReplyDto.setClubBoardReplyNo(clubBoardReplyNo);

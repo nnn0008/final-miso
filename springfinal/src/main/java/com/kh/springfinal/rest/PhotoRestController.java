@@ -150,7 +150,7 @@ public class PhotoRestController {
 		boolean isCheck = photoLikeDao.check(photoNo, clubMemberNo);
 		
 		if(isCheck) {//좋아요를 했다면
-			photoLikeDao.delete(photoNo); //체크를 해제
+			photoLikeDao.deleteByClubMemberNo(clubMemberNo); //체크를 해제
 			photoDao.update(photoNo);
 		}
 		else {
