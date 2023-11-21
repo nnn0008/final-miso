@@ -164,16 +164,21 @@ $(function(){
 							});
 							//console.log($(reReplyHtmlTemplate).find(".btn-reReply-cancel").length);
 							
-							var params = new URLSearchParams(location.search);
-					        var clubBoardNo = params.get("clubBoardNo");
+							/* var params = new URLSearchParams(location.search);
+					        var clubBoardNo = params.get("clubBoardNo"); */
 							
 							var clubBoardReplyParent = clubBoardReplyNo;
 							var clubBoardReplyContent = clubBoardContent;	
+							console.log(clubBoardNo);
 							
-							//console.log(clubBoardNo);
-							
-							$(reReplyTemplate).submit(function(e){
+							//$(reReplyTemplate).submit(function(e){
+							$(reReplyTemplate).find(".btn-reReply-send").on("click", function(){	
 								e.preventDefault();
+								
+								/* var params = new URLSearchParams(location.search);
+						        var clubBoardNo = params.get("clubBoardNo"); */
+								
+								console.log(clubBoardNo);
 								
 								$.ajax({
 									url: window.contextPath + "/rest/reply/insert",
@@ -207,49 +212,57 @@ $(function(){
 		}
 		
 		
-			//좋아요 관련 처리
-			var params = new URLSearchParams(location.search);
-  			var clubBoardNo = params.get("clubBoardNo");
-			//좋아요 여부를 체크
+			
+			
+	});
+
+</script>
+<script>
+	$(function(){
+		//좋아요 관련 처리
+		var params = new URLSearchParams(location.search);
+			var clubBoardNo = params.get("clubBoardNo");
+		//좋아요 여부를 체크
+		$.ajax({
+			url: window.contextPath + "/rest/clubBoard/check",
+			method: "post",
+			data: {
+				clubBoardNo: clubBoardNo,
+			},
+			success: function(response){
+				//console.log(response)
+				if(response.check){
+					$(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-solid");
+				}
+				else{
+					$(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-regular");
+				}
+			},
+		});
+		
+		$(".fa-heart").click(function(){
 			$.ajax({
-				url: window.contextPath + "/rest/clubBoard/check",
+				url: window.contextPath + "/rest/clubBoard/action",
 				method: "post",
 				data: {
 					clubBoardNo: clubBoardNo,
 				},
 				success: function(response){
-					//console.log(response)
 					if(response.check){
-						$(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-solid");
-					}
-					else{
 						$(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-regular");
 					}
+					else{
+						$(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-solid");
+					}
+					$(".board-like-count").empty().append(response.count);
 				},
 			});
-			
-			$(".fa-heart").click(function(){
-				$.ajax({
-					url: window.contextPath + "/rest/clubBoard/action",
-					method: "post",
-					data: {
-						clubBoardNo: clubBoardNo,
-					},
-					success: function(response){
-						if(response.check){
-							$(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-regular");
-						}
-						else{
-							$(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-solid");
-						}
-						$(".board-like-count").empty().append(response.count);
-					},
-				});
-			});
-			
+		});
 	});
-
+	
 </script>
+
+
 <script id="reply-template" type="text/template">
  <div class="col-12 for-reply-edit mt-2">
 	<div class="row">

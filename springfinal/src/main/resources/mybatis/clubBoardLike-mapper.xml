@@ -15,6 +15,10 @@
 		delete club_board_like where club_board_no = #{clubBoardNo}
 	</delete>
 	
+	<delete id="removeByClubMemberNo">
+		delete club_board_like where club_member_no = #{clubMemberNo}
+	</delete>
+	
 	<select id="find" resultType="ClubBoardLikeDto">
 		select * from club_board_like where club_board_no = #{clubBoardNo}
 	</select>

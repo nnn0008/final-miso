@@ -16,6 +16,8 @@ import com.kh.springfinal.dto.ClubBoardLikeDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.vo.ClubBoardLikeVO;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @RestController
 @RequestMapping("/rest/clubBoard")
 public class ClubBoardLikeRestController {
@@ -61,9 +63,9 @@ public class ClubBoardLikeRestController {
 		clubBoardLikeDto.setClubBoardNo(clubBoardNo);
 		
 		boolean isCheck = clubBoardLikeDao.check(clubBoardLikeDto);
-		
+		log.debug("clubMemberNo = {}", clubMemberNo);
 		if(isCheck) { //이미 좋아요를 눌렀다면
-			clubBoardLikeDao.delete(clubBoardNo);
+			clubBoardLikeDao.deleteByClubMemberNo(clubMemberNo);
 			clubBoardDao.updateLikeCount(clubBoardNo);
 		}
 		else {//좋아요를 누르지 않았따면

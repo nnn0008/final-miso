@@ -47,8 +47,10 @@ public class ReplyRestController {
 	        @RequestParam int clubBoardNo) {
 	    Map<String, Object> responseMap = new HashMap<>();
 
+	    log.debug("clubBoardReplyContent = {}", clubBoardReplyContent);
+	    log.debug("clubBoardReplyParent = {}", clubBoardReplyParent);
+	    log.debug("clubBoardNo = {}", clubBoardNo);
 	    try {
-	    	log.debug("clubBoardNo = {}", clubBoardNo);
 	        ClubBoardReplyDto clubBoardReplyDto = new ClubBoardReplyDto();
 	        int clubBoardReplyNo = clubBoardReplyDao.sequence();
 	        String memberId = (String) session.getAttribute("name");
@@ -68,7 +70,8 @@ public class ReplyRestController {
 	        if (clubBoardReplyDto.getClubBoardReplyParent() == null) {
 	            // 댓글인 경우
 	            clubBoardReplyDto.setClubBoardReplyGroup(clubBoardReplyNo);
-	        } else {
+	        } 
+	        else {
 	            // 대댓글인 경우
 	            ClubBoardReplyDto originClubBoardReplyDto = clubBoardReplyDao
 	                    .selectOne(clubBoardReplyDto.getClubBoardReplyParent());
