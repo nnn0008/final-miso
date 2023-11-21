@@ -25,6 +25,16 @@
     padding: 6px 12px;
     cursor: pointer;
   }
+  
+  .user_img_msg{
+  background-color: #ffffff;
+  height: 45px;
+  }
+  
+  .modal-profile-image{
+  width: 70px;
+  height: 70px;
+  }
 </style>
 
 </head>
@@ -115,7 +125,7 @@
 									<img
 										src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
 										class="rounded-circle img-fluid modal-profile-image"
-										style="width: 100px;" />
+										style="width: 100px; height: 100px;" />
 								</div>
 								<h4 class="mb-2 modal-profile-name">줄리 L. 아르소노</h4>
 								<p class="text-muted mb-4 modal-profile-id"></p>
@@ -421,7 +431,7 @@
 	    
 	    // getMemberList 호출
 	    $.ajax({
-	        url: "/getMemberList",
+	        url: window.contextPath+"/getMemberList",
 	        type: "GET",
 	        data: { chatRoomNo: chatRoomNo },
 	        success: function(data) {
@@ -436,7 +446,7 @@
 	    
 	    // getChatOneMemberList 호출
 	    $.ajax({
-	        url: "/getChatOneMemberList",
+	        url: window.contextPath+"/getChatOneMemberList",
 	        type: "GET",
 	        data: { chatRoomNo: chatRoomNo },
 	        success: function(data) {
@@ -448,8 +458,21 @@
 	        }
 	    });
 	    
+	    $.ajax({
+	    	url:window.contextPath+"/getMettingMemberList",
+	    	type: "GET",
+	    	data : {chatRoomNo : chatRoomNo},
+	    	success: function (data) {
+	    		console.log("Metting Member List:", data);
+				updateChatRoomMembersUI(data, loggedInUserId);
+			},
+			 error: function(xhr, status, error) {
+		            console.error("Error fetching meeting member list:", status, error);
+			 }	    
 	});
 
+	    
+	});
 
 	
 		//메세지 처리
@@ -457,7 +480,7 @@
 		
 		
 		var data = JSON.parse(e.data);
-		console.log(data);
+// 		console.log(data);
 		clubName = data.clubName;
 // 		console.log(clubName);
 		
@@ -542,6 +565,9 @@
 		    var chatTimeAsString = data.chatTime; // JSON에서 문자열로 가져온 chatTime
 		    var chatTime = new Date(chatTimeAsString); // 문자열을 Date 객체로 변환
 		    var messageDate = chatTime.toDateString(); // 날짜 정보만 추출
+		    
+		    var profileImageUrl = data.profileImageUrl
+// 		    console.log(data.profileImageUrl);
 
 		 // 날짜가 변경된 경우에만 표시
 		    if (messageDate !== prevMessageDate) {
@@ -589,8 +615,24 @@
 		            messageContainer.text(data.content);
 		        }
 
-		        var imageContainer = $("<div>").addClass("img_cont_msg")
-		            .append($("<img>").attr("src", "${pageContext.request.contextPath}/images/profile.jpg").css("width", "45px").addClass("rounded-circle user_img_msg"));
+		        var imageContainer = $("<div>").addClass("img_cont_msg");
+		        var profileImage = $("<img>").css("width", "45px").addClass("rounded-circle user_img_msg");
+
+		        // 프로필 이미지 URL이 존재하는 경우
+		        if (profileImageUrl) {
+		            profileImage.attr("src", profileImageUrl);
+		        } else {
+		            // 프로필 이미지 URL이 없는 경우
+		            var defaultImageUrl = "${pageContext.request.contextPath}/images/basic-profile.png"; // 여기에 기본 이미지의 경로를 넣어주세요.
+		            profileImage.attr("src", defaultImageUrl);
+
+		            // 이미지 로딩 에러(프로필 이미지가 없을 때) 시 기본 이미지로 교체
+		            profileImage.on("error", function () {
+		                $(this).attr("src", defaultImageUrl);
+		            });
+		        }
+
+		        imageContainer.append(profileImage);
 
 		        var timeSpan = $("<div>").addClass("time-right")
 		            .append($("<span>").addClass("msg_time_send").text(formattedTime));
@@ -670,8 +712,23 @@
 		    	// 상대방 메시지 (왼쪽에 표시)
 		    	var messageDiv = $("<div>").addClass("d-flex mb-4 align-items-start mt-2");
 
-		    	var imageContainer = $("<div>").addClass("img_cont_msg")
-		    	    .append($("<img>").attr("src", "${pageContext.request.contextPath}/images/profile2.jpg").css("width", "45px").addClass("rounded-circle user_img_msg"));
+		    	   var imageContainer = $("<div>").addClass("img_cont_msg");
+			        var profileImage = $("<img>").css("width", "45px").addClass("rounded-circle user_img_msg");
+
+			        // 프로필 이미지 URL이 존재하는 경우
+			        if (profileImageUrl) {
+			            profileImage.attr("src", profileImageUrl);
+			        } else {
+			            // 프로필 이미지 URL이 없는 경우
+			            var defaultImageUrl = "${pageContext.request.contextPath}/images/basic-profile.png"; // 여기에 기본 이미지의 경로를 넣어주세요.
+			            profileImage.attr("src", defaultImageUrl);
+
+			            // 이미지 로딩 에러(프로필 이미지가 없을 때) 시 기본 이미지로 교체
+			            profileImage.on("error", function () {
+			                $(this).attr("src", defaultImageUrl);
+			            });
+			        }
+			        imageContainer.append(profileImage);
 
 		    	// 클릭 이벤트 추가
 		    	imageContainer.on("click", function() {
@@ -681,7 +738,7 @@
 		    	        success: function(data) {
 		    	            // 성공적으로 데이터를 받아왔을 때 처리
 		    	            console.log(data); // 여기서 data는 List<MemberDto> 형태
-
+							
 		    	            // data 배열에서 클릭된 멤버의 정보 찾기
 		    	            var selectedMember = data.find(function(member) {
 		    	                // nicknameDiv에서 텍스트 정보 가져오기
@@ -691,15 +748,24 @@
 
 		    	            // selectedMember가 존재할 때만 모달을 업데이트
 		    	            if (selectedMember) {
-		    	                // 모달 내용 업데이트
-		    	                $("#profileModalLabel").text(selectedMember.memberName+" 님의 프로필"); // 모달 제목 업데이트
-		    	                var modalBody = $("#profileModal .modal-body");
-		    	                modalBody.find(".modal-profile-image").attr("src", "${pageContext.request.contextPath}/images/profile2.jpg"); // 이미지 업데이트
-		    	                modalBody.find(".modal-profile-name").text(selectedMember.memberName); // 이름 업데이트
-		    	                modalBody.find(".modal-profile-id").text("@" + selectedMember.memberId); // 아이디 업데이트
+		    	            	// 모달 내용 업데이트
+		    	            	$("#profileModalLabel").text(selectedMember.memberName + " 님의 프로필"); // 모달 제목 업데이트
+		    	            	var modalBody = $("#profileModal .modal-body");
+								
+		    	            	// 프로필 사진이 있는 경우에만 이미지 업데이트
+		    	            	if (selectedMember.profileImageUrl) {
+		    	            	    modalBody.find(".modal-profile-image").attr("src", selectedMember.profileImageUrl);
+		    	            	} else {
+		    	            	    // 프로필 사진이 없는 경우 기본 이미지를 사용하거나 표시할 내용을 결정할 수 있습니다.
+		    	            	    modalBody.find(".modal-profile-image").attr("src", "${pageContext.request.contextPath}/images/basic-profile.png");
+		    	            	}
 
-		    	                // 모달 표시
-		    	                $("#profileModal").modal("show");
+		    	            	modalBody.find(".modal-profile-name").text(selectedMember.memberName); // 이름 업데이트
+		    	            	modalBody.find(".modal-profile-id").text("@" + selectedMember.memberId); // 아이디 업데이트
+
+		    	            	// 모달 표시
+		    	            	$("#profileModal").modal("show");
+
 		    	            }
 		    	        },
 		    	        error: function(error) {

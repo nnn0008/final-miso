@@ -206,7 +206,7 @@ $(function(){
 					
 				}
 				
-					
+				
 				});//여기가 loadList의 최상위 ajax 끝낸 자리임
 			
 			
