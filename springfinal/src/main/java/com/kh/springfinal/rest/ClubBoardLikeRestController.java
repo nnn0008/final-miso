@@ -146,6 +146,6 @@ public class ClubBoardLikeRestController {
 	        return responseMap;
 	    
 
-	
-	
+	    }
+    }
 }
