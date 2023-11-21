@@ -19,4 +19,6 @@ public interface ZipCodeDao {
 	public ZipCodeDto selectOneAddrNo(String StringmemberAddr);
 	List<ZipCodeDto> selectListByPage(PaginationVO vo);
 	int countList(PaginationVO vo);
+	
+	ZipCodeDto selectOne(int zipCodeNo);
 }

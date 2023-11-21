@@ -62,8 +62,6 @@ public class MemberController {
 	@PostMapping("/join")
 	public String join(@ModelAttribute MemberDto memberDto,@RequestParam String StringmemberAddr, @RequestParam List<Integer> likeCategory) {
 		//회원 정보 DB저장
-		log.info(memberDto.toString());
-		log.info(likeCategory.toString());
 		ZipCodeDto codeDto=codeDao.selectOneAddrNo(StringmemberAddr);
 		memberDto.setMemberAddr(codeDto.getZipCodeNo());
 		// 예제로 사용할 날짜 문자열
@@ -267,19 +265,44 @@ public class MemberController {
 		return "member/mypage";
 	}
 	
-	
 	@GetMapping("/edit")
 	public String edit(HttpSession session, Model model) {
 		String memberId = (String) session.getAttribute("name");
 		MemberDto memberDto = memberDao.loginId(memberId);
 		AttachDto attachDto = memberProfileDao.profileFindOne(memberId);
+		ZipCodeDto zipCodeDto = codeDao.selectOne(memberDto.getMemberAddr());
+		if(zipCodeDto!=null) {
+			String addr = (zipCodeDto.getSido() != null ? zipCodeDto.getSido() + ' ' : "") +
+					(zipCodeDto.getSigungu() != null ? zipCodeDto.getSigungu() + ' ' : "") +
+					(zipCodeDto.getEupmyun() != null ? zipCodeDto.getEupmyun() + ' ' : "") +
+					(zipCodeDto.getHdongName() != null ? zipCodeDto.getHdongName() + ' ' : "");
+			log.debug(addr);
+					model.addAttribute("addr", addr);
+		}
+
+		
 		model.addAttribute("attachDto", attachDto);
 		model.addAttribute("memberDto", memberDto);
 		return "member/edit";
 	}
 	
 	@PostMapping("/edit")
-	public String edit2(@ModelAttribute MemberDto memberDto, @ModelAttribute MemberDto attachDto) {
+	public String edit2(@ModelAttribute MemberDto memberDto, @RequestParam String memberAddrString, @RequestParam(name = "likeCategory", required = false) List<Integer> likeCategory
+) {
+		log.debug("memberAddr: "+memberAddrString);
+		ZipCodeDto codeDto=codeDao.selectOneAddrNo(memberAddrString);
+		memberDto.setMemberAddr(codeDto.getZipCodeNo());
+		if(likeCategory!=null) {
+			memberCategoryDao.deleteLikeCategory(memberDto.getMemberId());
+			MemberCategoryDto memberCategoryDto = new MemberCategoryDto();
+			memberCategoryDto.setMemberId(memberDto.getMemberId());
+			for(int i = 0; i<likeCategory.size(); i++) {
+				int likecategory = likeCategory.get(i);
+				memberCategoryDto.setLikeCategory(likecategory);
+				memberCategoryDao.insert(memberCategoryDto);
+			}
+		}
+		memberDao.memberEdit(memberDto);
 		return "redirect:./mypage";
 	}
 }

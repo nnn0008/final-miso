@@ -33,4 +33,9 @@
 		<update id="changePw">
 			update member set member_pw = #{memberPw} where member_id=#{memberId}
 		</update>
+		
+		<update id="memberEdit">
+			update member set member_name=#{memberName}, member_addr=#{memberAddr}, member_email=#{memberEmail}, member_contact=#{memberContact}, member_birth=#{memberBirth}
+			where member_id = #{memberId}
+		</update>
     </mapper>

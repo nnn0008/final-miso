@@ -781,7 +781,7 @@
 										    
 <!-- 										관심 카테고리 소분류 -->
 										    <div class="form-group"> 
-										      <select class="form-select mojor-check" name="likeCategory" id="monor3" disabled>
+										      <select class="form-select mojor-check" name="	" id="monor3" disabled>
 								                <option class="ds3" value=""></option>
 								                <option class="choice3 40" value="7">등산</option>
 								                <option class="choice3 40" value="8">산책/트래킹</option>
