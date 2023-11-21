@@ -74,7 +74,7 @@ public class WebSocketNotifyServer extends TextWebSocketHandler{
             log.debug("notifyType = {}", notifyType);
             log.debug("replyWriterMember = {}", replyWriterMember); 
             log.debug("boardWriterMember = {}", boardWriterMember);
-            log.debug("boardNo = {}", clubBoardNo);
+            log.debug("clubBoardNo = {}", clubBoardNo);
             log.debug("boardTitle = {}", boardTitle);
             log.debug("replyWriterName = {}", replyWriterName);
             

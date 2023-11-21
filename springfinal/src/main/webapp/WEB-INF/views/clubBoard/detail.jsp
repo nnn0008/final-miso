@@ -258,8 +258,56 @@ $(function(){
 					$(".board-like-count").empty().append(response.count);
 				},
 			});
+
+			
+			$(".fa-heart").click(function () {
+			    $.ajax({
+			        url: window.contextPath + "/rest/clubBoard/action",
+			        method: "post",
+			        data: {
+			            clubBoardNo: clubBoardNo,
+			        },
+			        success: function (response) {
+			            if (response.vo.check) {
+			                $(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-regular");
+			            } else {
+			                $(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-solid");
+
+			                // 소켓 전송
+			                var notifyType = "like";
+			                var replyWriterMember = response.replyWriterMember;
+			                var boardWriterMember = response.boardWriterMember;
+			                var clubBoardNo = response.clubBoardNo;
+			                var boardTitle = response.boardTitle;
+			                var replyWriterName = response.replyWriterName;
+
+			                if (boardWriterMember != replyWriterMember) {
+			                    let socketMsg = JSON.stringify({
+			                        notifyType: notifyType,
+			                        replyWriterMember: replyWriterMember,
+			                        boardWriterMember: boardWriterMember,
+			                        clubBoardNo: clubBoardNo,
+			                        boardTitle: boardTitle,
+			                        replyWriterName: replyWriterName
+			                    });
+
+			                    notifySocket.send(socketMsg);
+			                }
+			            }
+			            $(".board-like-count").empty().append(response.vo.count);
+			        },
+			        error: function () {
+			            console.error("An error occurred during the like action.");
+			        }
+			    });
+			});
+
+		
+		$("#subReplyModal").on("hidden.bs.modal", function(){
+			$("[name=clubBoardSubReplyContent]").val("");
+			});		
 		});
-	});
+
 	
 </script>
 
