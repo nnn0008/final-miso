@@ -146,7 +146,6 @@ public class PhotoRestController {
 		ClubMemberDto clubMemberDto = clubBoardDao.selectOneClubMemberNo(memberId, clubNo);
 		int clubMemberNo = clubMemberDto.getClubMemberNo();
 		
-		
 		//Dto에 저장되어있는지 여부
 		boolean isCheck = photoLikeDao.check(photoNo, clubMemberNo);
 		

@@ -43,8 +43,11 @@
 	</select>
 	
 	<select id="findByReply" resultType="ClubBoardReplyDto">
-		select * from club_board_reply where club_board_no = #{clubBoardNo} connect by prior club_board_reply_no = club_board_reply_parent
-		start with club_board_reply_parent is null order siblings by club_board_reply_group asc, club_board_reply_no asc
+		SELECT * FROM club_board_reply
+		where club_board_no = #{clubBoardNo}
+		START WITH club_board_reply_parent IS NULL
+		CONNECT BY PRIOR club_board_reply_no = club_board_reply_parent
+		ORDER SIBLINGS by club_board_reply_group, club_board_reply_date
 	</select>
 	
 	<!-- 알림 비동기 부분 사용 -->

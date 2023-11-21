@@ -10,7 +10,7 @@ import com.kh.springfinal.vo.PaymentRegularListVO;
 public interface PaymentRegularDao {
 	int sequence();
 	void insert(PaymentRegularDto paymentRegularDto);
-	List<PaymentDto>selectList();
+	List<PaymentRegularDto>selectList();
 	PaymentRegularDto selectOne(int paymentRegularNo);
 	
 	void insertDetail(RegularDetailDto regularDetailDto);

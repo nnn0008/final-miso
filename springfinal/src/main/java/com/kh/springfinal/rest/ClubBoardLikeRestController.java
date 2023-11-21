@@ -144,9 +144,7 @@ public class ClubBoardLikeRestController {
 	        log.error("Error processing insert operation", e);
 	        responseMap.put("success", false);
 	        return responseMap;
-	    }
-	}
-
+	    
 
 	
 	
