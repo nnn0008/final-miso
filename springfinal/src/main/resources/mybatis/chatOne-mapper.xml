@@ -29,6 +29,16 @@
    SELECT * FROM chat_one WHERE chat_sender = #{chatSender} OR chat_receiver = #{chatReceiver}
     </select>
     
+     <select id="roomList2" resultType="ChatOneMemberVO">
+  SELECT DISTINCT co.*, 
+       sender_attach_no.attach_no AS sender_attach_no,
+       receiver_attach_no.attach_no AS receiver_attach_no
+	FROM chat_one co
+	LEFT JOIN member_profile sender_attach_no ON sender_attach_no.member_id = co.chat_sender
+	LEFT JOIN member_profile receiver_attach_no ON receiver_attach_no.member_id = co.chat_receiver
+	WHERE co.chat_sender = #{chatSender}  OR co.chat_receiver = #{chatReceiver}
+    </select>
+    
     <select id="oneChatMemberInfo" resultType="ChatOneDto">
     SELECT c.*, m.member_name, m.member_level
 	FROM chat_one c

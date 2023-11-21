@@ -19,10 +19,10 @@ import com.kh.springfinal.dao.ChatOneDao;
 import com.kh.springfinal.dao.ChatRoomDao;
 import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dto.ChatDto;
-import com.kh.springfinal.dto.ChatOneDto;
 import com.kh.springfinal.dto.ChatRoomDto;
-import com.kh.springfinal.dto.MeetingDto;
 import com.kh.springfinal.vo.ChatListVO;
+import com.kh.springfinal.vo.ChatOneMemberVO;
+import com.kh.springfinal.vo.MeetingVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,10 +59,10 @@ public class WebsocketController {
 	    // 해당 사용자가 가지고 있는 동호회 목록 조회
 	    List<ChatRoomDto> chatRoomList = chatRoomDao.chatRoomList(memberId);
 	    //해당 사용자가 가지고 있는 1:1룸 목록 조회
-	    List<ChatOneDto> oneChatRoomList = chatOneDao.oneChatRoomList(memberId, memberId);
+	    List<ChatOneMemberVO> oneChatRoomList = chatOneDao.oneChatRoomList2(memberId, memberId);
 	    //해당 사용자가 가지고 있는 정모 목록 조회
-	    List<MeetingDto> meetingRoomList = chatRoomDao.meetingRoomList(memberId); 
-	    
+	    List<MeetingVO> meetingRoomList = chatRoomDao.meetingRoomList2(memberId); 
+
 //	    ChatDto lastMessage = chatDao.chatLastMsg(chatRoomNo); //채팅방 마지막 메세지
 //	    log.debug("lastMessage={}",lastMessage);
 	    
@@ -74,7 +74,8 @@ public class WebsocketController {
 	        roomList.addAll(chatRoomInfoList);
 	    }
 
-	    model.addAttribute("list", chatRoomList);
+
+//	    model.addAttribute("list", chatRoomList);
 	    model.addAttribute("roomList", roomList);
 	    model.addAttribute("oneChatRoomList", oneChatRoomList);
 	    model.addAttribute("meetingRoomList", meetingRoomList);

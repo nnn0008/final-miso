@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.springfinal.dto.ChatDto;
 import com.kh.springfinal.dto.ChatOneDto;
+import com.kh.springfinal.vo.ChatOneMemberVO;
 import com.kh.springfinal.vo.ChatOneVO;
 
 @Repository
@@ -35,6 +36,12 @@ public class ChatOneDaoImpl implements ChatOneDao{
 	public List<ChatOneDto> oneChatRoomList(String chatSender, String chatReceiver) {
 		Map params = Map.of("chatSender", chatSender, "chatReceiver", chatReceiver);
 		return sqlSession.selectList("chatOne.roomList", params);
+	}
+	//이미지 조회
+	@Override
+	public List<ChatOneMemberVO> oneChatRoomList2(String chatSender, String chatReceiver) {
+		Map params = Map.of("chatSender", chatSender, "chatReceiver", chatReceiver);
+		return sqlSession.selectList("chatOne.roomList2", params);
 	}
 	
 	//1:1룸 회원 정보 조회

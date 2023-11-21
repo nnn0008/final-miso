@@ -15,6 +15,7 @@ import com.kh.springfinal.vo.ChatListVO;
 import com.kh.springfinal.vo.ChatMemberListVO;
 import com.kh.springfinal.vo.ChatOneMemberListVO;
 import com.kh.springfinal.vo.ChatVO;
+import com.kh.springfinal.vo.MeetingVO;
 import com.kh.springfinal.vo.MemberVO;
 
 @Repository
@@ -48,6 +49,13 @@ public class ChatRoomDaoImpl implements ChatRoomDao{
 		List<MeetingDto> meetingRooms = sqlSession.selectList("chatRoom.findMeeting", memberId);
 		return meetingRooms;
 	}
+	
+	@Override
+	public List<MeetingVO> meetingRoomList2(String memberId) {
+		List<MeetingVO> meetingRooms = sqlSession.selectList("chatRoom.findMeetingAttach", memberId);
+		return meetingRooms;
+	}
+	
 	
 	//회원 채팅방(동호회) 상세 조회
 	@Override
