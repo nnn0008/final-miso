@@ -75,6 +75,12 @@
     		)
     		</insert>
     		
+    		<!-- 결제 등록 후, tid 업데이트 -->
+			<update id="updateTid">
+			    UPDATE payment_regular
+			    SET payment_regular_tid = #{paymentRegularTid}
+			    WHERE payment_regular_no = #{paymentRegularNo}
+			</update>
     	
     		<!-- 결제 대표 목록 -->
     		<select id="list2" resultType="paymentRegularDto">
