@@ -76,5 +76,10 @@
     
     </select>
     
+    <select id="memberLevel" resultType="String">
+    
+    	select club_member_rank from club_member where club_member_no=#{clubMemberNo}
+    </select>
+     
     
     </mapper>

@@ -49,6 +49,13 @@
     select attach_no from meeting_image where meeting_no=#{meetingNo}
     )
     </select>
+    
+    <select id="findAttachNo" resultType="int">
+    
+    select attach_no from attach where attach_no=(
+    select attach_no from meeting_image where meeting_no=#{meetingNo}
+    )
+    </select>
 	
 	
 
