@@ -45,7 +45,7 @@
 	</select>
 
 	<update id="editUnit">
-		update book
+		update club_board
 		<set>
 			<if test="clubBoardCategory != null">
 				club_board_category = #{clubBoardDto.clubBoardCategory}
@@ -57,7 +57,7 @@
 				club_board_category = #{clubBoardDto.clubBoardCategory}
 			</if>
 		</set>
-		where club_board_no = #{club_board_no}
+		where club_board_no = #{clubBoardDto.clubBoardNo}
 	</update>
 	
 	<select id="findClubMemberNo" resultType="clubMemberDto">

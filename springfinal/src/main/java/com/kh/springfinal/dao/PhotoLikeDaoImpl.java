@@ -27,6 +27,11 @@ public class PhotoLikeDaoImpl implements PhotoLikeDao{
 	}
 	
 	@Override
+	public boolean deleteByClubMemberNo(int clubMemberNo) {
+		return sqlSession.delete("photoLike.removeByClubMemberNo", clubMemberNo) > 0;
+	}
+	
+	@Override
 	public PhotoLikeDto selectOne(int photoNo) {
 		return sqlSession.selectOne("photoLike.find", photoNo);
 	}

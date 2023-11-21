@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 <jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
 
@@ -11,8 +11,9 @@
 </style>
 <script>
 $(function(){
+	//$(".content-length").text() = $("[name=clubBoardContent]").length();
+	
 	$(".fail-feedback").hide();
-	$(".btn-attach-delete").hide();
 	 var status = {
 			title: false,
 			content: false,
@@ -74,40 +75,32 @@ $(function(){
 			$(window).off("beforeunload");
 		}
 	});
+	
+	
+	/* $("[name=clubBoardFix]").change(function(e){
+		if($(this).is(":checked")){
+			$(this).val("Y");
+			console.log($("[name=clubBoardFix]").val());
+		}
+		else{
+			$(this).val("N");
+			console.log($("[name=clubBoardFix]").val());
+		}
+	}); */
 		
 	$(window).on("beforeunload", function(){
         return false; //새로고침(F5)을 누르면 할 것인지 물어봄
     });
 	
 	//사진을 등록했을 때 다음 파일첨부 input을 보여주는 기능
-	$(".second-attach").hide();
+	/* $(".second-attach").hide();
 	$(".third-attach").hide();
 	$(".first-attach").on("input",function(){
 		$(".second-attach").show();
-		$(".btn-first-delete").show();
 	});
 	$(".second-attach").on("input",function(){
 		$(".third-attach").show();
-		$(".btn-second-delete").show();
-	});
-	$(".third-attach").on("input", function(){
-		$(".btn-third-delete").show();
-	});
-	$(".btn-first-delete").on("click", function(){
-		$(this).hide();
-		$(this).parents(".first-attached").find(".mt-2").empty();
-		$(this).parents(".first-attached").find(".first-attach").val("");
-	});
-	$(".btn-second-delete").on("click", function(){
-		$(this).hide();
-		$(this).parents(".second-attached").find(".mt-2").empty();
-		$(this).parents(".second-attached").find(".second-attach").val("");
-	});
-	$(".btn-third-delete").on("click", function(){
-		$(this).hide();
-		$(this).parents(".third-attached").find(".mt-2").empty();
-		$(this).parents(".third-attached").find(".third-attach").val("");
-	});
+	}); */
 		
 	//사진 미리보기
 	$(".attach-selector").change(function(e){
@@ -138,9 +131,10 @@ $(function(){
 
 </script>
 
-<form method="post" action="write" class="write-form" enctype="multipart/form-data" autocomplete="off"> 
+<form method="post" action="edit" class="write-form" enctype="multipart/form-data" autocomplete="off"> 
 	
-	<input type="hidden" name="clubNo" value="${clubNo}">
+	<input type="hidden" name="clubNo" value="${clubBoardDto.clubNo}">
+	<input type="hidden" name="clubBoardNo" value="${clubBoardDto.clubBoardNo}">
 	
 	<div class="row m-2 mt-4">
 		
@@ -160,7 +154,7 @@ $(function(){
 		
 		<div class="row mt-2">
 			<div class="col-12">
-				<input type="text" class="form-control w-100" placeholder="제목(40자)" name="clubBoardTitle">
+				<input type="text" class="form-control w-100" placeholder="제목(40자)" name="clubBoardTitle" value="${clubBoardDto.clubBoardTitle}">
 				<p class="fail-feedback text-end mt-1 text-danger fs-6">제목을 다시 정하세요(한글 40자, 영어 120자 이내)</p>
 			</div>
 		</div>
@@ -173,7 +167,7 @@ $(function(){
 		
 		<div class="row mt-2">
 			<div class="col-12">
-				<textarea class="form-control w-100" placeholder="내용" rows="10"  name="clubBoardContent"></textarea>
+				<textarea class="form-control w-100" placeholder="내용" rows="10"  name="clubBoardContent">${clubBoardDto.clubBoardContent}</textarea>
 			</div>
 		</div>
 		
@@ -185,39 +179,47 @@ $(function(){
 		
 		<div class="row mt-2">
 			<div class="col-12 text-start">
-				<p class="text-info fs-6">첫 번째 사진이 게시판 목록에 보이도록 등록됩니다</p>
+				<p class="text-info fs-6">첫 번째 사진이 목록에 보이게 됩니다</p>
 			</div>
 		</div>
 		
+		<!-- 등록된 이미지가 있다면 보여주기 -->
 		<div class="row mt-4">	
-			<div class="col-4 first-attached">
-				<input type="file" class="form-control first-attach attach-selector" accept="image/*" name="attach">
+			<div class="col-4">
+				<input type="file" class="form-control first-attach attach-selector" accept="image/*" name="attach" value="${clubBoardImageDto.attachNo}">
 				<div class="mt-2"></div>
-				<div class="row">
-					<div class="col">
-						<button type="button" class="btn btn-attach-delete btn-first-delete w-100" >기존 사진 지우기</button>
+				<c:if test="${clubBoardImageDto != null }">
+					<div class="row">
+						<div class="col">
+							<button type="button" class="btn">기존 사진 지우기</button>
+						</div>
 					</div>
-				</div>
+				</c:if>			
 			</div>
 
-			<div class="col-4 second-attached">
+			<div class="col-4">
 				<input type="file" class="form-control second-attach attach-selector" accept="image/*" name="attachSecond">
 				<div class="mt-2"></div>
-				<div class="row">
-					<div class="col">
-						<button type="button" class="btn btn-attach-delete btn-second-delete w-100">기존 사진 지우기</button>
+				<c:if test="${clubBoardImage2Dto != null }">
+					<div class="row">
+						<div class="col">
+							<button type="button" class="btn">기존 사진 지우기</button>
+						</div>
 					</div>
-				</div>
+				</c:if>
 			</div>
 
-			<div class="col-4 third-attached">
+			<div class="col-4">
 				<input type="file" class="form-control third-attach attach-selector" accept="image/*" name="attachThird">
 				<div class="mt-2"></div>
-				<div class="row">
-					<div class="col">
-						<button type="button" class="btn btn-attach-delete btn-third-delete w-100">기존 사진 지우기</button>
+				<c:if test="${clubBoardImage3Dto != null }">
+					<div class="row">
+						<div class="col">
+							<button type="button" class="btn">기존 사진 지우기</button>
+						</div>
 					</div>
-				</div>
+				</c:if>
+				
 			</div>
 		</div>
 		
@@ -253,3 +255,4 @@ $(function(){
 		</div>
 
 <jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>
+

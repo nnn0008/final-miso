@@ -67,20 +67,22 @@ public class FileLoadVO {
 	public void upload(ClubBoardImageDto clubBoardImageDto, ClubBoardImage2Dto clubBoardImage2Dto, ClubBoardImage3Dto clubBoardImage3Dto, 
 			int clubBoardNo, MultipartFile attach, MultipartFile attachSecond, MultipartFile attachThird) throws IllegalStateException, IOException {
 		//파일이 있다면 실행시켜주는 메소드
-		int attachNo = attachDao.sequence();
-		clubBoardImageDto.setAttachNo(attachNo);
-		clubBoardImageDto.setClubBoardNo(clubBoardNo);
-		
-		File target = new File(dir, String.valueOf(attachNo));
-		attach.transferTo(target);
-		
-		AttachDto attachDto = new AttachDto();
-		attachDto.setAttachNo(attachNo);
-		attachDto.setAttachName(attach.getOriginalFilename());
-		attachDto.setAttachSize(attach.getSize());
-		attachDto.setAttachType(attach.getContentType());
-		attachDao.insert(attachDto);
-		clubBoardImageDao.insert(clubBoardImageDto);
+		if(!attach.isEmpty()) {
+			int attachNo = attachDao.sequence();
+			clubBoardImageDto.setAttachNo(attachNo);
+			clubBoardImageDto.setClubBoardNo(clubBoardNo);
+			
+			File target = new File(dir, String.valueOf(attachNo));
+			attach.transferTo(target);
+			
+			AttachDto attachDto = new AttachDto();
+			attachDto.setAttachNo(attachNo);
+			attachDto.setAttachName(attach.getOriginalFilename());
+			attachDto.setAttachSize(attach.getSize());
+			attachDto.setAttachType(attach.getContentType());
+			attachDao.insert(attachDto);
+			clubBoardImageDao.insert(clubBoardImageDto);		
+		}
 		
 		if(!attachSecond.isEmpty()) {
 			int attachSecondNo = attachDao.sequence();
@@ -97,25 +99,95 @@ public class FileLoadVO {
 			attachSecondDto.setAttachType(attachSecond.getContentType());
 			attachDao.insert(attachSecondDto);
 			clubBoard2ImageDao.insert(clubBoardImage2Dto);
+		}
+		
+		if(!attachThird.isEmpty()) {
+			int attachThirdNo = attachDao.sequence();
+			clubBoardImage3Dto.setAttachNo(attachThirdNo);
+			clubBoardImage3Dto.setClubBoardNo(clubBoardNo);
 			
-			if(!attachThird.isEmpty()) {
-				int attachThirdNo = attachDao.sequence();
-				clubBoardImage3Dto.setAttachNo(attachThirdNo);
-				clubBoardImage3Dto.setClubBoardNo(clubBoardNo);
-				
-				File targetThird = new File(dir, String.valueOf(attachThirdNo));
-				attachThird.transferTo(targetThird);
-				
-				AttachDto attachThirdDto = new AttachDto();
-				attachThirdDto.setAttachNo(attachThirdNo);
-				attachThirdDto.setAttachName(attachThird.getOriginalFilename());
-				attachThirdDto.setAttachSize(attachThird.getSize());
-				attachThirdDto.setAttachType(attachThird.getContentType());
-				attachDao.insert(attachThirdDto);
-				clubBoard3ImageDao.insert(clubBoardImage3Dto);
-			}
+			File targetThird = new File(dir, String.valueOf(attachThirdNo));
+			attachThird.transferTo(targetThird);
+			
+			AttachDto attachThirdDto = new AttachDto();
+			attachThirdDto.setAttachNo(attachThirdNo);
+			attachThirdDto.setAttachName(attachThird.getOriginalFilename());
+			attachThirdDto.setAttachSize(attachThird.getSize());
+			attachThirdDto.setAttachType(attachThird.getContentType());
+			attachDao.insert(attachThirdDto);
+			clubBoard3ImageDao.insert(clubBoardImage3Dto);
 		}
 
+	}
+	//동호회 게시글 에딧시에
+	public void delete(ClubBoardImageDto dto, MultipartFile multipartFile) throws IllegalStateException, IOException {
+		AttachDto attachDto = attachDao.selectOne(dto.getAttachNo());
+		if(attachDto != null) {
+			attachDao.delete(dto.getAttachNo());
+			
+			File target = new File(dir, String.valueOf(attachDto.getAttachNo()));
+			target.delete();
+		}
+		
+		int attachNo = attachDao.sequence();
+		File insertTarget = new File(dir, String.valueOf(attachNo));
+		multipartFile.transferTo(insertTarget);
+		
+		AttachDto insertDto = new AttachDto();
+		insertDto.setAttachNo(attachNo);
+		insertDto.setAttachName(multipartFile.getOriginalFilename());
+		insertDto.setAttachSize(multipartFile.getSize());
+		insertDto.setAttachType(multipartFile.getContentType());
+		attachDao.insert(insertDto);
+		
+		dto.setAttachNo(attachNo);
+		clubBoardImageDao.insert(dto);
+	}
+	public void delete2(ClubBoardImage2Dto dto, MultipartFile multipartFile) throws IllegalStateException, IOException {
+		AttachDto attachDto = attachDao.selectOne(dto.getAttachNo());
+		if(attachDto != null) {
+			attachDao.delete(dto.getAttachNo());
+			
+			File target = new File(dir, String.valueOf(attachDto.getAttachNo()));
+			target.delete();
+		}
+		
+		int attachNo = attachDao.sequence();
+		File insertTarget = new File(dir, String.valueOf(attachNo));
+		multipartFile.transferTo(insertTarget);
+		
+		AttachDto insertDto = new AttachDto();
+		insertDto.setAttachNo(attachNo);
+		insertDto.setAttachName(multipartFile.getOriginalFilename());
+		insertDto.setAttachSize(multipartFile.getSize());
+		insertDto.setAttachType(multipartFile.getContentType());
+		attachDao.insert(insertDto);
+		
+		dto.setAttachNo(attachNo);
+		clubBoard2ImageDao.insert(dto);
+	}
+	public void delete3(ClubBoardImage3Dto dto, MultipartFile multipartFile) throws IllegalStateException, IOException {
+		AttachDto attachDto = attachDao.selectOne(dto.getAttachNo());
+		if(attachDto != null) {
+			attachDao.delete(dto.getAttachNo());
+			
+			File target = new File(dir, String.valueOf(attachDto.getAttachNo()));
+			target.delete();
+		}
+		
+		int attachNo = attachDao.sequence();
+		File insertTarget = new File(dir, String.valueOf(attachNo));
+		multipartFile.transferTo(insertTarget);
+		
+		AttachDto insertDto = new AttachDto();
+		insertDto.setAttachNo(attachNo);
+		insertDto.setAttachName(multipartFile.getOriginalFilename());
+		insertDto.setAttachSize(multipartFile.getSize());
+		insertDto.setAttachType(multipartFile.getContentType());
+		attachDao.insert(insertDto);
+		
+		dto.setAttachNo(attachNo);
+		clubBoard3ImageDao.insert(dto);
 	}
 	
 	//파일 다운로드 관련처리

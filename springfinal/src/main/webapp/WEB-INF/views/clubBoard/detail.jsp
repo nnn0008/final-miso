@@ -5,6 +5,12 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 <jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
 
+<style>
+.fa-ellipsis-vertical:hover{
+	cursor:pointer;
+}
+
+</style>
 <script>
 
 //댓글 작성 시 비동기처리로 댓글 작성 + 댓글 목록 비동기처리
@@ -76,19 +82,19 @@ $(function(){
 				//response를 댓글 목록으로 받아옴
 				success:function(response){
 					$(".reply-list").empty();
-					//console.log(response);
+					console.log(response);
 
 					for(var i = 0; i < response.length; i++){
-						console.log(response);
+						//console.log(response);
 						var template = $("#reply-template").html();
 						var htmlTemplate = $.parseHTML(template);
 						
-						$(htmlTemplate).find(".clubBoardReplyWriter").text(response[i].clubBoardReplyName);
+						$(htmlTemplate).find(".clubBoardReplyWriter").text(response[i].clubBoardReplyWriter);
 						$(htmlTemplate).find(".clubBoardReplyContent").text(response[i].clubBoardReplyContent);
 						$(htmlTemplate).find(".clubBoardReplyDate").text(response[i].clubBoardReplyDate);
 						
 						//내가 작성한 댓글인지 확인하여 수정/삭제 버튼을 안보이게
-						//if(memberId.length == 0 || memberId != response[i].clubBorad){
+						//if(memberId.length == 0 || memberId != response[i].clubBoard){
 						//	$(htmlTemplate).find(".edit-delete").empty();
 						//}
 						
@@ -154,7 +160,6 @@ $(function(){
 							var reReplyHtmlTemplate = $.parseHTML(reReplyTemplate);	
 							
 							var clubBoardReplyNo = $(this).attr("data-reply-no");
-							var clubBoardContent = $(reReplyHtmlTemplate).find(".clubBoardReReplyContent").text();
 							
 							//취소버튼을 클릭하면 기존의 버튼을 다시 복구해야됨
 							//$(reReplyHtmlTemplate).find(".btn-reReply-cancel").click(function(e){
@@ -168,30 +173,34 @@ $(function(){
 							/* var params = new URLSearchParams(location.search);
 					        var clubBoardNo = params.get("clubBoardNo"); */
 							
-							var clubBoardReplyParent = clubBoardReplyNo;
-							var clubBoardReplyContent = clubBoardContent;	
-							console.log(clubBoardNo);
-							
 							//$(reReplyTemplate).submit(function(e){
 							$(reReplyTemplate).find(".btn-reReply-send").on("click", function(){	
 								e.preventDefault();
 								
-								/* var params = new URLSearchParams(location.search);
-						        var clubBoardNo = params.get("clubBoardNo"); */
+								
+								var params = new URLSearchParams(location.search);
+						        var clubBoardNo = params.get("clubBoardNo");
+						        var clubBoardReplyNo = $(this).closest(".for-reply-edit").find(".btn-reply-delete").attr("data-reply-no"); 
+								var clubBoardReplyContent = $(reReplyHtmlTemplate).find(".clubBoardReReplyContent").text();
 								
 								console.log(clubBoardNo);
+								console.log(clubBoardReplyNo);
+								console.log(clubBoardReplyContent);
 								
 								$.ajax({
 									url: window.contextPath + "/rest/reply/insert",
 									method: "post",
 									data: {
-										clubBoardReplyParent: clubBoardReplyParent,
+										clubBoardReplyParent: clubBoardReplyNo,
 										clubBoardNo: clubBoardNo,
 										clubBoardReplyContent: clubBoardReplyContent,
 									},
 									success: function(response){
 										loadList();
 									},
+									error: function(error){
+										e.preventDefault();
+									}
 								});
 							});	
 							$(this).parents(".for-reply-edit").after(reReplyTemplate);
@@ -210,19 +219,18 @@ $(function(){
 				});//여기가 loadList의 최상위 ajax 끝낸 자리임
 			
 			
-		}
-		
-		
-			
-			
+		}	
 	});
 
 </script>
 <script>
 	$(function(){
+		
+		$(".board-like-count").val()
+		
 		//좋아요 관련 처리
 		var params = new URLSearchParams(location.search);
-			var clubBoardNo = params.get("clubBoardNo");
+		var clubBoardNo = params.get("clubBoardNo");
 		//좋아요 여부를 체크
 		$.ajax({
 			url: window.contextPath + "/rest/clubBoard/check",
@@ -241,7 +249,7 @@ $(function(){
 			},
 		});
 		
-		$(".fa-heart").click(function(){
+		/* $(".fa-heart").click(function(){
 			$.ajax({
 				url: window.contextPath + "/rest/clubBoard/action",
 				method: "post",
@@ -257,7 +265,7 @@ $(function(){
 					}
 					$(".board-like-count").empty().append(response.count);
 				},
-			});
+			}); */
 
 			
 			$(".fa-heart").click(function () {
@@ -301,16 +309,42 @@ $(function(){
 			        }
 			    });
 			});
-
-		
-		$("#subReplyModal").on("hidden.bs.modal", function(){
-			$("[name=clubBoardSubReplyContent]").val("");
-			});		
 		});
 
 	
 </script>
+<script>
+	//로그인 한 유저와 비교
+	$(function(){
+		var loginUser = "${sessionScope.name}";
+		var params = new URLSearchParams(location.search);
+		var clubBoardNo = params.get("clubBoardNo");
+		
+		$(".board-match").hide();
+		
+		$.ajax({
+			url: window.contextPath + "/rest/clubBoard/match",
+			method:"post",
+			data: {
+				clubBoardNo: clubBoardNo,
+			},
+			success: function(response){
+				if(response == "t" || loginUser == null){ //일치하면 수정/삭제 버튼 보여주기
+					$(".board-match").show();
+				}
+				else{ //가리기
+					$(".board-match").hide();
+				}
+			},
+		
+		});
+		
+	});
 
+	
+	
+
+</script>
 
 <script id="reply-template" type="text/template">
  <div class="col-12 for-reply-edit mt-2">
@@ -390,42 +424,77 @@ $(function(){
 			
 			<div class="row">
 				<div class="col-3">
-					<c:if test="${clubBoardAllDto.attachNoMp == null }">
+					<c:if test="${attachDto.attachNo == null }">
 						<img src="${pageContext.request.contextPath}/images/user.png" style="max-width: 25px;" alt="User Image">				
 					</c:if>
-					<c:if test="${clubBoardAllDto.attachNoMp != null}">
-						<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardAllDto.attachNoMp}">
+					<c:if test="${attachDto.attachNo != null}">
+						<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${attachDto.attachNo}">
 					</c:if>
 				</div>
 				<div class="col-3">
-					${clubBoardAllDto.clubBoardName}
+					${clubBoardDto.clubBoardName}
 				</div>
 				<div class="col-6 text-end">
-					${clubBoardAllDto.clubBoardCategory}
-					<fmt:formatDate value="${clubBoardAllDto.clubBoardDate}" pattern="M월 d일 a h시 m분"/>
+					${clubBoardDto.clubBoardCategory}
+					<%-- <fmt:formatDate value="${clubBoardDto.clubBoardDate}" pattern="M월 d일 a h시 m분"/> --%>
+					${clubBoardDto.clubBoardDate}
 				</div>
 			</div>
 			
 			<div class="row mt-4">
 				<div class="col">
-					${clubBoardAllDto.clubBoardTitle}
+					${clubBoardDto.clubBoardTitle}
+				</div>
+				<div class="col">
+					<i class="fa-solid fa-ellipsis-vertical"></i>
+					<a href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubBoardDto.clubNo}">목록</a>
+					<div class="row board-match">
+						<div class="col">
+							<a href="${pageContext.request.contextPath}/clubBoard/edit?clubBoardNo=${clubBoardDto.clubBoardNo}">수정</a>
+							<a href="${pageContext.request.contextPath}/clubBoard/delete?clubBoardNo=${clubBoardDto.clubBoardNo}">삭제</a>
+						</div>
+					</div>
+					<button type="button" class="btn btn-report">신고</button>					
 				</div>
 			</div>
 			<div class="row mt-4">
 				<div class="col" style="min-height: 200px;">
-					${clubBoardAllDto.clubBoardContent}
+					${clubBoardDto.clubBoardContent}
 				</div>
 			</div>
 			
+			<%-- 사진 등록이 되어있다면 보여주자 --%>
+			<c:if test="${clubBoardImageDto != null}">
+				<div class="row mt-3">
+					<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardImageDto.attachNo}">
+				</div>
+			</c:if>
+			<c:if test="${clubBoardImage2Dto != null}">
+				<div class="row mt-3">
+					<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardImage2Dto.attachNo}">
+				</div>
+			</c:if>
+			<c:if test="${clubBoardImage3Dto != null}">
+				<div class="row mt-3">
+					<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardImage3Dto.attachNo}">
+				</div>
+			</c:if>
+
+			
+			
 			<div class="row">
 				<div class="col">
-					<i class="fa-regular fa-heart photo-like" style="color: red"></i><p class="board-like-count">${clubBoardAllDto.clubBoardLikecount}</p>
+					<i class="fa-regular fa-heart photo-like" style="color: red"></i>
+					<p class="board-like-count">
+						<%--좋아요 개수를 넣어줄려고 해 --%>
+						${clubBoardDto.clubBoardLikecount}
+					</p>
 				</div>
 			</div>
 			<hr>
 		<%-- <c:if test="${sessionScope.name != null }"> --%>
 			<form class="reply-insert-form">
-				<input type="hidden" name="clubBoardNo" value="${clubBoardAllDto.clubBoardNo}">
+				<input type="hidden" name="clubBoardNo" value="${clubBoardDto.clubBoardNo}">
 				<div class="row mt-5">
 					<div class="col-10">
 						<input type="text" class="form-control w-100 reply-write" placeholder="댓글을 달아주세요">

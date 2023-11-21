@@ -56,6 +56,11 @@ public class ClubBoardDaoImpl implements ClubBoardDao{
 	}
 	
 	@Override
+	public boolean update(ClubBoardDto clubBoardDto) {
+		return sqlSession.update("clubBoard.editUnit", clubBoardDto) > 0;
+	}
+	
+	@Override
 	public boolean updateReplyCount(int clubBoardNo) {
 		return sqlSession.update("clubBoard.replyCount", clubBoardNo) > 0;
 	}

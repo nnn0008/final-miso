@@ -15,6 +15,10 @@
 		delete photo_like where photo_no = #{photoNo}
 	</delete>
 	
+	<delete id="removeByClubMemberNo">
+		delete photo_like where club_member_no = #{clubMemberNo} 
+	</delete>
+	
 	<select id="find" resultType="PhotoLikeDto">
 		select * from photo_like where photo_no = #{photoNo}
 	</select>
