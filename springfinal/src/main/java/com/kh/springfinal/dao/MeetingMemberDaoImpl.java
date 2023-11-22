@@ -56,4 +56,10 @@ public class MeetingMemberDaoImpl implements MeetingMemberDao{
 		
 		return result>0;
 	}
+	@Override
+	public int attendCount(int meetingNo) {
+		
+		
+		return sqlSession.selectOne("meetingMember.attendCount",meetingNo);
+	}
 }

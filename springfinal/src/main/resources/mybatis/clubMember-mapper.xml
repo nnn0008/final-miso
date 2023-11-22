@@ -80,6 +80,23 @@
     
     	select club_member_rank from club_member where club_member_no=#{clubMemberNo}
     </select>
+    
+    <!-- <select id="findMemberId" resultType="String">	
+    	
+    	select club_member_id from club_member where club_member_no = #{clubMemberNo}
+    
+    </select> -->
+    
+    <select id="meetingAttendMember" resultType="meetingAttendMemberVO">
+    
+    SELECT mm.meeting_no,cm.club_member_no,cm.club_member_id,cm.club_member_rank FROM 
+    meeting_member mm JOIN 
+    club_member cm ON 
+    mm.CLUB_MEMBER_NO = cm.CLUB_MEMBER_NO 
+    WHERE mm.MEETING_NO = #{meetingNo}
+    </select>
+    
+    
      
     
     </mapper>
