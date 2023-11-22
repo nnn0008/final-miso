@@ -13,7 +13,7 @@
  <!-- 왼쪽 사이드바 -->
             <aside class="left-sidebar">
                    
-                    <div class="row mt-3">
+                    <div class="row mt-4">
                         <div class="col">
                             <div class="col d-flex justify-content-center">
                                 <c:choose>
@@ -25,8 +25,19 @@
 			                    	</c:otherwise>
 			                    </c:choose>
                             </div>
-                            <div class="col d-flex justify-content-center">
-                               <strong class="ms-2">프로필</strong>
+                            <div class="col d-flex justify-content-center mt-3">
+                            	<c:choose>
+                            	<c:when test="${sessionScope.memberLevel=='일반유저'}">
+                            	<span class="badge rounded-pill bg-miso">일반</span>
+                            	</c:when>
+                            	<c:when test="${sessionScope.memberLevel=='파워유저'}">
+                            	<span class="badge bg-success rounded-pill bg-miso">파워</span>
+                            	</c:when>
+                            	<c:otherwise>
+                            	<span class="badge bg-primary rounded-pill">마스터</span>
+                            	</c:otherwise>
+                            	</c:choose>
+                               <strong class="ms-1">${sessionScope.memberName}</strong>
                             </div>
                         </div>
                     </div>
