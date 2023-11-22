@@ -17,6 +17,6 @@ public class ChatRoomResponseVO {
 
 	private List<ChatListVO> roomList;
     private List<ChatOneDto> oneChatRoomList;
-
+    private List<MeetingVO> meetingRoomList;
     
 }

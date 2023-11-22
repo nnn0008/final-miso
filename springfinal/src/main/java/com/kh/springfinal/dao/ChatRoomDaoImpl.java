@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.springfinal.dto.ChatDto;
 import com.kh.springfinal.dto.ChatRoomDto;
+import com.kh.springfinal.dto.ClubDto;
 import com.kh.springfinal.dto.MeetingDto;
 import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.vo.ChatListVO;
@@ -148,4 +149,14 @@ public class ChatRoomDaoImpl implements ChatRoomDao{
 	public List<ChatRoomDto> chatRoomAllList(String memberId) {
 		return sqlSession.selectList("chatRoom.chatRoomAllList", memberId);
 	}
+
+@Override
+	public ClubDto clubInfo(int chatRoomNo) {
+		return sqlSession.selectOne("chatRoom.clubInfo", chatRoomNo);
+	}
+
+@Override
+public ChatOneMemberListVO oneMembers(int chatRoomNo) {
+	return sqlSession.selectOne("chatRoom.chatOneMemberListDetail", chatRoomNo);
+}
 }

@@ -9,8 +9,12 @@
     		insert into member_category(member_id, like_category) values(#{memberId}, #{likeCategory})
     	</insert>
     	
-    	<select id="fineLikeCategory">
-
+    	<select id="fineLikeCategory" resultType="MemberCategoryDto">
+			select * from member_category where member_id=#{memberId}
     	</select>
+    	
+    	<delete id="deleteLikeCategory">
+    		delete member_category where member_id = #{memberId}
+    	</delete>
     	
     </mapper>

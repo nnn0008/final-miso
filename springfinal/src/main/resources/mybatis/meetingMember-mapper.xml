@@ -33,5 +33,12 @@
 		delete meeting_member where meeting_no=#{meetingNo} and club_member_no=#{clubMemberNo}
 	
 	</delete>
+	
+	<select id="attendCount" resultType="int">
+		
+		select count(*)
+		 from meeting_member where meeting_no=#{meetingNo}
+	
+	</select>
 
 </mapper> 

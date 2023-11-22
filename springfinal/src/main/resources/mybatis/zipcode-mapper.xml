@@ -60,8 +60,8 @@
 	<select id="selectOne" resultType="zipCodeDto">
 		
 		select * from zip_code where sido=#{sido} and 
-		hdong_name=#{hdong} and
-		sigungu=#{sigungu} and
+		hdong_name=#{hdongName} and
+		sigungu=#{sigungu} or
 		eupmyun=#{eupmyun}
 		
 	</select> 
@@ -83,7 +83,9 @@
 	 	</select>
 	
 	
-	
+	<select id="selectByZipcodeNo" resultType="zipCodeDto">
+		select * from zip_code where zip_code_no = #{zipCodeNo}
+	</select>
 		
 
 

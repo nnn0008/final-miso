@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.vo.ClubMemberVO;
+import com.kh.springfinal.vo.MeetingAttendMemberVO;
 
 @Repository
 public class ClubMemberDaoImpl implements ClubMemberDao{
@@ -85,14 +86,14 @@ public class ClubMemberDaoImpl implements ClubMemberDao{
 	}
 
 	@Override
-	public int findClubMemberNo(int clubNo, String memberId) {
+	public Integer findClubMemberNo(int clubNo, String memberId) {
 		
 		Map<String,Object> params = new HashMap<>();
 		
 		params.put("clubNo", clubNo);
 		params.put("memberId", memberId);
 		
-		return sqlSession.selectOne("clubMember.findClubMemberNo",params);
+		return sqlSession.selectOne("clubMember.findClubMemberNo",params)==null ? 0 :sqlSession.selectOne("clubMember.findClubMemberNo",params);
 	}
 
 	@Override
@@ -103,6 +104,18 @@ public class ClubMemberDaoImpl implements ClubMemberDao{
 		return level.equals("운영진") ? true : false;
 	
 	}
+
+	@Override
+	public List<MeetingAttendMemberVO> meetingAttendList(int meetingNo) {
+		return sqlSession.selectList("clubMember.meetingAttendMember",meetingNo);
+	}
+
+//	@Override
+//	public String attendMemberId(int clubMemberNo) {
+//		return sqlSession.selectOne("clubMember.findMemberId",clubMemberNo);
+//	}
+	
+	
 	
 	
 	

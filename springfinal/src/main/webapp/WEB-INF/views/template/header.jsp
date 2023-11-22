@@ -404,7 +404,7 @@ if (Array.isArray(data.roomList)) {
         var message =
             '<div class="row mt-3 ms-2 d-flex align-items-center club-box2" onclick="enterRoom(' + chatRoom.chatRoomNo + ')">' +
             '<div class="col-2">' +
-            '<img src="' + contextPath + '/images/dog.png" class="club-image2">' +
+            '<img src="${pageContext.request.contextPath}/club/image?clubNo=' + chatRoom.clubNo + '" class="rounded-circle" width="50" height="50">'+
             '</div>' +
             '<div class="col-10">' +
             '<div class="col ms-3">' +
@@ -423,7 +423,7 @@ if (Array.isArray(data.roomList)) {
     console.error("roomList is not an array:", data.roomList);
 }
 
-// oneChatRoomList 스타일 적용
+//oneChatRoomList 스타일 적용
 if (Array.isArray(data.oneChatRoomList)) {
    
    var sectionHeader =
@@ -439,11 +439,12 @@ if (Array.isArray(data.oneChatRoomList)) {
    
     data.oneChatRoomList.forEach(function (oneChatRoom) {
         var otherUser = (oneChatRoom.chatSender === "${sessionScope.name}") ? oneChatRoom.chatReceiver : oneChatRoom.chatSender;
+        var imageUrl = (oneChatRoom.chatSender === "${sessionScope.name}") ? '/rest/member/profileShow?memberId=' + oneChatRoom.chatReceiver : '/rest/member/profileShow?memberId=' + oneChatRoom.chatSender;
 
         var oneRoomMessage =
             '<div class="row mt-3 ms-2 d-flex align-items-center club-box2" onclick="enterRoom(' + oneChatRoom.chatRoomNo + ')">' +
             '<div class="col-2">' +
-            '<img src="' + contextPath + '/images/dog.png" class="club-image2">' +
+            '<img src="' + contextPath + imageUrl + '" class="rounded-circle" width="50" height="50">' +
             '</div>' +
             '<div class="col-10">' +
             '<div class="col ms-3">' +
@@ -457,6 +458,45 @@ if (Array.isArray(data.oneChatRoomList)) {
     });
 } else {
 //     console.error("oneChatRoomList is not an array:", data.oneChatRoomList);
+}
+
+
+// meetingRoomList 스타일 적용
+if (Array.isArray(data.meetingRoomList)) {
+
+    var sectionHeader =
+        '<div class="row">' +
+        '<div class="col text-start d-flex align-items-center ms-3 mt-3">' +
+        '<img src="' + contextPath + '/images/logo-door.png" width="10%">' +
+        '<strong class="ms-2">정모채팅</strong>' +
+        '</div>' +
+        '</div>';
+
+    var sectionHeaderItem = $("<div class='col-12 mb-2'>" + sectionHeader + "</div>");
+    modalContent.append(sectionHeaderItem);
+
+    data.meetingRoomList.forEach(function (meetingRoom) {
+
+        var message =
+            '<div class="row mt-3 ms-2 d-flex align-items-center club-box2" onclick="enterRoom(' + meetingRoom.chatRoomNo + ')">' +
+            '<div class="col-2">' +
+            '<img src="' + contextPath + '/images/dog.png" class="club-image2">' +
+            '</div>' +
+            '<div class="col-10">' +
+            '<div class="col ms-3">' +
+            '<span class="clubname-text2">' + meetingRoom.meetingName + '</span>' +
+            '</div>' +
+            '<div class="col ms-3">' +
+            '<span class="explain-text2">' + meetingRoom.meetingLocation + '</span>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+
+        var listItem = $("<div class='col-12 mb-2'>" + message + "</div>");
+        modalContent.append(listItem);
+    });
+} else {
+    console.error("meetingRoomList is not an array:", data.meetingRoomList);
 }
 
 }

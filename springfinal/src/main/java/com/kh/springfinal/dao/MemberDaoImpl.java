@@ -76,4 +76,10 @@ public class MemberDaoImpl implements MemberDao{
 	public List<MemberDto> selectListNew() {
 		return sqlSession.selectList("member.memberListByNew");
 	}
+	@Override
+	public boolean memberEdit(MemberDto memberDto) {
+		int count = sqlSession.update("member.memberEdit");
+		boolean result = count>0;
+		return result;
+	}
 }

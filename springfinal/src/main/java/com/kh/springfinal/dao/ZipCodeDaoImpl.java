@@ -26,6 +26,8 @@ public class ZipCodeDaoImpl implements ZipCodeDao{
 	public void insert(ZipCodeDto zipCodeDto) {
 		sqlSession.insert("zipcode.add", zipCodeDto);
 	}
+	
+	
 
 	@Override
 	public List<ZipCodeDto> list(String keyword) {
@@ -63,13 +65,13 @@ public class ZipCodeDaoImpl implements ZipCodeDao{
 
 	        // Address 객체에 할당
 	        ZipCodeDto zipCodeDto = new ZipCodeDto();
-	        zipCodeDto.setSido(words[0]);
-	        zipCodeDto.setSigungu(words[1]);
-	        zipCodeDto.setHdongName(words[2]);
-	        zipCodeDto.setEupmyun(words[2]);
+	        if(words[0]!=null) zipCodeDto.setSido(words[0]);
+	        if(words[1]!=null) zipCodeDto.setSigungu(words[1]);
+	        if(words[2]!=null) zipCodeDto.setHdongName(words[2]);
+	        if(words[2]!=null) zipCodeDto.setEupmyun(words[2]);
 		
 		
-		return sqlSession.selectOne("zipcode.selectOneMemberCN", zipCodeDto);
+		return sqlSession.selectOne("zipcode.selectOne", zipCodeDto);
 	}
 	public List<ZipCodeDto> selectListByPage(PaginationVO vo) {
 		
@@ -81,6 +83,13 @@ public class ZipCodeDaoImpl implements ZipCodeDao{
 	@Override
 	public int countList(PaginationVO vo) {
 	    return sqlSession.selectOne("zipcode.countListByPage", vo);
+	}
+
+
+
+	@Override
+	public ZipCodeDto selectOne(int zipCodeNo) {
+		return sqlSession.selectOne("zipcode.selectByZipcodeNo", zipCodeNo);
 	}
 	
 	

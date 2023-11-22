@@ -11,4 +11,6 @@ public interface MeetingMemberDao {
 	List<MeetingMemberDto> selectList();
 	boolean didAttend(int meetingNo,int clubMemberNo);
 	boolean deleteAttend(int meetingNo,int clubMemberNo);
+	int attendCount(int meetingNo);
+	
 }

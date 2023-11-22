@@ -13,7 +13,7 @@ import com.kh.springfinal.dto.OneDto;
 
 @CrossOrigin(value = {"http://localhost:3000", "http://localhost:5500"})
 @RestController
-@RequestMapping("/react/onereq")
+@RequestMapping("/rest/onereq")
 public class OneReactController {
 	@Autowired
 	private OneDao oneDao;
