@@ -276,18 +276,28 @@ $(function(){
                 	$(htmlTemplate).find(".attendCount").text(meeting.attendCount);
                 	
                 	
-                	 for(var a=0;a<attendMemberList.length;a++){
+
+                	for (var a = 0; a < attendMemberList.length; a++) {
                 		
-                		$(htmlTemplate).find(".profileList").append(
-                				$('<img>')
-                				.addClass("rounded-circle")
-                				.attr('src',"/rest/member/profileShow?memberId="+attendMemberList[a].clubMemberId)
-                				.attr('width', '50')
-                    			.attr('height', '50')
-                		)
-                				
+                		var aLink= $('<a>').attr('href',"/");
                 		
-                	} 
+                	    var image = $('<img>')
+                	        .addClass("rounded-circle")
+                	        .attr('src', "/rest/member/profileShow?memberId=" + attendMemberList[a].clubMemberId)
+                	        .attr('width', '50')
+                	        .attr('height', '50');
+
+                	    if (attendMemberList[a].clubMemberRank === '운영진') {
+                	    	
+                	    	//운영진일 경우 별표 추가
+                	
+                	    } 
+                	    
+                	    aLink.append(image);
+
+                	    $(htmlTemplate).find(".profileList").append(aLink);
+
+                	}
                 	
                 	//버튼
                 	$(htmlTemplate).find(".meetingEdit").attr("data-no",meeting.meetingNo);
