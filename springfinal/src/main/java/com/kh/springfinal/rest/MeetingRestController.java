@@ -247,23 +247,43 @@ public class MeetingRestController {
 		
 		String memberId = (String) session.getAttribute("name");
 		
-		int presentClubMemberNo = clubMemberDao.findClubMemberNo(clubNo, memberId);
+		
+		
+		int presentClubMemberNo=0;
+		
+		if(memberId!=null) {
+		
+		presentClubMemberNo = clubMemberDao.findClubMemberNo(clubNo, memberId);
+		
+		}
 		
 		for(MeetingDto dto : meetingList) {
 			
+			int attendCount = meetingMemberDao.attendCount(dto.getMeetingNo());
 			
-			Integer attachNo = meetingImageDao.findAttachNo(dto.getMeetingNo());
-			dto.setAttachNo(attachNo != null ? attachNo : 0);
-
 			
-			if(attachNo!=0) {
+			dto.setAttendCount(attendCount);
 			
-			dto.setAttachNo(attachNo);
+			dto.setAttendMemberList(clubMemberDao.meetingAttendList(dto.getMeetingNo()));
+			
+			log.debug("setAttendMemberList={}",clubMemberDao.meetingAttendList(dto.getMeetingNo()));
+			
+			
+			boolean isManager=false;
+			boolean didAttend=false;
+			
+			if(presentClubMemberNo!=0) {
+			
+			isManager = clubMemberDao.isManeger(presentClubMemberNo);
+			didAttend = meetingMemberDao.didAttend(dto.getMeetingNo(), presentClubMemberNo);
 			
 			}
+
+			Integer attachNo = meetingImageDao.findAttachNo(dto.getMeetingNo());
+			dto.setAttachNo(attachNo != null ? attachNo : 0);
 			
-			boolean isManager = clubMemberDao.isManeger(presentClubMemberNo);
-			boolean didAttend = meetingMemberDao.didAttend(dto.getMeetingNo(), presentClubMemberNo);
+		
+			
 			
 			dto.setDidAttend(didAttend);
 			dto.setManager(isManager);
@@ -421,11 +441,10 @@ public class MeetingRestController {
 		
 		int clubMemberNo = clubMemberDao.findClubMemberNo(clubNo, memberId);
 		
+		log.debug("clubMemberNo={}",clubMemberNo);
+		log.debug("meetingNo={}",meetingNo);
 		
-		
-		
-		
-		return meetingMemberDao.deleteAttend(clubMemberNo,meetingNo);
+		return meetingMemberDao.deleteAttend(meetingNo,clubMemberNo);
 		
 	}
 	

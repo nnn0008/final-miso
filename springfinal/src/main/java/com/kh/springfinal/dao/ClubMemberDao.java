@@ -5,6 +5,7 @@ import java.util.List;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.vo.ClubMemberVO;
+import com.kh.springfinal.vo.MeetingAttendMemberVO;
 
 public interface ClubMemberDao {
 	
@@ -24,8 +25,11 @@ public interface ClubMemberDao {
 	
 	boolean editPossible(int clubNo,String clubMemberId);
 	
-	int findClubMemberNo(int clubNo,String memberId);
+	Integer findClubMemberNo(int clubNo,String memberId);
 	
 	boolean isManeger(int clubMemberNo);
 
+//	String attendMemberId(int clubMemberNo);
+	
+	List<MeetingAttendMemberVO> meetingAttendList(int meetingNo);
 }

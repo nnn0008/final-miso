@@ -238,9 +238,13 @@ $(function(){
             	
                 for(var i=0; i<response.length; i++){
                 	var meeting = response[i];
+                	var attendMemberList = meeting.attendMemberList;
+                	
                 	
                 	var template = $("#meeting-template").html();
                 	var htmlTemplate = $.parseHTML(template);
+                	
+                	
                 	
                 	
                 	if(meeting.attachNo!=0){
@@ -258,6 +262,9 @@ $(function(){
                 	}
                 	
                 	
+                	
+                	
+                	
                 	$(htmlTemplate).find(".img").append(img);
                 	$(htmlTemplate).find(".ddayInput").text("D-"+meeting.dday);
                 	$(htmlTemplate).find(".meetingNoInput").text(meeting.meetingNo);
@@ -266,6 +273,23 @@ $(function(){
                 	$(htmlTemplate).find(".locationInput").text(meeting.meetingLocation);
                 	$(htmlTemplate).find(".meetingPriceInput").text(meeting.meetingPrice);
                 	$(htmlTemplate).find(".meetingNumberInput").text(meeting.meetingNumber);
+                	$(htmlTemplate).find(".attendCount").text(meeting.attendCount);
+                	
+                	
+                	 for(var a=0;a<attendMemberList.length;a++){
+                		
+                		$(htmlTemplate).find(".profileList").append(
+                				$('<img>')
+                				.addClass("rounded-circle")
+                				.attr('src',"/rest/member/profileShow?memberId="+attendMemberList[a].clubMemberId)
+                				.attr('width', '50')
+                    			.attr('height', '50')
+                		)
+                				
+                		
+                	} 
+                	
+                	//버튼
                 	$(htmlTemplate).find(".meetingEdit").attr("data-no",meeting.meetingNo);
                 	$(htmlTemplate).find(".meetingDelete").attr("data-no",meeting.meetingNo);
                 	$(htmlTemplate).find(".attend").attr("data-no",meeting.meetingNo);
@@ -345,7 +369,8 @@ $(function(){
       var clubNo = params.get("clubNo");
       var meetingNo = $(this).data("no");
       
-      
+      console.log("clubNo="+clubNo);
+      console.log("meetingNo="+meetingNo);
    		
    	    $.ajax({
             url: window.contextPath +"/rest/meeting/attendDelete",
@@ -417,14 +442,16 @@ $(function(){
 	</label>
 	</div>
    	<div>
-	미팅참석: /
+	미팅참석:  <label class="attendCount"></label>
+		/
 	<label class="meetingNumberInput">
 	</label>
 	</div>
-   	<button class="btn btn-primary attend">참석</button>
-   	<button class="btn btn-primary attendDelete">취소</button>
-   	<button class="btn btn-primary meetingEdit">수정</button>
-   	<button class="btn btn-primary meetingDelete">삭제</button>
+	<div class="profileList"></div>
+   	<button class="btn btn-primary attend">모임참석</button>
+   	<button class="btn btn-danger attendDelete">참석취소</button>
+   	<button class="btn btn-primary meetingEdit">모임수정</button>
+   	<button class="btn btn-primary meetingDelete">모임삭제</button>
    	</div>
    	</div>
    </div>
