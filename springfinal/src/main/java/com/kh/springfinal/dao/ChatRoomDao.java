@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.kh.springfinal.dto.ChatDto;
 import com.kh.springfinal.dto.ChatRoomDto;
+import com.kh.springfinal.dto.ClubDto;
 import com.kh.springfinal.dto.MeetingDto;
 import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.vo.ChatListVO;
@@ -42,4 +43,7 @@ public interface ChatRoomDao {
 	List<ChatOneMemberListVO> chatOneMemberList(int chatRoomNo);
 	List<ChatMemberListVO> meetingMemberList(int chatRoomNo);
 	List<ChatRoomDto> chatRoomAllList(String memberId);
+	
+	ClubDto clubInfo(int chatRoomNo);
+	ChatOneMemberListVO oneMembers(int chatRoomNo);
 }
