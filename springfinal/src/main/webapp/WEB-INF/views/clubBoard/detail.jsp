@@ -9,7 +9,6 @@
 .fa-ellipsis-vertical:hover{
 	cursor:pointer;
 }
-
 </style>
 <script>
 
@@ -22,7 +21,7 @@ $(function(){
 	
     loadList();
     //댓글 작성
-    
+    $(".div-for-insert-reply").append(replyHtmlTemplate);
     $(replyHtmlTemplate).submit(function(e){
     	var params = new URLSearchParams(location.search);
         var clubBoardNo = params.get("clubBoardNo");
@@ -33,7 +32,6 @@ $(function(){
         console.log(clubBoardReplyContent);
         if(clubBoardReplyContent.length == 0) return;
 
-		//console.log("성공3");
 		
         $.ajax({
             url: window.contextPath + "/rest/reply/insert",
@@ -44,7 +42,7 @@ $(function(){
                 //clubBoardReplyParent : clubBoardReplyParent,
             },
             success: function(response){
-                //console.log("성공2");
+                console.log("성공");
             	$(".reply-write").val("");
                 loadList();
 
@@ -219,7 +217,7 @@ $(function(){
 					}
 					
 					//여기에 댓글 입력창 붙이면 됨
-					$(".reply-list").append(replyHtmlTemplate);		
+					//$(".div-for-insert-reply").append(replyHtmlTemplate);		
 				}
 				
 				
@@ -490,11 +488,13 @@ $(function(){
 					<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardImageDto.attachNo}">
 				</div>
 			</c:if>
+			
 			<c:if test="${clubBoardImage2Dto != null}">
 				<div class="row mt-3">
 					<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardImage2Dto.attachNo}">
 				</div>
 			</c:if>
+			
 			<c:if test="${clubBoardImage3Dto != null}">
 				<div class="row mt-3">
 					<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardImage3Dto.attachNo}">
@@ -527,9 +527,8 @@ $(function(){
 		<%-- </c:if> --%>
 			
 		
-			<div class="row mt-2 reply-list">
-			
-			</div>
+			<div class="row mt-2 reply-list"></div>
+			<div class="row mt-2 div-for-insert-reply"></div>
 		
 			
 		</div>

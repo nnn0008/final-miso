@@ -47,17 +47,11 @@
 	<update id="editUnit">
 		update club_board
 		<set>
-			<if test="clubBoardCategory != null">
-				club_board_category = #{clubBoardDto.clubBoardCategory}
-			</if>
-			<if test="clubBoardTitle != null">
-				club_board_category = #{clubBoardDto.clubBoardCategory}
-			</if>
-			<if test="clubBoardContent != null">
-				club_board_category = #{clubBoardDto.clubBoardCategory}
-			</if>
+			club_board_category = #{clubBoardDto.clubBoardCategory},
+			club_board_title = #{clubBoardDto.clubBoardTitle},
+			club_board_content = #{clubBoardDto.clubBoardContent}
 		</set>
-		where club_board_no = #{clubBoardDto.clubBoardNo}
+		where club_board_no = #{clubBoardNo}
 	</update>
 	
 	<select id="findClubMemberNo" resultType="clubMemberDto">

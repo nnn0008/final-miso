@@ -11,12 +11,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kh.springfinal.dao.AttachDao;
 import com.kh.springfinal.dao.ClubBoardDao;
+import com.kh.springfinal.dao.ClubBoardImage2Dao;
+import com.kh.springfinal.dao.ClubBoardImage3Dao;
+import com.kh.springfinal.dao.ClubBoardImageDao;
 import com.kh.springfinal.dao.ClubBoardLikeDao;
 import com.kh.springfinal.dao.ClubBoardReplyDao;
 import com.kh.springfinal.dao.ClubMemberDao;
 import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dto.ClubBoardDto;
+import com.kh.springfinal.dto.ClubBoardImage2Dto;
+import com.kh.springfinal.dto.ClubBoardImage3Dto;
+import com.kh.springfinal.dto.ClubBoardImageDto;
 import com.kh.springfinal.dto.ClubBoardLikeDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MemberDto;
@@ -42,6 +49,15 @@ public class ClubBoardRestController {
 	
 	@Autowired
 	private ClubBoardReplyDao clubBoardReplyDao;
+	
+	@Autowired
+	private ClubBoardImageDao clubBoardImageDao;
+	@Autowired
+	private ClubBoardImage2Dao clubBoardImage2Dao;
+	@Autowired
+	private ClubBoardImage3Dao clubBoardImage3Dao;
+	@Autowired
+	private AttachDao attachDao;
 	
 	@PostMapping("/check")
 	public ClubBoardLikeVO check(@RequestParam int clubBoardNo, HttpSession session){
@@ -163,8 +179,21 @@ public class ClubBoardRestController {
 		else return "f"; //일치하지 않는다면
 	}
 	
-	
-	
+	@PostMapping("/deletePhoto")
+	public void deletePhoto(@RequestParam int clubBoardNo) {
+		ClubBoardImageDto clubBoardImageDto = clubBoardImageDao.selectOne(clubBoardNo);
+		attachDao.delete(clubBoardImageDto.getAttachNo());
+	}
+	@PostMapping("/deletePhoto2")
+	public void deletePhoto2(@RequestParam int clubBoardNo) {
+		ClubBoardImage2Dto clubBoardImage2Dto = clubBoardImage2Dao.selectOne(clubBoardNo);
+		attachDao.delete(clubBoardImage2Dto.getAttachNo());
+	}
+	@PostMapping("/deletePhoto3")
+	public void deletePhoto3(@RequestParam int clubBoardNo) {
+		ClubBoardImage3Dto clubBoardImage3Dto = clubBoardImage3Dao.selectOne(clubBoardNo);
+		attachDao.delete(clubBoardImage3Dto.getAttachNo());
+	}
 	
 	
 }

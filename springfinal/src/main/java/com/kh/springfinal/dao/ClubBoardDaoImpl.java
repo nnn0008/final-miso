@@ -56,8 +56,9 @@ public class ClubBoardDaoImpl implements ClubBoardDao{
 	}
 	
 	@Override
-	public boolean update(ClubBoardDto clubBoardDto) {
-		return sqlSession.update("clubBoard.editUnit", clubBoardDto) > 0;
+	public boolean update(ClubBoardDto clubBoardDto, int clubBoardNo) {
+		Map params = Map.of("clubBoardNo", clubBoardNo, "clubBoardDto", clubBoardDto);
+		return sqlSession.update("clubBoard.editUnit", params) > 0;
 	}
 	
 	@Override
