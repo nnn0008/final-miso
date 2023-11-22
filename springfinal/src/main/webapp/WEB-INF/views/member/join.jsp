@@ -476,15 +476,16 @@
                             <div class="contain-fluid">
                                 <div class="row">
                                     <div class="col">
+                                    
                                         <div class="row">
-                                            <div class="col text-center">
-                                                <h1 class="h1">회원가입</h1>
-                                            </div>
-                                        </div>
+                                <div class="col text-center">
+                                  <img src="${pageContext.request.contextPath}/images/miso_logo.png" width="40%">
+                                </div>
+                            </div>
 
                                         <div class="row mt-4">
                                             <div class="col text-end">
-                                                <h5>필수항목은 * 표시가 되어있습니다</h5>
+                                                <h5>필수항목 * 표시</h5>
                                             </div>
                                         </div>
 
@@ -497,8 +498,8 @@
                                                                 type="text" class="form-control" name="memberId"
                                                                 id="inputId" placeholder="아이디" required> <label
                                                                 for="inputId">아이디*</label>
-                                                            <div class="feedback gray d-id-feedback">영어 숫자로 이루어진
-                                                                글자 5~20자를 작성해주세요</div>
+                                                            <div class="feedback gray d-id-feedback">영어와 숫자로 이루어진
+                                                                글자 5~20자</div>
                                                         </div>
                                                         <div class="invalid-feedback">이미 사용중인 아이디입니다</div>
                                                         <div class="valid-feedback">사용 가능한 아이디입니다.</div>
@@ -515,8 +516,8 @@
                                                             <input type="text" class="form-control" name="memberPw"
                                                                 id="inputPw" placeholder="비밀번호" required> <label
                                                                 for="inputPw">비밀번호*</label>
-                                                            <div class="feedback gray d-pw-feedback">영어와 숫자로 이루어진 글자 8글자
-                                                                이상 적어주세요</div>
+                                                            <div class="feedback gray d-pw-feedback">영어와 숫자로 이루어진 8글자
+                                                                이상</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -528,7 +529,7 @@
                                                         <div class="form-floating checkPw-feed">
                                                             <input type="text" class="form-control" name="checkPw"
                                                                 id="checkPw" placeholder="비밀번호" required> <label
-                                                                for="checkPw">비밀번호 확인</label>
+                                                                for="checkPw">비밀번호 확인*</label>
                                                         </div>
                                                         <div class="invalid-feedback">비밀번호가 동일하지 않습니다</div>
                                                     </div>
@@ -543,7 +544,7 @@
                                                             <input type="checkbox" name="check3" class="check">
                                                             <input type="text" class="form-control" name="memberName"
                                                                 id="memberName" placeholder="실명" required> <label
-                                                                for="memberName">실명*</label>
+                                                                for="memberName">이름*</label>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -564,7 +565,7 @@
                                                                 for="memberEmail">이메일*</label>
                                                         </div>
                                                         <button
-                                                            class="btn btn-primary justify-content-end email-check">인증번호
+                                                            class="btn btn-success justify-content-end email-check">인증번호
                                                             발송</button>
                                                         <div class="invalid-feedback">이메일 형식의 맞게 적어주세요.</div>
                                                         <div class="valid-feedback">이메일을 발송하였습니다</div>
@@ -596,7 +597,7 @@
                                                                 for="memberContact">연락처</label>
                                                         </div>
                                                     </div>
-                                                    <div class="d-content-feedback">'-'을 제외하고 숫자로만 적어주세요</div>
+                                                    <div class="d-content-feedback">'-'을 제외하고 숫자</div>
                                                 </div>
                                             </div>
 
@@ -607,8 +608,7 @@
                                                             <input type="text" class="form-control" name="memberBirth"
                                                                 id="memberBirth" placeholder="생년월일" required> <label
                                                                 for="memberBirth">생년월일</label>
-                                                            <div class="d-brith-feedback">'-'을 포함하여 
-                                                                적어주세요.ex->1990-01-01</div>
+                                                            <div class="d-brith-feedback">'-'을 포함 ex)1990-01-01</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -616,8 +616,15 @@
 
 											<div class="row mt-4">
 							                    <div class="col">
-							                       지역 <input type="search" name="StringmemberAddr" class="form-control search-input"
-							                            placeholder="동,읍,면을 입력해주세요">
+							                    <div class="form-floating">
+                                                            <input type="search" class="form-control search-input" name="StringmemberAddr"
+                                                                id="memberBirth" placeholder="지역" required> <label
+                                                                for="memberBirth">지역</label>
+                                                            <div class="d-brith-feedback">동,읍,면 입력 ex)당산제1동</div>
+                                                        </div>
+							                    
+<!-- 							                       지역 <input type="search" name="StringmemberAddr" class="form-control search-input" -->
+<!-- 							                            placeholder="동,읍,면을 입력해주세요"> -->
 							                    </div>                    
 							                </div>
 							                <div class="row">
@@ -631,8 +638,9 @@
                                             
                                             <!-- 1. 관심 테이블 대분류 -->
                                             <input type="checkbox" class="category-check check">
-                                            <div class="form-group"> 
-										      <label for="mojor1" class="form-label mt-4">무엇에 관심이 있으신가요?</label>
+                                            <div class="form-group mt-5"> 
+                                            <img src="${pageContext.request.contextPath}/images/logo-door.png" width="4%">
+										      <label for="mojor1" class="form-label">무엇에 관심이 있으신가요?</label>
 										      <br>
 										      <span class="mt-1">관심 1</span>
 										      <select class="form-select" name="mojor-s1" id="mojor1">
@@ -816,7 +824,7 @@
 
                                             <div class="row">
                                                 <div class="col">
-                                                    <button class="btn btn-primary w-100 btn-join">가입</button>
+                                                    <button class="btn btn-success w-100 btn-join">회원가입</button>
                                                 </div>
                                             </div>
                                         </form>
