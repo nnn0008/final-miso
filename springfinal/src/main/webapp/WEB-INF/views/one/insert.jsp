@@ -27,7 +27,7 @@ $(function(){
 
 </script>
 
-	<form method="post" action="insert" autocomplete="off">
+	<form method="post" action="insert" autocomplete="off" enctype="multipart/form-data">
 	<%-- 답글일 때만 추가 정보를 전송 --%>
 	<c:if test="${isReply}">
 	<input type="hidden" name="oneParent" value="${originDto.oneNo}">
@@ -94,9 +94,7 @@ $(function(){
 		<div class="row mt-3">
 			<div class="col">
 				<label>
-					 <hr>
 				    <div class="preview-wrapper1"></div>
-				    <hr>
 				</label>
 			</div>
 		</div>
@@ -111,9 +109,6 @@ $(function(){
 				</button>
 			</div>
 		</div>
-		
-		
-		
 		
 		
 		

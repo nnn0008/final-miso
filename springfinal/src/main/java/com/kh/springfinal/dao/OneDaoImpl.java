@@ -8,7 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-
+import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.OneDto;
 import com.kh.springfinal.vo.PaginationVO;
 
@@ -80,27 +80,7 @@ public class OneDaoImpl implements OneDao {
 	}
 
 	@Override
-	public Integer findImage(int oneNo) {
-		try {
+	public AttachDto findImage(int oneNo) {
 		return sqlSession.selectOne("one.findImage",oneNo);
 		}
-		catch(Exception e) {
-			return null;
-		}
-	}
-
-	
-
-
-	
-
-	
-	
-
-
-
-	
-
-
-
 }

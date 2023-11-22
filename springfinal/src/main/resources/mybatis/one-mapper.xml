@@ -123,15 +123,15 @@
 	 	</delete>
 	 	
 	 	<!-- 이미지 찾기 -->
-	 	<update id="findImage">
+	 	<select id="findImage" resultType="AttachDto">
 	 		SELECT * 
-    FROM attach 
-    WHERE attach_no = (
-        SELECT attach_no 
-        FROM one_image 
-        WHERE one_no = #{oneNo}
-    )
-	 	</update>
+		    FROM attach 
+		    WHERE attach_no = (
+		        SELECT attach_no 
+		        FROM one_image 
+		        WHERE one_no = #{oneNo}
+		    )
+	 	</select>
 	 	
 	 	
 	 	

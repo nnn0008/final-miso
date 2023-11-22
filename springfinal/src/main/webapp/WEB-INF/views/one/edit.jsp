@@ -2,8 +2,31 @@
     pageEncoding="UTF-8"%>
     <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 	<jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
-	
-	<form action="edit" method="post">
+	<script>
+	$(function(){
+	    $("#attach-selector").change(function(){
+	        if(this.files.length == 0) {
+	            //초기화
+	            return;
+	        }
+
+	        //파일 미리보기는 서버 업로드와 관련이 없다
+	        //- 서버에 올릴거면 따로 처리를 또 해야 한다
+
+	        //[1] 자동으로 생성되는 미리보기 주소를 연결
+	        for(let i=0; i < this.files.length; i++) {
+	            $("<img>").attr("src", URL.createObjectURL(this.files[i]))
+	                            .css("max-width", "300px")
+	                            .appendTo(".preview-wrapper1");
+	        }
+	        
+	       
+	    });
+	});
+
+
+</script>
+	<form action="edit" method="post" enctype="multipart/form-data" autocomplete="off">
 		<input type="hidden" name="oneNo" value="${OneDto.oneNo}">
 	<div class="container">
 	
@@ -28,16 +51,34 @@
 		</div>
 		</div>
 		
-<div class="row mt-3">
+	<div class="row mt-3">
 			<div class="col">
 					<input type="text" name="oneTitle" required class="form-control" value="${OneDto.oneTitle}">
 	</div>
 		</div>
 		
-<div class="row mt-3">
+		<div class="row mt-3">
 			<div class="col">
-		<textarea name="oneContent" class="form-control" value="${OneDto.oneContent}"  placeholder="내용" rows="10" cols="80"></textarea>
+			 
+		<textarea name="oneContent" class="form-control"   placeholder="내용" rows="10" cols="80">${OneDto.oneContent}</textarea>
 		</div>
+		</div>
+		
+		<div class="row mt-3">
+			<div class="col">
+				<img src="image?oneNo=${OneDto.oneNo}" width="200" height="200">
+			</div>
+			<div class="col">
+				<input type="file" name="attach" multiple id="attach-selector">    
+			</div>
+		</div>
+		
+		<div class="row mt-3">
+			<div class="col">
+				<label>
+				    <div class="preview-wrapper1"></div>
+				</label>
+			</div>
 		</div>
 		
 					<div class="row mt-3">
