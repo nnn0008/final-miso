@@ -19,6 +19,4 @@ public class OneDto {
 	private int oneGroup,oneDepth;
 	private Integer oneParent;
 	private String type,keyword;
-	
-
 }
