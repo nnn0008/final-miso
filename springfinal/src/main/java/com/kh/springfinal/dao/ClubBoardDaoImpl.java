@@ -52,7 +52,7 @@ public class ClubBoardDaoImpl implements ClubBoardDao{
 	
 	@Override
 	public boolean delete(int clubBoardNo) {
-		return sqlSession.selectOne("clubBoard.remove", clubBoardNo);
+		return sqlSession.delete("clubBoard.remove", clubBoardNo) > 0;
 	}
 	
 	@Override

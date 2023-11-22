@@ -14,15 +14,15 @@
 
 //댓글 작성 시 비동기처리로 댓글 작성 + 댓글 목록 비동기처리
 $(function(){
+    loadList();
 	
 	window.notifySocket = new SockJS("${pageContext.request.contextPath}/ws/notify");
 	//전역변수로 설정
 	var replyHtmlTemplate = $.parseHTML($("#reply-insert-form").html());
 	
-    loadList();
     //댓글 작성
-    $(".div-for-insert-reply").append(replyHtmlTemplate);
-    $(replyHtmlTemplate).submit(function(e){
+    //$(".div-for-insert-reply").append(replyHtmlTemplate);
+    $(".reply-insert-form").submit(function(e){
     	var params = new URLSearchParams(location.search);
         var clubBoardNo = params.get("clubBoardNo");
         
@@ -31,7 +31,6 @@ $(function(){
         var clubBoardReplyContent = $(this).find(".reply-write").val();
         console.log(clubBoardReplyContent);
         if(clubBoardReplyContent.length == 0) return;
-
 		
         $.ajax({
             url: window.contextPath + "/rest/reply/insert",
@@ -68,7 +67,62 @@ $(function(){
 		     		} 
 		      },
 		    });
-		});
+	});
+    
+    //대댓글 작성
+    //$(replyHtmlTemplate).find(".btn-success").click(function(e){
+    $(document).on("click", ".btn-successs", function(e){
+		var params = new URLSearchParams(location.search);
+        var clubBoardNo = params.get("clubBoardNo");
+        var originReplyNo = $(this).parents(".for-reply-edit").find(".btn-subReply").data("reply-no");
+        e.preventDefault();
+        console.log(originReplyNo);
+        
+        var clubBoardReplyContent = $(this).parents(".for-reply-edit").find(".reply-write").val();
+        console.log(clubBoardReplyContent);
+        if(clubBoardReplyContent.length == 0) return;
+		
+        $.ajax({
+            url: window.contextPath + "/rest/reply/insert",
+            method: "post",
+            data: {
+                clubBoardReplyContent: clubBoardReplyContent,
+                clubBoardNo: clubBoardNo,
+                clubBoardReplyParent : originReplyNo,
+            },
+            success: function(response){
+                console.log("성공");
+            	$(".reply-write").val("");
+            	$(this).remove();
+                loadList();
+                $(".div-for-insert-reply").show();
+
+					//소켓 전송
+	                    var notifyType = "reply";
+	                    var replyWriterMember = response.replyWriterMember;
+	                    var boardWriterMember = response.boardWriterMember;
+	                    var boardNo = response.boardNo;
+	                    var boardTitle = response.boardTitle;
+	                    var replyWriterName = response.replyWriterName;
+
+	                    if(boardWriterMember != replyWriterMember){
+	                        let socketMsg = JSON.stringify({
+	                            notifyType: notifyType,
+	                            replyWriterMember: replyWriterMember,
+	                            boardWriterMember: boardWriterMember,
+	                            boardNo: boardNo,
+	                            boardTitle: boardTitle,
+	                            replyWriterName : replyWriterName
+	                        });
+
+	                        notifySocket.send(socketMsg);                 
+			     		} 
+		      },
+		      error:function(error){
+		    	  console.error("문제발생");
+		      }
+		    });
+	});
 
 		//로그인 한 아이디
 		var memberId = "${sessionScope.name}";
@@ -95,7 +149,7 @@ $(function(){
 						$(htmlTemplate).find(".clubBoardReplyWriter").text(response[i].clubBoardReplyWriter);
 						$(htmlTemplate).find(".clubBoardReplyContent").text(response[i].clubBoardReplyContent);
 						$(htmlTemplate).find(".clubBoardReplyDate").text(response[i].clubBoardReplyDate);
-						
+						$(htmlTemplate).find(".btn-subReply").attr("data-reply-no", response[i].clubBoardReplyNo);
 						//내가 작성한 댓글인지 확인하여 수정/삭제 버튼을 안보이게
 						//if(memberId.length == 0 || memberId != response[i].clubBoard){
 						//	$(htmlTemplate).find(".edit-delete").empty();
@@ -120,7 +174,6 @@ $(function(){
 								},
 							});
 						});
-						
 
 						$(htmlTemplate).find(".btn-open-reply-edit").attr("data-reply-no", response[i].clubBoardReplyNo).click(function(){
 							var editTemplate = $("#reply-edit-template").html();
@@ -156,7 +209,7 @@ $(function(){
 							$(this).parents(".for-reply-edit").hide().after(editHtmlTemplate);
 						});
 						
-						$(htmlTemplate).find(".btn-subReply").attr("data-reply-no", response[i].clubBoardReplyNo).click(function(){
+						/*$(htmlTemplate).find(".btn-subReply").attr("data-reply-no", response[i].clubBoardReplyNo).click(function(){ 
 							var button = $(this);
 							button.hide();
 							var reReplyTemplate = $("#reReply-template").html();
@@ -165,7 +218,7 @@ $(function(){
 							var clubBoardReplyNo = $(this).attr("data-reply-no");
 							
 							//취소버튼을 클릭하면 기존의 버튼을 다시 복구해야됨
-							//$(reReplyHtmlTemplate).find(".btn-reReply-cancel").click(function(e){
+							//$(reReplyHtmlTemplate).find(".btn-reReply-cancel").click(function(e)
 							$(document).on("click", ".btn-reReply-cancel", function(e){
 								//console.log("작동중");
 								$(this).closest(".reReply-edit-form").remove();
@@ -173,10 +226,10 @@ $(function(){
 							});
 							//console.log($(reReplyHtmlTemplate).find(".btn-reReply-cancel").length);
 							
-							/* var params = new URLSearchParams(location.search);
-					        var clubBoardNo = params.get("clubBoardNo"); */
+							var params = new URLSearchParams(location.search);
+					        var clubBoardNo = params.get("clubBoardNo");
 							
-							//$(reReplyTemplate).find(".btn-reReply-send").on("click", function(){	
+							//$(reReplyTemplate).find(".btn-reReply-send").on("click", function()
 							$(reReplyTemplate).submit(function(e){
 								e.preventDefault();
 								
@@ -208,7 +261,24 @@ $(function(){
 							
 							$(this).parents(".for-reply-edit").after(reReplyTemplate);
 							
-						});  
+						}); */  
+						
+						$(htmlTemplate).find(".btn-subReply").attr("data-reply-no", response[i].clubBoardReplyNo).click(function(e){
+							$(this).hide();
+							var parent = $(this).parents(".for-reply-edit");
+							if(!parent.is(replyHtmlTemplate)){
+								$(this).parents(".for-reply-edit").append(replyHtmlTemplate);
+								$(".div-for-insert-reply").hide();
+								//console.log("생성");
+							 }
+							//console.log("취소준비");
+							parent.find(".btn-reReply-cancel").on("click", function(e){
+								$(this).parents(".for-reply-edit").find(".btn-subReply").show();
+								$(replyHtmlTemplate).remove();
+								$(".div-for-insert-reply").show();
+								//console.log("취소");
+							});
+						});
 						
 						//댓글을 붙여
 						$(".reply-list").append(htmlTemplate);
@@ -222,9 +292,10 @@ $(function(){
 				
 				
 				});//여기가 loadList의 최상위 ajax 끝낸 자리임
-			
-			
+
 		}	
+		
+		
 	});
 
 </script>
@@ -319,8 +390,8 @@ $(function(){
 	
 </script>
 <script>
-	//로그인 한 유저와 비교
 	$(function(){
+		//로그인 한 유저와 비교(게시글)
 		var loginUser = "${sessionScope.name}";
 		var params = new URLSearchParams(location.search);
 		var clubBoardNo = params.get("clubBoardNo");
@@ -341,8 +412,9 @@ $(function(){
 					$(".board-match").hide();
 				}
 			},
-		
 		});
+		
+		
 		
 	});
 
@@ -424,17 +496,16 @@ $(function(){
 </script>
 <!-- 댓글 작성용 템플릿 -->
 <script id="reply-insert-form" type="text/template">
-<form class="reply-insert-form">
 	<input type="hidden" name="clubBoardNo" value="${clubBoardDto.clubBoardNo}">
 	<div class="row mt-5">
 		<div class="col-10">
-			<input type="text" class="form-control w-100 reply-write" placeholder="댓글을 달아주세요">
+			<textarea type="text" class="form-control w-100 reply-write" rows="3" placeholder="댓글을 달아주세요"></textarea>
 		</div>
 		<div class="col">
-			<button type="submit" class="btn btn-reply-send btn-success">전송</button>
+			<button type="button" class="btn btn-reply-send btn-success btn-successs w-100">전송</button>
+			<button type="button" class="btn btn-reply-cancel btn-reReply-cancel w-100">취소</button>
 		</div>
 	</div>
-</form>
 </script>
 
 <div class="container-fluid">
@@ -500,8 +571,6 @@ $(function(){
 					<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardImage3Dto.attachNo}">
 				</div>
 			</c:if>
-
-			
 			
 			<div class="row">
 				<div class="col">
@@ -512,23 +581,24 @@ $(function(){
 				</div>
 			</div>
 			<hr>
-		<%-- <c:if test="${sessionScope.name != null }"> --%>
-			<%-- <form class="reply-insert-form">
+			
+			<%--댓글이 있는 곳 --%>
+			<div class="row mt-2 reply-list"></div>
+			
+			<%-- 댓글 작성할 곳이 있는 곳 --%>
+			<div class="row mt-2 div-for-insert-reply">
+				<form class="reply-insert-form">
 				<input type="hidden" name="clubBoardNo" value="${clubBoardDto.clubBoardNo}">
 				<div class="row mt-5">
 					<div class="col-10">
-						<input type="text" class="form-control w-100 reply-write" placeholder="댓글을 달아주세요">
+						<textarea type="text" class="form-control w-100 reply-write" rows="3" placeholder="댓글을 달아주세요"></textarea>
 					</div>
 					<div class="col">
 						<button type="submit" class="btn btn-reply-send btn-success">전송</button>
 					</div>
 				</div>
-			</form> --%>
-		<%-- </c:if> --%>
-			
-		
-			<div class="row mt-2 reply-list"></div>
-			<div class="row mt-2 div-for-insert-reply"></div>
+			</form> 
+			</div>
 		
 			
 		</div>

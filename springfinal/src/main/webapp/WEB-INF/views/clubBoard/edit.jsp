@@ -11,20 +11,20 @@
 </style>
 <script>
 $(function(){
-	//$(".content-length").text() = $("[name=clubBoardContent]").length();
-	console.log($(".first-attach").val());
-	if($(".first-attach").val() == "") {
+	//$(".content-length").val() = $("[name=clubBoardContent]").length();
+	//console.log($(".first-attach").val() || $(".second-attach").val() == undefined);
+	/*  if($(".first-attach").val() === "") {
 		$(".first-row").hide();
 		$(".first-attached-image").hide();
-	}
-	if($(".second-attach").val() == "" || $(".second-attach").val() == undefined) {
+	} */
+	/*if($(".second-attach").val() == "" || $(".second-attach").val() == undefined) {
 		$(".second-row").hide();
 		$(".second-attached-image").hide();
 	}
 	if($(".third-attach").val() == "" || $(".third-attach").val() == undefined) {
 		$(".third-row").hide();
 		$(".third-attached-image").hide();
-	}
+	} */
 	
 	$(".fail-feedback").hide();
 	 var status = {
@@ -123,7 +123,7 @@ $(function(){
 	}); 
 	$(".btn-first-delete").on("click", function(){
 		$(this).hide();
-		$(this).parents(".first-attached").find(".mt-2").empty();
+		$(this).parents(".first-attached").find(".for-attached-image").empty();
 		var image = $(this).parents(".first-attached").find(".first-attach");
 		if(image.val() == ""){
 			var params = new URLSearchParams(location.search);
@@ -145,8 +145,8 @@ $(function(){
 	
 	$(".btn-second-delete").on("click", function(){
 		$(this).hide();
-		$(this).parents(".second-attached").find(".mt-2").empty();
-		$(this).parents(".second-attached").find(".second-attach").val("");
+		$(this).parents(".second-attached").find(".for-attached-image").empty();
+		//$(this).parents(".second-attached").find(".second-attach").val("");
 		var image = $(this).parents(".second-attached").find(".second-attach");
 		if(image.val() == ""){
 			var params = new URLSearchParams(location.search);
@@ -167,8 +167,8 @@ $(function(){
 	});
 	$(".btn-third-delete").on("click", function(){
 		$(this).hide();
-		$(this).parents(".third-attached").find(".mt-2").empty();
-		$(this).parents(".third-attached").find(".third-attach").val("");
+		$(this).parents(".third-attached").find(".for-attached-image").empty();
+		//$(this).parents(".third-attached").find(".third-attach").val("");
 		var image = $(this).parents(".third-attached").find(".third-attach");
 		if(image.val() == ""){
 			var params = new URLSearchParams(location.search);
@@ -305,46 +305,89 @@ $(function(){
 		
 		<!-- 등록된 이미지가 있다면 보여주기 -->
 		<div class="row mt-4">
-		
-			<div class="col-4 first-attached image-attached">
-				<input type="file" class="form-control first-attach attach-selector w-100" accept="image/*" name="attach" value="${clubBoardImageDto.attachNo}">
-				<div class="mt-2 first-attached-image">
-					<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardImageDto.attachNo}" style="width:162.66px" class="attach-selected" data-bs-toggle="modal" data-bs-target="#exampleModal">
-				</div>
-				<div class="row delete-row first-row">
-					<div class="col">
-						<button type="button" class="btn btn-first-delete w-100 btn-photo-delete">사진 지우기</button>
+		<c:choose>
+			<c:when test="${clubBoardImageDto != null }">
+				<div class="col-4 first-attached image-attached">
+					<input type="file" class="form-control first-attach attach-selector w-100" accept="image/*" name="attach" value="${clubBoardImageDto.clubBoardNo}">
+					<div class="mt-2 first-attached-image for-attached-image">
+						<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardImageDto.attachNo}" style="width:162.66px" class="attach-selected" data-bs-toggle="modal" data-bs-target="#exampleModal">
 					</div>
-				</div>	
-			</div>
-
-			<div class="col-4 second-attached image-attached">
-				<input type="file" class="form-control second-attach attach-selector" accept="image/*" name="attachSecond">
-				<div class="mt-2 second-attached-image">
-					<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardImage2Dto.attachNo}" style="width:162.66px" class="attach-selected" data-bs-toggle="modal" data-bs-target="#exampleModal">
+					<div class="row delete-row first-row">
+						<div class="col">
+							<button type="button" class="btn btn-first-delete w-100 btn-photo-delete">사진 지우기</button>
+						</div>
+					</div>	
 				</div>
-				<c:if test="${clubBoardImage2Dto != null }">
+			</c:when>	
+			
+			<c:otherwise>
+				<div class="col-4 first-attached image-attached">
+					<input type="file" class="form-control first-attach attach-selector w-100" accept="image/*" name="attach" value="${clubBoardImageDto.clubBoardNo}">
+					<div class="mt-2 first-attached-image for-attached-image">
+					</div>
+					<div class="row delete-row first-row" style="display: none;">
+						<div class="col">
+							<button type="button" class="btn btn-first-delete w-100 btn-photo-delete">사진 지우기</button>
+						</div>
+					</div>	
+				</div>
+			</c:otherwise>
+		</c:choose>
+		
+		<c:choose>
+			<c:when test="${clubBoardImage2Dto != null }">
+				<div class="col-4 second-attached image-attached">
+					<input type="file" class="form-control second-attach attach-selector" accept="image/*" name="attachSecond">
+					<div class="mt-2 second-attached-image for-attached-image">
+						<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardImage2Dto.attachNo}" style="width:162.66px" class="attach-selected" data-bs-toggle="modal" data-bs-target="#exampleModal">
+					</div>
 					<div class="row delete-row second-row">
 						<div class="col">
 							<button type="button" class="btn btn-second-delete w-100 btn-photo-delete">사진 지우기</button>
 						</div>
 					</div>
-				</c:if>
-			</div>
-
-			<div class="col-4 third-attached image-attached">
-				<input type="file" class="form-control third-attach attach-selector" accept="image/*" name="attachThird" class="attach-selected">
-				<div class="mt-2 third-attached-image">
-					<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardImage3Dto.attachNo}" style="width:162.66px" class="attach-selected" data-bs-toggle="modal" data-bs-target="#exampleModal">
 				</div>
-				<c:if test="${clubBoardImage3Dto != null }">
+			</c:when>
+			<c:otherwise>
+				<div class="col-4 second-attached image-attached">
+					<input type="file" class="form-control second-attach attach-selector" accept="image/*" name="attachSecond">
+					<div class="mt-2 second-attached-image for-attached-image">
+					</div>
+					<div class="row delete-row second-row">
+						<div class="col">
+							<button type="button" class="btn btn-second-delete w-100 btn-photo-delete" style="display: none;">사진 지우기</button>
+						</div>
+					</div>
+				</div>
+			</c:otherwise>
+		</c:choose>
+		<c:choose>
+			<c:when test="${clubBoardImage3Dto != null}">
+				<div class="col-4 third-attached image-attached">
+					<input type="file" class="form-control third-attach attach-selector" accept="image/*" name="attachThird" class="attach-selected">
+					<div class="mt-2 third-attached-image">
+						<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardImage3Dto.attachNo}" style="width:162.66px" class="attach-selected" data-bs-toggle="modal" data-bs-target="#exampleModal">
+					</div>
 					<div class="row delete-row third-row">
 						<div class="col">
 							<button type="button" class="btn btn-third-delete w-100 btn-photo-delete">사진 지우기</button>
 						</div>
 					</div>
-				</c:if>
-			</div>
+				</div>
+			</c:when>
+			<c:otherwise>
+				<div class="col-4 third-attached image-attached">
+					<input type="file" class="form-control third-attach attach-selector" accept="image/*" name="attachThird" class="attach-selected">
+					<div class="mt-2 third-attached-image">
+					</div>
+					<div class="row delete-row third-row">
+						<div class="col">
+							<button type="button" class="btn btn-third-delete w-100 btn-photo-delete" style="display: none;">사진 지우기</button>
+						</div>
+					</div>
+				</div>
+			</c:otherwise>
+		</c:choose>
 				
 		</div>
 		

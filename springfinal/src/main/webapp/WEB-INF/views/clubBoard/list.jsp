@@ -26,16 +26,17 @@
 	}
 </script>
 <div class="row m-2 mt-4">
+<a href="${pageContext.request.contextPath}/clubBoard/write?clubNo=${clubNo}">글쓰기</a>
 
 <c:forEach var="clubBoardAllDto" items="${list}">
 	<button type="button" class="btn-no-style" onclick="redirect('${clubBoardAllDto.clubBoardNo}')">
 		<div class="row mt-4">
-			<c:if test="${clubBoardAllDto.attachNoMp} != null">
+			<c:if test="${clubBoardAllDto.attachNoMp != null}">
 				<div class="col-3">
 					<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardAllDto.attachNoMp}">
 				</div>			
 			</c:if>
-			<c:if test="${clubBoardAllDto.attachNoMp} == null">
+			<c:if test="${clubBoardAllDto.attachNoMp == null}">
 				<img src="${pageContext.request.contextPath}/images/user.png" style="max-width: 100px;" alt="User Image">		
 			</c:if>
 			<div class="col-3 text-start">
