@@ -1,5 +1,6 @@
 package com.kh.springfinal.rest;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,12 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.springfinal.dao.ClubBoardDao;
 import com.kh.springfinal.dao.ClubBoardReplyDao;
+import com.kh.springfinal.dao.ClubMemberDao;
 import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dto.ClubBoardDto;
 import com.kh.springfinal.dto.ClubBoardReplyDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.vo.ClubBoardReplyMemberVO;
+import com.kh.springfinal.vo.ClubBoardReplyVO;
 
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
@@ -38,6 +41,9 @@ public class ReplyRestController {
 	
 	@Autowired
 	private MemberDao memberDao;
+	
+	@Autowired
+	private ClubMemberDao clubMemberDao;
 	
 	@PostMapping("/insert")
 	public ResponseEntity<Map<String, Object>> insert(HttpSession session,
@@ -109,10 +115,32 @@ public class ReplyRestController {
 	}
 
 	@PostMapping("/list")
-	public List<ClubBoardReplyDto> list(@RequestParam int clubBoardNo){
-		List<ClubBoardReplyDto> list = clubBoardReplyDao.selectListByReply(clubBoardNo);
+	public List<ClubBoardReplyVO> list(@RequestParam int clubBoardNo, HttpSession session){
+		String memberId = (String)session.getAttribute("name");
+		ClubBoardDto clubBoardDto = clubBoardDao.selectOnes(clubBoardNo);
+		int clubNo = clubBoardDto.getClubNo();
+		Integer clubMemberNo = clubMemberDao.findClubMemberNo(clubNo, memberId); 
+		List<ClubBoardReplyDto> dtoList = clubBoardReplyDao.selectListByReply(clubBoardNo);
+		List<ClubBoardReplyVO> voList = new ArrayList<>();
+		for(ClubBoardReplyDto dto : dtoList) { // 오른쪽에 반복할 리스트, 왼쪽에 아무거나 이름
+			ClubBoardReplyVO vo = new ClubBoardReplyVO();
+			vo.setClubBoardNo(dto.getClubBoardNo());
+			vo.setClubBoardReplyContent(dto.getClubBoardReplyContent());
+			vo.setClubBoardReplyDate(dto.getClubBoardReplyDate());
+			vo.setClubBoardReplyDepth(dto.getClubBoardReplyDepth());
+			vo.setClubBoardReplyGroup(dto.getClubBoardReplyGroup());
+			vo.setClubBoardReplyNo(dto.getClubBoardReplyNo());
+			vo.setClubBoardReplyParent(dto.getClubBoardReplyParent());
+			vo.setClubBoardReplyWriter(dto.getClubBoardReplyWriter());
+			vo.setClubMemberNo(dto.getClubMemberNo());
+			//댓글을 작성한 자와 로그인 한 자가 동일한지 비교해라
+			boolean isMatch = clubMemberNo == dto.getClubMemberNo(); 
+			vo.setMatch(isMatch);
+			
+			voList.add(vo);
+		}
 		
-		return list;
+		return voList;
 	}
 	
 //	@PostMapping("/list")

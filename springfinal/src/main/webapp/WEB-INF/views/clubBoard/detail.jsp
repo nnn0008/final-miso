@@ -151,10 +151,9 @@ $(function(){
 						$(htmlTemplate).find(".clubBoardReplyDate").text(response[i].clubBoardReplyDate);
 						$(htmlTemplate).find(".btn-subReply").attr("data-reply-no", response[i].clubBoardReplyNo);
 						//내가 작성한 댓글인지 확인하여 수정/삭제 버튼을 안보이게
-						//if(memberId.length == 0 || memberId != response[i].clubBoard){
-						//	$(htmlTemplate).find(".edit-delete").empty();
-						//}
-						
+						if(response[i].match == false){
+							$(htmlTemplate).find(".edit-delete").empty();
+						}
 						
 						//대댓글 이라면
                       	if(response[i].clubBoardReplyParent != null){
@@ -208,60 +207,6 @@ $(function(){
 							//화면 배치
 							$(this).parents(".for-reply-edit").hide().after(editHtmlTemplate);
 						});
-						
-						/*$(htmlTemplate).find(".btn-subReply").attr("data-reply-no", response[i].clubBoardReplyNo).click(function(){ 
-							var button = $(this);
-							button.hide();
-							var reReplyTemplate = $("#reReply-template").html();
-							var reReplyHtmlTemplate = $.parseHTML(reReplyTemplate);	
-							
-							var clubBoardReplyNo = $(this).attr("data-reply-no");
-							
-							//취소버튼을 클릭하면 기존의 버튼을 다시 복구해야됨
-							//$(reReplyHtmlTemplate).find(".btn-reReply-cancel").click(function(e)
-							$(document).on("click", ".btn-reReply-cancel", function(e){
-								//console.log("작동중");
-								$(this).closest(".reReply-edit-form").remove();
-								button.show();
-							});
-							//console.log($(reReplyHtmlTemplate).find(".btn-reReply-cancel").length);
-							
-							var params = new URLSearchParams(location.search);
-					        var clubBoardNo = params.get("clubBoardNo");
-							
-							//$(reReplyTemplate).find(".btn-reReply-send").on("click", function()
-							$(reReplyTemplate).submit(function(e){
-								e.preventDefault();
-								
-								var params = new URLSearchParams(location.search);
-						        var clubBoardNo = params.get("clubBoardNo");
-						        var clubBoardReplyNo = $(this).closest(".for-reply-edit").find(".btn-reply-delete").attr("data-reply-no"); 
-								var clubBoardReplyContent = $(reReplyHtmlTemplate).find(".clubBoardReReplyContent").text();
-								console.log(params);
-								console.log(clubBoardNo);
-								console.log(clubBoardReplyNo);
-								console.log(clubBoardReplyContent);
-								
-								$.ajax({
-									url: window.contextPath + "/rest/reply/insert",
-									method: "post",
-									data: {
-										clubBoardReplyParent: clubBoardReplyNo,
-										clubBoardNo: clubBoardNo,
-										clubBoardReplyContent: clubBoardReplyContent,
-									},
-									success: function(response){
-										loadList();
-									},
-									error: function(error){
-										e.preventDefault();
-									}
-								});
-							});	
-							
-							$(this).parents(".for-reply-edit").after(reReplyTemplate);
-							
-						}); */  
 						
 						$(htmlTemplate).find(".btn-subReply").attr("data-reply-no", response[i].clubBoardReplyNo).click(function(e){
 							$(this).hide();
@@ -453,24 +398,32 @@ $(function(){
 <script id="reply-edit-template" type="text/template">
 		<form class="reply-edit-form edit-container">
 		<input type="hidden" name="clubBoardReplyNo" value="?">
-		<div class="row flex-container">
-			<div class="col">
-				<input type="text" name="clubBoardReplyContent" class="form-control"></textarea>
+		<div class="row">
+			<div class="col-10">
+				<textarea name="clubBoardReplyContent" class="form-control" rows="3"></textarea>
 			</div>
 			<div class="col">
 				<button type="submit" class="btn btn-success btn-reply-edit">
-					<i class="fa-solid fa-check"></i>
 					수정
 				</button>
-			</div>
-			<div class="col">
 				<button type="button" class="btn btn-danger btn-cancel">
-					<i class="fa-solid fa-xmark"></i>
 					취소
 				</button>
 			</div>
 		</div>
 		</form>
+</script>
+<!-- 댓글 작성용 템플릿 -->
+<script id="reply-insert-form" type="text/template">
+	<div class="row mt-5">
+		<div class="col-10">
+			<textarea type="text" class="form-control w-100 reply-write" rows="3" placeholder="댓글을 달아주세요"></textarea>
+		</div>
+		<div class="col">
+			<button type="button" class="btn btn-reply-send btn-success btn-successs w-100">전송</button>
+			<button type="button" class="btn btn-reply-cancel btn-reReply-cancel w-100">취소</button>
+		</div>
+	</div>
 </script>
 <script id="reReply-template" type="text/template">
 	<form class="reReply-edit-form">
@@ -494,19 +447,7 @@ $(function(){
 		</div>
 		</form>
 </script>
-<!-- 댓글 작성용 템플릿 -->
-<script id="reply-insert-form" type="text/template">
-	<input type="hidden" name="clubBoardNo" value="${clubBoardDto.clubBoardNo}">
-	<div class="row mt-5">
-		<div class="col-10">
-			<textarea type="text" class="form-control w-100 reply-write" rows="3" placeholder="댓글을 달아주세요"></textarea>
-		</div>
-		<div class="col">
-			<button type="button" class="btn btn-reply-send btn-success btn-successs w-100">전송</button>
-			<button type="button" class="btn btn-reply-cancel btn-reReply-cancel w-100">취소</button>
-		</div>
-	</div>
-</script>
+
 
 <div class="container-fluid">
 	<div class="row">
@@ -538,13 +479,13 @@ $(function(){
 				<div class="col">
 					<i class="fa-solid fa-ellipsis-vertical"></i>
 					<a href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubBoardDto.clubNo}">목록</a>
+					<button type="button" class="btn btn-report">신고</button>					
 					<div class="row board-match">
 						<div class="col">
 							<a href="${pageContext.request.contextPath}/clubBoard/edit?clubBoardNo=${clubBoardDto.clubBoardNo}">수정</a>
 							<a href="${pageContext.request.contextPath}/clubBoard/delete?clubBoardNo=${clubBoardDto.clubBoardNo}">삭제</a>
 						</div>
 					</div>
-					<button type="button" class="btn btn-report">신고</button>					
 				</div>
 			</div>
 			<div class="row mt-4">
