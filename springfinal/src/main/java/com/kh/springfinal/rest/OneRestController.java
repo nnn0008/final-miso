@@ -49,6 +49,9 @@ public class OneRestController {
 		
 		int attachNo = attachDao.sequence();
 		
+		String home = System.getProperty("user.home");
+		File dir = new File(home, "upload");//저장할디렉터리
+		dir.mkdirs();//디렉터리 생성
 		
 		File target = new File(dir, String.valueOf(attachNo));//저장할파일
 		attach.transferTo(target);
@@ -61,10 +64,6 @@ public class OneRestController {
 		attachDto.setAttachType(attach.getContentType());
 		attachDao.insert(attachDto);
 		
-		int oneNo = oneDto.getOneNo();
-		oneDao.deleteImage(oneNo);//제거
-		oneDao.connect(oneNo, attachNo);//연결
-		
 		return Map.of("attachNo",attachNo);
 	}
 	
@@ -76,6 +75,8 @@ public class OneRestController {
 			return ResponseEntity.notFound().build();//404 반환
 		}
 		
+		String home = System.getProperty("user.home");
+		File dir = new File(home, "upload");
 		File target = new File(dir, String.valueOf(attachDto.getAttachNo()));
 		
 		byte[] data = FileUtils.readFileToByteArray(target);//실제 파일정보 불러오기
