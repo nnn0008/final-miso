@@ -14,7 +14,7 @@ public interface ClubBoardDao {
 	ClubBoardDto selectOnes(int clubBoardNo);
 	ClubBoardAllDto selectOne(int clubBoardNo);
 	boolean delete(int clubBoardNo);
-	boolean update(ClubBoardDto clubBoardDto);
+	boolean update(ClubBoardDto clubBoardDto, int clubBoardNo);
 	boolean updateReplyCount(int clubBoardNo);
 	boolean updateLikeCount(int clubBoardNo);
 }
