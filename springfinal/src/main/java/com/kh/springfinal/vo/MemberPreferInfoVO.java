@@ -6,16 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
-public class ClubListVO {
+public class MemberPreferInfoVO {
 	
-	private int clubNo;
-	private String clubName;
-	private String clubExplain;
+	
+	private String memberId;
+	private String memberName;
 	private String sido;
-	private String sigungu;
 	private String majorCategoryName;
-	private String minorCategoryName;
-	private int memberCount;
-	private int attachNo;
+	
 
 }

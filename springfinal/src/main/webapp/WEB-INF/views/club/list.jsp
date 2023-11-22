@@ -21,19 +21,42 @@
     </div>
 </div>
 <hr>
+		
 	<h1>추천 동호회 리스트</h1>
+	
+	<div>
+	${memberPreferList[0].memberName}님의 주소 '${memberPreferList[0].sido}' 지역을 중심으로 한 
+	<c:forEach var = "memberPreferList" items="${memberPreferList}">
+		<${memberPreferList.majorCategoryName}>
+	</c:forEach>
+	카테고리 동호회 결과
+	</div>
+	
 	<c:forEach var="clubListVO" items="${clubList}">
+	
+	
 	<div class="row">
 		<div class="col">
        <div class="alert alert-dismissible alert-light">
-        <a href="/club/detail?clubNo=${clubListVO.clubNo}">
+		<a href="/club/detail?clubNo=${clubListVO.clubNo}">
+		<c:choose>
+		<c:when test="${clubListVO.attachNo!=0}">
 		<img src="${pageContext.request.contextPath}/club/image?clubNo=${clubListVO.clubNo}" class="rounded-circle" width="100" height="100">
+		</c:when>
+		<c:otherwise>
+		<img src="${pageContext.request.contextPath}/images/noimage.jpg" class="rounded-circle" width="100" height="100">
+		</c:otherwise>
+		</c:choose>
 		</a>
-		클럽 이름 : ${clubListVO.clubName}
-		클럽 설명 : ${clubListVO.clubExplain}
-		지역 : ${clubListVO.sigungu}
-		카테고리 이름 : ${clubListVO.majorCategoryName}
-		멤버 수 : ${clubListVO.memberCount}
+		<div>클럽 이름 : ${clubListVO.clubName}</div>
+		<div>클럽 설명 : 
+			<span class="d-inline-block text-truncate" style="max-width: 550px;">
+  				${clubListVO.clubExplain}
+						</span>
+			</div>
+		<div>${clubListVO.sido} ${clubListVO.sigungu}</div>
+		<div>${clubListVO.majorCategoryName}-${clubListVO.minorCategoryName}</div>
+		<div>멤버 수 : ${clubListVO.memberCount}</div>
          </div>
           </div>
 		

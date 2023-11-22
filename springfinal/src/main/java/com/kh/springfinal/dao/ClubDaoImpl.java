@@ -12,6 +12,7 @@ import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.ClubDto;
 import com.kh.springfinal.vo.ClubImageVO;
 import com.kh.springfinal.vo.ClubListVO;
+import com.kh.springfinal.vo.MemberPreferInfoVO;
 
 @Repository
 public class ClubDaoImpl implements ClubDao{
@@ -108,6 +109,12 @@ public class ClubDaoImpl implements ClubDao{
 		return sqlSession.selectList("club.minorClubList",params);
 		
 		
+	}
+
+	@Override
+	public List<MemberPreferInfoVO> memberPreferInfo(String memberId) {
+		
+		return sqlSession.selectList("club.memberPreferInfo",memberId);
 	}
 	
 	
