@@ -20,7 +20,8 @@ public interface OneDao {
 	
 	
 	//이미지
-	void insertImage(int oneNo,int attachNo);
+//	void insertImage(int oneNo,int attachNo);
+	void connect(int oneNo,int attachNo);
 	boolean deleteImage(int oneNo);
 	Integer findImage(int oneNo);
 	

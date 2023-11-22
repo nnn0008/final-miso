@@ -66,15 +66,21 @@ public class OneDaoImpl implements OneDao {
 	    return sqlSession.selectOne("one.countListByPage", vo);
 	}
 
+//	@Override
+//	public void insertImage(int oneNo, int attachNo) {
+//		Map<String, Object> params = new HashMap<>();
+//		params.put("oneNo", oneNo);
+//		params.put("attachNo", attachNo);
+//		sqlSession.insert("one.insertImage",params);
+//		
+//	}
 	@Override
-	public void insertImage(int oneNo, int attachNo) {
+	public void connect(int oneNo, int attachNo) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("oneNo", oneNo);
 		params.put("attachNo", attachNo);
-		sqlSession.insert("one.insertImage",params);
-		
+		sqlSession.update("one.contect",params);
 	}
-
 	@Override
 	public boolean deleteImage(int oneNo) {
 		return sqlSession.delete("one.deleteImage",oneNo)>0;
@@ -89,6 +95,8 @@ public class OneDaoImpl implements OneDao {
 			return null;
 		}
 	}
+
+	
 
 
 	

@@ -71,7 +71,7 @@
 	
 		<div class="row mt-4">
 			<div class="col">
-				이미지
+				<img src="${pageContext.request.contextPath}/rest/one/download?oneNo=${oneDto.oneNo}" width="200" height="200">
 			</div>
 		</div>
 	</div>
