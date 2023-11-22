@@ -27,7 +27,7 @@ import com.kh.springfinal.dto.OneDto;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/rest")
+@RequestMapping("/rest/one")
 public class OneRestController {
 	
 	@Autowired
@@ -63,7 +63,7 @@ public class OneRestController {
 		
 		int oneNo = oneDto.getOneNo();
 		oneDao.deleteImage(oneNo);//제거
-		oneDao.insertImage(oneNo, attachNo);
+		oneDao.connect(oneNo, attachNo);//연결
 		
 		return Map.of("attachNo",attachNo);
 	}

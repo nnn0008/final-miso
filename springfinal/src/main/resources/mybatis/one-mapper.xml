@@ -105,9 +105,15 @@
 	 		select * from one where one_no = #{oneNo}
 	 	</select>
 	 	
-	 	<!-- 이미지 등록 -->
+	 	<!-- 이미지 등록 
 	 	<insert id="insertImage">
 	 		insert into one_image
+	 		values(${oneNo},${attachNo})
+	 	</insert>
+	 	-->
+	 	
+	 	<insert id="connect">
+	 		insert into one_image(one_no,attach_no)
 	 		values(${oneNo},${attachNo})
 	 	</insert>
 	 	

@@ -3,7 +3,84 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 <jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
+<script>
+	$(function () {
+		$(".attach-selector").change(function(e){
+		    if(this.files.length == 0){
+		        return;
+		    }
+		    let reader = new FileReader();
+		    reader.onload = ()=>{
+		        $("<img>")
+		            .attr("src", reader.result)
+		            .css("width", 162.66)
+		            .addClass("attach-selected")
+		            .appendTo($(".image-preview")); // 이 부분을 원하는 <div> 선택자로 수정해주세요
+		    };
+		      
+		    for(let i = 0; i < this.files.length; i++){
+		        reader.readAsDataURL(this.files[i]);
+		    }
+		});
+        $(".image-chooser").change(function () {
+            var input = this;
+            if (input.files.length == 0) {
+                event.preventDefault(); // 폼 제출을 막음
+                return;
+            };
 
+            var form = new FormData();
+            form.append("attach", input.files[0]);
+
+            // 파일을 서버로 전송
+            $.ajax({
+                url: window.contextPath + "/rest/one/upload",
+                method: "post",
+                processData: false,
+                contentType: false,
+                data: form,
+                success: function (response) {
+                    // 응답 형태 - {"attachNo" : 7}
+                    $(".image").attr("src", "/rest/one/download?attachNo=" + response.attachNo);
+                    // 미리보기 엘리먼트를 만들어 이미지를 추가
+                    $("<img>").attr("src", "/rest/one/download?attachNo=" + response.attachNo)
+                        .css("width", "162.66px")
+                        .addClass("attach-selected")
+                        .attr("data-bs-toggle", "modal")
+                        .attr("data-bs-target", "#exampleModal")
+                        .appendTo($(".image-preview"));
+                },
+                error: function () {
+                    window.alert("통신 오류 발생\n잠시 후 다시 시도해주세요");
+                },
+            });
+        });
+
+        $(".image-upload").click(function (event) {
+            event.preventDefault(); // 기존의 form 제출을 막음
+
+            var form = $("form")[0];
+            var formData = new FormData(form);
+
+            // 파일을 서버로 전송
+            $.ajax({
+                url: window.contextPath + "/insert",
+                method: "post",
+                processData: false,
+                contentType: false,
+                data: formData,
+                success: function (response) {
+                    // 등록 성공 시 동작
+                },
+                error: function () {
+                    window.alert("통신 오류 발생\n잠시 후 다시 시도해주세요");
+                },
+            });
+        });
+
+    });
+
+</script>
 
 	<form method="post" action="insert" autocomplete="off">
 	<%-- 답글일 때만 추가 정보를 전송 --%>
