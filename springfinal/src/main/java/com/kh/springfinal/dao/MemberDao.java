@@ -12,4 +12,5 @@ public interface MemberDao {
 	boolean changePw(String memberId, String memberPw);
 	List<MemberDto> selectListOld();
 	List<MemberDto> selectListNew();
+	boolean memberEdit(MemberDto memberDto);
 }

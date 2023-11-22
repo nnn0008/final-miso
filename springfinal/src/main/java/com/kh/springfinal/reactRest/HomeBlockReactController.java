@@ -17,7 +17,6 @@ import com.kh.springfinal.dto.HomeBlockDto;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @CrossOrigin(value = {"http://localhost:3000", "http://localhost:5500"})
 @RestController
 @RequestMapping("/memberBlock")

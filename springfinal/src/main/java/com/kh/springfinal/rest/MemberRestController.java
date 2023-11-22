@@ -24,9 +24,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.springfinal.dao.AttachDao;
 import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dao.MemberProfileDao;
+import com.kh.springfinal.dao.ZipCodeDao;
 import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.dto.MemberProfileDto;
+import com.kh.springfinal.dto.ZipCodeDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,6 +45,9 @@ public class MemberRestController {
 	
 	@Autowired
 	private MemberProfileDao profileDao;
+	
+	@Autowired
+	private ZipCodeDao zipCodeDao;
 	
 	@PostMapping("/checkId")
 	public String checkId(@RequestParam String memberId) {
@@ -95,10 +100,10 @@ public class MemberRestController {
 	profileShow(@RequestParam String memberId) throws IOException {
 		AttachDto attachDto = profileDao.profileFindOne(memberId);
 
-		if(attachDto == null) {
-			//throw new NoTargetException("파일 없음");//내가만든 예외로 통합
-			return ResponseEntity.notFound().build();//404 반환
-		}
+//		if(attachDto == null) {
+//			//throw new NoTargetException("파일 없음");//내가만든 예외로 통합
+//			return ResponseEntity.notFound().build();//404 반환
+//		}
 
 		String home = System.getProperty("user.home");
 		File dir = new File(home, "upload");
@@ -113,10 +118,15 @@ public class MemberRestController {
 				.contentLength(attachDto.getAttachSize())
 				.header(HttpHeaders.CONTENT_TYPE, attachDto.getAttachType())
 				.header(HttpHeaders.CONTENT_DISPOSITION, 
-					ContentDisposition.attachment()
-					.filename(attachDto.getAttachName(), StandardCharsets.UTF_8)
-					.build().toString()
+				ContentDisposition.attachment()
+				.filename(attachDto.getAttachName(), StandardCharsets.UTF_8)
+				.build().toString()
 				)
 			.body(resource);
+	}
+	
+	@PostMapping("/searchAddr")
+	public ZipCodeDto searchAddr(@RequestParam int memberAddr) {
+		return zipCodeDao.selectOne(memberAddr);
 	}
 }
