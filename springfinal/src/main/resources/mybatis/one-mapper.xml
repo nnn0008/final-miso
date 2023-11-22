@@ -37,14 +37,14 @@
 	 	</update>
 	 	
 	 	<!-- 게시글 목록 -->
-	 	<!--
+	 	
 	 	<select id="list" resultType="OneDto">
 	    select * from one
 	    start with one_parent is null
 	    connect by prior one_no = one_parent
 	    order siblings by one_group desc, one_no asc
 		</select>
-		 -->
+		
 		<!-- 페이지네이션 -->
 		<select id="selectListByPage" resultType="OneDto">
 			<!-- 검색 -->
