@@ -45,8 +45,7 @@ public class OneController {
 		return "one/insert";
 	}
 	@PostMapping("/insert")
-	public String insert(@ModelAttribute OneDto oneDto, HttpSession session,
-			@RequestParam(required = false) Integer attachNo) {
+	public String insert(@ModelAttribute OneDto oneDto, HttpSession session,@RequestParam(required = false) Integer attachNo) {
 		int oneNo = oneDao.sequence();
 		oneDto.setOneNo(oneNo);//번호 넣고
 		
@@ -67,12 +66,6 @@ public class OneController {
 		}
 		
 		oneDao.insert(oneDto);//글쓰기
-		
-		if (attachNo != null) {
-	       oneDao.connect(oneNo, attachNo); // 파일과 게시글 연결
-	    }
-
-		
 		return "redirect:detail?oneNo="+oneNo;
 	}
 	
