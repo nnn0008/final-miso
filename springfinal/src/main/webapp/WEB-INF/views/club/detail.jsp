@@ -515,9 +515,51 @@ $(function(){
    </a> 
    </c:if>
    
-   
    <hr>
    
+   <h2>게시판</h2>
+   
+   <c:choose>
+   
+   <c:when test="${clubDetailBoardList[0]==null}">
+   <h4>아직 게시글이 없어요!</h4>
+   <h6>모임 활동을 공유해보세요</h6>
+   <a href="${pageContext.request.contextPath}/clubBoard/write?clubNo=${clubDto.clubNo}">
+   <button class="btn btn-primary w-100">작성하기</button>
+   </a>
+   </c:when>
+   
+   <c:otherwise>
+   <a href="${pageContext.request.contextPath}/clubBoard/detail?clubBoardNo=${clubDetailBoardList[0].clubBoardNo}">
+   <div class="container">
+   <div class="row">
+   <div class="col-2">
+   <img src="/rest/member/profileShow?memberId=${clubDetailBoardList[0].memberId}"
+   width="50" height="50" class="rounded-circle">
+   	</div>
+   	<div class="col-8">
+   	<div>카테고리 : ${clubDetailBoardList[0].clubBoardCategory}</div>
+   	<div>회원 이름 : ${clubDetailBoardList[0].memberName}</div>
+   	<div>작성 날짜 : ${clubDetailBoardList[0].clubBoardDate}</div>
+   	<div>글 제목 : ${clubDetailBoardList[0].clubBoardTitle}</div>
+   	<div>글 내용 : ${clubDetailBoardList[0].clubBoardContent}</div>
+   </div>
+   	</div>
+   	</div>
+   	</a>
+   	
+   	<div>
+   	<a href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDetailBoardList[0].clubNo}">
+   	<button class="btn btn-primary w-100">더보기</button>
+   	</a>
+   	</div>
+   </c:otherwise>
+   </c:choose>
+   
+   
+   
+   <hr>
+   <h2>정기모임</h2>
    <div class="row">
 		<div class="col">
 			<button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">

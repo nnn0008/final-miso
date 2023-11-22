@@ -89,5 +89,19 @@
 		where club_board_no = #{clubBoardNo}) where club_board_no = #{clubBoardNo}
 	</update>
 	
+	<select id="clubDetailBoardList" resultType="clubDetailBoardListVO">
+	SELECT cb.club_board_no,cb.club_no,cb.club_board_title,cb.club_board_content,cb.club_board_date,cb.club_board_category,m.member_id,m.member_name 
+	FROM club_board cb 
+	JOIN 
+	club_member cm 
+	ON
+	cm.CLUB_MEMBER_NO = cb.CLUB_MEMBER_NO 
+	JOIN 
+	MEMBER m 
+	ON 
+	cm.CLUB_MEMBER_ID = m.MEMBER_Id WHERE cb.CLUB_no=#{clubNo}
+	
+	</select>
+	
 
 	</mapper>
