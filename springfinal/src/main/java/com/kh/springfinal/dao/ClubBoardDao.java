@@ -5,6 +5,7 @@ import java.util.List;
 import com.kh.springfinal.dto.ClubBoardAllDto;
 import com.kh.springfinal.dto.ClubBoardDto;
 import com.kh.springfinal.dto.ClubMemberDto;
+import com.kh.springfinal.vo.ClubDetailBoardListVO;
 
 public interface ClubBoardDao {
 	int sequence();
@@ -17,4 +18,5 @@ public interface ClubBoardDao {
 	boolean update(ClubBoardDto clubBoardDto, int clubBoardNo);
 	boolean updateReplyCount(int clubBoardNo);
 	boolean updateLikeCount(int clubBoardNo);
+	List<ClubDetailBoardListVO> clubDetailBoardList(int clubNo);
 }

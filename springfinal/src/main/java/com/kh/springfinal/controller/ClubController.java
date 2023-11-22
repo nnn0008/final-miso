@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.springfinal.dao.AttachDao;
 import com.kh.springfinal.dao.CategoryDao;
 import com.kh.springfinal.dao.ChatRoomDao;
+import com.kh.springfinal.dao.ClubBoardDao;
 import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dao.ClubMemberDao;
 import com.kh.springfinal.dao.MeetingDao;
@@ -41,6 +42,7 @@ import com.kh.springfinal.dto.MajorCategoryDto;
 import com.kh.springfinal.dto.MeetingDto;
 import com.kh.springfinal.dto.MinorCategoryDto;
 import com.kh.springfinal.dto.ZipCodeDto;
+import com.kh.springfinal.vo.ClubDetailBoardListVO;
 import com.kh.springfinal.vo.ClubImageVO;
 import com.kh.springfinal.vo.ClubListVO;
 import com.kh.springfinal.vo.ClubMemberVO;
@@ -72,6 +74,9 @@ public class ClubController {
 	
 	@Autowired
 	private MeetingDao meetingDao;
+	
+	@Autowired
+	private ClubBoardDao clubBoardDao;
 	
 	
 	
@@ -136,6 +141,7 @@ public class ClubController {
 		ClubImageVO clubDto = clubDao.clubDetail(clubNo);
 		MajorCategoryDto major = categoryDao.findMajor(clubDto.getClubCategory());
 		ZipCodeDto zipDto = zipDao.findZip(clubNo);
+		List<ClubDetailBoardListVO> clubDetailBoardList  = clubBoardDao.clubDetailBoardList(clubNo);
 		
 		boolean joinButton = !clubMemberDao.existMember(clubNo, memberId) && (memberId!=null);
 		boolean editPossible = clubMemberDao.editPossible(clubNo, memberId);
@@ -181,6 +187,8 @@ public class ClubController {
 		model.addAttribute("zipDto",zipDto);
 		model.addAttribute("joinButton",joinButton);
 		model.addAttribute("meetingList",meetingList);
+		
+		model.addAttribute("clubDetailBoardList",clubDetailBoardList);
 		
 
 		return "club/detail";

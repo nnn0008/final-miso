@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.kh.springfinal.dto.ClubBoardAllDto;
 import com.kh.springfinal.dto.ClubBoardDto;
 import com.kh.springfinal.dto.ClubMemberDto;
+import com.kh.springfinal.vo.ClubDetailBoardListVO;
 
 @Repository
 public class ClubBoardDaoImpl implements ClubBoardDao{
@@ -69,5 +70,10 @@ public class ClubBoardDaoImpl implements ClubBoardDao{
 	@Override
 	public boolean updateLikeCount(int clubBoardNo) {
 		return sqlSession.update("clubBoard.updateLikeCount", clubBoardNo) > 0;
+	}
+
+	@Override
+	public List<ClubDetailBoardListVO> clubDetailBoardList(int clubNo) {
+		return sqlSession.selectList("clubBoard.clubDetailBoardList",clubNo);
 	}
 }
