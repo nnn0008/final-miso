@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.kh.springfinal.dto.ChatDto;
+import com.kh.springfinal.dto.ClubDto;
 
 public interface ChatDao {
 	void insert(ChatDto dto); 
@@ -22,4 +23,5 @@ public interface ChatDao {
 	int sequence();
 	
 	boolean chatBlindCheck(int chatNo); //채팅 블라인드 처리 확인
+
 }

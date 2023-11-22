@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +19,7 @@ import com.kh.springfinal.dto.ChatRoomDto;
 import com.kh.springfinal.dto.NotifyDto;
 import com.kh.springfinal.vo.ChatListVO;
 import com.kh.springfinal.vo.ChatRoomResponseVO;
+import com.kh.springfinal.vo.MeetingVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,6 +52,9 @@ public class NotifyRestController {
 	    // 해당 사용자가 가지고 있는 1:1룸 목록 조회
 	    List<ChatOneDto> oneChatRoomList = chatOneDao.oneChatRoomList(memberId, memberId);
 //	    log.debug("oneChatRoomList={}", oneChatRoomList);
+	    
+	  //해당 사용자가 가지고 있는 정모 목록 조회
+	    List<MeetingVO> meetingRoomList = chatRoomDao.meetingRoomList2(memberId); 
 
 	    // 해당 동호회의 번호, 이름, 내용 조회
 	    List<ChatListVO> roomList = new ArrayList<>();
@@ -61,7 +64,7 @@ public class NotifyRestController {
 	        roomList.addAll(chatRoomInfoList);
 	    }
 
-	    ChatRoomResponseVO response = new ChatRoomResponseVO(roomList, oneChatRoomList);
+	    ChatRoomResponseVO response = new ChatRoomResponseVO(roomList, oneChatRoomList, meetingRoomList);
 	    return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	

@@ -146,23 +146,23 @@ public class ChatRestController {
 	 }
 
 	 
-	 @GetMapping("/getMemberList")
-	 public List<ChatMemberListVO> getMemberList(@RequestParam int chatRoomNo) {
-	     List<ChatMemberListVO> memberList = chatRoomDao.chatMemberList(chatRoomNo);
-	     return memberList;
-	 }
-
-	 @GetMapping("/getChatOneMemberList")
-	 public List<ChatOneMemberListVO> getChatOneMemberList(@RequestParam int chatRoomNo) {
-	     List<ChatOneMemberListVO> chatOneMemberList = chatRoomDao.chatOneMemberList(chatRoomNo);
-	     return chatOneMemberList;
-	 }
-	 
-	 @GetMapping("/getMettingMemberList")
-	 public List<ChatMemberListVO> getMeetingMemberList(@RequestParam int chatRoomNo){
-		 List<ChatMemberListVO> meetingMemberList = chatRoomDao.meetingMemberList(chatRoomNo);
-		 return meetingMemberList;
-	 }
+//	 @GetMapping("/getMemberList")
+//	 public List<ChatMemberListVO> getMemberList(@RequestParam int chatRoomNo) {
+//	     List<ChatMemberListVO> memberList = chatRoomDao.chatMemberList(chatRoomNo);
+//	     return memberList;
+//	 }
+//
+//	 @GetMapping("/getChatOneMemberList")
+//	 public List<ChatOneMemberListVO> getChatOneMemberList(@RequestParam int chatRoomNo) {
+//	     List<ChatOneMemberListVO> chatOneMemberList = chatRoomDao.chatOneMemberList(chatRoomNo);
+//	     return chatOneMemberList;
+//	 }
+//	 
+//	 @GetMapping("/getMettingMemberList")
+//	 public List<ChatMemberListVO> getMeetingMemberList(@RequestParam int chatRoomNo){
+//		 List<ChatMemberListVO> meetingMemberList = chatRoomDao.meetingMemberList(chatRoomNo);
+//		 return meetingMemberList;
+//	 }
 
 	 
 	 @PostMapping("/updateBlind")

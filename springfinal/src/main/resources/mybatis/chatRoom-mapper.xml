@@ -207,4 +207,8 @@ WHERE cr.CHAT_ROOM_NO = #{chatRoomNo}
 	FROM CHAT_ONE co 
 	WHERE chat_sender = #{memberId} OR chat_receiver = #{memberId}
     </select>
+    
+    <select id="clubInfo" resultType="ClubDto">
+    SELECT * from CLUB c WHERE CHAT_ROOM_NO = #{chatRoomNo}
+    </select>
 </mapper>

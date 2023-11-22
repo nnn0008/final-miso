@@ -20,7 +20,10 @@ import com.kh.springfinal.dao.ChatRoomDao;
 import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dto.ChatDto;
 import com.kh.springfinal.dto.ChatRoomDto;
+import com.kh.springfinal.dto.ClubDto;
 import com.kh.springfinal.vo.ChatListVO;
+import com.kh.springfinal.vo.ChatMemberListVO;
+import com.kh.springfinal.vo.ChatOneMemberListVO;
 import com.kh.springfinal.vo.ChatOneMemberVO;
 import com.kh.springfinal.vo.MeetingVO;
 
@@ -86,7 +89,14 @@ public class WebsocketController {
 	
 	//채팅방
 	@RequestMapping("/enterRoom/{chatRoomNo}")
-	public String enterRoom(@PathVariable int chatRoomNo) {
+	public String enterRoom(@PathVariable int chatRoomNo, Model model) {
+		ClubDto clubInfo = chatRoomDao.clubInfo(chatRoomNo);
+		List<ChatMemberListVO> members = chatRoomDao.chatMemberList(chatRoomNo);
+		ChatOneMemberListVO oneMembers = chatRoomDao.oneMembers(chatRoomNo);
+		
+		model.addAttribute("clubInfo", clubInfo);
+		model.addAttribute("members", members);
+		model.addAttribute("oneMembers", oneMembers);
 	    return "chat/sockjs2";
 	}
 	
