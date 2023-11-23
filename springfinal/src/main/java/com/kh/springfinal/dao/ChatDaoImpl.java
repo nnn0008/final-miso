@@ -74,6 +74,12 @@ public class ChatDaoImpl implements ChatDao{
 		return sqlSession.update("chat.chatBlindUpdate", chatNo) > 0;
 	}
 	
+	@Override
+	public String chatBliindCheck(int chatNo) {
+		return sqlSession.selectOne("chat.chatBliindCheck", chatNo);
+	}
+	
+	@Override
 	public int sequence() {
 		return sqlSession.selectOne("chat.sequence");
 	}

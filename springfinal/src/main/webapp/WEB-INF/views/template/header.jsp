@@ -305,24 +305,25 @@ function populateModal(data) {
         return new Date(b.notifyDate) - new Date(a.notifyDate);
     }).slice(0, 10);
 
-    // 알림 갯수 표시
+ // 알림 갯수 표시
     var notificationCount = sortedData.length;
     showNotificationCount(notificationCount); // 알림 개수 업데이트
 
-    var notificationCountMessage = $("<div class='col-12 mb-2 text-center'>" + notificationCount + "개의 알림이 있습니다</div>");
-    modalContent.append(notificationCountMessage);
+    if (notificationCount > 0) {
+        // 알림이 있을 경우
+        var notificationCountMessage = $("<div class='col-12 mb-2 text-center'>" + notificationCount + "개의 알림이 있습니다</div>");
+        modalContent.append(notificationCountMessage);
 
-    if (notificationCount === 0) {
-        // 데이터가 없으면 '알림이 없습니다' 메시지를 추가
-        var noNotificationMessage = $("<div class='col-12 mb-2 text-center'>알림이 없습니다</div>");
-        modalContent.append(noNotificationMessage);
-    } else {
         // 데이터가 있으면 각 알림 메시지를 추가
         sortedData.forEach(function (item, index) {
             var message = createNotificationMessage(item);
             var listItem = $("<div class='col-12 mb-2'>" + message + "</div>");
             modalContent.append(listItem);
         });
+    } else {
+        // 알림이 없을 경우
+        var noNotificationMessage = $("<div class='col-12 mb-2 text-center'>알림이 없습니다</div>");
+        modalContent.append(noNotificationMessage);
     }
 }
 

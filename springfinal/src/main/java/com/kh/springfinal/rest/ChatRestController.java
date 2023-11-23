@@ -3,11 +3,13 @@ package com.kh.springfinal.rest;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.http.HttpRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -165,12 +167,13 @@ public class ChatRestController {
 //	 }
 
 	 
-	 @PostMapping("/updateBlind")
-	 public void update(@RequestBody Map<String, Object> requestBody) {
-		System.out.println("들어오나");
-		 int chatNo = (int) requestBody.get("chatNo");
-	     chatDao.chatBlindUpdate(chatNo);
-	 }
+//	 @PostMapping("/updateBlind")
+//	 public void update(HttpServletRequest request) {
+//		 Map<String, String[]> map = request.getParameterMap();
+//		 System.out.println("들어오나");
+//		 int chatNo = (int) requestBody.get("chatNo");
+//	     chatDao.chatBlindUpdate(chatNo);
+//	 }
 	 
 }
 
