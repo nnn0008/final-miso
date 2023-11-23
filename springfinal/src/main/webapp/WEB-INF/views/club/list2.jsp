@@ -29,26 +29,34 @@
 </c:choose>
 
 	<c:forEach var="clubListVO" items="${clubList}">
+	
+	
 	<div class="row">
 		<div class="col">
-		<div class="alert alert-dismissible alert-light">
+       <div class="alert alert-dismissible alert-light">
 		<a href="/club/detail?clubNo=${clubListVO.clubNo}">
 		<c:choose>
 		<c:when test="${clubListVO.attachNo!=0}">
 		<img src="${pageContext.request.contextPath}/club/image?clubNo=${clubListVO.clubNo}" class="rounded-circle" width="100" height="100">
 		</c:when>
 		<c:otherwise>
-		<img src="${pageContext.request.contextPath}/images/noimage.jpg" class="rounded-circle" width="100" height="100">
+		<img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="80" height="80">
 		</c:otherwise>
 		</c:choose>
 		</a>
 		<div>클럽 이름 : ${clubListVO.clubName}</div>
-		<div>클럽 설명 : ${clubListVO.clubExplain}</div>
+		<div>클럽 설명 : 
+			<span class="d-inline-block text-truncate" style="max-width: 550px;">
+  				${clubListVO.clubExplain}
+						</span>
+			</div>
 		<div>${clubListVO.sido} ${clubListVO.sigungu}</div>
 		<div>${clubListVO.majorCategoryName}-${clubListVO.minorCategoryName}</div>
 		<div>멤버 수 : ${clubListVO.memberCount}</div>
-		</div>
-		</div>
+         </div>
+          </div>
+		
+		
 	</div>
 	</c:forEach>
 
