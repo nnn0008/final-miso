@@ -7,6 +7,33 @@
 .img-thumbnail:hover {
 	cursor: pointer;
 }
+.attached-photo-image, .detail-image{
+margin-top: 1em;
+width: 445px;
+border-radius: 1%;
+}
+.image-box {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    overflow: hidden;
+}
+.attached-image {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important; 
+}
+.img-thumbnail {
+    border: none !important; 
+}
+.row .col .d-flex {
+    display: flex;
+    align-items: center;
+}
+.row .col .d-flex i {
+    margin-right: 5px; 
+}
+
 </style>
 <script>
 $(function(){
@@ -83,7 +110,7 @@ $(function(){
    				$(".image-attach").empty();
    				for(let i = 0; i < response.length; i++){
 	   				//console.log(response[i]);
-   					var wrapper = $("<div>").addClass("col-sm-6 col-md-4 col-lg-3 p-3")
+   					var wrapper = $("<div>").addClass("col-sm-6 col-md-4 col-lg-4 p-1 image-box")
    					.append($("<img>").addClass("attached-image img-thumbnail").attr("data-photo-no", response[i].photoNo)
    					.attr("src", window.contextPath + "/rest/photo/download/" + response[i].photoNo));
    					
@@ -276,20 +303,28 @@ $(function(){
 	<div class="col-me-10 offset-md-1">
 
 		<!-- 제목 -->
-		<div class="row mt-5">
-			<div class="col-6 offset-3 text-center">
-				<h1>사진첩</h1>
-			</div>
-		</div>
+<div class="row">
+    <div class="col-6 text-start d-flex align-items-center">
+        <img src="${pageContext.request.contextPath}/images/logo-door.png" width="10%">
+        <strong class="ms-2">사진첩</strong>
+    </div>
+    <div class="col-6 text-end">
+        <button type="button" class="btn btn-success bg-miso"
+                data-bs-toggle="modal" data-bs-target="#exampleModal">
+            사진 등록
+        </button>
+    </div>
+</div>
 
-		<div class="row mt-5">
-			<div class="col">
-				<!-- insert Modal -->
-				<button type="button" class="btn btn-primary w-100"
-					data-bs-toggle="modal" data-bs-target="#exampleModal">
-					사진등록하기</button>
-			</div>
-		</div>
+
+<!-- 		<div class="row"> -->
+<!-- 			<div class="col"> -->
+<!-- 				insert Modal -->
+<!-- 				<button type="button" class="btn btn-success bg-miso w-100" -->
+<!-- 					data-bs-toggle="modal" data-bs-target="#exampleModal"> -->
+<!-- 					사진 등록</button> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
 
 
 		<hr>
@@ -305,7 +340,13 @@ $(function(){
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h1 class="modal-title fs-5" id="exampleModalLabel">사진 등록</h1>
+			<div class="row mt-2">
+                            <div class="col text-start modal-title ms-2 d-flex align-items-center"" id="exampleModalLabel">
+                                <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+                                <strong class="ms-2">사진 등록</strong>
+                            </div>
+                        </div>
+<!-- 				<h1 class="modal-title fs-5" id="exampleModalLabel">사진 등록</h1> -->
 				<button type="button" class="btn-close" data-bs-dismiss="modal"
 					aria-label="Close"></button>
 			</div>
@@ -329,7 +370,7 @@ $(function(){
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary"
 					data-bs-dismiss="modal">취소</button>
-				<button type="button" class="btn btn-primary btn-photo-register"
+				<button type="button" class="btn btn-success bg-miso btn-photo-register"
 					data-bs-dismiss="modal">등록</button>
 			</div>
 		</div>
@@ -343,10 +384,11 @@ $(function(){
 	aria-labelledby="exampleModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<div class="modal-header">
-				<h1 class="modal-title fs-5" id="exampleModalLabel2"></h1>
-				<button type="button" class="btn btn-danger btn-image-delete"
-					data-bs-dismiss="modal">사진 삭제</button>
+			<div class="modal-header ms-2">
+			<img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+				<h5 class="modal-title fs-5 ms-2" id="exampleModalLabel2"></h5>
+<!-- 				<button type="button" class="btn btn-outline-danger btn-image-delete ms-2" -->
+<!-- 					data-bs-dismiss="modal">사진 삭제</button> -->
 				<button type="button" class="btn-close" data-bs-dismiss="modal"
 					aria-label="Close"></button>
 			</div>
@@ -360,19 +402,28 @@ $(function(){
 						</div>
 					</div>
 
-					<div class="row">
-						<div class="col">
-							<i class="fa-regular fa-heart photo-like" style="color: red"></i>
-							<p class="photo-like-count"></p>
-						</div>
-					</div>
+					<div class="row mt-3">
+    <div class="col">
+        <div class="d-flex align-items-center">
+            <i class="fa-regular fa-heart fa-xl photo-like" style="color: red"></i>
+            <p class="photo-like-count ml-2">좋아요 카운트 숫자</p>
+        </div>
+    </div>
+</div>
 
-					댓글 창
+
+					<div class="row mt-2">
+					<div class="col">
+					댓글창
+					</div>
+					</div>
 
 				</div>
 
 			</div>
 			<div class="modal-footer">
+			<button type="button" class="btn btn-outline-danger btn-image-delete ms-2"
+					data-bs-dismiss="modal">사진 삭제</button>
 				<button type="button" class="btn btn-secondary"
 					data-bs-dismiss="modal">닫기</button>
 				<!-- <button type="button" class="btn btn-primary">Save changes</button> -->
