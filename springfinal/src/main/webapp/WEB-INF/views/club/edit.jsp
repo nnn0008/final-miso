@@ -7,7 +7,32 @@
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://unpkg.com/hangul-js" type="text/javascript"></script>
-i want to go home
+
+ <script>
+        $(function(){
+            $(".attach-selector").change(function(){
+            	
+                if(this.files.length == 0) {
+                    //초기화
+                    return;
+                }
+
+                //파일 미리보기는 서버 업로드와 관련이 없다
+                //- 서버에 올릴거면 따로 처리를 또 해야 한다
+                
+                //[2] 직접 읽어서 내용을 설정하는 방법
+                let reader = new FileReader();
+                reader.onload = ()=>{
+                    
+                    $(".preview-wrapper2").find(".preview").attr("src",reader.result);
+                    
+                };
+                for(let i=0; i < this.files.length; i++) {
+                    reader.readAsDataURL(this.files[i]);
+                }
+            });
+        });
+    </script>
 
 <script>
 	$(function() {
@@ -222,7 +247,18 @@ $(function(){
 			</ul>
 		</div>
 	</div>
-	사진 업로드<input class="form-control" type="file" name="attach" accept="image/*">
+	사진 업로드<input class="form-control attach-selector" type="file" name="attach" accept="image/*">
+	
+	<div class="preview-wrapper2">
+	<c:choose>
+	<c:when test="${clubDto.attachNo!=0}">
+	<img src="${pageContext.request.contextPath}/club/image?clubNo=${clubDto.clubNo}" width="200" class="preview">
+	</c:when>
+	<c:otherwise>
+	<img src="/images/noimage.jpg" width="200" height="200" class="preview">
+	</c:otherwise>
+	</c:choose>
+	</div>
 	
 	<div class="row mt-2">
 	<div class="col">
