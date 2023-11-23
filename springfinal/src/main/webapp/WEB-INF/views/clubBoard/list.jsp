@@ -25,8 +25,53 @@
 		window.location.href = "detail?clubBoardNo="+url;
 	}
 </script>
+<script>
+	//jQuery를 이용한 스크롤바의 위치를 보기
+	 $(function() {
+		 var loading = false;
+		 
+        var scrollIndicator = $('#scroll-indicator');
+        var scrollPercent = $('#scroll-percent');
+
+        $(window).scroll(function() {
+            var scrollTop = $(this).scrollTop();
+            var windowHeight = $(window).height();
+            var documentHeight = $(document).height();
+            
+           //스크롤 위치 계산
+            var scrollPercentage = (scrollTop / (documentHeight - windowHeight)) * 100;
+            
+        	//콘솔에 스크롤 위치 출력
+            //console.log('스크롤 위치:', scrollPercentage.toFixed(2) + '%');
+
+            // 표시할 퍼센트 값을 업데이트
+            scrollPercent.text(scrollPercentage.toFixed(2) + '%');
+
+	        if(scrollPercentage.toFixed >= 65 && !loading){
+	        	loading = true;
+	        	
+	        	var currentPage = parseInt($("#currentPage").val()) + 1;
+	        	
+		        $.ajax({
+		        	url: window.contextPath + "/rest/clubBoard/page",
+		        	method: "post",
+		        	data: {
+	
+		        	},
+		        	success: function(response){
+		        		
+		        	},
+		        });        	
+	        }
+        });
+        
+        
+        
+        
+    });
+</script>
 <div class="row m-2 mt-4">
-<a href="${pageContext.request.contextPath}/clubBoard/write?clubNo=${clubNo}">글쓰기</a>
+<a href="${pageContext.request.contextPath}/clubBoard/write?clubNo=${vo.clubNo}">글쓰기</a>
 
 <c:forEach var="clubBoardAllDto" items="${list}">
 	<button type="button" class="btn-no-style" onclick="redirect('${clubBoardAllDto.clubBoardNo}')">

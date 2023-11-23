@@ -162,7 +162,7 @@ public class ReplyRestController {
 //		
 //		Map params = Map.of("replyList", list, "clubMemberNo", clubMemberNo);
 //		return params;
-//	}
+//	}2
 	
 	@PostMapping("/delete")
 	public void delete(@RequestParam int clubBoardReplyNo) {

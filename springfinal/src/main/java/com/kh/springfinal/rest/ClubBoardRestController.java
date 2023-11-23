@@ -28,6 +28,7 @@ import com.kh.springfinal.dto.ClubBoardLikeDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.vo.ClubBoardLikeVO;
+import com.kh.springfinal.vo.ClubBoardPaginationVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -195,5 +196,9 @@ public class ClubBoardRestController {
 		attachDao.delete(clubBoardImage3Dto.getAttachNo());
 	}
 	
-	
+//	@PostMapping("/page")
+//	public ClubBoardPaginationVO page(@RequestParam integer  ) {
+//		
+//		return vo;
+//	}
 }
