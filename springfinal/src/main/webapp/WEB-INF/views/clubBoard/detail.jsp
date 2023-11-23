@@ -178,6 +178,9 @@ $(function(){
 							var editTemplate = $("#reply-edit-template").html();
 							var editHtmlTemplate = $.parseHTML(editTemplate);
 							
+							//기존 댓글 창을 숨기자
+							$(".div-for-insert-reply").hide();
+							
 							var clubBoardReplyNo = $(this).attr("data-reply-no");
 							var clubBoardReplyContent = $(this).parents(".for-reply-edit").find(".clubBoardReplyContent").text();
 							//console.log(clubBoardReplyContent);
@@ -188,6 +191,7 @@ $(function(){
 							$(editHtmlTemplate).find(".btn-cancel").click(function(e){
 								$(this).parents(".edit-container").prev(".for-reply-edit").show();
 								$(this).parents(".edit-container").remove();
+								$(".div-for-insert-reply").show();
 							});
 							
 							//완료(등록)버튼 처리
@@ -366,20 +370,65 @@ $(function(){
 <script>
 	//신고와 관련된 스크립트
 	$(function(){
-		$(".report-send-form").submit(function(e){
+		
+		//$(".btn-report-send").prop("disabled", true);
+		$(".btn-report-send").click(function(e){
+		//$(".report-send-form").submit(function(e){
 			e.preventDefault();
 			
-			$.ajax({
-				url: window.contextPath + "/rest/report/clubBoard/insert",
-				method: "post",
-				data: $(e.target).serialize(),
-				success: function(response){
-					alert("신고가 접수되었습니다");
-				},
-			});
-			
+			var reportCategory = $("[name=reportCategory]").val();
+
+		    if (!reportCategory) {
+		        // 선택되지 않은 경우
+		        $('[name="reportCategory"]').addClass('is-invalid');
+		        console.log("제출");
+		    }
+		    else {
+		    	
+		   		console.log("됐냐");
+		        // 선택된 경우
+		        $('[name=reportCategory]').removeClass('is-invalid');
+		        console.log($(e.target));
+		        $.ajax({
+					url: window.contextPath + "/rest/report/clubBoard/insert",
+					method: "post",
+					data: $(e.target).serialize(),
+					success: function(response){
+						alert("신고가 접수되었습니다");
+				        // 모달 닫기
+				        $('#exampleModal').modal('hide');
+					},
+					error: function (error) {
+	                    // 여기에 에러 처리 코드 추가
+	                    alert("에러가 발생했습니다. 다시 시도해주세요.");
+	                }
+				});		
+		    }
+		    console.log("됐냐고요");
 		});
 		
+		$("[name=reportCategory]").change(function(){
+			console.log("값을 변경시킴", $(this).val());
+			
+			if($(this).val()){
+				console.log("변경 성공");
+			
+				$(this).removeClass("is-invalid");
+				$(".btn-report-send").prop("disabled", false);
+			}
+			else{
+				console.log("변경 실패");
+				$(this).addClass("is-invalid");
+				$(".btn-report-send").prop("disabled", true);
+			}
+		});
+		
+		// 모달이 닫힐 때 이벤트 처리
+		$('#exampleModal').on('hidden.bs.modal', function (e) {
+		  // 입력 필드 초기화
+		  $('[name=reportCategory]').val('');
+		  $('[name=reportCategory]').removeClass('is-invalid');
+		});
 		
 	});
 	
@@ -496,7 +545,7 @@ $(function(){
 				<div class="col">
 					<i class="fa-solid fa-ellipsis-vertical"></i>
 					<a href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubBoardDto.clubNo}">목록</a>
-					<a href="##exampleModal" data-bs-toggle="modal" data-bs-target="#exampleModal">신고</a>
+					<a href="#exampleModal" data-bs-toggle="modal" data-bs-target="#exampleModal">신고</a>
 					<div class="row board-match">
 						<div class="col">
 							<a href="${pageContext.request.contextPath}/clubBoard/edit?clubBoardNo=${clubBoardDto.clubBoardNo}">수정</a>
@@ -610,7 +659,7 @@ $(function(){
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-        <button type="submit" class="btn btn-primary btn-report-send" data-bs-dismiss="modal">제출</button>
+        <button type="button" class="btn btn-primary btn-report-send">제출</button>
       </div>
     </div>
   </div>

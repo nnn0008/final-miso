@@ -131,7 +131,7 @@ public class ClubBoardController {
 		ClubBoardDto clubBoardDto = clubBoardDao.selectOnes(clubBoardNo);
 		ClubMemberDto clubMemberDto = clubMemberDao.selectOne(clubBoardDto.getClubMemberNo());
 		AttachDto attachDto = memberProfileDao.profileFindOne(clubMemberDto.getClubMemberId());
-		ClubBoardLikeDto clubBoardLikeDto = clubBoardLikeDao.selectOne(clubBoardNo);
+		//ClubBoardLikeDto clubBoardLikeDto = clubBoardLikeDao.selectOne(clubBoardNo);
 		ClubBoardImageDto clubBoardImageDto = clubBoardImageDao.selectOne(clubBoardNo);
 		ClubBoardImage2Dto clubBoardImage2Dto = clubBoardImage2Dao.selectOne(clubBoardNo);
 		ClubBoardImage3Dto clubBoardImage3Dto = clubBoardImage3Dao.selectOne(clubBoardNo);
@@ -143,7 +143,7 @@ public class ClubBoardController {
 		model.addAttribute("clubMemberDto", clubMemberDto);
 		model.addAttribute("clubBoardDto", clubBoardDto);
 		model.addAttribute("attachDto", attachDto);
-		model.addAttribute("likeDto", clubBoardLikeDto);
+		//model.addAttribute("likeDto", clubBoardLikeDto);
 		return "clubBoard/detail";
 	}
 	
