@@ -544,8 +544,14 @@ $(function(){
 				</div>
 				<div class="col">
 					<i class="fa-solid fa-ellipsis-vertical"></i>
-					<a href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubBoardDto.clubNo}">목록</a>
-					<a href="#exampleModal" data-bs-toggle="modal" data-bs-target="#exampleModal">신고</a>
+					<div class="row">
+						<a href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubBoardDto.clubNo}">목록</a>
+					</div>
+					<c:if test="${sessionScope.name != clubMemberDto.clubMemberId}">
+						<div class="row">
+							<a href="#exampleModal" data-bs-toggle="modal" data-bs-target="#exampleModal">신고</a>					
+						</div>
+					</c:if>
 					<div class="row board-match">
 						<div class="col">
 							<a href="${pageContext.request.contextPath}/clubBoard/edit?clubBoardNo=${clubBoardDto.clubBoardNo}">수정</a>
