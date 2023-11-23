@@ -27,7 +27,7 @@
 	<div class="container">
 	
 	<div class="row mt-4">
-                   <div class="col text-start d-flex align-items-center ms-3 mt-3">
+                   <div class="col text-start d-flex align-items-center mt-3">
                        <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
                        <strong class="ms-2">게시글 수정</strong>
                    </div>
@@ -65,7 +65,7 @@
 				<img src="image?oneNo=${OneDto.oneNo}" width="200" height="200">
 			</div>
 			<div class="col">
-				<input type="file" name="attach" multiple id="attach-selector">    
+				<input type="file" name="attach" class="form-control first-attach attach-selector" multiple id="attach-selector">    
 			</div>
 		</div>
 		
@@ -77,14 +77,15 @@
 			</div>
 		</div>
 		
-					<div class="row mt-3">
-				<div class="col">
-					<button type="submit" class="btn bg-miso w-100">
-					<i class="fa-solid fa-eraser"></i>
-					수정</button>
-				</div>
+		
+		<div class="row mt-3">
+			<div class="col">
+			<button type="submit" class="btn btn-success btn-lg bg-miso w-100 btn-send">
+				<strong>수정하기</strong>
+				</button>
 			</div>
-			
+		</div>
+		
 	</div>
 	</form>
 	

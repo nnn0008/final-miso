@@ -147,9 +147,10 @@
 function updateDataAndOpenModal(modalId, updateFunction) {
     $(".notifyLayer").not("#" + modalId).removeClass("show");
     $("#" + modalId).toggleClass("show");
-
+ 
     updateFunction();
 }
+
 
 $(document).ready(function () {
     $(".showNotifyButton").click(function () {
@@ -164,11 +165,13 @@ $(document).ready(function () {
 
     // 모달창 클릭 시 데이터 갱신
     $("#notifyModal").click(function () {
+    	truncateClubDescription();
         getNotifyList();
     });
 
     // 모달창 클릭 시 데이터 갱신
     $("#chatModal").click(function () {
+    	truncateClubDescription();
         getChatRoomList();
     });
 
@@ -405,14 +408,14 @@ if (Array.isArray(data.roomList)) {
         var message =
             '<div class="row mt-3 ms-2 d-flex align-items-center club-box2" onclick="enterRoom(' + chatRoom.chatRoomNo + ')">' +
             '<div class="col-2">' +
-            '<img src="${pageContext.request.contextPath}/club/image?clubNo=' + chatRoom.clubNo + '" class="rounded-circle" width="50" height="50">'+
+            '<img src="' + contextPath + '/club/image?clubNo=' + chatRoom.clubNo + '" class="rounded-circle" width="50" height="50">'+
             '</div>' +
             '<div class="col-10">' +
             '<div class="col ms-3">' +
             '<span class="clubname-text2">' + chatRoom.clubName + '</span>' +
             '</div>' +
             '<div class="col ms-3">' +
-            '<span class="explain-text2">' + chatRoom.clubExplain + '</span>' +
+            '<span class="explain-text2 d-inline-block text-truncate" style="max-width: 160px;">' + chatRoom.clubExplain + '</span>' +
             '</div>' +
             '</div>' +
             '</div>';
@@ -485,10 +488,10 @@ if (Array.isArray(data.meetingRoomList)) {
             '</div>' +
             '<div class="col-10">' +
             '<div class="col ms-3">' +
-            '<span class="clubname-text2">' + meetingRoom.meetingName + '</span>' +
+            '<span class="clubname-text2 text-truncate">' + meetingRoom.meetingName + '</span>' +
             '</div>' +
             '<div class="col ms-3">' +
-            '<span class="explain-text2">' + meetingRoom.meetingLocation + '</span>' +
+            '<span class="explain-text2 d-inline-block text-truncate" style="max-width: 160px;">' + meetingRoom.meetingLocation + '</span>' +
             '</div>' +
             '</div>' +
             '</div>';
@@ -502,6 +505,23 @@ if (Array.isArray(data.meetingRoomList)) {
 
 }
 
+function truncateClubDescription() {
+    console.log('truncateClubDescription 함수 호출됨');
+
+    const clubDescriptions = document.querySelectorAll('.explain-text2');
+
+    clubDescriptions.forEach(function (description) {
+        const maxLength = 30; // 최대 길이 설정
+        const text = description.textContent;
+
+        console.log('현재 텍스트:', text);
+
+        if (text.length > maxLength) {
+            description.textContent = text.substring(0, maxLength) + '...';
+            console.log('텍스트가 제한됨:', description.textContent);
+        }
+    });
+}
 
 </script>
 

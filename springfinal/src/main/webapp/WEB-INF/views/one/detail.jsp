@@ -13,7 +13,7 @@
 
 	<div class="container">
 		<div class="row mt-4">
-		  <div class="col text-start d-flex align-items-center ms-3 mt-3">
+		  <div class="col text-start d-flex align-items-center mt-3">
                                 <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
                                 <strong class="ms-2">1대 1 문의</strong>
                             </div>
