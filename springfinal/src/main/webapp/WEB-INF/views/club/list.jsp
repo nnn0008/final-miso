@@ -9,10 +9,33 @@
    
    <link href="${pageContext.request.contextPath}/css/club.css" rel="stylesheet"> 
  
+ <style>
+.categori-text{
+font-size: 13px;
+}
+</style>
  
- <script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // 동호회 설명 길이 제한 함수
+        function truncateClubDescription() {
+            const clubDescriptions = document.querySelectorAll('.club-explain');
 
- </script>
+            clubDescriptions.forEach(function (description) {
+                const maxLength = 30; // 최대 길이 설정
+                const text = description.textContent;
+
+                if (text.length > maxLength) {
+                    description.textContent = text.substring(0, maxLength) + '...';
+                }
+            });
+        }
+
+        // 페이지 로드 시 동호회 설명 길이 제한 실행
+        truncateClubDescription();
+    });
+</script>
+
 
 <div class="container text-center">
     <div class="row align-items-start">
@@ -23,7 +46,7 @@
                     <div class="icon-container">
                         <img src="../images/${majorCategory.imageName}" alt="${majorCategory.majorCategoryName} icon">
                     </div>
-                    <span class="mt-2">${majorCategory.majorCategoryName}</span>
+                    <span class="mt-2 categori-text">${majorCategory.majorCategoryName}</span>
                 </a>
             </div>
         </c:forEach>
@@ -50,7 +73,7 @@
 	
 	<c:forEach var="clubListVO" items="${clubList}">
 	
-<div class="row mt-4 d-flex align-items-center club-box" onclick="location.href='/club/detail?clubNo=${clubListVO.clubNo}'">
+<div class="row mt-4 mb-3 d-flex align-items-center club-box" onclick="location.href='/club/detail?clubNo=${clubListVO.clubNo}'">
     <div class="col-2">
         <div class="d-flex align-items-center">
             <c:choose>
@@ -72,7 +95,7 @@
             <strong class="club-name">${clubListVO.clubName}</strong>
         </div>
         <div class="col mt-1">
-            <span class="club-explain">${clubListVO.clubExplain}</span>
+            <span class="club-explain ">${clubListVO.clubExplain}</span>
         </div>
         <div class="col mt-1">
             <strong class="club-sidos">${clubListVO.sido} ${clubListVO.sigungu}</strong> |

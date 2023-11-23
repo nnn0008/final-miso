@@ -8,6 +8,27 @@
     <script src="https://unpkg.com/hangul-js" type="text/javascript"></script>
   <link href="${pageContext.request.contextPath}/css/club.css" rel="stylesheet"> 
   
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // 동호회 설명 길이 제한 함수
+        function truncateClubDescription() {
+            const clubDescriptions = document.querySelectorAll('.club-explain');
+
+            clubDescriptions.forEach(function (description) {
+                const maxLength = 30; // 최대 길이 설정
+                const text = description.textContent;
+
+                if (text.length > maxLength) {
+                    description.textContent = text.substring(0, maxLength) + '...';
+                }
+            });
+        }
+
+        // 페이지 로드 시 동호회 설명 길이 제한 실행
+        truncateClubDescription();
+    });
+</script>
+  
   <style>
 
      .badge.bg-miso{
