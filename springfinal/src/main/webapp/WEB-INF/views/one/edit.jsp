@@ -2,25 +2,21 @@
     pageEncoding="UTF-8"%>
     <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 	<jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
+	<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+	<script>src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 	<script>
 	$(function(){
 	    $("#attach-selector").change(function(){
+	    	
+	    	 $(".preview-wrapper1").empty();
+	    	 
 	        if(this.files.length == 0) {
-	            //초기화
 	            return;
 	        }
 
-	        //파일 미리보기는 서버 업로드와 관련이 없다
-	        //- 서버에 올릴거면 따로 처리를 또 해야 한다
-
-	        //[1] 자동으로 생성되는 미리보기 주소를 연결
-	        for(let i=0; i < this.files.length; i++) {
-	            $("<img>").attr("src", URL.createObjectURL(this.files[i]))
+	            $("<img>").attr("src", URL.createObjectURL(this.files[0]))
 	                            .css("max-width", "300px")
 	                            .appendTo(".preview-wrapper1");
-	        }
-	        
-	       
 	    });
 	});
 
