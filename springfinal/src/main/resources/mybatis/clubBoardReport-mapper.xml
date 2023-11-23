@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="clubBoardReport">
+    	<insert id="insert">
+    		insert into club_board_report(report_no, club_board_no) values(#{reportNo}, #{clubBoardNo})
+    	</insert>
+    	
+    	<select id="selectList">
+    		select * from club_board_report;
+    	</select>
+    	
+    	<delete id="delete">
+    		delete club_board_report where report_no=#{reportNo} and club_board_no=#{clubBoardNo}
+    	</delete>
+    </mapper>

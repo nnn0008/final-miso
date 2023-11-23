@@ -102,7 +102,7 @@ public class PhotoRestController {
 		ClubMemberDto clubMemberDto = clubMemberDao.selectOne(photoDto.getClubMemberNo());
 		MemberDto memberDto = memberDao.loginId(clubMemberDto.getClubMemberId());
 		//MemberProfileDto memberProfileDto = memberProfileDao.profileFindOne(memberDto.getMemberId());
-		Map<String, Object> params = Map.of("photoDto", photoDto, "memberDto", memberDto);
+		Map<String, Object> params = Map.of("photoDto", photoDto, "memberName", memberDto.getMemberName(), "memberId", memberDto.getMemberId());
 		return params;
 	}
 	
@@ -152,6 +152,7 @@ public class PhotoRestController {
 		if(isCheck) {//좋아요를 했다면
 			photoLikeDao.deleteByClubMemberNo(clubMemberNo); //체크를 해제
 			photoDao.update(photoNo);
+			//log.debug("했으니까 해제함");
 		}
 		else {
 			PhotoLikeDto photoLikeDto = new PhotoLikeDto();
@@ -159,6 +160,7 @@ public class PhotoRestController {
 			photoLikeDto.setPhotoNo(photoNo);
 			photoLikeDao.insert(photoLikeDto);
 			photoDao.update(photoNo);
+			//log.debug("안했으니까 추가");
 		}
 		int count = photoLikeDao.count(photoNo);
 		

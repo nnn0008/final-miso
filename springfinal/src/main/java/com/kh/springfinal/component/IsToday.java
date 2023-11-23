@@ -1,10 +1,12 @@
 package com.kh.springfinal.component;
 
 import java.net.URISyntaxException;
+import java.sql.Date;
 import java.time.LocalDate;
 
 import org.springframework.stereotype.Component;
 
+import com.kh.springfinal.dto.PaymentDto;
 import com.kh.springfinal.dto.PaymentRegularDto;
 
 @Component
@@ -13,7 +15,7 @@ public class IsToday {
 	    LocalDate today = LocalDate.now();
 	    LocalDate paymentRegularEnd = 
 	            ((java.sql.Date) paymentRegularDto.getPaymentRegularEnd()).toLocalDate();
-	    return today.equals(paymentRegularEnd);
+	    return today.isEqual(paymentRegularEnd);
 }
 
 public boolean regularMonth(PaymentRegularDto paymentRegularDto) throws URISyntaxException {
@@ -27,4 +29,5 @@ public boolean regularYear(PaymentRegularDto paymentRegularDto) throws URISyntax
 	String productName = paymentRegularDto.getPaymentRegularName();
 	return productName.contains("1년");
 }
+
 }

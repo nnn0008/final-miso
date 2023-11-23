@@ -76,7 +76,7 @@ $(function(){
         var clubBoardNo = params.get("clubBoardNo");
         var originReplyNo = $(this).parents(".for-reply-edit").find(".btn-subReply").data("reply-no");
         e.preventDefault();
-        console.log(originReplyNo);
+        //console.log(originReplyNo);
         
         var clubBoardReplyContent = $(this).parents(".for-reply-edit").find(".reply-write").val();
         console.log(clubBoardReplyContent);
@@ -139,7 +139,7 @@ $(function(){
 				//response를 댓글 목록으로 받아옴
 				success:function(response){
 					$(".reply-list").empty();
-					console.log(response);
+					//console.log(response);
 
 					for(var i = 0; i < response.length; i++){
 						//console.log(response);
@@ -178,6 +178,9 @@ $(function(){
 							var editTemplate = $("#reply-edit-template").html();
 							var editHtmlTemplate = $.parseHTML(editTemplate);
 							
+							//기존 댓글 창을 숨기자
+							$(".div-for-insert-reply").hide();
+							
 							var clubBoardReplyNo = $(this).attr("data-reply-no");
 							var clubBoardReplyContent = $(this).parents(".for-reply-edit").find(".clubBoardReplyContent").text();
 							//console.log(clubBoardReplyContent);
@@ -188,6 +191,7 @@ $(function(){
 							$(editHtmlTemplate).find(".btn-cancel").click(function(e){
 								$(this).parents(".edit-container").prev(".for-reply-edit").show();
 								$(this).parents(".edit-container").remove();
+								$(".div-for-insert-reply").show();
 							});
 							
 							//완료(등록)버튼 처리
@@ -362,10 +366,83 @@ $(function(){
 		
 		
 	});
+</script>
+<script>
+	//신고와 관련된 스크립트
+	$(function(){
+		
+		//$(".btn-report-send").prop("disabled", true);
+		$(".btn-report-send").click(function(e){
+		//$(".report-send-form").submit(function(e){
+			e.preventDefault();
+			
+			var reportCategory = $("[name=reportCategory]").val();
 
+		    if (!reportCategory) {
+		        // 선택되지 않은 경우
+		        $('[name="reportCategory"]').addClass('is-invalid');
+		        console.log("제출");
+		    }
+		    else {
+		    	
+		   		console.log("됐냐");
+		        // 선택된 경우
+		        $('[name=reportCategory]').removeClass('is-invalid');
+		        var reportType = $("[name=reportType]").val();
+		        var reportLocal = $("[name=reportLocal]").val(); 
+		        var reportReporter = $("[name=reportReporter]").val();
+		        var reportReported = $("[name=reportReported]").val();
+		        var reportCategory = $("[name=reportCategory]").val();
+		        
+		        $.ajax({
+					url: window.contextPath + "/rest/report/clubBoard/insert",
+					method: "post",
+					data:{
+						reportType: reportType,
+						reportLocal: reportLocal,
+						reportReporter: reportReporter,
+						reportReported: reportReported,
+						reportCategory, reportCategory
+					}, 
+					success: function(response){
+				        // 모달 닫기
+				        setTimeout(function(){
+							alert("신고가 접수되었습니다");
+				        }, 500);
+					},
+					error: function (error) {
+	                    // 여기에 에러 처리 코드 추가
+	                    alert("에러가 발생했습니다. 다시 시도해주세요.");
+	                }
+				});		
+		    }
+		    console.log("됐냐고요");
+		});
+		
+		$("[name=reportCategory]").change(function(){
+			console.log("값을 변경시킴", $(this).val());
+			if($(this).val()){
+				console.log("변경 성공");
+			
+				$(this).removeClass("is-invalid");
+				$(".btn-report-send").prop("disabled", false).attr("data-bs-dismiss", "modal");
+			}
+			else{
+				console.log("변경 실패");
+				$(this).addClass("is-invalid");
+				$(".btn-report-send").prop("disabled", true);
+			}
+		});
+		
+		// 모달이 닫힐 때 이벤트 처리
+		$('#exampleModal').on('hidden.bs.modal', function (e) {
+		  // 입력 필드 초기화
+		  $('[name=reportCategory]').val('');
+		  $('[name=reportCategory]').removeClass('is-invalid');
+		});
+		
+	});
 	
-	
-
 </script>
 
 <script id="reply-template" type="text/template">
@@ -478,8 +555,14 @@ $(function(){
 				</div>
 				<div class="col">
 					<i class="fa-solid fa-ellipsis-vertical"></i>
-					<a href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubBoardDto.clubNo}">목록</a>
-					<button type="button" class="btn btn-report">신고</button>					
+					<div class="row">
+						<a href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubBoardDto.clubNo}">목록</a>
+					</div>
+					<c:if test="${sessionScope.name != clubMemberDto.clubMemberId}">
+						<div class="row">
+							<a href="#exampleModal" data-bs-toggle="modal" data-bs-target="#exampleModal">신고</a>					
+						</div>
+					</c:if>
 					<div class="row board-match">
 						<div class="col">
 							<a href="${pageContext.request.contextPath}/clubBoard/edit?clubBoardNo=${clubBoardDto.clubBoardNo}">수정</a>
@@ -546,36 +629,58 @@ $(function(){
 	</div>
 </div>
 
-<!-- Button trigger modal -->
-<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  Launch demo modal
-</button> -->
 <!-- Modal -->
-<!-- <div class="modal fade" id="replyEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">댓글 수정</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">${clubBoardDto.clubBoardNo}번 글 신고하기</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         
-        <input type="hidden" name="clubBoardReplyNo">	
+        <div class="container-fluid">
         	
-        <div class="row">
-        	<div class="col">   		
-        		<input type="text" class="form-control" name="clubBoardReplyContent">
-        	</div>
-        </div>      
+        	<form class="report-send-form">
+        	<input type="hidden" readonly name="reportType" value="게시글">
+        	<input type="hidden" readonly name="reportLocal" value="${clubBoardDto.clubBoardNo}">
+			<input type="hidden" readonly name="reportReporter" value="${sessionScope.name}">
+			       			
+	        	<div class="row">
+	        		<div class="col">
+						신고 하려는 유저	        					
+	        		</div>
+	        		<div class="col">
+						<input type="text" readonly value="${clubMemberDto.clubMemberId}" name="reportReported" class="form-control">		
+	        		</div>
+	        	</div>
+	        	<div class="row mt-2">
+	        		<div class="col">
+						신고 사유        			
+	        		</div>
+	        		<div class="col">
+	        			<select name="reportCategory" class="form-select">
+	        				<option value="">선택하세요</option>
+	        				<option value="광고">광고</option>
+	        				<option value="음란">음란</option>
+	        				<option value="욕설">욕설</option>
+	        				<option value="차별">차별</option>	        				
+	        				<option value="개인정보">개인정보 유출</option>	        				
+	        			</select>
+	        		</div>
+	        	</div>
+        	</form>
+        	
+        </div>
+        
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary update-cancel-reply" data-bs-dismiss="modal">취소</button>
-        <button type="button" class="btn btn-primary update-success-reply" data-bs-dismiss="modal">저장</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-primary btn-report-send">제출</button>
       </div>
     </div>
   </div>
 </div>
 
-</div> -->
 
 <jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>

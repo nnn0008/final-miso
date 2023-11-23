@@ -148,7 +148,6 @@ public class KakaopayController {
 				//[1] 결제번호 생성
 				int paymentNo = Integer.parseInt(response.getPartnerOrderId());
 				
-			
 				//[2] 결제번호 등록
 				paymentDao.insert(PaymentDto.builder()
 						.paymentNo(paymentNo)//결제고유번호

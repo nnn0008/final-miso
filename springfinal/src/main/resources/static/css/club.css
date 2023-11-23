@@ -1,0 +1,58 @@
+ .icon-container {
+        position: relative;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        overflow: hidden;
+        background-color: #EBE8E8;
+            display: flex;
+    align-items: center;
+    justify-content: center;
+    }
+
+    .icon-container img {
+        width: 60%;
+        height: 60%;
+        object-fit: cover;
+    }
+    
+    .main-text{
+    font-size: 20px;
+    }
+    
+       .club-image-list{
+       border-radius: 20%;
+       background-color: #D9D9D9;
+   }
+   .club-name{
+   font-size: 18px;
+   }
+   
+   .club-explain, .club-member{
+   color: #9B9B9B;
+   }
+   
+   .club-sidos{
+   font-size: 14px;
+   }
+   .bg-gray{
+   background-color: #BAB9B9;
+   }
+   
+   .club-box{
+    position: relative;
+   }
+   .badge-new{
+   position: absolute;
+    top: -10px;
+    left: 50px; 
+    display: inline-block;
+    opacity: 1;
+    z-index: 3;
+   }
+   
+   .club-box:hover {
+    background-color: #f0f0f0;;
+    cursor: pointer; 
+   }
+   

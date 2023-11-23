@@ -4,11 +4,6 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 <jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
 
-<!DOCTYPE html>
-<html>
-<head>
-
-</head>
 
 <style>
 
@@ -29,14 +24,38 @@
         cursor: pointer; /* 호버 시 커서 모양 변경 */
     }
 
+    .main-text{
+    font-size: 20px;
+    }
 </style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // 동호회 설명 길이 제한 함수
+        function truncateClubDescription() {
+            const clubDescriptions = document.querySelectorAll('.explain-text');
+
+            clubDescriptions.forEach(function (description) {
+                const maxLength = 30; // 최대 길이 설정
+                const text = description.textContent;
+
+                if (text.length > maxLength) {
+                    description.textContent = text.substring(0, maxLength) + '...';
+                }
+            });
+        }
+
+        // 페이지 로드 시 동호회 설명 길이 제한 실행
+        truncateClubDescription();
+    });
+</script>
 
 <body>
 
 	<div class="row">
             <div class="col text-start d-flex align-items-center ms-3 mt-3">
                 <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
-                <strong class="ms-2">모임채팅</strong>
+                <strong class="ms-2 main-text">모임채팅</strong>
             </div>
         </div>
         
@@ -67,7 +86,7 @@
 <div class="row">
             <div class="col text-start d-flex align-items-center ms-3 mt-3">
                 <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
-                <strong class="ms-2">개인채팅</strong>
+                <strong class="ms-2 main-text">개인채팅</strong>
             </div>
         </div>
 
@@ -120,7 +139,7 @@
 <div class="row">
             <div class="col text-start d-flex align-items-center ms-3 mt-3">
                 <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
-                <strong class="ms-2">정모채팅</strong>
+                <strong class="ms-2 main-text">정모채팅</strong>
             </div>
         </div>
         

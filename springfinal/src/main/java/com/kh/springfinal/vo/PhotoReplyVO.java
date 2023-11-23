@@ -1,14 +1,11 @@
-package com.kh.springfinal.dto;
+package com.kh.springfinal.vo;
 
 import java.sql.Date;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Builder @Data @AllArgsConstructor @NoArgsConstructor
-public class PhotoReplyDto {
+@Data
+public class PhotoReplyVO {
 	private int photoReplyNo;
 	private String photoReplyContent;
 	private Date photoReplyDate;
@@ -16,4 +13,7 @@ public class PhotoReplyDto {
 	private Integer photoReplyParent;
 	private int photoNo;
 	private int clubMemberNo;
+	private boolean match;
+	private String photoReplyWriter;
+	private String photoReplyId;
 }

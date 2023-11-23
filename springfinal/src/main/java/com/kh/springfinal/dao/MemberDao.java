@@ -3,6 +3,7 @@ package com.kh.springfinal.dao;
 import java.util.List;
 
 import com.kh.springfinal.dto.MemberDto;
+import com.kh.springfinal.dto.MemberEditDto;
 
 public interface MemberDao {
 	void join(MemberDto memberDto);
@@ -12,5 +13,5 @@ public interface MemberDao {
 	boolean changePw(String memberId, String memberPw);
 	List<MemberDto> selectListOld();
 	List<MemberDto> selectListNew();
-	boolean memberEdit(MemberDto memberDto);
+	boolean memberEdit(MemberEditDto memberDto);
 }

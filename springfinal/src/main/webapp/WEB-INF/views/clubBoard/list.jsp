@@ -33,11 +33,12 @@
 		<div class="row mt-4">
 			<c:if test="${clubBoardAllDto.attachNoMp != null}">
 				<div class="col-3">
-					<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardAllDto.attachNoMp}">
+					<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardAllDto.attachNoMp}"class="rounded-circle" width="80" height="80">
 				</div>			
 			</c:if>
 			<c:if test="${clubBoardAllDto.attachNoMp == null}">
-				<img src="${pageContext.request.contextPath}/images/user.png" style="max-width: 100px;" alt="User Image">		
+<%-- 				<img src="${pageContext.request.contextPath}/images/user.png" style="max-width: 100px;" alt="User Image"> --%>
+				<img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="80" height="80">		
 			</c:if>
 			<div class="col-3 text-start">
 				${clubBoardAllDto.clubBoardName}
