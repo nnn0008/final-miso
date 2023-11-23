@@ -264,6 +264,7 @@
     window.contextPath = "${pageContext.request.contextPath}";
 </script>
 	
+	
 	<script>
 	//연결 생성
 	//연결 후 해야할 일들을 콜백함수로 지정(onopen, onclose, onerror, onmessage)
