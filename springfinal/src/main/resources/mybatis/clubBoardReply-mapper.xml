@@ -42,6 +42,7 @@
 		select * from club_member where club_no = #{clubNo} and club_member_id = #{clubMemberId}
 	</select>
 	
+	<!-- 계층형 게시판 댓글 -->
 	<select id="findByReply" resultType="ClubBoardReplyDto">
 		SELECT * FROM club_board_reply
 		where club_board_no = #{clubBoardNo}
