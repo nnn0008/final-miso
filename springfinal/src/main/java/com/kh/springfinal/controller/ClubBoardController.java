@@ -1,6 +1,5 @@
 package com.kh.springfinal.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -35,9 +34,9 @@ import com.kh.springfinal.dto.ClubBoardDto;
 import com.kh.springfinal.dto.ClubBoardImage2Dto;
 import com.kh.springfinal.dto.ClubBoardImage3Dto;
 import com.kh.springfinal.dto.ClubBoardImageDto;
-import com.kh.springfinal.dto.ClubBoardLikeDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MemberDto;
+import com.kh.springfinal.vo.ClubBoardPaginationVO;
 import com.kh.springfinal.vo.FileLoadVO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -118,11 +117,23 @@ public class ClubBoardController {
 	}
 	
 	@RequestMapping("/list")
-	public String list(Model model, @RequestParam int clubNo) {
-		List<ClubBoardAllDto> list = clubBoardDao.selectListByPage(1, 10, clubNo);
-		model.addAttribute("clubNo", clubNo);
+	public String list(Model model, @ModelAttribute("vo") ClubBoardPaginationVO vo, @RequestParam int clubNo) {
+		vo.setKeyword(null);
+		vo.setClubNo(clubNo);
+		int currentPage = vo.getPage();
+		int pageSize = 15;
+		int start = (currentPage - 1) * pageSize + 1;
+		int end = start + pageSize - 1;
+		vo.setBegin(start);
+		vo.setEnd(end);
+		int count = clubBoardDao.boardCount(clubNo); // 게시글의 총 게시글 수를 조회
+		int totalPage = (int)Math.ceil((double) count / pageSize); //전체 페이지 수
+		
+		List<ClubBoardAllDto> list = clubBoardDao.selectListByPage(vo);
+		
+		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("list", list);
-//		log.debug("list = {}", list);
+
 		return "clubBoard/list";
 	}
 	
