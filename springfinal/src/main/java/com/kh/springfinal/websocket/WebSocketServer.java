@@ -98,6 +98,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		 ClientVO client = new ClientVO(session);
 		clients.add(client);
+		
 		log.debug("사용자 접속 {}명", clients.size());
 	}
 	

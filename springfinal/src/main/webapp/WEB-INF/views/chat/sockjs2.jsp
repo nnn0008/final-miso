@@ -570,7 +570,36 @@
 		var data = JSON.parse(e.data);
 		console.log(data);
 // 		console.log(clubName);
-		
+			
+if (data.messageType === "delete") {
+    console.log("Received delete event:", data);
+
+    // 여기서 data.chatNo를 사용하도록 수정
+    var chatNo = data.chatNo;
+    console.log("chatNo:", chatNo);
+
+    // 내가 보낸 메시지인 경우
+    var messageContainerSend = $(".message-list").find(".msg_cotainer_send[data-chatNo='" + chatNo + "']");
+    console.log("Found message container (send):", messageContainerSend);
+
+    // 상대방이 보낸 메시지인 경우
+    var messageContainerReceive = $(".message-list").find(".msg_cotainer[data-chatNo='" + chatNo + "']");
+    console.log("Found message container (receive):", messageContainerReceive);
+
+    if (messageContainerSend.length > 0) {
+        console.log("Before updating text (send):", messageContainerSend.text());
+        messageContainerSend.text("삭제된 메시지입니다");
+        console.log("After updating text (send):", messageContainerSend.text());
+    } else if (messageContainerReceive.length > 0) {
+        console.log("Before updating text (receive):", messageContainerReceive.text());
+        messageContainerReceive.text("삭제된 메시지입니다");
+        console.log("After updating text (receive):", messageContainerReceive.text());
+    } else {
+        console.log("Message container not found for chatNo:", chatNo);
+    }
+}
+
+
 	
 		//메세지 타입이 디엠이라면 해당 룸번호로 이동
 		if(data.messageType === "dm" && data.chatRoomNo){
@@ -604,10 +633,6 @@
 
 	        window.socket.send(JSON.stringify(sendMessage));
 	    }
-		 
-		 if(data.messgeType === "delete"&& data.blind ==='Y'){
-			 messageContainer.text("삭제된 메시지라고");
-		 }
 		 
 		// 시간을 표시할 패턴 설정
 		var dateOptions = {
@@ -722,14 +747,6 @@
 		            });
 		        }
 		        
-// 		        if(data.messageType === "delete"){
-// 		            console.log("Received delete event:", data);
-// 		            console.log("chatNo:", chatNo, "data.chatNo:", data.chatNo);
-// 		            var messageContainer = $(".message-list").find(".msg_cotainer_send[data-chatNo='" + chatNo + "']");
-// 		            console.log("Found message container:", messageContainer);
-// 		            console.log("Before updating text:", messageContainer.text());
-// 		            messageContainer.text("삭제된 메시지라고");
-// 		        }
 
 		        imageContainer.append(profileImage);
 
@@ -747,9 +764,9 @@
 		            .on("click", function () {
 		                var messageDiv = $(this).closest(".d-flex");
 		                var messageContent = $(".msg_cotainer_send", messageDiv);
-
 		                var chatNo = messageContainer.attr("data-chatNo");
 		                console.log("chatNo", chatNo);
+
 					
 		                var confirmDelete = confirm("메시지를 정말 삭제하시겠습니까?");
 		                
@@ -763,18 +780,12 @@
 	                		    };
 
 	                	window.socket.send(JSON.stringify(deleteMessage));
-// 	                	 $(this).hide();
-// 	                     messageContent.text("삭제된 메시지입니다");
+	                	 $(this).hide();
+	                     messageContent.text("삭제된 메시지입니다");
 	                		 
 		                }
 		            });
 		        	
-		        	if(data.messageType==='delete'){
-		        		var chatNo = messageContainer.attr("data-chatNo");
-		        		console.log("chatNo2", chatNo);
-		        		messageContainer.text("삭제된 메시지");
-		        	}
-
 		        // 삭제 아이콘을 메시지 박스에 추가하고 숨겨둠
 		        messageContainer.append(deleteIcon);
 
@@ -912,7 +923,7 @@
 				               var messageDiv = $(this).closest(".d-flex");
 				               var messageContent = $(".msg_cotainer", messageDiv);
 
-				              var chatNo = messageContainer.attr("data-chatNo");
+				               var chatNo = messageContainer.attr("data-chatNo");
 				               console.log("chatNo", chatNo);
 
 				                var confirmDelete = confirm("메시지를 정말 삭제하시겠습니까?");
@@ -926,8 +937,8 @@
 				                		    };
 
 				                	window.socket.send(JSON.stringify(deleteMessage));
-// 				                	 $(this).hide();
-// 				                     messageContent.text("삭제된 메시지입니다");
+				                	 $(this).hide();
+				                     messageContent.text("삭제된 메시지입니다");
 		                		 
 				                }
 				            });
