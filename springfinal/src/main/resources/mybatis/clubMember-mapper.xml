@@ -53,7 +53,7 @@
     	
     	<select id="memberInfo" resultType="clubMemberVO">
     		
-    		SELECT m.member_id,m.member_name,cm.club_member_rank,cm.join_message FROM club_member cm JOIN MEMBER m 
+    		SELECT m.member_id,m.member_name,cm.club_member_rank,cm.join_message,cm.join_date FROM club_member cm JOIN MEMBER m 
     		ON m.MEMBER_ID=cm.CLUB_MEMBER_ID WHERE cm.CLUB_NO=#{clubNo}
     	
     	</select>

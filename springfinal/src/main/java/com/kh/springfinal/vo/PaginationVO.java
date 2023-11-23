@@ -12,6 +12,7 @@ public class PaginationVO {
 	private int size = 5; //보여줄 게시판의 글 수(기본:20)
 	private int count; //전체 글 수
 	private int navigatorSize = 5; //하단 네비게이터 표시 개수(기본:10)
+	private int whereNo;
 	
 	public boolean isSearch() {
 		return type != null && keyword != null;
@@ -26,9 +27,20 @@ public class PaginationVO {
 	public boolean isFirst() {
 		return getBegin() == 1;
 	}
+	public boolean getWhereNoFlag() {
+	    return whereNo != 0;
+	}
+	
+	
+	
+	
 	public String getPrevQueryString() {
 		if(isSearch()) { //검색이면
 		return "page="+ (getBegin()-1) +"&size=" +size+ "&type=" + type + "&keyword=" + keyword;
+		}
+		else if(getWhereNoFlag()) {
+			return "page=" + (getBegin()-1)+ "&size=" +size+ "&whereNo="+whereNo;
+			
 		}
 		else { //목록이면
 			return "page=" + (getBegin()-1) + "&size=" +size;
@@ -45,6 +57,10 @@ public class PaginationVO {
 		if(isSearch()) { //검색이면
 		return "page="+ (getEnd()+1) + "&size=" +size+ "&type=" + type + "&keyword=" + keyword;
 		}
+		else if(getWhereNoFlag()) {
+			return "page=" + (getEnd()+1)+ "&size=" +size+ "&whereNo="+whereNo;
+			
+		}
 		else { //목록이면
 			return "page=" + (getEnd()+1)+ "&size=" +size;
 		}
@@ -54,6 +70,10 @@ public class PaginationVO {
 		if(isSearch()) { //검색이면
 			return "page="+ page + "&size=" +size+ "&type=" + type + "&keyword=" + keyword; //헤당페이지 내놔라
 			}
+		else if(getWhereNoFlag()) {
+			return "page=" + page+ "&size=" +size+ "&whereNo="+whereNo;
+			
+		}
 			else { //목록이면
 				return "page=" + page +"&size=" +size;
 			}

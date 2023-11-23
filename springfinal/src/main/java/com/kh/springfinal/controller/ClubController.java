@@ -35,6 +35,7 @@ import com.kh.springfinal.dao.ClubBoardDao;
 import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dao.ClubMemberDao;
 import com.kh.springfinal.dao.MeetingDao;
+import com.kh.springfinal.dao.PhotoDao;
 import com.kh.springfinal.dao.ZipCodeDao;
 import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.ChatRoomDto;
@@ -43,6 +44,7 @@ import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MajorCategoryDto;
 import com.kh.springfinal.dto.MeetingDto;
 import com.kh.springfinal.dto.MinorCategoryDto;
+import com.kh.springfinal.dto.PhotoDto;
 import com.kh.springfinal.dto.ZipCodeDto;
 import com.kh.springfinal.vo.ClubDetailBoardListVO;
 import com.kh.springfinal.vo.ClubImageVO;
@@ -80,6 +82,9 @@ public class ClubController {
 	
 	@Autowired
 	private ClubBoardDao clubBoardDao;
+	
+	@Autowired
+	private PhotoDao photoDao;
 	
 	
 	
@@ -144,12 +149,23 @@ public class ClubController {
 		MajorCategoryDto major = categoryDao.findMajor(clubDto.getClubCategory());
 		ZipCodeDto zipDto = zipDao.findZip(clubNo);
 		List<ClubDetailBoardListVO> clubDetailBoardList  = clubBoardDao.clubDetailBoardList(clubNo);
+		List<PhotoDto> photoList = photoDao.selectList(clubNo);
 		
 		boolean joinButton = !clubMemberDao.existMember(clubNo, memberId) && (memberId!=null);
 		boolean editPossible = clubMemberDao.editPossible(clubNo, memberId);
 		
 		List<ClubMemberVO> clubMemberList = clubMemberDao.memberInfo(clubNo);
 		
+		
+		SimpleDateFormat joinDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		for(ClubMemberVO dto : clubMemberList) {
+			
+		String date = joinDateFormat.format(dto.getJoinDate());
+			
+		dto.setJoinDateString(date);
+		}
+		
+		int meetingCount = meetingDao.count(clubNo);
 		
 		
 		int memberCount = clubMemberDao.memberCount(clubNo);
@@ -164,7 +180,6 @@ public class ClubController {
 	        int dday = (int) dto.getDday();
 	        
 	        
-	        log.debug("dday={}",dto.getDday());
 	        dto.setDday(dday);
 	        
 	        //디데이 설정
@@ -188,6 +203,8 @@ public class ClubController {
 		model.addAttribute("zipDto",zipDto);
 		model.addAttribute("joinButton",joinButton);
 		model.addAttribute("meetingList",meetingList);
+		model.addAttribute("photoList",photoList);
+		model.addAttribute("meetingCount",meetingCount);
 		
 		model.addAttribute("clubDetailBoardList",clubDetailBoardList);
 		
