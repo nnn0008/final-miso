@@ -13,18 +13,11 @@
     	<insert id="insert">
     		insert into payment(
     			payment_no,payment_member,payment_tid,
-    			payment_name,payment_price,payment_remain,
-    			payment_end
+    			payment_name,payment_price,payment_remain
     		)
     		values(
     			#{paymentNo},#{paymentMember},#{paymentTid},
-    			#{paymentName},#{paymentPrice},#{paymentRemain},
-    		 CASE 
-            WHEN #{paymentName} IN ('파워 유저 이용권(1달)', '프리미엄 모임  이용권(1달)')
-            THEN ADD_MONTHS(SYSDATE, 1)
-            WHEN #{paymentName} IN ('파워 유저  이용권(1년)', '프리미엄 모임  이용권(1년)')
-            THEN ADD_MONTHS(SYSDATE, 12)
-        END
+    			#{paymentName},#{paymentPrice},#{paymentRemain}
     		)
     	</insert>
     	

@@ -23,7 +23,7 @@ public class KakaoPayConfiguration {
 	public HttpHeaders headers() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", "KakaoAK "+kakaoPayProperties.getKey());
-		headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+		headers.add("Content-type", "application/x-www-form-urlencoded;charset=UTF-8");
 		return headers;
 	}
 }

@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.kh.springfinal.component.IsToday;
 import com.kh.springfinal.configuration.KakaoPayProperties;
+import com.kh.springfinal.dao.PaymentDao;
 import com.kh.springfinal.dao.PaymentRegularDao;
+import com.kh.springfinal.dto.PaymentDto;
 import com.kh.springfinal.dto.PaymentRegularDto;
 import com.kh.springfinal.vo.KakaoPayRegularRequestRequestVO;
 import com.kh.springfinal.vo.KakaoPayRegularRequestResponseVO;
@@ -27,6 +29,9 @@ public class RegularSchedulerServiceImpl implements RegularSchedulerService {
 	
 	@Autowired
 	PaymentRegularDao paymentRegularDao;
+	
+	@Autowired
+	PaymentDao paymentDao;
 	
 	@Autowired
 	IsToday isToday;
@@ -87,5 +92,7 @@ public class RegularSchedulerServiceImpl implements RegularSchedulerService {
 	
 		}
 	 }
+
+
 
 }

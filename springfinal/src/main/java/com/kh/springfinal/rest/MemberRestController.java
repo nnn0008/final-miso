@@ -101,10 +101,10 @@ public class MemberRestController {
 	profileShow(@RequestParam String memberId) throws IOException {
 		AttachDto attachDto = profileDao.profileFindOne(memberId);
 
-//		if(attachDto == null) {
-//			//throw new NoTargetException("파일 없음");//내가만든 예외로 통합
-//			return ResponseEntity.notFound().build();//404 반환
-//		}
+		if(attachDto == null) {
+			//throw new NoTargetException("파일 없음");//내가만든 예외로 통합
+			return ResponseEntity.notFound().build();//404 반환
+		}
 
 		String home = System.getProperty("user.home");
 		File dir = new File(home, "upload");
