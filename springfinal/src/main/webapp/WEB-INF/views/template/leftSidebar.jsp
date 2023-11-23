@@ -71,7 +71,7 @@
 
                     <div class="row p-2 align-items-center">
                         <div class="col">
-                            <a href="/member/mypage" class="link d-flex align-items-center">
+                            <a href="/member/mypage?memberId=${sessionScope.name}" class="link d-flex align-items-center">
                                 <img src="${pageContext.request.contextPath}/images/Vector-2.png" width="20%">
                                 <strong class="ms-3">프로필</strong>
                             </a>

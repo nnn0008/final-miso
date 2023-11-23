@@ -65,10 +65,13 @@ public class ZipCodeDaoImpl implements ZipCodeDao{
 
 	        // Address 객체에 할당
 	        ZipCodeDto zipCodeDto = new ZipCodeDto();
-	        if(words[0]!=null) zipCodeDto.setSido(words[0]);
-	        if(words[1]!=null) zipCodeDto.setSigungu(words[1]);
-	        if(words[2]!=null) zipCodeDto.setHdongName(words[2]);
-	        if(words[2]!=null) zipCodeDto.setEupmyun(words[2]);
+	        if(words.length > 0 && words[0] != null) zipCodeDto.setSido(words[0]);
+	        if(words.length > 1 && words[1] != null) zipCodeDto.setSigungu(words[1]);
+	        if(words.length > 2 && words[2] != null) {
+	        	zipCodeDto.setHdongName(words[2]);
+	        	zipCodeDto.setEupmyun(words[2]);
+	        	};
+
 		
 		
 		return sqlSession.selectOne("zipcode.selectOne", zipCodeDto);

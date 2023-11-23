@@ -159,12 +159,17 @@
                                         $(".checkPw-feed").addClass("is-invalid");
                                     }
                                 });
-
+								
+                                //닉네임 값 유무 검사
                                 $("[name=memberName]").blur(function () {
+                                	$(".name-feed").removeClass("is-invalid");
+                                	$(this).removeClass("is-valid is-invalid")
                                     if ($("[name=memberName]").val() != "") {
                                         $(this).addClass("is-valid");
                                         $("[name=check3]").prop("checked", true).trigger("change");
                                     } else {
+                                    	$(".name-feed").addClass("is-invalid");
+                                    	$(this).addClass("is-invalid");
                                         $("[name=check3]").prop("checked", false).trigger("change");
                                     }
                                 });
@@ -222,11 +227,15 @@
                                 //연락처 형식 검사 코드
                                 $("[name=memberContact]").blur(
                                     function () {
-                                    	if($(this).val()=="") return;
+                                        $(this).removeClass("is-invalid is-valid");
+                                    	if($(this).val()=="") {
+                                    		$(this).addClass("is-invalid");
+                                    		$(".d-content-feedback").addClass(
+                                            "text-danger");
+                                    	};
                                         var inputContent = $(this).val();
                                         var regex = /^\d{10,11}$/;
                                         var isValid = regex.test(inputContent)
-                                        $(this).removeClass("is-invalid is-valid");
                                         $(".d-content-feedback").removeClass(
                                             "text-danger");
                                         if (isValid) {
@@ -238,6 +247,9 @@
                                                 "text-danger");
                                         }
                                     });
+                                
+                                //지역 유무 검사 코드
+                                
                                 
                                 //필수 항목 전부 체크시 가입 버튼 활성화
                                 $(".check").change(function () {
@@ -386,6 +398,8 @@
 								    	$("#monor3").prop("disabled", true);
 								    }
 								});
+								
+								
 						
 								//카테고리 값 유무 검사
 								$(".mojor-check").change(function () {
@@ -539,12 +553,13 @@
                                             <div class="row mt-3">
                                                 <div class="col">
                                                     <div class="input-group has-validation">
-                                                        <div class="form-floating">
+                                                        <div class="form-floating name-feed">
                                                             <input type="checkbox" name="check3" class="check">
                                                             <input type="text" class="form-control" name="memberName"
                                                                 id="memberName" placeholder="실명" required> <label
                                                                 for="memberName">실명*</label>
                                                         </div>
+                                                        <div class="invalid-feedback">필수항목입니다</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -613,11 +628,20 @@
                                                     </div>
                                                 </div>
                                             </div>
-
+															
+															
 											<div class="row mt-4">
 							                    <div class="col">
-							                       지역 <input type="search" name="StringmemberAddr" class="form-control search-input"
-							                            placeholder="동,읍,면을 입력해주세요">
+							                       <div class="input-group has-validation">
+                                                       <div class="form-floating">
+                                                            <input type="search" class="form-control search-input" name="StringmemberAddr"
+                                                                id="memberAddr" placeholder="" required>  <label
+                                                                for="memberBirth">지역</label>
+                                                                 <div class="d-addr-feedback">동, 읍, 면을 입력해 주세요</div>
+                                                       	</div>
+                                                    	</div>
+                                                            <div class="invalid-feedback">필수 항목입니다</div>
+                                                    </div>
 							                    </div>                    
 							                </div>
 							                <div class="row">
@@ -626,7 +650,29 @@
 							                        </ul>
 							                    </div>
 							                </div>
-											
+											<script>
+											$("#memberAddr").blur(
+				                                    function () {
+				                                        $(this).removeClass("is-invalid is-valid");
+				                                    	if($(this).val()=="") {
+				                                    		$(".d-addr-feedback").hide();
+				                                    		$(this).addClass("is-invalid");
+				                                    		return;
+				                                    	};
+				                                        var inputContent = $(this).val();
+				                                        var regex = ;
+				                                        var isValid = regex.test(inputContent)
+				                                        $(".d-addr-feedback").show();
+				                                        if (isValid) {
+				                                            $(this).addClass("is-valid");
+				                                        } 
+				                                        else {
+				                                            $(this).addClass("is-invalid");
+				                                            $(".d-content-feedback").addClass(
+				                                                "text-danger");
+				                                        }
+				                                    });
+											</script>
 
                                             
                                             <!-- 1. 관심 테이블 대분류 -->

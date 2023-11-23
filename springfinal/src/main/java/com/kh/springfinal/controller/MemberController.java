@@ -32,6 +32,7 @@ import com.kh.springfinal.dao.ZipCodeDao;
 import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.MemberCategoryDto;
 import com.kh.springfinal.dto.MemberDto;
+import com.kh.springfinal.dto.MemberEditDto;
 import com.kh.springfinal.dto.ZipCodeDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -108,9 +109,9 @@ public class MemberController {
 //						@RequestParam String memberId, @RequestParam String memberPw,
 //						@RequestParam(required = false) String saveId,
 //								HttpSession session) {
-		//db 유저 정보
+////		db 유저 정보
 //		MemberDto userDto = memberDao.selectOne(memberId, memberPw);
-		// id 틀리면 되돌림
+////		 id 틀리면 되돌림
 //		if(userDto==null) {
 //			if(saveId != null) {
 //				Cookie cookie = new Cookie("saveId", memberId);
@@ -124,9 +125,9 @@ public class MemberController {
 //			}
 //			return "redirect:login?error";
 //		}
-		//db Pw
+////		db Pw
 //		String userPw = userDto.getMemberPw();
-		//db Pw 와 입력값Pw 검사 후 session입력
+////		db Pw 와 입력값Pw 검사 후 session입력
 //		if(userPw.equals(memberPw)) {
 //			session.setAttribute("name", userDto.getMemberId());
 //			session.setAttribute("level", userDto.getMemberLevel());
@@ -141,7 +142,6 @@ public class MemberController {
 //				cookie.setMaxAge(0);//4주
 //				httpServletResponse.addCookie(cookie);
 //			}
-			
 //		}
 //		else {
 //			if(saveId != null) {
@@ -156,7 +156,7 @@ public class MemberController {
 //			}
 //			return "redirect:login?error";
 //		}
-		//로그인 완료창으로 보내기
+////		로그인 완료창으로 보내기
 //		return "redirect:../";	
 //	}
 	
@@ -254,9 +254,9 @@ public class MemberController {
 	}
 	
 	@RequestMapping("/mypage")
-	public String mypage(HttpSession session, Model model) {
+	public String mypage(Model model, @RequestParam String memberId) {
 		//회원 정보
-		String memberId=(String) session.getAttribute("name");
+		
 		MemberDto memberDto = memberDao.loginId(memberId);
 		//프로필 정보
 		AttachDto attachDto = memberProfileDao.profileFindOne(memberId);
@@ -287,22 +287,41 @@ public class MemberController {
 	}
 	
 	@PostMapping("/edit")
-	public String edit2(@ModelAttribute MemberDto memberDto, @RequestParam String memberAddrString, @RequestParam(name = "likeCategory", required = false) List<Integer> likeCategory
+	public String edit2(HttpSession httpSession, @ModelAttribute MemberEditDto memberDto, @RequestParam String memberAddrString, @RequestParam List<Integer> likeCategory
 ) {
-		log.debug("memberAddr: "+memberAddrString);
-		ZipCodeDto codeDto=codeDao.selectOneAddrNo(memberAddrString);
-		memberDto.setMemberAddr(codeDto.getZipCodeNo());
-		if(likeCategory!=null) {
-			memberCategoryDao.deleteLikeCategory(memberDto.getMemberId());
-			MemberCategoryDto memberCategoryDto = new MemberCategoryDto();
-			memberCategoryDto.setMemberId(memberDto.getMemberId());
-			for(int i = 0; i<likeCategory.size(); i++) {
-				int likecategory = likeCategory.get(i);
-				memberCategoryDto.setLikeCategory(likecategory);
-				memberCategoryDao.insert(memberCategoryDto);
-			}
+		memberDto.setMemberId((String)httpSession.getAttribute("name"));
+		//회원 정보 DB저장
+				ZipCodeDto codeDto=codeDao.selectOneAddrNo(memberAddrString);
+				memberDto.setMemberAddr(codeDto.getZipCodeNo());
+				if(memberDto.getMemberBirth()!=null) {
+					
+				// 예제로 사용할 날짜 문자열
+		        String dateString = memberDto.getMemberBirth();
+
+		        // DateTimeFormatter를 사용하여 문자열을 LocalDate로 파싱
+		        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		        LocalDate localDate = LocalDate.parse(dateString, formatter);
+
+		        // LocalDate를 다시 원하는 형식의 문자열로 변환
+		        String formattedDate = localDate.format(formatter);
+		        memberDto.setMemberBirth(formattedDate);
+				}
+				log.debug(memberDto.toString());
+				boolean result = memberDao.memberEdit(memberDto);
+				memberCategoryDao.deleteLikeCategory(memberDto.getMemberId());
+				MemberCategoryDto memberCategoryDto = new MemberCategoryDto();
+				memberCategoryDto.setMemberId(memberDto.getMemberId());
+				//관심 카테고리 저장
+				for(int i = 0; i<likeCategory.size(); i++) {
+					Integer likecategory = likeCategory.get(i);
+					memberCategoryDto.setLikeCategory(likecategory);
+					memberCategoryDao.insert(memberCategoryDto);
+				}
+				if(result) {
+					return "redirect:./mypage?memberId="+memberDto.getMemberId();
+				}
+				else {
+					return "500";
+				}
 		}
-		memberDao.memberEdit(memberDto);
-		return "redirect:./mypage";
 	}
-}

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.springfinal.configuration.EncryConfiguration;
 import com.kh.springfinal.dto.MemberDto;
+import com.kh.springfinal.dto.MemberEditDto;
 
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
@@ -77,8 +78,8 @@ public class MemberDaoImpl implements MemberDao{
 		return sqlSession.selectList("member.memberListByNew");
 	}
 	@Override
-	public boolean memberEdit(MemberDto memberDto) {
-		int count = sqlSession.update("member.memberEdit");
+	public boolean memberEdit(MemberEditDto memberDto) {
+		int count = sqlSession.update("member.memberEdit", memberDto);
 		boolean result = count>0;
 		return result;
 	}

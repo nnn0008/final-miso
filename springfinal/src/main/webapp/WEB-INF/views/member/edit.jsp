@@ -185,7 +185,7 @@
                         <h1>회원 정보 수정 페이지</h1>
                     </div>
                 </div>
-
+				<input type="hidden" name="memberId" value="${memberDto.memberId}">
                 <div class="row">
                     <div class="col text-center">
                         <c:choose>
@@ -259,34 +259,16 @@
 							  <div class="input-group-prepend">
 							    <span class="input-group-text w-20" id="inputGroup-sizing-default">지역</span>
 							  </div>
-							  <c:choose>
-								  <c:when test="${memberDto.memberAddr==0}">
-							                    <div class="col">
-							                       <input type="search" name="memberAddrString" class="form-control search-input"
-							                            placeholder="동,읍,면을 입력해주세요" value="${addr}">
-							                    </div>                    
-							                <div class="row">
-							                    <div class="col">
-							                        <ul class="list-group addr-list">
-							                        </ul>
-							                    </div>
-						                    </div>
-								  </c:when>
-								  <c:otherwise>
-						  			<div class="row mt-4">
-					                    <div class="col">
-					                       <input type="search" name="StringmemberAddr" class="form-control search-input"
-					                            placeholder="동,읍,면을 입력해주세요" value="${addr}">
-					                    </div>                    
-					                </div>
-					                <div class="row">
-					                    <div class="col">
-					                        <ul class="list-group addr-list">
-					                        </ul>
-					                    </div>
-					                </div>
-								  </c:otherwise>
-							  </c:choose>
+			                    <div class="col">
+			                       <input type="search" name="memberAddrString" class="form-control search-input"
+			                            placeholder="동,읍,면을 입력해주세요" value="${addr}">
+			                    </div>                    
+			                <div class="row">
+			                    <div class="col">
+			                        <ul class="list-group addr-list">
+			                        </ul>
+			                    </div>
+		                    </div>
 							</div>
                     	</div>
                     </div>
@@ -482,8 +464,8 @@
 										    </div>
 										    
 										    <div class="form-group"> 
-										      <select class="form-select mojor-check" name="likeCategory" id="monor2" disabled>
-								                <option class="ds2" value=" "></option>
+										      <select class="form-select mojor-check" name="likeCategory" id="monor3" disabled>
+								                <option class="ds3" value=" "></option>
 								                <option class="choice3 40" value="7">등산</option>
 								                <option class="choice3 40" value="8">산책/트래킹</option>
 								                <option class="choice3 40" value="9">캠핑/백패킹</option>
@@ -508,7 +490,7 @@
 	            
 	            <div class="row mt-5">
 	      		    	<div class="col text-start">
-			      		    <button type="button" class="btn btn-danger rounded-button w-75" style="font-size: 40px;">취소</button>
+			      		    <a href="./mypage?memberId=${memberDto.memberId}>"><button type="button" class="btn btn-danger rounded-button w-75" style="font-size: 40px;"> 취소</button></a>
 	      		    	</div>
 	      		    	<div class="col text-end">
 			      		    <button type="submit" class="btn btn-primary rounded-button w-75" style="font-size: 40px;">완료</button>
