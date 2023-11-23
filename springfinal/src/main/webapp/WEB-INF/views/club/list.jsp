@@ -7,58 +7,166 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://unpkg.com/hangul-js" type="text/javascript"></script>
     
-    
-    
+ <style>
+    .icon-container {
+        position: relative;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        overflow: hidden;
+        background-color: #EBE8E8;
+            display: flex;
+    align-items: center;
+    justify-content: center;
+    }
 
-	<div class="container text-center">
-  <div class="row align-items-start">
-  <c:forEach var="majorCategory" items="${categoryList}" varStatus="loopStatus">
-    <div class="col-3">
-      <a href="list2?majorCategoryNo=${majorCategory.majorCategoryNo}"><img src="../images/${majorCategory.imageName}" width="30%"></a>
-      ${majorCategory.majorCategoryName}
-    </div>
-  </c:forEach>
+    .icon-container img {
+        width: 60%;
+        height: 60%;
+        object-fit: cover;
+    }
+    
+    .main-text{
+    font-size: 20px;
+    }
+    
+       .club-image-list{
+       border-radius: 20%;
+       background-color: #D9D9D9;
+   }
+   .club-name{
+   font-size: 18px;
+   }
+   
+   .club-explain, .club-member{
+   color: #9B9B9B;
+   }
+   
+   .club-sidos{
+   font-size: 14px;
+   }
+   .bg-gray{
+   background-color: #BAB9B9;
+   }
+   
+   .club-box{
+    position: relative;
+   }
+   .badge-new{
+   position: absolute;
+    top: -10px;
+    left: 50px; 
+    display: inline-block;
+    opacity: 1;
+    z-index: 3;
+   }
+   
+   .club-box:hover {
+    background-color: #f0f0f0;;
+    cursor: pointer; 
+   }
+   
+   
+</style>   
+ 
+ <script>
+
+ </script>
+
+<div class="container text-center">
+    <div class="row align-items-start">
+        <c:forEach var="majorCategory" items="${categoryList}" varStatus="loopStatus">
+            <div class="col-2 clickable-category">
+                <a href="list2?majorCategoryNo=${majorCategory.majorCategoryNo}" 
+                class="d-flex flex-column align-items-center link-underline link-underline-opacity-0 link-dark">
+                    <div class="icon-container">
+                        <img src="../images/${majorCategory.imageName}" alt="${majorCategory.majorCategoryName} icon">
+                    </div>
+                    <span class="mt-2">${majorCategory.majorCategoryName}</span>
+                </a>
+            </div>
+        </c:forEach>
     </div>
 </div>
+
 <hr>
 		
-	<h1>추천 동호회 리스트</h1>
-	
+	 <div class="row">
+                            <div class="col text-start d-flex align-items-center">
+                                <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+                                <strong class="ms-2 main-text">추천 동호회</strong>
+                            </div>
+                        </div>
 	<div>
-	${memberPreferList[0].memberName}님의 주소 '${memberPreferList[0].sido}' 지역을 중심으로 한 
+	<span class="badge bg-miso mt-3">${memberPreferList[0].memberName}</span>님의 주소 
+	<span class="badge bg-success">${memberPreferList[0].sido}</span>
+	지역을 중심으로 한 카테고리 동호회<br>
 	<c:forEach var = "memberPreferList" items="${memberPreferList}">
-		<${memberPreferList.majorCategoryName}>
+	<span class="badge bg-info mt-2">${memberPreferList.majorCategoryName}</span>
 	</c:forEach>
-	카테고리 동호회 결과
 	</div>
 	
 	<c:forEach var="clubListVO" items="${clubList}">
 	
+<div class="row mt-4 d-flex align-items-center club-box" onclick="location.href='/club/detail?clubNo=${clubListVO.clubNo}'">
+    <div class="col-2">
+        <div class="d-flex align-items-center">
+            <c:choose>
+                <c:when test="${clubListVO.attachNo!=0}">
+                    <img src="${pageContext.request.contextPath}/club/image?clubNo=${clubListVO.clubNo}"
+                        width="80" height="80" class="club-image-list">
+                </c:when>
+                <c:otherwise>
+                    <img src="${pageContext.request.contextPath}/images/basic-profile2.png"
+                        width="80" height="80">
+                </c:otherwise>
+            </c:choose>
+
+            <span class="badge rounded-pill bg-danger badge-new ms-2">NEW</span>
+        </div>
+    </div>
+    <div class="col-10">
+        <div class="col">
+            <strong class="club-name">${clubListVO.clubName}</strong>
+        </div>
+        <div class="col mt-1">
+            <span class="club-explain">${clubListVO.clubExplain}</span>
+        </div>
+        <div class="col mt-1">
+            <strong class="club-sidos">${clubListVO.sido} ${clubListVO.sigungu}</strong> |
+            <span class="club-member">멤버 ${clubListVO.memberCount}</span> |
+            <span class="badge bg-info">${clubListVO.majorCategoryName}</span>
+            <span class="badge rounded-pill bg-gray">${clubListVO.minorCategoryName}</span>
+        </div>
+    </div>
+</div>
+
+          
 	
-	<div class="row">
-		<div class="col">
-       <div class="alert alert-dismissible alert-light">
-		<a href="/club/detail?clubNo=${clubListVO.clubNo}">
-		<c:choose>
-		<c:when test="${clubListVO.attachNo!=0}">
-		<img src="${pageContext.request.contextPath}/club/image?clubNo=${clubListVO.clubNo}" class="rounded-circle" width="100" height="100">
-		</c:when>
-		<c:otherwise>
-		<img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="80" height="80">
-		</c:otherwise>
-		</c:choose>
-		</a>
-		<div>클럽 이름 : ${clubListVO.clubName}</div>
-		<div>클럽 설명 : 
-			<span class="d-inline-block text-truncate" style="max-width: 550px;">
-  				${clubListVO.clubExplain}
-						</span>
-			</div>
-		<div>${clubListVO.sido} ${clubListVO.sigungu}</div>
-		<div>${clubListVO.majorCategoryName}-${clubListVO.minorCategoryName}</div>
-		<div>멤버 수 : ${clubListVO.memberCount}</div>
-         </div>
-          </div>
+<!-- 	<div class="row"> -->
+<!-- 		<div class="col"> -->
+<!--        <div class="alert alert-dismissible alert-light"> -->
+<%-- 		<a href="/club/detail?clubNo=${clubListVO.clubNo}"> --%>
+<%-- 		<c:choose> --%>
+<%-- 		<c:when test="${clubListVO.attachNo!=0}"> --%>
+<%-- 		<img src="${pageContext.request.contextPath}/club/image?clubNo=${clubListVO.clubNo}" class="rounded-circle" width="100" height="100"> --%>
+<%-- 		</c:when> --%>
+<%-- 		<c:otherwise> --%>
+<%-- 		<img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="80" height="80"> --%>
+<%-- 		</c:otherwise> --%>
+<%-- 		</c:choose> --%>
+<!-- 		</a> -->
+<%-- 		<div>클럽 이름 : ${clubListVO.clubName}</div> --%>
+<!-- 		<div>클럽 설명 :  -->
+<!-- 			<span class="d-inline-block text-truncate" style="max-width: 550px;"> -->
+<%--   				${clubListVO.clubExplain} --%>
+<!-- 						</span> -->
+<!-- 			</div> -->
+<%-- 		<div>${clubListVO.sido} ${clubListVO.sigungu}</div> --%>
+<%-- 		<div>${clubListVO.majorCategoryName}-${clubListVO.minorCategoryName}</div> --%>
+<%-- 		<div>멤버 수 : ${clubListVO.memberCount}</div> --%>
+<!--          </div> -->
+<!--           </div> -->
 		
 		
 	</div>
