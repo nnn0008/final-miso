@@ -46,6 +46,7 @@ import com.kh.springfinal.vo.ClubDetailBoardListVO;
 import com.kh.springfinal.vo.ClubImageVO;
 import com.kh.springfinal.vo.ClubListVO;
 import com.kh.springfinal.vo.ClubMemberVO;
+import com.kh.springfinal.vo.MemberPreferInfoVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -172,6 +173,8 @@ public class ClubController {
                 int daysDiff = (int) Math.ceil(timeDiff / (1000 * 3600 * 24));
 
                 dto.setDday(daysDiff);
+                
+             
 			
 			
 		}
@@ -339,6 +342,7 @@ public class ClubController {
 			
 			List<MajorCategoryDto> categoryList = categoryDao.majorcategoryList();
 			List<ClubListVO> clubList = clubDao.clubList(memberId);
+			List<MemberPreferInfoVO> memberPreferList = clubDao.memberPreferInfo(memberId); 
 			
 			
 			for(ClubListVO list : clubList) {
@@ -353,6 +357,7 @@ public class ClubController {
 			
 			model.addAttribute("clubList",clubList);
 			model.addAttribute("categoryList",categoryList);
+			model.addAttribute("memberPreferList",memberPreferList);
 			
 			
 			return "club/list";

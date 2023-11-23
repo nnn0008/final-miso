@@ -478,10 +478,14 @@ $(function(){
 
 
 
-
+<c:choose>
+		<c:when test="${clubDto.attachNo!=0}">
 <img src="${pageContext.request.contextPath}/club/image?clubNo=${clubDto.clubNo}" width="550" height="250">
-
-
+</c:when>
+<c:otherwise>
+<img src="${pageContext.request.contextPath}/images/noimage.jpg" width="550" height="250">
+</c:otherwise>
+</c:choose>
 
 <div class="container-fluid mt-4">
     <div class="row">
