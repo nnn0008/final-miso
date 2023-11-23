@@ -7,39 +7,32 @@
 .img-thumbnail:hover {
 	cursor: pointer;
 }
-
 .attached-photo-image, .detail-image{
 margin-top: 1em;
 width: 445px;
 border-radius: 1%;
 }
-
 .image-box {
     position: relative;
     width: 180px;
     height: 180px;
     overflow: hidden;
 }
-
 .attached-image {
     width: 100% !important;
     height: 100% !important;
-    object-fit: cover !important; /* 이미지를 화면에 꽉 채우도록 설정 */
+    object-fit: cover !important; 
 }
-
 .img-thumbnail {
-    border: none !important; /* img-thumbnail의 기본 border 제거 */
+    border: none !important; 
 }
-
 .row .col .d-flex {
     display: flex;
     align-items: center;
 }
-
 .row .col .d-flex i {
-    margin-right: 5px; /* 아이콘과 텍스트 사이 여백 조절 */
+    margin-right: 5px; 
 }
-
 
 </style>
 <script>
