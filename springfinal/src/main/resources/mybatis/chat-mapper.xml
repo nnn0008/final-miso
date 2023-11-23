@@ -105,7 +105,7 @@ ORDER BY
 UPDATE chat SET chat_blind = 'Y' WHERE chat_no = #{chatNo}
 </update>
 
-<select id="chatBliindCheck" resultType="boolean">
+<select id="chatBliindCheck" resultType="String" parameterType="int">
     SELECT CHAT_BLIND FROM chat WHERE CHAT_no = #{chatNo}
 </select>
 

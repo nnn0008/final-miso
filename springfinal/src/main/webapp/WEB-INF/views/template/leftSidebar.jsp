@@ -27,15 +27,15 @@
                             </div>
                             <div class="col d-flex justify-content-center mt-3">
                             	<c:choose>
-                            	<c:when test="${sessionScope.memberLevel=='일반유저'}">
+                            	<c:when test="${sessionScope.level=='일반유저'}">
                             	<span class="badge rounded-pill bg-miso">일반</span>
                             	</c:when>
-                            	<c:when test="${sessionScope.memberLevel=='파워유저'}">
+                            	<c:when test="${sessionScope.level=='파워유저'}">
                             	<span class="badge bg-success rounded-pill bg-miso">파워</span>
                             	</c:when>
-                            	<c:otherwise>
+                            	<c:when test="${sessionScope.level=='마스터'}">
                             	<span class="badge bg-primary rounded-pill">마스터</span>
-                            	</c:otherwise>
+                            	</c:when>
                             	</c:choose>
                                <strong class="ms-1">${sessionScope.memberName}</strong>
                             </div>

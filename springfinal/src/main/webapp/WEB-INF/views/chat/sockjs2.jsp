@@ -229,27 +229,27 @@
 			</div>
 		</div>
 
-		<!-- 모달 -->
-		<div class="modal" id="chatMoreModal">
-		    <div class="modal-dialog">
-		        <div class="modal-content">
-		            <!-- 모달 내용 -->
-		            <div class="modal-body">
-		                <p>채팅방을 지우거나 나가시겠습니까?</p>
-		            </div>
+<!-- 		<!-- 모달 -->
+<!-- 		<div class="modal" id="chatMoreModal"> -->
+<!-- 		    <div class="modal-dialog"> -->
+<!-- 		        <div class="modal-content"> -->
+<!-- 		            모달 내용 -->
+<!-- 		            <div class="modal-body"> -->
+<!-- 		                <p>채팅방을 지우거나 나가시겠습니까?</p> -->
+<!-- 		            </div> -->
 		
-		            <!-- 모달 하단 버튼 -->
-		            <div class="modal-footer">
-		                <button type="button" class="btn btn-danger" id="deleteChatRoomBtn">채팅방 지우기</button>
-		                <button type="button" class="btn btn-secondary" id="leaveChatRoomBtn">채팅방 나가기</button>
-		                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-		            </div>
-		        </div>
-		    </div>
-		</div>
+<!-- 		            모달 하단 버튼 -->
+<!-- 		            <div class="modal-footer"> -->
+<!-- 		                <button type="button" class="btn btn-danger" id="deleteChatRoomBtn">채팅방 지우기</button> -->
+<!-- 		                <button type="button" class="btn btn-secondary" id="leaveChatRoomBtn">채팅방 나가기</button> -->
+<!-- 		                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button> -->
+<!-- 		            </div> -->
+<!-- 		        </div> -->
+<!-- 		    </div> -->
+<!-- 		</div> -->
 
 
-	</div>
+<!-- 	</div> -->
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -567,11 +567,10 @@
 		
 		
 		var data = JSON.parse(e.data);
-// 		console.log(data);
+		console.log(data);
 // 		console.log(clubName);
 		
 	
-
 		//메세지 타입이 디엠이라면 해당 룸번호로 이동
 		if(data.messageType === "dm" && data.chatRoomNo){
 			moveToRoom(data.chatRoomNo);
@@ -605,6 +604,10 @@
 	        window.socket.send(JSON.stringify(sendMessage));
 	    }
 		 
+		 if(data.messgeType === "delete"&& data.blind ==='Y'){
+			 messageContainer.text("삭제된 메시지라고");
+		 }
+		 
 		// 시간을 표시할 패턴 설정
 		var dateOptions = {
 		    year: "numeric",
@@ -634,7 +637,7 @@
 
 		
 		if (data.content) { // 메세지 처리 
-		
+			
 			
 		    var memberId = "${sessionScope.name}";
 		   // console.log(memberId);
@@ -650,7 +653,7 @@
 		    var chatTimeAsString = data.chatTime; // JSON에서 문자열로 가져온 chatTime
 		    var chatTime = new Date(chatTimeAsString); // 문자열을 Date 객체로 변환
 		    var messageDate = chatTime.toDateString(); // 날짜 정보만 추출
-		    
+		    	    
 		    var profileImageUrl = data.profileImageUrl
 // 		    console.log(data.profileImageUrl);
 
@@ -671,23 +674,24 @@
 		    }
 		            
 		    var content = $("<div>").text(data.content);
-		    var memberLevel = $("<span>").text(data.memberLevel).addClass("badge rounded-pill ms-2");
+// 		    var memberLevel = $("<span>").text(data.memberLevel).addClass("badge rounded-pill ms-2");
 
-		    // 메세지 레벨에 따라 배지 스타일 변경
-		    if (data.memberLevel == "일반") {
-		        memberLevel.addClass("bg-gray");
-		    } else if (data.memberLevel == "관리자") {
-		        memberLevel.addClass("bg-danger");
-		    } else if (data.memberLevel == "VIP") {
-		        memberLevel.addClass("bg-warning");
-		    }
-		  
+// 		    // 메세지 레벨에 따라 배지 스타일 변경
+// 		    if (data.memberLevel == "일반") {
+// 		        memberLevel.addClass("bg-gray");
+// 		    } else if (data.memberLevel == "관리자") {
+// 		        memberLevel.addClass("bg-danger");
+// 		    } else if (data.memberLevel == "VIP") {
+// 		        memberLevel.addClass("bg-warning");
+// 		    }
+
+
 		    if (memberId === chatSender) {
 		        // 본인 메시지 (오른쪽에 표시)
 		        var messageDiv = $("<div>").addClass("d-flex justify-content-end mb-4 mt-2");
-
-		        var messageContainer = $("<div>").addClass("msg_cotainer_send");
-
+		        var messageContainer = $("<div>").addClass("msg_cotainer_send").attr("data-chatNo", data.chatNo);
+// 		 		console.log(messageContainer);
+		        
 		        // 파일인 경우 이미지 태그를 추가
 		        if (data.messageType === "file") {
 // 		            console.log("file data: ", data);
@@ -697,9 +701,9 @@
 		            messageContainer.append(img);
 		        } else {
 		            // 텍스트인 경우 텍스트 추가
-		            messageContainer.text(data.content);
+		        	 messageContainer.text(data.content);
 		        }
-
+		        
 		        var imageContainer = $("<div>").addClass("img_cont_msg");
 		        var profileImage = $("<img>").css("width", "45px").addClass("rounded-circle user_img_msg");
 
@@ -716,6 +720,15 @@
 		                $(this).attr("src", defaultImageUrl);
 		            });
 		        }
+		        
+// 		        if(data.messageType === "delete"){
+// 		            console.log("Received delete event:", data);
+// 		            console.log("chatNo:", chatNo, "data.chatNo:", data.chatNo);
+// 		            var messageContainer = $(".message-list").find(".msg_cotainer_send[data-chatNo='" + chatNo + "']");
+// 		            console.log("Found message container:", messageContainer);
+// 		            console.log("Before updating text:", messageContainer.text());
+// 		            messageContainer.text("삭제된 메시지라고");
+// 		        }
 
 		        imageContainer.append(profileImage);
 
@@ -734,42 +747,32 @@
 		                var messageDiv = $(this).closest(".d-flex");
 		                var messageContent = $(".msg_cotainer_send", messageDiv);
 
-		                var chatNo = data.chatNo;
+		                var chatNo = messageContainer.attr("data-chatNo");
 		                console.log("chatNo", chatNo);
 					
 		                var confirmDelete = confirm("메시지를 정말 삭제하시겠습니까?");
 		                
 		                if (confirmDelete) {
 		                // 서버에 업데이트 요청을 보냄
-		                $.ajax({
-		                    url: window.contextPath +'/updateBlind',
-		                    type: 'POST',
-		                    contentType: 'application/json',
-		                    data: JSON.stringify({ chatNo: chatNo }),
-		                    success: function (response) {
-		                        // 업데이트 성공 시 클라이언트에서 추가 작업을 수행
-		                        console.log('업데이트 성공');
-				                messageContent.html("삭제된 메시지입니다");
-				                
-				             // 서버로 delete 메시지 타입을 보냄
-				                socket.send(JSON.stringify({ 
-				                	messageType: 'delete',
-				                	chatNo: chatNo,
-				                	chatRoomNo: chatRoomNo
-				                }));
-				                
-				                deleteIcon.remove();
-			                    deleteIcon.hide();	
-		                    },
-		                    error: function (error) {
-		                        console.error(error);
-		                    }
-		                });
-		                }
-		                else{
-		                	
+		                
+		               	 var deleteMessage = {
+	                		        messageType: "delete",
+	                		        chatNo: chatNo,
+	                		        chatRoomNo: chatRoomNo,
+	                		    };
+
+	                	window.socket.send(JSON.stringify(deleteMessage));
+// 	                	 $(this).hide();
+// 	                     messageContent.text("삭제된 메시지입니다");
+	                		 
 		                }
 		            });
+		        	
+		        	if(data.messageType==='delete'){
+		        		var chatNo = messageContainer.attr("data-chatNo");
+		        		console.log("chatNo2", chatNo);
+		        		messageContainer.text("삭제된 메시지");
+		        	}
 
 		        // 삭제 아이콘을 메시지 박스에 추가하고 숨겨둠
 		        messageContainer.append(deleteIcon);
@@ -783,15 +786,19 @@
 		        messageContainer.on("mouseleave", function () {
 		            deleteIcon.hide();
 		        });
-
 				   }
-
+		        
+// 		        else if (data.chatBlind === 'Y') {
+// 		            // Y라면 '삭제된 메시지입니다' 처리
+// 		            messageContainer.text("삭제된 메시지입니다");
+// 		        }
 		        messageDiv.append(timeSpan).append(contentDiv).append(imageContainer);
 
 		        $(".message-list").append(messageDiv);
 		        
-		        // 새로운 메시지가 추가된 후에 isBlind 값을 확인하여 UI 업데이트
-// 		        updateMessageVisibility(data);
+// 		        console.log("messageContainer:", messageContainer);
+// 		        console.log("deleteIcon:", deleteIcon);
+
 		    }  else {
 		    	
 		    	// 상대방 메시지 (왼쪽에 표시)
@@ -799,6 +806,7 @@
 
 		    	   var imageContainer = $("<div>").addClass("img_cont_msg");
 			        var profileImage = $("<img>").css("width", "45px").addClass("rounded-circle user_img_msg");
+			        
 
 			        // 프로필 이미지 URL이 존재하는 경우
 			        if (profileImageUrl) {
@@ -868,8 +876,9 @@
 				   var nicknameDiv = $("<div>").addClass("msg_nickname")
 				       .text(data.memberId === data.memberName ? oneChatMemberName : memberName);
 
-				   var messageContainer = $("<div>").addClass("msg_cotainer");
-
+				   var messageContainer = $("<div>").addClass("msg_cotainer").attr("data-chatNo", data.chatNo);
+				   console.log(messageContainer);
+					
 				   // 파일인 경우 이미지 태그를 추가
 				   if (data.messageType === "file") {
 // 				       console.log("file data: ", data);
@@ -881,9 +890,17 @@
 				       // 텍스트인 경우 텍스트 추가
 				       messageContainer.text(data.content);
 				   }
-
+				   
+// 				   if(data.messageType === "delete"){
+// 					   console.log("Received delete event:", data);
+// 					   var messageContainer = $(".message-list").find(".msg_cotainer[data-chatNo='" + chatNo + "']");
+// 					   console.log("Found message container:", messageContainer);
+// 					    console.log("Before updating text:", messageContainer.text());
+// 					   messageContainer.text("삭제된 메시지라고");
+// 				   }
+				   
 				   contentDiv.append(nicknameDiv).append(messageContainer);
-
+				   
 				   if (data.chatBlind === 'N') {
 				       // 삭제 아이콘 및 클릭 이벤트 처리
 				       var deleteIcon = $("<span>")
@@ -894,39 +911,27 @@
 				               var messageDiv = $(this).closest(".d-flex");
 				               var messageContent = $(".msg_cotainer", messageDiv);
 
-				               var chatNo = data.chatNo;
+				              var chatNo = messageContainer.attr("data-chatNo");
 				               console.log("chatNo", chatNo);
 
 				                var confirmDelete = confirm("메시지를 정말 삭제하시겠습니까?");
 				                
 				                if (confirmDelete) {
-				               // 서버에 업데이트 요청을 보냄
-				               $.ajax({
-				                   url: window.contextPath +'/updateBlind',
-				                   type: 'POST',
-				                   contentType: 'application/json',
-				                   data: JSON.stringify({ chatNo: chatNo }),
-				                   success: function(response) {
-				                       console.log('업데이트 성공');
-						                messageContent.html("삭제된 메시지입니다");
-						                
-						             // 서버로 delete 메시지 타입을 보냄
-						                socket.send(JSON.stringify({ messageType: 'delete', chatNo: chatNo }));
-
-						                
-						                deleteIcon.remove();
-					                    deleteIcon.hide();						                    
-		
-				                   },
-				                   error: function (error) {
-				                        console.error(error);
-				                    }
-				                });
-				                }
-				                else{
 				                	
+				                	 var deleteMessage = {
+				                		        messageType: "delete",
+				                		        chatNo: chatNo,
+				                		        chatRoomNo: chatRoomNo,
+				                		    };
+
+				                	window.socket.send(JSON.stringify(deleteMessage));
+// 				                	 $(this).hide();
+// 				                     messageContent.text("삭제된 메시지입니다");
+		                		 
 				                }
 				            });
+				       
+				      
 
 				        // 삭제 아이콘을 메시지 박스에 추가하고 숨겨둠
 				        messageContainer.append(deleteIcon);
@@ -940,33 +945,23 @@
 				        messageContainer.on("mouseleave", function () {
 				            deleteIcon.hide();
 				        });
-
 				   }
-
+				 
+				   
+				   
 				   var timeSpan = $("<div>").addClass("time-left")
 				       .append($("<span>").addClass("msg_time").text(formattedTime));
-
+				   
 				   messageDiv.append(imageContainer).append(contentDiv).append(timeSpan);
 
 				   $(".message-list").append(messageDiv);
 
-				   // 새로운 메시지가 추가된 후에 isBlind 값을 확인하여 UI 업데이트
-// 				    updateMessageVisibility(data);
 		}
 		// 스크롤바 이동
 		$(".message-list").scrollTop($(".message-list")[0].scrollHeight);		
 		    }
 	}
 
-// 		// 메시지의 가시성을 업데이트하는 함수
-// 		function updateMessageVisibility(data) {
-// 		    // isBlind 값이 'true'인 경우 해당 메시지를 숨김
-// 		    console.log(data.isBlind);
-// 		    if (data.isBlind === true) {
-// 		        var lastMessage =  messageContent.html("삭제된 메시지입니다");
-// 		        lastMessage.hide();
-// 		    }
-// 		}
 		
 		//메세지를 전송하는 코드
 		//-메세지가 @로 시작하면 DM으로 처리(아이디 유무 검사정도 하면 좋음)

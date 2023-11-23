@@ -552,32 +552,42 @@ public class WebSocketServer extends TextWebSocketHandler{
          }
             
 	    }	
-//	    
-//	    else if(MessageType.delete.equals(messageType)) {
-//	    	
-//	        String payload = (String) message.getPayload();
-//	        ObjectMapper objectMapper = new ObjectMapper();
-//	        Map<String, String> messageMap = objectMapper.readValue(payload, new TypeReference<Map<String, String>>() {});
-//
-//	        String chatNoString = messageMap.get("chatNo");
-//	        int chatRoomNo = messageDto.getChatRoomNo();
-//	        
-//	        // chatNo를 int로 변환
-//	        int  chatNo = Integer.parseInt(chatNoString);
-//	        
-//	        Set<ClientVO> roomMembers = roomMembersMap.get(chatRoomNo);
-//	        log.debug("roomMembers for chatRoomNo {}: {}", chatRoomNo, roomMembers);
-//	        
-//	        chatDao.chatBlindCheck(chatNo); //해당 메시지 블라인드 체크
-//	        
-//	        TextMessage tm = new TextMessage("메세지가 삭제되었습니다");
-//	        session.sendMessage(tm);
-//	        
-//	        for (ClientVO c : roomMembers) {
-//	            c.send(tm);
-//	        }
-//	        
-//	    }
+	    
+	    else if (MessageType.delete.equals(messageType)) {
+	        int chatRoomNo = messageDto.getChatRoomNo();
+	        int chatNo = messageDto.getChatNo();
+
+	        // 업데이트 수행 및 업데이트된 chatBlind 값 조회
+	        boolean chatBlindUpdated = chatDao.chatBlindUpdate(chatNo);
+	        String chatBlind = chatDao.chatBliindCheck(chatNo);
+	        	        
+	        List<Map<String, Object>> targetSessions = sessionList.stream()
+	                .filter(map -> map.get("chatRoomNo").equals(chatRoomNo))
+	                .collect(Collectors.toList());
+
+	        log.debug("Target sessions for chatRoomNo {}: {}", chatRoomNo, targetSessions);
+
+	        if (!targetSessions.isEmpty()) {
+	            // 정보를 Map에 담아서 변환 후 전송
+	            Map<String, Object> data = new HashMap<>();
+	            data.put("messageType", MessageType.delete.toString());
+	            data.put("chatNo", chatNo);
+	            data.put("chatBlind", chatBlind);
+
+//	            // 업데이트된 chatBlind에 따라 content 설정
+//	            if ("Y".equals(chatBlind)) {
+//	                data.put("content", "삭제된 메시지입니다");
+//	            } 
+	            
+	            String messageJson = mapper.writeValueAsString(data);
+	            TextMessage tm = new TextMessage(messageJson);
+
+	            for (Map<String, Object> targetSessionMap : targetSessions) {
+	                WebSocketSession targetSession = (WebSocketSession) targetSessionMap.get("session");
+	                targetSession.sendMessage(tm);
+	            }
+	        }
+	    }
 
    }
 	
