@@ -6,6 +6,53 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://unpkg.com/hangul-js" type="text/javascript"></script>
 
+<script>
+        $(function(){
+            $("#selector").change(function(){
+            	
+                if(this.files.length == 0) {
+                    //초기화
+                    return;
+                }
+
+                //파일 미리보기는 서버 업로드와 관련이 없다
+                //- 서버에 올릴거면 따로 처리를 또 해야 한다
+                
+                //[2] 직접 읽어서 내용을 설정하는 방법
+                let reader = new FileReader();
+                reader.onload = ()=>{
+                    
+                    $(".preview-wrapper2").find(".preview").attr("src",reader.result);
+                    
+                };
+                for(let i=0; i < this.files.length; i++) {
+                    reader.readAsDataURL(this.files[i]);
+                }
+            });
+            
+			$("#selector2").change(function(){
+            	
+                if(this.files.length == 0) {
+                    //초기화
+                    return;
+                }
+
+                //파일 미리보기는 서버 업로드와 관련이 없다
+                //- 서버에 올릴거면 따로 처리를 또 해야 한다
+                
+                //[2] 직접 읽어서 내용을 설정하는 방법
+                let reader = new FileReader();
+                reader.onload = ()=>{
+                    
+                    $(".preview-wrapper2").find(".preview2").attr("src",reader.result);
+                    
+                };
+                for(let i=0; i < this.files.length; i++) {
+                    reader.readAsDataURL(this.files[i]);
+                }
+            });
+        });
+    </script>
 
 
 <script>
@@ -199,6 +246,8 @@ $(function(){
  // 모달에 데이터를 채우는 함수
     function fillModalWithData(meetingData) {
         // 모달 내부의 필드에 데이터 채우기
+        
+        
         $("#meetingEditModal .meetingNoByEdit").val(meetingData.meetingNo);
         $("#meetingEditModal .meetingNameByEdit").val(meetingData.meetingName);
         $("#meetingEditModal .meetingLocationByEdit").val(meetingData.meetingLocation); 
@@ -641,9 +690,11 @@ $(function(){
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-      		<img src="/images/noimage.jpg" width="200">
+      <div class="preview-wrapper2">
+      		<img src="/images/noimage.jpg" width="200" height="200" class="preview">
+      		</div>
         	<input type="hidden" class="meetingClubNo" data-no="${clubDto.clubNo}" name="clubNo" value="${clubDto.clubNo}">
-			<input type="file" class="meetingImage" name="attach">
+			<input type="file" class="meetingImage" name="attach" id="selector">
 			<input type="text" class="meetingName" name="meetingName" placeholder="정모 이름">        
         	<input type="date" class="meetingDate" name="meetingDate" placeholder="12월 31일">
         	<input type="time" class="meetingTime" name="meetingTime" placeholder="오후 12:00">
@@ -671,9 +722,11 @@ $(function(){
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-      		<img src="/images/noimage.jpg" width="200" class="img">
+      		 <div class="preview-wrapper2">
+ 
+      		</div>
         	<input type="hidden" class="meetingNoByEdit" name="meetingNo" value="${meetinDto.meetingNo}">
-			<input type="file" class="meetingImageByEdit" name="attach">
+			<input type="file" class="meetingImageByEdit" name="attach" id="selector2">
 			<input type="text" class="meetingNameByEdit" name="meetingName" placeholder="정모 이름" value="${meetingDto.meetingName}">        
         	<input type="date" class="meetingDateByEdit" name="meetingDate" placeholder="12월 31일">
         	<input type="time" class="meetingTimeByEdit" name="meetingTime" placeholder="오후 12:00">

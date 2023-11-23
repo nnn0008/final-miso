@@ -44,7 +44,7 @@
 		<img src="${pageContext.request.contextPath}/club/image?clubNo=${clubListVO.clubNo}" class="rounded-circle" width="100" height="100">
 		</c:when>
 		<c:otherwise>
-		<img src="${pageContext.request.contextPath}/images/noimage.jpg" class="rounded-circle" width="100" height="100">
+		<img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="80" height="80">
 		</c:otherwise>
 		</c:choose>
 		</a>

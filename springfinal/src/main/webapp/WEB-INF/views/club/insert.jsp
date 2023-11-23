@@ -13,6 +13,8 @@
     overflow: auto; /* 스크롤이 필요한 경우 스크롤 허용 */
 }
  </style>   
+ 
+  
     
     
     <script>
@@ -78,50 +80,53 @@
     
     	<script>
     	$(function () {
-    	    // [1] 모든 .zip 엘리먼트 숨기기
+    		var searchTimeout;
 
-    	    // [2] 검색어 입력 처리
-    	    $(".search-input").on('input', function () {
-    	        console.log("검색중");
+    		$(".search-input").on('input', function () {
+    		    $(".addr-list").show();
 
-    	        
+    		    var keyword = $(this).val();
+    		    console.log("검색 키워드:" + keyword);
 
-    	        var keyword = $(this).val();
-    	        console.log("검색 키워드:"+keyword);
+    		    if (searchTimeout) {
+    		        clearTimeout(searchTimeout); // 이전 타이머가 있다면 제거
+    		    }
 
-    	        if (keyword.length === 0) {
-    	            $(".zip").hide();
-    	            return;
-    	        }
+    		    // 300ms 후에 Ajax 요청을 보냄
+    		    searchTimeout = setTimeout(function () {
+    		        if (keyword.length === 0) {
+    		            $(".zip").hide();
+    		            return;
+    		        }
 
-    	        $.ajax({
-    	            url: "http://localhost:8080/rest/zipPage",
-    	            method: "get",
-    	            data: { keyword: keyword },
-    	            success: function (response) {
-    	                // 검색 결과를 처리
-    	                var zipList = $('.addr-list');
-    	                // 이전 검색 결과 지우기
-    	                zipList.empty();
+    		        $.ajax({
+    		            url: "http://localhost:8080/rest/zipPage",
+    		            method: "get",
+    		            data: { keyword: keyword },
+    		            success: function (response) {
+    		                // 검색 결과를 처리
+    		                var zipList = $('.addr-list');
+    		                // 이전 검색 결과 지우기
+    		                zipList.empty();
 
-    	                for (var i = 0; i < response.length; i++) {
-    	                    var text = (response[i].sido != null ? response[i].sido + ' ' : '') +
-    	                        (response[i].sigungu != null ? response[i].sigungu + ' ' : '') +
-    	                        (response[i].eupmyun != null ? response[i].eupmyun + ' ' : '') +
-    	                        (response[i].hdongName != null ? response[i].hdongName + ' ' : '');
+    		                for (var i = 0; i < response.length; i++) {
+    		                    var text = (response[i].sido != null ? response[i].sido + ' ' : '') +
+    		                        (response[i].sigungu != null ? response[i].sigungu + ' ' : '') +
+    		                        (response[i].eupmyun != null ? response[i].eupmyun + ' ' : '') +
+    		                        (response[i].hdongName != null ? response[i].hdongName + ' ' : '');
 
+    		                    zipList.append($("<li>")
+    		                        .addClass("list-group-item zip")
+    		                        .val(response[i].zipCodeNo)
+    		                        .text(text)
+    		                        .data("result", response[i].sigungu)
+    		                    );
+    		                }
+    		            }
+    		        });
+    		    }, 300); // 300ms 딜레이
+    		});
 
-    	                    zipList.append($("<li>")
-    	                    	    .addClass("list-group-item zip")
-    	                    	    .val(response[i].zipCodeNo)
-    	                    	    .text(text)
-    	                    	    .data("result", response[i].sigungu)
-    	                    	);
-
-    	                }
-    	   
-    	            }
-    	        });
     	        
     	        // [3] 목록을 클릭하면 입력창에 채우고 .zip 엘리먼트 숨기기
         	    $(".addr-list").on("click", ".zip", function () {
@@ -140,12 +145,11 @@
 
         	        var selectedAddress = $(this).data("result");
         	        $(".search-input").val(selectedAddress);
-        	        $(".zip").hide();
+        	        $(".addr-list").hide();
         	        
         	    });
     	        
     	        
-    	    });
     	    
 	
     	    
