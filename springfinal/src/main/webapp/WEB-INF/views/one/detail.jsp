@@ -30,7 +30,12 @@
 						<tr>
 						<td><i class="fa-regular fa-calendar"></i> ${OneDto.oneDate}</td>
 						</tr>
-					<td height="350px" style="background-color:#ACCEFF;">${OneDto.oneContent}</td>
+					<td height="350px" style="background-color:#ACCEFF;">
+					<img src="${pageContext.request.contextPath}/one/image?oneNo=${OneDto.oneNo}" width="200" height="200">
+					<br>
+					<br>
+					${OneDto.oneContent}
+					</td>
 					
 				</table>
 				
@@ -68,12 +73,7 @@
 		</a>
 	</div>
 	</div>
-	
-		<div class="row mt-4">
-			<div class="col">
-				<img src="${pageContext.request.contextPath}/one/image?oneNo=${OneDto.oneNo}" width="200" height="200">
-			</div>
-		</div>
+		
 	</div>
 
 
