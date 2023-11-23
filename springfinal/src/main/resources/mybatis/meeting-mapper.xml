@@ -36,7 +36,7 @@
 	</select>
 	
 	<select id="selectByClubNo" resultType="MeetingDto">
-		select * from meeting where club_no = #{clubNo} order by meeting_no desc
+		select meeting.*,MEETING_DATE -SYSDATE as dday from meeting where club_no = #{clubNo} order by meeting_no desc
 	</select>
 	
 	<delete id="remove">
