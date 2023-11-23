@@ -6,68 +6,9 @@
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://unpkg.com/hangul-js" type="text/javascript"></script>
-    
- <style>
-    .icon-container {
-        position: relative;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        overflow: hidden;
-        background-color: #EBE8E8;
-            display: flex;
-    align-items: center;
-    justify-content: center;
-    }
-
-    .icon-container img {
-        width: 60%;
-        height: 60%;
-        object-fit: cover;
-    }
-    
-    .main-text{
-    font-size: 20px;
-    }
-    
-       .club-image-list{
-       border-radius: 20%;
-       background-color: #D9D9D9;
-   }
-   .club-name{
-   font-size: 18px;
-   }
    
-   .club-explain, .club-member{
-   color: #9B9B9B;
-   }
-   
-   .club-sidos{
-   font-size: 14px;
-   }
-   .bg-gray{
-   background-color: #BAB9B9;
-   }
-   
-   .club-box{
-    position: relative;
-   }
-   .badge-new{
-   position: absolute;
-    top: -10px;
-    left: 50px; 
-    display: inline-block;
-    opacity: 1;
-    z-index: 3;
-   }
-   
-   .club-box:hover {
-    background-color: #f0f0f0;;
-    cursor: pointer; 
-   }
-   
-   
-</style>   
+   <link href="${pageContext.request.contextPath}/css/club.css" rel="stylesheet"> 
+ 
  
  <script>
 
@@ -97,14 +38,15 @@
                                 <strong class="ms-2 main-text">추천 동호회</strong>
                             </div>
                         </div>
-	<div>
-	<span class="badge bg-miso mt-3">${memberPreferList[0].memberName}</span>님의 주소 
-	<span class="badge bg-success">${memberPreferList[0].sido}</span>
-	지역을 중심으로 한 카테고리 동호회<br>
-	<c:forEach var = "memberPreferList" items="${memberPreferList}">
-	<span class="badge bg-info mt-2">${memberPreferList.majorCategoryName}</span>
-	</c:forEach>
-	</div>
+<div class="text-center">
+    <span class="badge bg-miso mt-3">${memberPreferList[0].memberName}</span>님의 주소 
+    <span class="badge bg-success">${memberPreferList[0].sido}</span>
+    지역을 중심으로 한 카테고리 동호회<br>
+    <c:forEach var="memberPrefer" items="${memberPreferList}">
+        <span class="badge bg-info mt-2">${memberPrefer.majorCategoryName}</span>
+    </c:forEach>
+</div>
+
 	
 	<c:forEach var="clubListVO" items="${clubList}">
 	
