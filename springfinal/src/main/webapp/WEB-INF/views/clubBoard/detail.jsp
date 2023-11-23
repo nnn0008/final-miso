@@ -76,7 +76,7 @@ $(function(){
         var clubBoardNo = params.get("clubBoardNo");
         var originReplyNo = $(this).parents(".for-reply-edit").find(".btn-subReply").data("reply-no");
         e.preventDefault();
-        console.log(originReplyNo);
+        //console.log(originReplyNo);
         
         var clubBoardReplyContent = $(this).parents(".for-reply-edit").find(".reply-write").val();
         console.log(clubBoardReplyContent);
@@ -388,15 +388,27 @@ $(function(){
 		   		console.log("됐냐");
 		        // 선택된 경우
 		        $('[name=reportCategory]').removeClass('is-invalid');
-		        console.log($(e.target));
+		        var reportType = $("[name=reportType]").val();
+		        var reportLocal = $("[name=reportLocal]").val(); 
+		        var reportReporter = $("[name=reportReporter]").val();
+		        var reportReported = $("[name=reportReported]").val();
+		        var reportCategory = $("[name=reportCategory]").val();
+		        
 		        $.ajax({
 					url: window.contextPath + "/rest/report/clubBoard/insert",
 					method: "post",
-					data: $(e.target).serialize(),
+					data:{
+						reportType: reportType,
+						reportLocal: reportLocal,
+						reportReporter: reportReporter,
+						reportReported: reportReported,
+						reportCategory, reportCategory
+					}, 
 					success: function(response){
-						alert("신고가 접수되었습니다");
 				        // 모달 닫기
-				        $('#exampleModal').modal('hide');
+				        setTimeout(function(){
+							alert("신고가 접수되었습니다");
+				        }, 500);
 					},
 					error: function (error) {
 	                    // 여기에 에러 처리 코드 추가
@@ -409,12 +421,11 @@ $(function(){
 		
 		$("[name=reportCategory]").change(function(){
 			console.log("값을 변경시킴", $(this).val());
-			
 			if($(this).val()){
 				console.log("변경 성공");
 			
 				$(this).removeClass("is-invalid");
-				$(".btn-report-send").prop("disabled", false);
+				$(".btn-report-send").prop("disabled", false).attr("data-bs-dismiss", "modal");
 			}
 			else{
 				console.log("변경 실패");
