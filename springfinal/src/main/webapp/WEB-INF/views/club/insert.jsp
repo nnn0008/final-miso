@@ -255,9 +255,9 @@
     
     <div class="row mt-4">
           <div class="col">
-    <form action="insert" class="form-control form-control-lg add" method="post">
+    <form action="insert" class="form-control add" method="post">
     	
-    	관심사 선택
+    	<label>관심사 선택</label>
     	<select class="form-select select1">
     		<c:forEach var="majorCategoryDto" items="${majorCategory}">
     		<option value="${majorCategoryDto.majorCategoryNo}">${majorCategoryDto.majorCategoryName}</option>
@@ -307,9 +307,11 @@
 
 
     	
-    	<div class="row mt-4 mb-4">
+    	<div class="row mt-4 mb-2">
     		<div class="col">
-    	<button class="btn btn-success bg-miso w-100" type="submit">모임 만들기</button>
+    	<button class="btn btn-success btn-lg bg-miso w-100" type="submit">
+    	<strong>모임 만들기</strong>
+    	</button>
     	</div>
     	
     	</div>
