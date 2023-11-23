@@ -139,7 +139,7 @@ $(function(){
 				//response를 댓글 목록으로 받아옴
 				success:function(response){
 					$(".reply-list").empty();
-					console.log(response);
+					//console.log(response);
 
 					for(var i = 0; i < response.length; i++){
 						//console.log(response);
@@ -362,10 +362,27 @@ $(function(){
 		
 		
 	});
-
+</script>
+<script>
+	//신고와 관련된 스크립트
+	$(function(){
+		$(".report-send-form").submit(function(e){
+			e.preventDefault();
+			
+			$.ajax({
+				url: window.contextPath + "/rest/report/clubBoard/insert",
+				method: "post",
+				data: $(e.target).serialize(),
+				success: function(response){
+					alert("신고가 접수되었습니다");
+				},
+			});
+			
+		});
+		
+		
+	});
 	
-	
-
 </script>
 
 <script id="reply-template" type="text/template">
@@ -479,7 +496,7 @@ $(function(){
 				<div class="col">
 					<i class="fa-solid fa-ellipsis-vertical"></i>
 					<a href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubBoardDto.clubNo}">목록</a>
-					<button type="button" class="btn btn-report">신고</button>					
+					<a href="##exampleModal" data-bs-toggle="modal" data-bs-target="#exampleModal">신고</a>
 					<div class="row board-match">
 						<div class="col">
 							<a href="${pageContext.request.contextPath}/clubBoard/edit?clubBoardNo=${clubBoardDto.clubBoardNo}">수정</a>
@@ -546,36 +563,58 @@ $(function(){
 	</div>
 </div>
 
-<!-- Button trigger modal -->
-<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  Launch demo modal
-</button> -->
 <!-- Modal -->
-<!-- <div class="modal fade" id="replyEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">댓글 수정</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">${clubBoardDto.clubBoardNo}번 글 신고하기</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         
-        <input type="hidden" name="clubBoardReplyNo">	
+        <div class="container-fluid">
         	
-        <div class="row">
-        	<div class="col">   		
-        		<input type="text" class="form-control" name="clubBoardReplyContent">
-        	</div>
-        </div>      
+        	<form class="report-send-form">
+        	<input type="hidden" readonly name="reportType" value="게시글">
+        	<input type="hidden" readonly name="reportLocal" value="${clubBoardDto.clubBoardNo}">
+			<input type="hidden" readonly name="reportReporter" value="${sessionScope.name}">
+			       			
+	        	<div class="row">
+	        		<div class="col">
+						신고 하려는 유저	        					
+	        		</div>
+	        		<div class="col">
+						<input type="text" readonly value="${clubMemberDto.clubMemberId}" name="reportReported" class="form-control">		
+	        		</div>
+	        	</div>
+	        	<div class="row mt-2">
+	        		<div class="col">
+						신고 사유        			
+	        		</div>
+	        		<div class="col">
+	        			<select name="reportCategory" class="form-select">
+	        				<option value="">선택하세요</option>
+	        				<option value="광고">광고</option>
+	        				<option value="음란">음란</option>
+	        				<option value="욕설">욕설</option>
+	        				<option value="차별">차별</option>	        				
+	        				<option value="개인정보">개인정보 유출</option>	        				
+	        			</select>
+	        		</div>
+	        	</div>
+        	</form>
+        	
+        </div>
+        
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary update-cancel-reply" data-bs-dismiss="modal">취소</button>
-        <button type="button" class="btn btn-primary update-success-reply" data-bs-dismiss="modal">저장</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+        <button type="submit" class="btn btn-primary btn-report-send" data-bs-dismiss="modal">제출</button>
       </div>
     </div>
   </div>
 </div>
 
-</div> -->
 
 <jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>
