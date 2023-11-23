@@ -8,10 +8,30 @@
     <script src="https://unpkg.com/hangul-js" type="text/javascript"></script>
     
     <style>
-    .addr-list {
-    max-height: 300px; /* 예시: 최대 높이 설정 */
+
+
+.addr-list {
+    position: absolute;
+    z-index: 1000;
+    max-height: 300px;
+    width:545px;
+    overflow-y: auto;
     overflow: auto; /* 스크롤이 필요한 경우 스크롤 허용 */
+    display: none;
+    margin-top: 5px;
 }
+
+/* 입력창의 상단에 위치하도록 설정 */
+.position-relative {
+    position: relative;
+}
+
+/* 드롭다운이 열렸을 때 스타일 조정 */
+.addr-list.show {
+    display: block;
+}
+
+
  </style>   
  
   
@@ -206,61 +226,75 @@
 
     	});
 
+    	// 드롭다운이 열릴 때
+    	$(".search-input").focus(function() {
+    	    $(".addr-list").addClass("show");
+    	});
+
+    	// 드롭다운이 닫힐 때
+    	$(".search-input").blur(function() {
+    	    $(".addr-list").removeClass("show");
+    	});
+
+    	// 혹은 드롭다운의 아이템이 클릭되었을 때
+    	$(".addr-list").on("click", "li", function() {
+    	    $(".addr-list").removeClass("show");
+    	});
+
 
 	</script>
     
     
     
-    <h1>동호회 등록</h1>
+    <div class="row">
+                            <div class="col text-start d-flex align-items-center"">
+                                <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+                                <strong class="ms-2">모임 만들기</strong>
+                            </div>
+                        </div>
     
     <div class="row mt-4">
           <div class="col">
-    <form action="insert" class="form-control form-control-lg add" method="post">
+    <form action="insert" class="form-control add" method="post">
     	
-    	상위 카테고리
+    	<label>관심사 선택</label>
     	<select class="form-select select1">
     		<c:forEach var="majorCategoryDto" items="${majorCategory}">
     		<option value="${majorCategoryDto.majorCategoryNo}">${majorCategoryDto.majorCategoryName}</option>
     		</c:forEach>
     	</select>
-    	하위 카테고리
+    	<label class="mt-2">하위 카테고리</label>
+    	
     	<select class="form-select select2" name="clubCategory">
     	</select>
-    		
-    	
-    	
+  		
     	
     	
     	
     	<div class="row">
     		<div class="col">
-    	모임 이름<input class="form-control" type="text" name="clubName">
+    	<label class="mt-2">모임 이름</label>
+    	<input class="form-control" type="text" name="clubName">
     	</div>
     	</div>
     	<div class="row">
     		<div class="col">
-    	모임 설명<input class="form-control" type="text" name="clubExplain">
+    	<label class="mt-2">모임 설명</label>
+    	<input class="form-control" type="text" name="clubExplain">
     	</div>
     	</div>
     	
     	<div class="row">
     		<div class="col">
-    	정원<input class="form-control" type="number" name="clubPersonnel">
+    	<label class="mt-2">정원</label>
+    	<input class="form-control" type="number" name="clubPersonnel">
     	</div>
     	</div>
-    	<div class="row mt-3">
-    		<div class="col">
-    	<button class="btn btn-primary" type="submit">모임 만들기</button>
-    	</div>
-    	</div>
-    
-   
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-10 offset-md-1">
-                <div class="row mt-4">
+    	
+    	<div class="row">
                     <div class="col">
-                       지역 <input type="search" class="form-control search-input"
+                       <label class="mt-2">지역</label>
+                       <input type="search" class="form-control search-input"
                             placeholder="동,읍,면을 입력해주세요">
                     </div>                    
                 </div>
@@ -270,9 +304,37 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-        </div>        
-    </div>
+
+
+    	
+    	<div class="row mt-4 mb-2">
+    		<div class="col">
+    	<button class="btn btn-success btn-lg bg-miso w-100" type="submit">
+    	<strong>모임 만들기</strong>
+    	</button>
+    	</div>
+    	
+    	</div>
+    
+   
+<!--     <div class="container-fluid"> -->
+<!--         <div class="row"> -->
+<!--             <div class="col-md-10 offset-md-1"> -->
+<!--                 <div class="row mt-4"> -->
+<!--                     <div class="col"> -->
+<!--                        지역 <input type="search" class="form-control search-input" -->
+<!--                             placeholder="동,읍,면을 입력해주세요"> -->
+<!--                     </div>                     -->
+<!--                 </div> -->
+<!--                 <div class="row"> -->
+<!--                     <div class="col"> -->
+<!--                         <ul class="list-group addr-list"> -->
+<!--                         </ul> -->
+<!--                     </div> -->
+<!--                 </div> -->
+<!--             </div> -->
+<!--         </div>         -->
+<!--     </div> -->
   
     
 

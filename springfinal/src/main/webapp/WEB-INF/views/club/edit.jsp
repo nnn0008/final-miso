@@ -8,6 +8,15 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://unpkg.com/hangul-js" type="text/javascript"></script>
 
+<style>
+.preview{
+margin-top: 1em;
+width: 550px;
+height: 300px;
+border-radius: 1%;
+}
+</style>
+
  <script>
         $(function(){
             $(".attach-selector").change(function(){
@@ -218,10 +227,16 @@ $(function(){
 
 
 
+ <div class="row">
+                            <div class="col text-start d-flex align-items-center"">
+                                <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+                                <strong class="ms-2">모임 수정</strong>
+                            </div>
+                        </div>
 
-<form class="form-control add" method="post" enctype="multipart/form-data">
+<form class="form-control add mt-4" method="post" enctype="multipart/form-data">
 <input type="hidden" value="${clubDto.clubNo}" name="clubNo">
-	관심사 상위 카테고리 
+	<label>관심사 선택</label>
 	<select class="form-select select1">
 		<c:forEach var="major" items="${majorList}">
 			<c:choose>
@@ -236,10 +251,11 @@ $(function(){
 			</c:choose>
 		</c:forEach>
 	</select> 
-	하위 카테고리 
+	<label class="mt-2">하위 카테고리</label>
 	<select class="form-select select2" name="clubCategory">
 	</select> 
-	지역 <input class="form-control search-input" type="text"
+	<label class="mt-2">지역</label>
+	<input class="form-control search-input" type="text"
 		value="${zipDto.sigungu}" data-no="${zipDto.zipCodeNo}">
 	<div class="row">
 		<div class="col">
@@ -247,7 +263,8 @@ $(function(){
 			</ul>
 		</div>
 	</div>
-	사진 업로드<input class="form-control attach-selector" type="file" name="attach" accept="image/*">
+	<label class="mt-2">사진 업로드</label>
+	<input class="form-control attach-selector" type="file" name="attach" accept="image/*">
 	
 	<div class="preview-wrapper2">
 	<c:choose>
@@ -262,23 +279,26 @@ $(function(){
 	
 	<div class="row mt-2">
 	<div class="col">
-	모임명
+	<label class="mt-2 d-flex align-items-center">
+	<img src="${pageContext.request.contextPath}/images/logo-door.png" width="25%" class="me-1">
+	모임명</label>
 	</div>
-	<div class="col-10">
+	<div class="col-10	">
 	<input class="form-control name" value="${clubDto.clubName}" name="clubName">
 	</div>
 	</div>
 	<div class="row mt-2">
 	<div class="col">
-	<textarea class="form-control" name="clubExplain">${clubDto.clubExplain}</textarea>
+	<textarea class="form-control" name="clubExplain" rows="3">${clubDto.clubExplain}</textarea>
 	</div>
 	</div>
 	<div class="row">
 	<div class="col">
-		정원<input type="number" name="clubPersonnel" class="form-control" value="${clubDto.clubPersonnel}">
+		<label class="mt-2">정원</label>
+		<input type="number" name="clubPersonnel" class="form-control" value="${clubDto.clubPersonnel}">
 	</div>
 	</div>	
-	<div class="row">
+	<div class="row mt-3">
 	<div class="col">
 	<c:choose>
 	<c:when test="${clubDto.clubPremium=='Y'}">
@@ -307,9 +327,9 @@ $(function(){
 	</div>
 	
 	
-	<div class="row">
-	<div class="col mt-2">
-	<button class="btn btn-primary">수정</button>
+	<div class="row mt-4 mb-2">
+	<div class="col">
+	<button class="btn btn-success btn-lg bg-miso w-100"><strong>수정하기</strong></button>
 	</div>
 	</div>
 
