@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="photoReply">
+
+	<select id="sequence" resultType="int">
+		select photo_reply_seq.nextval from dual
+	</select>
+	
+	<insert id="add">
+		insert into photo_reply(
+			photo_reply_no, photo_reply_content, photo_reply_group, photo_reply_parent,
+			photo_no, club_member_no
+		) 
+		values(
+			#{photoReplyNo}, #{photoReplyContent}, #{photoReplyGroup}, #{photoReplyParent},
+			#{photoNo}, #{clubMemberNo}
+		)
+	</insert>
+	
+	<!-- 계층형 댓글 -->
+	<select id="list" resultType="PhotoReplyDto">
+		select * from photo_reply where photo_no = #{photoNo}
+		start with photo_reply_parent is null connect by prior photo_reply_no = photo_reply_parent
+		order siblings by photo_reply_group, photo_reply_date
+	</select>
+	
+	<delete id="remove">
+		delete photo_reply where photo_reply_no = #{photoReplyNo}
+	</delete>
+	
+	<select id="find" resultType="PhotoReplyDto">
+		select * from photo_reply where photo_reply_no = #{photoReplyNo}
+	</select>
+
+</mapper>   
