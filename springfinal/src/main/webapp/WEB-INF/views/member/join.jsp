@@ -37,7 +37,7 @@
 
             <style>
                 .check, .choice {
-		              display: none;  
+            	  display: none;   
                 }
                 
                
@@ -248,8 +248,6 @@
                                         }
                                     });
                                 
-                                //지역 유무 검사 코드
-                                
                                 
                                 //필수 항목 전부 체크시 가입 버튼 활성화
                                 $(".check").change(function () {
@@ -344,12 +342,16 @@
 								           $(".ds1").prop("selected", true).trigger("change");
 								    	 $(".choice1").css("display", "none");
 								    	$("#monor1").prop("disabled", true).trigger("change"); // 예시로 display를 none으로 설정
+								    	 $(".category-check")
+                                         .prop("checked", false).trigger("change");
 								        }
 								    }
 								    else{
 								    	$(".ds1").prop("selected", true);
 								    	 $(".choice1").css("display", "none");
 								    	$("#monor1").prop("disabled", true);
+								    	 $(".category-check")
+                                         .prop("checked", false).trigger("change");
 								    }
 								});
 								
@@ -367,12 +369,16 @@
 								           $(".ds2").prop("selected", true);
 								    	 $(".choice2").css("display", "none");
 								    	$("#monor2").prop("disabled", true); // 예시로 display를 none으로 설정
+								    	 $(".category-check")
+                                         .prop("checked", false).trigger("change");
 								        }
 								    }
 								    else{
 								    	$(".ds2").prop("selected", true);
 								    	 $(".choice2").css("display", "none");
 								    	$("#monor2").prop("disabled", true);
+								    	 $(".category-check")
+                                         .prop("checked", false).trigger("change");
 								    }
 								});
 								
@@ -390,12 +396,16 @@
 								           $(".ds3").prop("selected", true);
 								    	 $(".choice3").css("display", "none");
 								    	$("#monor3").prop("disabled", true); // 예시로 display를 none으로 설정
+								    	 $(".category-check")
+                                         .prop("checked", false).trigger("change");
 								        }
 								    }
 								    else{
 								    	$(".ds3").prop("selected", true);
 								    	 $(".choice3").css("display", "none");
 								    	$("#monor3").prop("disabled", true);
+								    	 $(".category-check")
+                                         .prop("checked", false).trigger("change");
 								    }
 								});
 								
@@ -455,7 +465,8 @@
 						                               .text(text));
 						                       }
 						          
-						                   }
+		                                        }
+						                       
 						               });
 						               
 						               // [3] 목록을 클릭하면 입력창에 채우고 .zip 엘리먼트 숨기기
@@ -474,6 +485,12 @@
 						                   $(".search-input").val(selectedAddress);
 						                   $(".zip").hide();
 						                   
+						                   $(".d-addr-feedback").removeClass("text-danger");
+                                            $("#memberAddr").removeClass("is-valid is-invalid");
+                                            $(".addr-feed").removeClass("is-valid invalid");
+                                            $("#memberAddr").addClass("is-valid");
+                                            $(".addr-feed").addClass("is-valid");
+                                            $(".addrCheck").prop("checked", true).trigger("change");
 						                   //console.log($('.newInput').val())
 						               });
 						               
@@ -629,18 +646,17 @@
                                                 </div>
                                             </div>
 															
-															
+											<input type="checkbox" class="check addrCheck">
 											<div class="row mt-4">
 							                    <div class="col">
 							                       <div class="input-group has-validation">
-                                                       <div class="form-floating">
+                                                       <div class="form-floating addr-feed">
                                                             <input type="search" class="form-control search-input" name="StringmemberAddr"
                                                                 id="memberAddr" placeholder="" required>  <label
                                                                 for="memberBirth">지역</label>
                                                                  <div class="d-addr-feedback">동, 읍, 면을 입력해 주세요</div>
                                                        	</div>
                                                     	</div>
-                                                            <div class="invalid-feedback">필수 항목입니다</div>
                                                     </div>
 							                    </div>                    
 							                </div>
@@ -651,26 +667,34 @@
 							                    </div>
 							                </div>
 											<script>
-											$("#memberAddr").blur(
+											$("#memberAddr").change(
 				                                    function () {
 				                                        $(this).removeClass("is-invalid is-valid");
+				                                        $(".d-addr-feedback").removeClass(
+		                                                "text-danger");
+				                                        $(".addr-feed").removeClass("is-invalid is-valid");
 				                                    	if($(this).val()=="") {
-				                                    		$(".d-addr-feedback").hide();
 				                                    		$(this).addClass("is-invalid");
-				                                    		return;
+				                                    		$(".addr-feed").addClass("is-invalid");
+				                                    		$(".d-addr-feedback").addClass(
+			                                                "text-danger");
+				                                    		$(".addrCheck").prop("checked", false).trigger("change");
 				                                    	};
-				                                        var inputContent = $(this).val();
-				                                        var regex = ;
-				                                        var isValid = regex.test(inputContent)
-				                                        $(".d-addr-feedback").show();
-				                                        if (isValid) {
-				                                            $(this).addClass("is-valid");
-				                                        } 
-				                                        else {
-				                                            $(this).addClass("is-invalid");
-				                                            $(".d-content-feedback").addClass(
-				                                                "text-danger");
-				                                        }
+					                                        var inputContent = $(this).val();
+					                                        var regex = /^[가-힣]+\s[가-힣]+\s[가-힣]+$/;
+					                                        var isValid = regex.test(inputContent);
+					                                        if (isValid) {
+					                                            $(this).addClass("is-valid");
+					                                            $(".addr-feed").addClass("is-valid");
+					                                            $(".addrCheck").prop("checked", true).trigger("change");
+					                                        } 
+					                                        else {
+					                                            $(this).addClass("is-invalid");
+					                                            $(".addr-feed").addClass("is-invalid");
+					                                            $(".d-addr-feedback").addClass(
+					                                                "text-danger");
+					                                            $(".addrCheck").prop("checked", false).trigger("change");
+					                                        }
 				                                    });
 											</script>
 

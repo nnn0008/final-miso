@@ -10,4 +10,15 @@
     		values(#{reportNo}, #{reportReported}, #{reportReporter}, #{reportCategory}, #{reportType}, #{reportLocal})
     	</insert>
     	
+    	<select id="selectList" resultType="ReportDto">
+    		select * from report order by reportDao asc
+    	</select>
+    	
+    	<select id="selectOne" resultType="ReportDto">
+<!--     		select * from report where  -->
+    	</select>
+    	
+    	<delete id="delete">
+    		delete report where report_no = #{reportNo} 
+    	</delete>
     </mapper>
