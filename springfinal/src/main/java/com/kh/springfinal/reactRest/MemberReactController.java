@@ -15,12 +15,13 @@ import com.kh.springfinal.dto.MemberDto;
 //@CrossOrigin
 @CrossOrigin(value = {"http://localhost:3000", "http://localhost:5500"})
 @RestController
+@RequestMapping("/memberList")
 public class MemberReactController {
 	
 	@Autowired
 	private MemberDao memberDao;
 	
-	@GetMapping("/memberList/")
+	@GetMapping("/")
 	public List<MemberDto> selectListOld() {
 		return memberDao.selectListOld();
 	}

@@ -70,4 +70,11 @@
 		    cbr.club_board_reply_no = #{clubBoardReplyNo}
 	</select>
 	
+	<select id="selectReplyByMember" resultType="ClubBoardReplyDto">
+		select * from club_board_reply 
+		where club_member_no in (
+		select club_member_no from club_member where club_member_id = #{memebrId}
+		)
+	</select>
+	
 </mapper>  

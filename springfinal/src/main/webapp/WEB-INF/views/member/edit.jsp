@@ -11,6 +11,17 @@
             padding: 10px 20px !important; /* 원하는 크기에 따라 조절 */
             
         }
+    .check, .choice {
+	  display: none;   
+    }
+    
+   
+
+    .btn-join, .email-check {
+        pointer-events: none;
+        opacity: 0.5;
+        /* 또는 다른 값을 사용하여 투명도 조절 가능 */
+    }
     </style>
 	
 	<script>
@@ -38,71 +49,114 @@
 		    });
 		});
 		
-		// 주소 검색
-        $(".search-input").on('input', function () {
-            console.log("검색중");
-
-            if (!/^[가-힣]/.test($(this).val())) {
-                return;
+		
+        //닉네임 값 유무 검사
+        $("[name=memberName]").blur(function () {
+        	$(".name-feed").removeClass("is-invalid");
+        	$(this).removeClass("is-valid is-invalid")
+            if ($("[name=memberName]").val() != "") {
+                $(this).addClass("is-valid");
+                $("[name=check3]").prop("checked", true).trigger("change");
+            } else {
+            	$(".name-feed").addClass("is-invalid");
+            	$(this).addClass("is-invalid");
+                $("[name=check3]").prop("checked", false).trigger("change");
             }
+        });
 
-            var keyword = $(this).val();
-            console.log(keyword);
-
-            if (keyword.length === 0) {
-                $(".zip").hide();
-                return;
-            }
-
-            $.ajax({
-                url: "http://localhost:8080/rest/zip",
-                method: "get",
-                data: { keyword: keyword },
-                success: function (response) {
-                    // 검색 결과를 처리
-                    var zipList = $('.addr-list');
-                    // 이전 검색 결과 지우기
-                    zipList.empty();
-
-                    for (var i = 0; i < response.length; i++) {
-                        var text = (response[i].sido != null ? response[i].sido + ' ' : '') +
-                            (response[i].sigungu != null ? response[i].sigungu + ' ' : '') +
-                            (response[i].eupmyun != null ? response[i].eupmyun + ' ' : '') +
-                            (response[i].hdongName != null ? response[i].hdongName + ' ' : '');
-
-                        console.log(text);
-
-                        zipList.append($("<li>")
-                            .addClass("list-group-item zip")
-                            .val(response[i].zipCodeNo)
-                            .text(text));
-                    }
-       
+        //이메일 형식 검사 코드
+        $("[name=memberEmail]").blur(
+            function () {
+                var inputEmail = $(this).val();
+                var regex = /\S+@\S+\.\S+/;
+                var isValid = regex.test(inputEmail)
+                $(this).removeClass("is-valid is-invalid");
+                $(".email-feedback").removeClass(
+                    "is-valid is-invalid");
+                $(".d-e-feedback").removeClass(
+                    "text-danger");
+                if (!isValid) {
+                    $(this).addClass("is-invalid");
+                    $(".email-feedback").addClass(
+                        "is-invalid");
+                    $(".d-e-feedback").addClass(
+                        "text-danger");
+                    $("[name=check4]").prop("checked",
+                        false);
+                    $(".email-check").css({
+                        "pointer-events": "none",
+                        "opacity": "0.5" 
+                    });
+                } 
+                else {
+                    $(this).addClass("is-valid");
+                    
+                    $(".email-check").css({
+                        "pointer-events": "auto",
+                        "opacity": "1" // 투명도를 1로 설정하여 다시 원래 상태로 만듭니다.
+                    });
                 }
             });
-            
-            // [3] 목록을 클릭하면 입력창에 채우고 .zip 엘리먼트 숨기기
-            $(".addr-list").on("click", ".zip", function () {
-               
-               var form = $('.add');
-               
-                form.append($("<input>")
-                     .addClass("newInput")
-                      .prop("type", "hidden")
-                      .attr("name", "zipCodeNo")
-                      .val($(this).val())
-                  ); 
 
-                var selectedAddress = $(this).text();
-                $(".search-input").val(selectedAddress);
-                $(".zip").hide();
-                
-                //console.log($('.newInput').val())
-            });
-            
-            
+        //생년월일 형식 검사 코드
+        $("[name=memberBirth]").blur(function () {
+        	if($(this).val()=="") return;
+            var inputContent = $(this).val();
+            var regex = /^[1-2][0-9][0-9]{2}-[01][0-9]-[0-3][0-9]$/;
+            var isValid = regex.test(inputContent)
+            $(this).removeClass("is-invalid is-valid");
+            $(".d-brith-feedback").removeClass("text-danger");
+            if (isValid) {
+                $(this).addClass("is-valid");
+            } else {
+                $(this).addClass("is-invalid");
+                $(".d-brith-feedback").addClass("text-danger");
+            }
         });
-		
+
+        //연락처 형식 검사 코드
+        $("[name=memberContact]").blur(
+            function () {
+                $(this).removeClass("is-invalid is-valid");
+            	if($(this).val()=="") {
+            		$(this).addClass("is-invalid");
+            		$(".d-content-feedback").addClass(
+                    "text-danger");
+            	};
+                var inputContent = $(this).val();
+                var regex = /^\d{10,11}$/;
+                var isValid = regex.test(inputContent)
+                $(".d-content-feedback").removeClass(
+                    "text-danger");
+                if (isValid) {
+                    $(this).addClass("is-valid");
+                } 
+                else {
+                    $(this).addClass("is-invalid");
+                    $(".d-content-feedback").addClass(
+                        "text-danger");
+                }
+            });
+        
+        
+        //필수 항목 전부 체크시 가입 버튼 활성화
+        $(".check").change(function () {
+                    if ($(".check").length == $(".check:checked").length) {
+                        $(".btn-join").css({
+                            "pointer-events": "auto",
+                            "opacity": "1" // 투명도를 1로 설정하여 다시 원래 상태로 만듭니다.
+                        });
+                    } 
+                    else {
+                    	console.log("바뀜");
+                        $(".btn-join").css({
+                            "pointer-events": "none",
+                            "opacity": "0.5" // 투명도를 1로 설정하여 다시 원래 상태로 만듭니다.
+                        });
+                    }
+                })
+        
+        
 		//관심 카테고리 동작 코드 1
 		$("[name=mojor-s1]").change(function () {
 			$(".ds1").hide();
@@ -117,12 +171,16 @@
 		           $(".ds1").prop("selected", true).trigger("change");
 		    	 $(".choice1").css("display", "none");
 		    	$("#monor1").prop("disabled", true).trigger("change"); // 예시로 display를 none으로 설정
+		    	 $(".category-check")
+                 .prop("checked", false).trigger("change");
 		        }
 		    }
 		    else{
 		    	$(".ds1").prop("selected", true);
 		    	 $(".choice1").css("display", "none");
 		    	$("#monor1").prop("disabled", true);
+		    	 $(".category-check")
+                 .prop("checked", false).trigger("change");
 		    }
 		});
 		
@@ -140,12 +198,16 @@
 		           $(".ds2").prop("selected", true);
 		    	 $(".choice2").css("display", "none");
 		    	$("#monor2").prop("disabled", true); // 예시로 display를 none으로 설정
+		    	 $(".category-check")
+                 .prop("checked", false).trigger("change");
 		        }
 		    }
 		    else{
 		    	$(".ds2").prop("selected", true);
 		    	 $(".choice2").css("display", "none");
 		    	$("#monor2").prop("disabled", true);
+		    	 $(".category-check")
+                 .prop("checked", false).trigger("change");
 		    }
 		});
 		
@@ -163,16 +225,108 @@
 		           $(".ds3").prop("selected", true);
 		    	 $(".choice3").css("display", "none");
 		    	$("#monor3").prop("disabled", true); // 예시로 display를 none으로 설정
+		    	 $(".category-check")
+                 .prop("checked", false).trigger("change");
 		        }
 		    }
 		    else{
 		    	$(".ds3").prop("selected", true);
 		    	 $(".choice3").css("display", "none");
 		    	$("#monor3").prop("disabled", true);
+		    	 $(".category-check")
+                 .prop("checked", false).trigger("change");
 		    }
 		});
 		
-	});
+		
+
+		//카테고리 값 유무 검사
+		$(".mojor-check").change(function () {
+			if($(this).val()!=null){
+				 $(".category-check")
+                 .prop("checked", true).trigger("change");
+			}
+			else{
+				$(".category-check")
+                .prop("checked", false).trigger("change");
+			}
+		})
+
+		// [1] 모든 .zip 엘리먼트 숨기기
+
+           // [2] 검색어 입력 처리
+           $(".search-input").on('input', function () {
+               console.log("검색중");
+
+               if (!/^[가-힣]/.test($(this).val())) {
+                   return;
+               }
+
+               var keyword = $(this).val();
+               console.log(keyword);
+
+               if (keyword.length === 0) {
+                   $(".zip").hide();
+                   return;
+               }
+
+               $.ajax({
+                   url: "http://localhost:8080/rest/zip",
+                   method: "get",
+                   data: { keyword: keyword },
+                   success: function (response) {
+                       // 검색 결과를 처리
+                       var zipList = $('.addr-list');
+                       // 이전 검색 결과 지우기
+                       zipList.empty();
+
+                       for (var i = 0; i < response.length; i++) {
+                           var text = (response[i].sido != null ? response[i].sido + ' ' : '') +
+                               (response[i].sigungu != null ? response[i].sigungu + ' ' : '') +
+                               (response[i].eupmyun != null ? response[i].eupmyun + ' ' : '') +
+                               (response[i].hdongName != null ? response[i].hdongName + ' ' : '');
+
+                           console.log(text);
+
+                           zipList.append($("<li>")
+                               .addClass("list-group-item zip")
+                               .val(response[i].zipCodeNo)
+                               .text(text));
+                       }
+          
+                        }
+                       
+               });
+               
+               // [3] 목록을 클릭하면 입력창에 채우고 .zip 엘리먼트 숨기기
+               $(".addr-list").on("click", ".zip", function () {
+                  
+                  var form = $('.add');
+                  
+                   form.append($("<input>")
+                        .addClass("newInput")
+                         .prop("type", "hidden")
+                         .attr("name", "zipCodeNo")
+                         .val($(this).val())
+                     ); 
+
+                   var selectedAddress = $(this).text();
+                   $(".search-input").val(selectedAddress);
+                   $(".zip").hide();
+                   
+                   $(".d-addr-feedback").removeClass("text-danger");
+                    $("#memberAddr").removeClass("is-valid is-invalid");
+                    $(".addr-feed").removeClass("is-valid invalid");
+                    $("#memberAddr").addClass("is-valid");
+                    $(".addr-feed").addClass("is-valid");
+                    $(".addrCheck").prop("checked", true).trigger("change");
+               });
+               
+               
+           });
+
+			
+});
 		
 	</script>
 	
@@ -185,61 +339,23 @@
                         <h1>회원 정보 수정 페이지</h1>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col text-center">
-                        <c:choose>
-                            <c:when test="${attachDto==null}">
-                                <img src="https://dummyimage.com/150x150/000/fff" class="rounded-circle profile">
-                            </c:when>
-                            <c:otherwise>
-                                <img src="/rest/member/profileShow?memberId=${memberDto.memberId}" class="rounded-circle profile" style="width:150px; height: 150px;">
-                            </c:otherwise>
-                        </c:choose>
-                        <div class="position-relative ">
-	                        <button class="btn edit-camare" data-bs-toggle="modal" data-bs-target="#edit-modal"><i class="fa-solid fa-camera fa-2xl"></i></button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!--   프로필 업로드를 위한 모달 -->
-               <form enctype="multipart/form-data" method="post" action="/your-upload-endpoint">
-                <div class="modal" id="edit-modal">
-				  <div class="modal-dialog" role="document">
-				    <div class="modal-content">
-				      <div class="modal-header">
-				        <h5 class="modal-title">프로필 설정</h5>
-				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-				          <span aria-hidden="true"></span>
-				        </button>
-				      </div>
-				      <div class="modal-body">
-				        <div class="mb-3">
-						  <label for="formFile" class="form-label">이미지를 선택해 주세요</label>
-						  <input class="form-control" type="file" name="attach" id="formFile" accept="image/*">
-						</div>
-				      </div>
-				      <div class="modal-footer">
-				        <button type="button" class="btn btn-primary profile-set-btn" data-bs-dismiss="modal">설정</button>
-				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-				      </div>
-				    </div>
-				  </div>
-				</div>
-				</form>
+				
                 
 					
 				<form action=".	/edit" method="post">
-                    <div class="row">
-                    	<div class="col">
-                    		<div class="input-group mt-3 mb-3">
-							  <div class="input-group-prepend">
-							    <span class="input-group-text ps-3" id="inputGroup-sizing-default">이름</span>
-							  </div>
-							  <input type="text" class="form-control" name="memberName" aria-label="Default" aria-describedby="inputGroup-sizing-default" value="${memberDto.memberName}">
-							</div>
-                    	</div>
-                    </div>
+					<div class="row mt-3">
+                       <div class="col">
+                           <div class="input-group has-validation">
+                               <div class="form-floating name-feed">
+                                   <input type="checkbox" name="check3" class="check">
+                                   <input type="text" class="form-control" name="memberName"
+                                       id="memberName" placeholder="실명" required> <label
+                                       for="memberName">실명*</label>
+                               </div>
+                               <div class="invalid-feedback">필수항목입니다</div>
+                           </div>
+                       </div>
+                   </div>                    
                     
                     
                     <div class="row">
@@ -259,34 +375,16 @@
 							  <div class="input-group-prepend">
 							    <span class="input-group-text w-20" id="inputGroup-sizing-default">지역</span>
 							  </div>
-							  <c:choose>
-								  <c:when test="${memberDto.memberAddr==0}">
-							                    <div class="col">
-							                       <input type="search" name="memberAddrString" class="form-control search-input"
-							                            placeholder="동,읍,면을 입력해주세요" value="${addr}">
-							                    </div>                    
-							                <div class="row">
-							                    <div class="col">
-							                        <ul class="list-group addr-list">
-							                        </ul>
-							                    </div>
-						                    </div>
-								  </c:when>
-								  <c:otherwise>
-						  			<div class="row mt-4">
-					                    <div class="col">
-					                       <input type="search" name="StringmemberAddr" class="form-control search-input"
-					                            placeholder="동,읍,면을 입력해주세요" value="${addr}">
-					                    </div>                    
-					                </div>
-					                <div class="row">
-					                    <div class="col">
-					                        <ul class="list-group addr-list">
-					                        </ul>
-					                    </div>
-					                </div>
-								  </c:otherwise>
-							  </c:choose>
+			                    <div class="col">
+			                       <input type="search" name="memberAddrString" class="form-control search-input"
+			                            placeholder="동,읍,면을 입력해주세요" value="${addr}">
+			                    </div>                    
+			                <div class="row">
+			                    <div class="col">
+			                        <ul class="list-group addr-list">
+			                        </ul>
+			                    </div>
+		                    </div>
 							</div>
                     	</div>
                     </div>
@@ -482,8 +580,8 @@
 										    </div>
 										    
 										    <div class="form-group"> 
-										      <select class="form-select mojor-check" name="likeCategory" id="monor2" disabled>
-								                <option class="ds2" value=" "></option>
+										      <select class="form-select mojor-check" name="likeCategory" id="monor3" disabled>
+								                <option class="ds3" value=" "></option>
 								                <option class="choice3 40" value="7">등산</option>
 								                <option class="choice3 40" value="8">산책/트래킹</option>
 								                <option class="choice3 40" value="9">캠핑/백패킹</option>
@@ -508,7 +606,7 @@
 	            
 	            <div class="row mt-5">
 	      		    	<div class="col text-start">
-			      		    <button type="button" class="btn btn-danger rounded-button w-75" style="font-size: 40px;">취소</button>
+			      		    <a href="./mypage?memberId=${memberDto.memberId}>"><button type="button" class="btn btn-danger rounded-button w-75" style="font-size: 40px;"> 취소</button></a>
 	      		    	</div>
 	      		    	<div class="col text-end">
 			      		    <button type="submit" class="btn btn-primary rounded-button w-75" style="font-size: 40px;">완료</button>

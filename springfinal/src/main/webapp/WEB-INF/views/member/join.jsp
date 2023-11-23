@@ -37,7 +37,7 @@
 
             <style>
                 .check, .choice {
-		              display: none;  
+            	  display: none;   
                 }
                 
                
@@ -159,12 +159,17 @@
                                         $(".checkPw-feed").addClass("is-invalid");
                                     }
                                 });
-
+								
+                                //닉네임 값 유무 검사
                                 $("[name=memberName]").blur(function () {
+                                	$(".name-feed").removeClass("is-invalid");
+                                	$(this).removeClass("is-valid is-invalid")
                                     if ($("[name=memberName]").val() != "") {
                                         $(this).addClass("is-valid");
                                         $("[name=check3]").prop("checked", true).trigger("change");
                                     } else {
+                                    	$(".name-feed").addClass("is-invalid");
+                                    	$(this).addClass("is-invalid");
                                         $("[name=check3]").prop("checked", false).trigger("change");
                                     }
                                 });
@@ -222,11 +227,15 @@
                                 //연락처 형식 검사 코드
                                 $("[name=memberContact]").blur(
                                     function () {
-                                    	if($(this).val()=="") return;
+                                        $(this).removeClass("is-invalid is-valid");
+                                    	if($(this).val()=="") {
+                                    		$(this).addClass("is-invalid");
+                                    		$(".d-content-feedback").addClass(
+                                            "text-danger");
+                                    	};
                                         var inputContent = $(this).val();
                                         var regex = /^\d{10,11}$/;
                                         var isValid = regex.test(inputContent)
-                                        $(this).removeClass("is-invalid is-valid");
                                         $(".d-content-feedback").removeClass(
                                             "text-danger");
                                         if (isValid) {
@@ -238,6 +247,7 @@
                                                 "text-danger");
                                         }
                                     });
+                                
                                 
                                 //필수 항목 전부 체크시 가입 버튼 활성화
                                 $(".check").change(function () {
@@ -332,12 +342,16 @@
 								           $(".ds1").prop("selected", true).trigger("change");
 								    	 $(".choice1").css("display", "none");
 								    	$("#monor1").prop("disabled", true).trigger("change"); // 예시로 display를 none으로 설정
+								    	 $(".category-check")
+                                         .prop("checked", false).trigger("change");
 								        }
 								    }
 								    else{
 								    	$(".ds1").prop("selected", true);
 								    	 $(".choice1").css("display", "none");
 								    	$("#monor1").prop("disabled", true);
+								    	 $(".category-check")
+                                         .prop("checked", false).trigger("change");
 								    }
 								});
 								
@@ -355,12 +369,16 @@
 								           $(".ds2").prop("selected", true);
 								    	 $(".choice2").css("display", "none");
 								    	$("#monor2").prop("disabled", true); // 예시로 display를 none으로 설정
+								    	 $(".category-check")
+                                         .prop("checked", false).trigger("change");
 								        }
 								    }
 								    else{
 								    	$(".ds2").prop("selected", true);
 								    	 $(".choice2").css("display", "none");
 								    	$("#monor2").prop("disabled", true);
+								    	 $(".category-check")
+                                         .prop("checked", false).trigger("change");
 								    }
 								});
 								
@@ -378,14 +396,20 @@
 								           $(".ds3").prop("selected", true);
 								    	 $(".choice3").css("display", "none");
 								    	$("#monor3").prop("disabled", true); // 예시로 display를 none으로 설정
+								    	 $(".category-check")
+                                         .prop("checked", false).trigger("change");
 								        }
 								    }
 								    else{
 								    	$(".ds3").prop("selected", true);
 								    	 $(".choice3").css("display", "none");
 								    	$("#monor3").prop("disabled", true);
+								    	 $(".category-check")
+                                         .prop("checked", false).trigger("change");
 								    }
 								});
+								
+								
 						
 								//카테고리 값 유무 검사
 								$(".mojor-check").change(function () {
@@ -441,7 +465,8 @@
 						                               .text(text));
 						                       }
 						          
-						                   }
+		                                        }
+						                       
 						               });
 						               
 						               // [3] 목록을 클릭하면 입력창에 채우고 .zip 엘리먼트 숨기기
@@ -460,6 +485,12 @@
 						                   $(".search-input").val(selectedAddress);
 						                   $(".zip").hide();
 						                   
+						                   $(".d-addr-feedback").removeClass("text-danger");
+                                            $("#memberAddr").removeClass("is-valid is-invalid");
+                                            $(".addr-feed").removeClass("is-valid invalid");
+                                            $("#memberAddr").addClass("is-valid");
+                                            $(".addr-feed").addClass("is-valid");
+                                            $(".addrCheck").prop("checked", true).trigger("change");
 						                   //console.log($('.newInput').val())
 						               });
 						               
@@ -539,12 +570,13 @@
                                             <div class="row mt-3">
                                                 <div class="col">
                                                     <div class="input-group has-validation">
-                                                        <div class="form-floating">
+                                                        <div class="form-floating name-feed">
                                                             <input type="checkbox" name="check3" class="check">
                                                             <input type="text" class="form-control" name="memberName"
                                                                 id="memberName" placeholder="실명" required> <label
                                                                 for="memberName">실명*</label>
                                                         </div>
+                                                        <div class="invalid-feedback">필수항목입니다</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -613,11 +645,19 @@
                                                     </div>
                                                 </div>
                                             </div>
-
+															
+											<input type="checkbox" class="check addrCheck">
 											<div class="row mt-4">
 							                    <div class="col">
-							                       지역 <input type="search" name="StringmemberAddr" class="form-control search-input"
-							                            placeholder="동,읍,면을 입력해주세요">
+							                       <div class="input-group has-validation">
+                                                       <div class="form-floating addr-feed">
+                                                            <input type="search" class="form-control search-input" name="StringmemberAddr"
+                                                                id="memberAddr" placeholder="" required>  <label
+                                                                for="memberBirth">지역</label>
+                                                                 <div class="d-addr-feedback">동, 읍, 면을 입력해 주세요</div>
+                                                       	</div>
+                                                    	</div>
+                                                    </div>
 							                    </div>                    
 							                </div>
 							                <div class="row">
@@ -626,7 +666,37 @@
 							                        </ul>
 							                    </div>
 							                </div>
-											
+											<script>
+											$("#memberAddr").change(
+				                                    function () {
+				                                        $(this).removeClass("is-invalid is-valid");
+				                                        $(".d-addr-feedback").removeClass(
+		                                                "text-danger");
+				                                        $(".addr-feed").removeClass("is-invalid is-valid");
+				                                    	if($(this).val()=="") {
+				                                    		$(this).addClass("is-invalid");
+				                                    		$(".addr-feed").addClass("is-invalid");
+				                                    		$(".d-addr-feedback").addClass(
+			                                                "text-danger");
+				                                    		$(".addrCheck").prop("checked", false).trigger("change");
+				                                    	};
+					                                        var inputContent = $(this).val();
+					                                        var regex = /^[가-힣]+\s[가-힣]+\s[가-힣]+$/;
+					                                        var isValid = regex.test(inputContent);
+					                                        if (isValid) {
+					                                            $(this).addClass("is-valid");
+					                                            $(".addr-feed").addClass("is-valid");
+					                                            $(".addrCheck").prop("checked", true).trigger("change");
+					                                        } 
+					                                        else {
+					                                            $(this).addClass("is-invalid");
+					                                            $(".addr-feed").addClass("is-invalid");
+					                                            $(".d-addr-feedback").addClass(
+					                                                "text-danger");
+					                                            $(".addrCheck").prop("checked", false).trigger("change");
+					                                        }
+				                                    });
+											</script>
 
                                             
                                             <!-- 1. 관심 테이블 대분류 -->

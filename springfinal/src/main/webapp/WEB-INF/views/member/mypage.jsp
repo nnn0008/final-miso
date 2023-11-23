@@ -49,8 +49,9 @@ $(function() {
 <div class="contain-fluid">
         <div class="row ms-2">
             <div class="col-12	">
-                
-                        <div class="row">
+                <c:choose>
+                	<c:when test="${sessionScope.name==memberDto.memberId}">
+                		<div class="row">
                             <div class="col mb-3">
                                 <strong class="profile-text">프로필</strong> 
                             </div>
@@ -59,7 +60,7 @@ $(function() {
                         <div class="row mt-3 d-flex align-items-center profile-box">
                             <div class="col-3">
                                 <c:choose>
-                                    <c:when test="${attachDto==null}">
+                                    <c:when test="${memberDto==null}">
                                         <img src="https://dummyimage.com/40x40/000/fff" class="rounded-circle profile">
                                     </c:when>
                                     <c:otherwise>
@@ -149,6 +150,12 @@ $(function() {
                                 <span>모임이름</span>
                             </div>
                     </div>
+                	</c:when>
+                	<c:otherwise>
+                		
+                	</c:otherwise>
+                </c:choose>
+                        
                         
 
 		
