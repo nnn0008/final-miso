@@ -255,7 +255,16 @@ $(function(){
         $("#meetingEditModal .meetingDateByEdit").val(meetingData.date); 
         $("#meetingEditModal .meetingTimeByEdit").val(meetingData.time); 
         $("#meetingEditModal .meetingMaxPeopleByEdit").val(meetingData.meetingNumber);
-        $("#meetingEditModal .img").attr("src","/rest/meeting/attchImage?attachNo=" + meetingData.attachNo);
+        
+        if(meetingData.attachNo!=0){
+        	$("#meetingEditModal .preview2").attr("src","/rest/meeting/attchImage?attachNo=" + meetingData.attachNo);
+        }
+        
+        else{
+        	
+        	$("#meetingEditModal .preview2").attr("src","/images/noimage.jpg");
+        	
+        }
         // 나머지 필드에 대해서도 필요한 데이터 채우기
 
         // 예시에서는 meetingFix가 체크박스이므로, 체크 상태를 설정합니다.
@@ -723,7 +732,7 @@ $(function(){
       </div>
       <div class="modal-body">
       		 <div class="preview-wrapper2">
- 
+	<img class="preview2" width="200" height="200">
       		</div>
         	<input type="hidden" class="meetingNoByEdit" name="meetingNo" value="${meetinDto.meetingNo}">
 			<input type="file" class="meetingImageByEdit" name="attach" id="selector2">

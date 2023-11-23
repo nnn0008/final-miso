@@ -298,15 +298,11 @@ public class MeetingRestController {
 	        
 	        //디데이 설정
 	        
-	        Date currentDate = new Date();
-	        SimpleDateFormat currentDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	        String formattedCurrentDate = currentDateFormat.format(currentDate);
-	        String day = currentDateFormat.format(date);
+	        int dday = (int) dto.getDday();
 	        
-            int timeDiff = (int) (currentDateFormat.parse(day).getTime() - currentDateFormat.parse(formattedCurrentDate).getTime());
-            int daysDiff = (int) Math.ceil(timeDiff / (1000 * 3600 * 24));
-
-            dto.setDday(daysDiff);
+	        dto.setDday(dday);
+	        
+	      
 		}
 		
 		return meetingList;

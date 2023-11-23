@@ -24,7 +24,7 @@ public class MeetingDto {
 	private String dateString;
 	private String date;
 	private String time;
-	private int dday;
+	private float dday;
 	private int chatRoomNo;
 	private int attachNo;
 	private boolean isManager;
