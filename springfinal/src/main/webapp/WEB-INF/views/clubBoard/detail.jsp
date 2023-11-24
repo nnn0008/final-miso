@@ -598,7 +598,7 @@ $(function(){
 			
 			<div class="row">
 				<div class="col">
-					<i class="fa-regular fa-heart photo-like" style="color: red"></i>
+					<i class="fa-regular fa-heart" style="color: red"></i>
 					<p class="board-like-count">
 						${clubBoardDto.clubBoardLikecount}
 					</p>
