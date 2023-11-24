@@ -13,6 +13,7 @@ import com.kh.springfinal.dto.ClubDto;
 import com.kh.springfinal.vo.ClubImageVO;
 import com.kh.springfinal.vo.ClubListVO;
 import com.kh.springfinal.vo.MemberPreferInfoVO;
+import com.kh.springfinal.vo.PaginationVO;
 
 @Repository
 public class ClubDaoImpl implements ClubDao{
@@ -115,6 +116,12 @@ public class ClubDaoImpl implements ClubDao{
 	public List<MemberPreferInfoVO> memberPreferInfo(String memberId) {
 		
 		return sqlSession.selectList("club.memberPreferInfo",memberId);
+	}
+
+	@Override
+	public List<ClubListVO> clubSearchPageList(PaginationVO vo) {
+		
+		return sqlSession.selectList("club.searchClub",vo);
 	}
 	
 	
