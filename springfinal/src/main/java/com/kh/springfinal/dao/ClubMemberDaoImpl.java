@@ -115,7 +115,7 @@ public class ClubMemberDaoImpl implements ClubMemberDao{
 	@Override
 	public boolean upgradeRank(int clubMemberNo) {
 		
-		return sqlSession.update("clubMember.lankUpgrade",clubMemberNo)>0;
+		return sqlSession.update("clubMember.rankUpgrade",clubMemberNo)>0;
 	}
 
 //	@Override

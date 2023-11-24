@@ -130,7 +130,6 @@ public class ClubController {
 		clubMemberDto.setClubMemberRank("운영진");
 		clubMemberDto.setJoinMessage("환영합니다.");
 		
-		log.debug("clubDto={}",clubDto);
 		
 		clubDao.insert(clubDto);
 		clubMemberDao.insert(clubMemberDto);
@@ -149,6 +148,9 @@ public class ClubController {
 		MajorCategoryDto major = categoryDao.findMajor(clubDto.getClubCategory());
 		ZipCodeDto zipDto = zipDao.findZip(clubNo);
 		List<ClubDetailBoardListVO> clubDetailBoardList  = clubBoardDao.clubDetailBoardList(clubNo);
+		
+		log.debug("clubDetailBoardList={}",clubDetailBoardList);
+		
 		List<PhotoDto> photoList = photoDao.selectList(clubNo);
 		
 		int clubMemberNo = clubMemberDao.findClubMemberNo(clubNo, memberId);
@@ -209,6 +211,8 @@ public class ClubController {
 		model.addAttribute("meetingList",meetingList);
 		model.addAttribute("photoList",photoList);
 		model.addAttribute("meetingCount",meetingCount);
+		
+		
 		model.addAttribute("clubMemberNo",clubMemberNo);
 		
 		model.addAttribute("clubDetailBoardList",clubDetailBoardList);

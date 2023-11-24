@@ -350,7 +350,7 @@ public class MeetingRestController {
 			
 			dto.setAttendMemberList(clubMemberDao.meetingAttendList(dto.getMeetingNo()));
 			
-			
+			log.debug("AttendMemberList={}",dto.getAttendMemberList());
 			
 			boolean isManager=false;
 			boolean didAttend=false;

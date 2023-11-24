@@ -91,7 +91,14 @@
 	</update>
 	
 	<select id="clubDetailBoardList" resultType="clubDetailBoardListVO">
-	SELECT cb.club_board_no,cb.club_no,cb.club_board_title,cb.club_board_content,cb.club_board_date,cb.club_board_category,m.member_id,m.member_name 
+	SELECT cb.club_board_no,
+	cb.club_no,
+	cb.club_board_title,
+	cb.club_board_content,
+	cb.club_board_date,
+	cb.club_board_category,
+	m.member_id,m.member_name,
+	a.attach_no 
 	FROM club_board cb 
 	JOIN 
 	club_member cm 
@@ -100,7 +107,12 @@
 	JOIN 
 	MEMBER m 
 	ON 
-	cm.CLUB_MEMBER_ID = m.MEMBER_Id WHERE cb.CLUB_no=#{clubNo}
+	cm.CLUB_MEMBER_ID = m.MEMBER_Id 
+	left outer join member_profile mp 
+	on m.member_id = mp.member_id 
+	left outer join attach a 
+	on mp.attach_no = a.attach_no
+	WHERE cb.CLUB_no=#{clubNo}
 	</select>
 	
 	<select id="selectListByPage" resultType="clubBoardAllDto">

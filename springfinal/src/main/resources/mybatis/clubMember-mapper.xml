@@ -101,14 +101,16 @@
     
     <select id="meetingAttendMember" resultType="meetingAttendMemberVO">
     
-    SELECT mm.meeting_no,cm.club_member_no,cm.club_member_id,cm.club_member_rank FROM 
+    SELECT a.attach_no,mm.meeting_no,cm.club_member_no,cm.club_member_id,cm.club_member_rank FROM 
     meeting_member mm JOIN 
     club_member cm ON 
     mm.CLUB_MEMBER_NO = cm.CLUB_MEMBER_NO 
+    left outer join member_profile mp on cm.club_member_id = mp.member_id
+    left outer join attach a on mp.attach_no = a.attach_no
     WHERE mm.MEETING_NO = #{meetingNo}
     </select>
     
-    <update id="lankUpgrade">
+    <update id="rankUpgrade">
     
     	update club_member set club_member_rank='운영진' 
     	where club_member_no=#{clubMemberNo}
