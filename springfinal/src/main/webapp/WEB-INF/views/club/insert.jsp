@@ -3,47 +3,34 @@
    <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 <jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/hangul-js" type="text/javascript"></script>
     
-    <style>
+  <style>
 
-
-.addr-list {
+ .addr-list {
     position: absolute;
     z-index: 1000;
-    max-height: 300px;
-    width:545px;
-    overflow-y: auto;
+    max-height: 250px; /* 적절한 높이로 설정 */
+    width: 545px;
     overflow: auto; /* 스크롤이 필요한 경우 스크롤 허용 */
-    display: none;
     margin-top: 5px;
-}
+    }
 
 /* 입력창의 상단에 위치하도록 설정 */
 .position-relative {
     position: relative;
 }
 
-/* 드롭다운이 열렸을 때 스타일 조정 */
-.addr-list.show {
-    display: block;
-}
-
-
  </style>   
  
-  
-    
-    
-    <script>
+<script>
  
     $(function(){
     	
     	var no = $(this).find(":selected").val()
-		
-    		
+		  		
     	$.ajax({
             url:"http://localhost:8080/rest/category",
             method:"get",
@@ -169,10 +156,7 @@
         	        
         	    });
     	        
-    	        
-    	    
-	
-    	    
+    	        	    
     	    var page = 1; // 초기 페이지
     	    var scrollTimeout; // 스크롤 이벤트를 지연시키기 위한 타이머
 
@@ -224,21 +208,6 @@
     	 }
 
 
-    	});
-
-    	// 드롭다운이 열릴 때
-    	$(".search-input").focus(function() {
-    	    $(".addr-list").addClass("show");
-    	});
-
-    	// 드롭다운이 닫힐 때
-    	$(".search-input").blur(function() {
-    	    $(".addr-list").removeClass("show");
-    	});
-
-    	// 혹은 드롭다운의 아이템이 클릭되었을 때
-    	$(".addr-list").on("click", "li", function() {
-    	    $(".addr-list").removeClass("show");
     	});
 
 

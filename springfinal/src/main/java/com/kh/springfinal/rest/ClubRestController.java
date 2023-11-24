@@ -1,13 +1,11 @@
 package com.kh.springfinal.rest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,21 +15,29 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.springfinal.dao.CategoryDao;
+import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dao.ClubMemberDao;
+import com.kh.springfinal.dao.WishlistDao;
 import com.kh.springfinal.dao.ZipCodeDao;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MinorCategoryDto;
-import com.kh.springfinal.dto.OneDto;
 import com.kh.springfinal.dto.ZipCodeDto;
+import com.kh.springfinal.vo.ClubListVO;
 import com.kh.springfinal.vo.PaginationVO;
+
+import lombok.extern.slf4j.Slf4j;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/rest")
+@Slf4j
 public class ClubRestController {
 		
 	@Autowired
 	private SqlSession sqlSession;
+	
+	@Autowired
+	private ClubDao clubDao;
 	
 	@Autowired
 	private ZipCodeDao zipCodeDao;
@@ -41,6 +47,9 @@ public class ClubRestController {
 	
 	@Autowired
 	private ClubMemberDao clubMemberDao;
+	
+	@Autowired
+	private WishlistDao wishlistDao;
 	
 	@GetMapping("/category")
 	public List<MinorCategoryDto> category(@RequestParam int majorCategoryNo) {
@@ -126,4 +135,170 @@ public class ClubRestController {
 		}
 	
 	}
+	
+	
+	
+	@GetMapping("/clubSearchPageList")
+	public List<ClubListVO> searchList(@ModelAttribute(name ="vo") PaginationVO vo,
+			HttpSession session){
+		
+		String memberId = (String) session.getAttribute("name");
+		
+		int count = clubDao.searchCount(vo);
+		
+		vo.setWhereString(memberId);
+		vo.setSize(6);
+		vo.setCount(count);
+		
+		List<ClubListVO> clubList= clubDao.clubSearchPageList(vo);
+		
+			for(ClubListVO list : clubList) {
+			
+			int memberCount = clubMemberDao.memberCount(list.getClubNo());
+			list.setMemberCount(memberCount);
+			
+			int clubNo = list.getClubNo();
+			
+			
+			boolean likeClub = wishlistDao.doLike(memberId, clubNo);
+			
+			list.setLikeClub(likeClub);
+			log.debug("likeClub={}",likeClub);
+		}
+		
+		return clubList;
+		
+		
+	}
+	
+	@GetMapping("memberPreferList")
+	public List<ClubListVO> memberPreferClubList(
+			@ModelAttribute(name ="vo") PaginationVO vo,
+			HttpSession session){
+		
+		
+		
+		String memberId = (String) session.getAttribute("name");
+		
+		
+		vo.setWhereString(memberId);
+		vo.setSize(6);
+		
+		int count = clubDao.preferCount(vo);
+		List<ClubListVO> clubList= clubDao.clubListPage(vo);
+		
+		for(ClubListVO list : clubList) {
+			
+			int memberCount = clubMemberDao.memberCount(list.getClubNo());
+			list.setMemberCount(memberCount);
+			
+			int clubNo = list.getClubNo();
+			
+			
+			boolean likeClub = wishlistDao.doLike(memberId, clubNo);
+			
+			list.setLikeClub(likeClub);
+			
+		}
+		
+		
+		return clubList;
+		
+		
+	}
+	
+	@GetMapping("majorCategoryClubList")
+	public List<ClubListVO> majorCategoryClubList(@ModelAttribute(name ="vo") PaginationVO vo,
+			HttpSession session){
+		
+		
+		
+		String memberId = (String) session.getAttribute("name");
+		
+		
+		vo.setWhereString(memberId);
+		
+		vo.setSize(6);
+		
+		List<ClubListVO> clubList= clubDao.majorClubListPage(vo);
+		
+		for(ClubListVO list : clubList) {
+			
+			int memberCount = clubMemberDao.memberCount(list.getClubNo());
+			list.setMemberCount(memberCount);
+			
+			int clubNo = list.getClubNo();
+			
+			
+			boolean likeClub = wishlistDao.doLike(memberId, clubNo);
+			
+			list.setLikeClub(likeClub);
+			
+		}
+		
+		
+		return clubList;
+		
+		
+	}
+	
+	@GetMapping("minorCategoryClubList")
+	public List<ClubListVO> minorCategoryClubList(@ModelAttribute(name ="vo") PaginationVO vo,
+			HttpSession session){
+		
+		
+		
+		String memberId = (String) session.getAttribute("name");
+		
+		
+		vo.setWhereString(memberId);
+		
+		vo.setSize(6);
+		
+		List<ClubListVO> clubList= clubDao.minorClubListPage(vo);
+		
+				for(ClubListVO list : clubList) {
+			
+			int memberCount = clubMemberDao.memberCount(list.getClubNo());
+			list.setMemberCount(memberCount);
+			
+			int clubNo = list.getClubNo();
+			
+			
+			boolean likeClub = wishlistDao.doLike(memberId, clubNo);
+			
+			list.setLikeClub(likeClub);
+			
+		}
+		
+		
+		return clubList;
+		
+		
+	}
+	
+	
+	@PostMapping("wishInsert")
+	public void add(HttpSession session, int clubNo) {
+		
+		String memberId= (String) session.getAttribute("name");
+		
+		wishlistDao.insert(memberId, clubNo);
+		
+		
+	}
+	
+	@PostMapping("wishDelete")
+	public void delete(HttpSession session, int clubNo) {
+		
+		String memberId= (String) session.getAttribute("name");
+		
+		wishlistDao.delete(memberId, clubNo);
+		
+		
+	}
+	
+	
+	
+	
 }

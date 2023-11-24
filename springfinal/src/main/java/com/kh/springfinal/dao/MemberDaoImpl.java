@@ -83,4 +83,13 @@ public class MemberDaoImpl implements MemberDao{
 		boolean result = count>0;
 		return result;
 	}
+	@Override
+	public boolean updateLevel(String memberId) {
+		return sqlSession.update("member.updateLevel",memberId)>0;
+	}
+	
+	@Override
+	public boolean updateDownLevel(String memberId) {
+		return sqlSession.update("member.updateDownLevel",memberId)>0;
+	}
 }

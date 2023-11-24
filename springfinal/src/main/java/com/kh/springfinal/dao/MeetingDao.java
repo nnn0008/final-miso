@@ -16,6 +16,6 @@ public interface MeetingDao {
 	List<MeetingDto> meetingListByPage(PaginationVO vo);
 	AttachDto findImage(int meetingNo);
 	int count(PaginationVO vo);
-	int count(int clubNO);
+	int count(int clubNO);//전체 개수 클럽 디테일로 보내서 jsp 전체에서 쓰기 위해서 만듬
 	
 }

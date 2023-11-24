@@ -15,9 +15,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.kh.springfinal.dao.ClubDao;
+import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dao.PaymentDao;
 import com.kh.springfinal.dao.PaymentRegularDao;
 import com.kh.springfinal.dao.ProductDao;
+import com.kh.springfinal.dto.ClubDto;
 import com.kh.springfinal.dto.PaymentDetailDto;
 import com.kh.springfinal.dto.PaymentDto;
 import com.kh.springfinal.dto.PaymentRegularDto;
@@ -62,6 +65,12 @@ public class KakaopayController {
 	@Autowired
 	private ProductDao productDao;
 	
+	@Autowired
+	private MemberDao memberDao;
+	
+	@Autowired
+	private ClubDao clubDao;
+	
 	
 	
 	
@@ -72,9 +81,15 @@ public class KakaopayController {
 	}
 	//단건 상품화면
 	@RequestMapping("/singleList")
-	public String singleList(Model model) {
+	public String singleList(Model model,HttpSession session) {
 		List<ProductDto>singleList=productDao.selectSingleProductList();
 		model.addAttribute("singleList",singleList);
+		
+		String memberId=(String)session.getAttribute("name");
+		
+//		PurchaseClubListVO purchaseClubList = ClubMemberDao.selectOne(memberId);
+		
+//		model.addAttribute("purchaseClubList", purchaseClubList);
 		return"pay/singleList";
 	}
 	//정기 상품화면
@@ -170,8 +185,12 @@ public class KakaopayController {
 								.paymentDetailProductQty(vo.getQty())//구매수량
 								.build());
 					}
-			
-				
+					//회원등급 업데이트
+					String memberId=(String)session.getAttribute("name");
+					memberDao.updateLevel(memberId);
+					
+					//모임 프리미엄 업데이트
+					clubDao.updatePremium(memberId);
 		return "redirect:successResult";
 	}
 	
@@ -220,7 +239,7 @@ public class KakaopayController {
 	}
 	
 	@RequestMapping("/cancelAll")
-	public String cancelAll(@RequestParam int paymentNo) throws URISyntaxException {
+	public String cancelAll(HttpSession session,@RequestParam int paymentNo) throws URISyntaxException {
 		PaymentDto paymentDto = paymentDao.selectOne(paymentNo);
 		if(paymentDto == null || paymentDto.getPaymentRemain() == 0) {
 //			throw new NoTargetException("이미 취소된 결제입니다");
@@ -239,7 +258,14 @@ public class KakaopayController {
 				.build());
 		paymentDao.cancelDetailGroup(paymentNo);
 		
-		return"redirect:pay/list";
+		//회원등급 취소
+		String memberId=(String)session.getAttribute("name");
+		memberDao.updateDownLevel(memberId);
+		
+		//모임 프리미엄 취소
+		clubDao.updateDownPremium(memberId);
+		
+		return"redirect:/list";
 	}
 	@RequestMapping("/cancelPage")
 	public String cancelPage(HttpSession session) {
@@ -343,8 +369,14 @@ public class KakaopayController {
 										.regularDetailProductQty(vo.getQty())//구매수량
 										.build());
 							}
+							
+							//회원등급 취소
+							String memberId=(String)session.getAttribute("name");
+							memberDao.updateLevel(memberId);
+							
+							//모임 프리미엄 취소
+							clubDao.updatePremium(memberId);
 					
-						
 				return "redirect:regularSuccessResult";
 			}
 			
@@ -354,7 +386,7 @@ public class KakaopayController {
 			}
 			
 			@RequestMapping("/regularCancel")
-			public String regularCancel(@RequestParam int regularDetailNo)throws URISyntaxException{
+			public String regularCancel(HttpSession session,@RequestParam int regularDetailNo)throws URISyntaxException{
 				//1
 				RegularDetailDto regularDetailDto = paymentRegularDao.selectDetail(regularDetailNo);
 				
@@ -381,7 +413,7 @@ public class KakaopayController {
 	return "redirect:list2";
 }
 		@RequestMapping("/regularCancelAll")
-		public String regularCancelAll(@RequestParam int paymentRegularNo)throws URISyntaxException{
+		public String regularCancelAll(HttpSession session,@RequestParam int paymentRegularNo)throws URISyntaxException{
 			
 			//1
 			PaymentRegularDto paymentRegularDto = paymentRegularDao.selectOne(paymentRegularNo);
@@ -405,6 +437,14 @@ public class KakaopayController {
 	        		 .paymentRegularRemain(0)
 	        		 .build());
 	         paymentRegularDao.cancelDetailGroup(paymentRegularNo);
+	         
+	       //회원등급 업데이트
+				String memberId=(String)session.getAttribute("name");
+				memberDao.updateDownLevel(memberId);
+				
+				//모임 프리미엄 취소
+				clubDao.updateDownPremium(memberId);
+				
 	         
 	         return "redirect:list2";
 		}

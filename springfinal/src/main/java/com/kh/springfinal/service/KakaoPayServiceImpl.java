@@ -62,7 +62,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 		
 		//주소 설정
 		URI uri = new URI("https://kapi.kakao.com/v1/payment/ready");
-		
+		log.debug("request준비={}",request);
 		//바디 설정
 		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 		body.add("cid",kakaoPayProperties.getCid());
@@ -75,7 +75,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 		
 		//현재 페이지 주소 계산
 		String path = ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString();
-		body.add("approval_url",path+"/successResult");
+		body.add("approval_url",path+"/success");
 		body.add("cancel_url",path+"/cancelPage");
 		body.add("fail_url",path+"/failPage");
 		
@@ -83,13 +83,13 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 		HttpEntity entity = new HttpEntity(body,headers);//요청 객체
 		
 		KakaoPayReadyResponseVO response = template.postForObject(uri, entity, KakaoPayReadyResponseVO.class);
-		
+		log.debug("reponse준비={}",response);
 		return response;
 	}
 
 	@Override
 	public KakaoPayApproveResponseVO approve(KakaoPayApproveRequestVO request) throws URISyntaxException {
-		
+		log.debug("request등록={}",request);
 		URI uri = new URI("https://kapi.kakao.com/v1/payment/approve");
 		
 		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
@@ -104,7 +104,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 		HttpEntity entity = new HttpEntity(body,headers);//요청 객체
 		
 		KakaoPayApproveResponseVO response = template.postForObject(uri, entity, KakaoPayApproveResponseVO.class);
-		
+		log.debug("reponse등록={}",response);
 		log.debug("결제 승인 완료 = {}", response.getTid());
 		
 		return response;

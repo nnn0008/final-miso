@@ -356,21 +356,8 @@ public class ClubController {
 			String memberId = (String) session.getAttribute("name");
 			
 			List<MajorCategoryDto> categoryList = categoryDao.majorcategoryList();
-			List<ClubListVO> clubList = clubDao.clubList(memberId);
 			List<MemberPreferInfoVO> memberPreferList = clubDao.memberPreferInfo(memberId); 
 			
-			
-			for(ClubListVO list : clubList) {
-				
-				int memberCount = clubMemberDao.memberCount(list.getClubNo());
-				list.setMemberCount(memberCount);
-				
-			}
-			
-			log.debug("clubList2={}",clubList);
-			
-			
-			model.addAttribute("clubList",clubList);
 			model.addAttribute("categoryList",categoryList);
 			model.addAttribute("memberPreferList",memberPreferList);
 			
@@ -389,12 +376,7 @@ public class ClubController {
 			List<ClubListVO> clubList = clubDao.majorClubList(memberId,majorCategoryNo);
 			
 			
-			for(ClubListVO list : clubList) {
-				
-				int memberCount = clubMemberDao.memberCount(list.getClubNo());
-				list.setMemberCount(memberCount);
-				
-			}
+			
 			
 			model.addAttribute("clubList",clubList);
 			model.addAttribute("categoryList",categoryList);
@@ -416,14 +398,7 @@ public class ClubController {
 			
 			List<ClubListVO> clubList = clubDao.minorClubList(memberId,minorCategoryNo);
 			
-			log.debug("clubList={}",clubList);
 			
-			for(ClubListVO list : clubList) {
-				
-				int memberCount = clubMemberDao.memberCount(list.getClubNo());
-				list.setMemberCount(memberCount);
-				
-			}
 			
 			model.addAttribute("clubList",clubList);
 			model.addAttribute("categoryList",categoryList);
@@ -433,6 +408,12 @@ public class ClubController {
 			
 			
 			
+		}
+		
+		@GetMapping("/searchList")
+		public String searchList(@RequestParam String keyword) {
+			
+			return "club/clubSearchList";
 		}
 		
 		
