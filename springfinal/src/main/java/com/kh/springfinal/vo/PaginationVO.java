@@ -32,12 +32,13 @@ public class PaginationVO {
 	public boolean getWhereNoFlag() {
 	    return whereNo != 0;
 	}
+
+	public boolean getClubNoFlag() {
+
 	public boolean getWhereStringFlag() {
 	    return whereString != null;
 	}
-	public boolean getClubNo() {
-		return clubNo != 0;
-	}
+    
 	//동호회 게시판은 키워드만 있어도 됨
 	public boolean isCategory() {
 		return keyword != null;
@@ -50,7 +51,7 @@ public class PaginationVO {
 		else if(getWhereNoFlag()) {
 			return "page=" + (getBegin()-1)+ "&size=" +size+ "&whereNo="+whereNo;	
 		}
-		else if(getClubNo()) {
+		else if(getClubNoFlag()) {
 			return "page=" + (getBegin()-1) + "&size=" +size + "&clubNo=" + clubNo;
 		}
 		else if(getWhereStringFlag()) {
@@ -83,7 +84,7 @@ public class PaginationVO {
 		else if(getWhereNoFlag()) {
 			return "page=" + (getEnd()+1)+ "&size=" +size+ "&whereNo="+whereNo;	
 		}
-		else if(getClubNo()) {
+		else if(getClubNoFlag()) {
 			return "page=" + (getEnd()+1)+ "&size=" +size + "&clubNo=" + clubNo;
 		}
 		else if(getWhereStringFlag()) {
@@ -109,7 +110,7 @@ public class PaginationVO {
 		else if(getWhereNoFlag()) {
 			return "page=" + page+ "&size=" +size+ "&whereNo="+whereNo;
 		}
-		else if(getClubNo()) {
+		else if(getClubNoFlag()) {
 			return "page=" + page+ "&size=" +size+ "&clubNo=" + clubNo;
 		}
 		else if(getWhereStringFlag()) {

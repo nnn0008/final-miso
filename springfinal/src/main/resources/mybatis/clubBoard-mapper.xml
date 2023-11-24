@@ -112,7 +112,8 @@
 				<if test="keyword != null">
 					and club_board_category = #{keyword}
 				</if>		
-			</where> 
+			</where>
+			order by club_board_no desc 
 				)TMP
 			) where rn between #{startRow} and #{finishRow}
 	</select>

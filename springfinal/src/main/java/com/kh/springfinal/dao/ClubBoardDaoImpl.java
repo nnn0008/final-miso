@@ -13,6 +13,8 @@ import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.vo.ClubDetailBoardListVO;
 import com.kh.springfinal.vo.PaginationVO;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Repository
 public class ClubBoardDaoImpl implements ClubBoardDao{
 	@Autowired
@@ -84,6 +86,7 @@ public class ClubBoardDaoImpl implements ClubBoardDao{
 	@Override
 	public int clubBoardCount(PaginationVO vo, int clubNo) {
 		vo.setClubNo(clubNo);
+		//log.debug("vo={}", vo);
 		return sqlSession.selectOne("clubBoard.boardCount", vo);
 	}
 }
