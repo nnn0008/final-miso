@@ -466,7 +466,7 @@ $(function(){
                     .addClass("d-flex align-items-center"); // 가로로 정렬
 
                 for (var a = 0; a < attendMemberList.length; a++) {
-                    var aLink = $('<a>').attr('href', "/");
+                    var aLink = $('<a>').attr('href', "/profileShow?memberId=" + attendMemberList[a].clubMemberId);
                     
                     var image = $('<img>')
                         .addClass("rounded-circle me-3")
@@ -994,13 +994,13 @@ $(document).ready(function () {
         <a id="homeLink" href="#" class="btn btn-success bg-miso w-100 active">홈</a>
     </div>
     <div class="col-3 pe-0">
-        <a id="boardLink" href="#" class="btn btn-success bg-miso w-100">게시판</a>
+        <a id="boardLink" href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDto.clubNo}" class="btn btn-success bg-miso w-100">게시판</a>
     </div>
     <div class="col-3 pe-0">
-        <a id="photoLink" href="#" class="btn btn-success bg-miso w-100">사진첩</a>
+        <a id="photoLink" href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}" class="btn btn-success bg-miso w-100">사진첩</a>
     </div>
     <div class="col-3">
-        <a id="chatLink" href="#" class="btn btn-success bg-miso w-100">채팅</a>
+        <a id="chatLink" href="/chat/enterRoom/${clubDto.chatRoomNo}" class="btn btn-success bg-miso w-100">채팅</a>
     </div>
 </div>
 
@@ -1228,8 +1228,9 @@ $(document).ready(function () {
         <div class="col memberList">
             <div class="row d-flex align-items-center">
                 <div class="col-2 position-relative">
+                <a href="/member/mypage?memberId=${clubMember.memberId}">
                     <img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${clubMember.memberId}" width="100" height="100" class="rounded-circle">
-                    
+                    </a>
                     <c:if test="${clubMember.clubMemberRank == '운영진'}">
                         <i class="fa-solid fa-crown fa-lg pt-3 pb-3 ps-2 pe-2 club-member-badge"></i>
                     </c:if>
