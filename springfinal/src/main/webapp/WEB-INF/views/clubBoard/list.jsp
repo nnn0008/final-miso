@@ -73,10 +73,7 @@
 		        });        	
 	        }
         });
-        
-        
-        
-        
+
     });
 </script>
 <div class="row m-2 mt-4">

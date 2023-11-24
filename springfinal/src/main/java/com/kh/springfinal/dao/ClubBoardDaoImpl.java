@@ -35,16 +35,6 @@ public class ClubBoardDaoImpl implements ClubBoardDao{
 	}
 	
 	@Override
-	public List<ClubBoardAllDto> selectListByPage(PaginationVO vo) {
-		//page가 페이지 번호
-		//size가 하나의 페이지에서 보여줄 게시글의 수 (ex) page(2) size(10)이라면 게시글은 11번~20번
-//		Integer end = page * size; // 총 글의 개수
-//		Integer begin = end - (size - 1); //시작 글의 번호
-//		Map params = Map.of("begin", begin, "end", end, "clubNo", clubNo, "keyword", keyword);
-		return sqlSession.selectList("clubBoard.selectListByPage", vo);
-	}
-	
-	@Override
 	public ClubBoardDto selectOnes(int clubBoardNo) {
 		return sqlSession.selectOne("clubBoard.finds", clubBoardNo);
 	}
@@ -80,8 +70,20 @@ public class ClubBoardDaoImpl implements ClubBoardDao{
 		return sqlSession.selectList("clubBoard.clubDetailBoardList",clubNo);
 	}
 	
-//	@Override
-//	public int clubboardCount(int clubNo) {
-//		return sqlSession.selectOne("clubBoard.boardCount", clubNo);
-//	}
+	@Override
+	public List<ClubBoardAllDto> selectListByPage(PaginationVO vo, int clubNo) {
+		//page가 페이지 번호
+		//size가 하나의 페이지에서 보여줄 게시글의 수 (ex) page(2) size(10)이라면 게시글은 11번~20번
+//		Integer end = page * size; // 총 글의 개수
+//		Integer begin = end - (size - 1); //시작 글의 번호
+//		Map params = Map.of("begin", begin, "end", end, "clubNo", clubNo, "keyword", keyword);
+		vo.setClubNo(clubNo);
+		return sqlSession.selectList("clubBoard.selectListByPage", vo);
+	}
+	
+	@Override
+	public int clubBoardCount(PaginationVO vo, int clubNo) {
+		vo.setClubNo(clubNo);
+		return sqlSession.selectOne("clubBoard.boardCount", vo);
+	}
 }
