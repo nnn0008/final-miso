@@ -59,7 +59,7 @@
     )
     </select>
     
-   <select id="clubList" resultType="ClubListVO">
+     <select id="clubList" resultType="ClubListVO">
    
    SELECT c.CLUB_NO,
     c.CLUB_NAME,
@@ -84,6 +84,60 @@
 	SELECT ma.major_category_name FROM MAJOR_CATEGORY ma JOIN MINOR_CATEGORY mi ON ma.MAJOR_CATEGORY_NO =mi.MAJOR_CATEGORY_NO 
 	WHERE mi.MINOR_CATEGORY_NO IN (SELECT mc.like_category FROM MEMBER_CATEGORY mc JOIN MEMBER m ON mc.member_id = m.MEMBER_ID 
 	WHERE m.member_id=#{memberId})
+	)
+   
+   </select>
+    
+   <select id="clubListPage" resultType="ClubListVO">
+   select * from (
+	select rownum rn, TMP.* from (
+   SELECT c.CLUB_NO,
+    c.CLUB_NAME,
+    c.CLUB_EXPLAIN,
+    zc.SIGUNGU,
+    zc.SIDO,
+    ma.MAJOR_CATEGORY_NAME,
+    mi.MINOR_CATEGORY_NAME,
+    mi.MINOR_CATEGORY_NO,
+    a.attach_no 
+    FROM Club c 
+	JOIN ZIP_CODE zc ON c.ZIP_CODE_NO =zc.ZIP_CODE_NO 	
+	JOIN Minor_CATEGORY mi ON c.CLUB_CATEGORY = mi.MINOR_CATEGORY_NO 
+	JOIN MAJOR_CATEGORY ma ON mi.MAJOR_CATEGORY_NO = ma.MAJOR_CATEGORY_NO 
+	left outer join club_image ci on c.club_no = ci.club_no
+	left outer join attach a on ci.attach_no = a.attach_no  
+	WHERE c.ZIP_CODE_NO IN(SELECT zip_code_no FROM ZIP_CODE WHERE SIdo in
+	(SELECT z.sido FROM 
+	MEMBER m JOIN ZIP_CODE z ON m.MEMBER_ADDR = z.ZIP_CODE_NO WHERE m.MEMBER_ID=#{whereString})
+	)
+	and ma.MAJOR_CATEGORY_NAME in(
+	SELECT ma.major_category_name FROM MAJOR_CATEGORY ma JOIN MINOR_CATEGORY mi ON ma.MAJOR_CATEGORY_NO =mi.MAJOR_CATEGORY_NO 
+	WHERE mi.MINOR_CATEGORY_NO IN (SELECT mc.like_category FROM MEMBER_CATEGORY mc JOIN MEMBER m ON mc.member_id = m.MEMBER_ID 
+	WHERE m.member_id=#{whereString})
+	)
+	) TMP
+			    )
+			    where rn between #{startRow} and #{finishRow}
+   
+   </select>
+   
+   <select id="clubListCount" resultType="int">
+   
+   SELECT count(*) 
+    FROM Club c 
+	JOIN ZIP_CODE zc ON c.ZIP_CODE_NO =zc.ZIP_CODE_NO 	
+	JOIN Minor_CATEGORY mi ON c.CLUB_CATEGORY = mi.MINOR_CATEGORY_NO 
+	JOIN MAJOR_CATEGORY ma ON mi.MAJOR_CATEGORY_NO = ma.MAJOR_CATEGORY_NO 
+	left outer join club_image ci on c.club_no = ci.club_no
+	left outer join attach a on ci.attach_no = a.attach_no  
+	WHERE c.ZIP_CODE_NO IN(SELECT zip_code_no FROM ZIP_CODE WHERE SIdo in
+	(SELECT z.sido FROM 
+	MEMBER m JOIN ZIP_CODE z ON m.MEMBER_ADDR = z.ZIP_CODE_NO WHERE m.MEMBER_ID=#{whereString})
+	)
+	and ma.MAJOR_CATEGORY_NAME in(
+	SELECT ma.major_category_name FROM MAJOR_CATEGORY ma JOIN MINOR_CATEGORY mi ON ma.MAJOR_CATEGORY_NO =mi.MAJOR_CATEGORY_NO 
+	WHERE mi.MINOR_CATEGORY_NO IN (SELECT mc.like_category FROM MEMBER_CATEGORY mc JOIN MEMBER m ON mc.member_id = m.MEMBER_ID 
+	WHERE m.member_id=#{whereString})
 	)
    
    </select>
@@ -129,7 +183,57 @@ ORDER BY
    
    </select>
    
+   <select id="majorClubListPage" resultType="ClubListVO">
+   select * from (
+	select rownum rn, TMP.* from (
+   SELECT 
+    c.CLUB_NO,
+    c.CLUB_NAME,
+    c.CLUB_EXPLAIN,
+    zc.SIGUNGU,
+    zc.SIDO,
+    ma.MAJOR_CATEGORY_NAME,
+    mi.MINOR_CATEGORY_NAME,
+    mi.MINOR_CATEGORY_NO,
+    a.attach_no 
+FROM 
+    Club c 
+JOIN 
+    ZIP_CODE zc ON c.ZIP_CODE_NO = zc.ZIP_CODE_NO 
+JOIN 
+    Minor_CATEGORY mi ON c.CLUB_CATEGORY = mi.MINOR_CATEGORY_NO 
+JOIN 
+    MAJOR_CATEGORY ma ON mi.MAJOR_CATEGORY_NO = ma.MAJOR_CATEGORY_NO
+    left outer join club_image ci on c.club_no = ci.club_no
+	left outer join attach a on ci.attach_no = a.attach_no 
+WHERE ma.MAJOR_CATEGORY_NAME = (
+        SELECT major_category_name 
+        FROM MAJOR_CATEGORY 
+        WHERE major_category_no = #{whereNo}
+    )
+ORDER BY 
+    CASE WHEN c.ZIP_CODE_NO IN (
+        SELECT zip_code_no 
+        FROM ZIP_CODE 
+        WHERE SIdo IN (
+            SELECT z.sido 
+            FROM MEMBER m 
+            JOIN ZIP_CODE z ON m.MEMBER_ADDR = z.ZIP_CODE_NO 
+            WHERE m.MEMBER_ID = #{whereString}
+        )
+    ) THEN 0 ELSE 1 END) TMP
+			    )
+			    where rn between #{startRow} and #{finishRow}
+   
+   </select>
+   
+   
+   
+   
+   
    <select id="minorClubList" resultType="ClubListVO">
+   
+ 
     SELECT c.CLUB_NO,
     c.CLUB_NAME,
     c.CLUB_EXPLAIN,
@@ -152,6 +256,39 @@ ORDER BY
 	MEMBER m JOIN ZIP_CODE z ON m.MEMBER_ADDR = z.ZIP_CODE_NO WHERE m.MEMBER_ID=#{memberId})
 	))
 	THEN 0 ELSE 1 end
+
+    
+    
+    </select>
+    
+    <select id="minorClubListPage" resultType="ClubListVO">
+    
+      select * from (
+	select rownum rn, TMP.* from (
+    SELECT c.CLUB_NO,
+    c.CLUB_NAME,
+    c.CLUB_EXPLAIN,
+    zc.SIGUNGU,
+    zc.SIDO,
+    ma.MAJOR_CATEGORY_NAME,
+    mi.MINOR_CATEGORY_NAME,
+    mi.MINOR_CATEGORY_NO, 
+    a.attach_no 
+    FROM Club c
+	JOIN ZIP_CODE zc ON c.ZIP_CODE_NO =zc.ZIP_CODE_NO 
+	JOIN Minor_CATEGORY mi ON c.CLUB_CATEGORY = mi.MINOR_CATEGORY_NO 
+	JOIN MAJOR_CATEGORY ma ON mi.MAJOR_CATEGORY_NO = ma.MAJOR_CATEGORY_NO
+	left outer join club_image ci on c.club_no = ci.club_no
+	left outer join attach a on ci.attach_no = a.attach_no 
+	WHERE mi.MINOR_CATEGORY_NO = #{whereNo}
+	ORDER by
+	CASE WHEN (c.ZIP_CODE_NO IN(SELECT zip_code_no FROM ZIP_CODE WHERE SIdo in
+	(SELECT z.sido FROM 
+	MEMBER m JOIN ZIP_CODE z ON m.MEMBER_ADDR = z.ZIP_CODE_NO WHERE m.MEMBER_ID=#{whereString})
+	))
+	THEN 0 ELSE 1 end) TMP
+			    )
+			    where rn between #{startRow} and #{finishRow}
 
     
     
@@ -181,7 +318,8 @@ ORDER BY
     <select id="searchClub" resultType="ClubListVO">
 
 	select * from (
-			        SELECT c.CLUB_NO,
+	select rownum rn, TMP.* from (
+	SELECT c.CLUB_NO,
     c.CLUB_NAME,
     c.CLUB_EXPLAIN,
     c.club_date,
@@ -197,11 +335,11 @@ ORDER BY
 	JOIN MAJOR_CATEGORY ma ON mi.MAJOR_CATEGORY_NO = ma.MAJOR_CATEGORY_NO
 	left outer join club_image ci on c.club_no = ci.club_no
 	left outer join attach a on ci.attach_no = a.attach_no 
-	where instr(c.club_name,#{clubName})>0 OR  instr(c.club_explain,#{clubExplain})>0
+	where instr(c.club_name,#{keyword})>0 OR  instr(c.club_explain,#{keyword})>0
 	ORDER by
 	CASE WHEN (c.ZIP_CODE_NO IN(SELECT zip_code_no FROM ZIP_CODE WHERE SIdo in
 	(SELECT z.sido FROM 
-	MEMBER m JOIN ZIP_CODE z ON m.MEMBER_ADDR = z.ZIP_CODE_NO WHERE m.MEMBER_ID=#{memberId})
+	MEMBER m JOIN ZIP_CODE z ON m.MEMBER_ADDR = z.ZIP_CODE_NO WHERE m.MEMBER_ID=#{whereString})
 	))
 	THEN 0 ELSE 1 END
 			        ) TMP
@@ -210,6 +348,25 @@ ORDER BY
     
     </select>
 
+    
+    <select id="countList" resultType="int">
+    SELECT count(*) 
+    FROM Club c
+	JOIN ZIP_CODE zc ON c.ZIP_CODE_NO =zc.ZIP_CODE_NO 
+	JOIN Minor_CATEGORY mi ON c.CLUB_CATEGORY = mi.MINOR_CATEGORY_NO 
+	JOIN MAJOR_CATEGORY ma ON mi.MAJOR_CATEGORY_NO = ma.MAJOR_CATEGORY_NO
+	left outer join club_image ci on c.club_no = ci.club_no
+	left outer join attach a on ci.attach_no = a.attach_no 
+	where instr(c.club_name,#{keyword})>0 OR  instr(c.club_explain,#{keyword})>0
+	ORDER by
+	CASE WHEN (c.ZIP_CODE_NO IN(SELECT zip_code_no FROM ZIP_CODE WHERE SIdo in
+	(SELECT z.sido FROM 
+	MEMBER m JOIN ZIP_CODE z ON m.MEMBER_ADDR = z.ZIP_CODE_NO WHERE m.MEMBER_ID=#{whereString})
+	))
+	THEN 0 ELSE 1 END
+    
+    
+    </select>
     
     
     

@@ -14,6 +14,7 @@ public class PaginationVO {
 	private int navigatorSize = 5; //하단 네비게이터 표시 개수(기본:10)
 	private int whereNo;
 	private int clubNo;
+	private String whereString;
 	
 	public boolean isSearch() {
 		return type != null && keyword != null;
@@ -30,6 +31,9 @@ public class PaginationVO {
 	}
 	public boolean getWhereNoFlag() {
 	    return whereNo != 0;
+	}
+	public boolean getWhereStringFlag() {
+	    return whereString != null;
 	}
 	public boolean getClubNo() {
 		return clubNo != 0;
@@ -48,6 +52,18 @@ public class PaginationVO {
 		}
 		else if(getClubNo()) {
 			return "page=" + (getBegin()-1) + "&size=" +size + "&clubNo=" + clubNo;
+		}
+		else if(getWhereStringFlag()) {
+			return "page=" + (getBegin()-1)+ "&size=" +size+ "&whereString="+whereString+ "&keyword=" + keyword;
+			
+		}
+		else if(getWhereStringFlag()) {
+			return "page=" + (getBegin()-1)+ "&size=" +size+ "&whereString="+whereString;
+			
+		}
+		else if(getWhereStringFlag()&&getWhereNoFlag()) {
+			return "page=" + (getBegin()-1)+ "&size=" +size+ "&whereString="+whereString+ "&whereNo="+whereNo;
+			
 		}
 		else { //목록이면
 			return "page=" + (getBegin()-1) + "&size=" +size;
@@ -70,6 +86,17 @@ public class PaginationVO {
 		else if(getClubNo()) {
 			return "page=" + (getEnd()+1)+ "&size=" +size + "&clubNo=" + clubNo;
 		}
+		else if(getWhereStringFlag()) {
+			return "page=" + (getEnd()+1)+ "&size=" +size+ "&whereString="+whereString+ "&keyword=" + keyword;	
+		}
+		else if(getWhereStringFlag()) {
+			return "page=" + (getEnd()+1)+ "&size=" +size+ "&whereString="+whereString;
+			
+		}
+		else if(getWhereStringFlag()&&getWhereNoFlag()) {
+			return "page=" + (getEnd()+1)+ "&size=" +size+ "&whereString="+whereString+ "&whereNo="+whereNo;
+			
+		}
 		else { //목록이면
 			return "page=" + (getEnd()+1)+ "&size=" +size;
 		}
@@ -84,6 +111,17 @@ public class PaginationVO {
 		}
 		else if(getClubNo()) {
 			return "page=" + page+ "&size=" +size+ "&clubNo=" + clubNo;
+		}
+		else if(getWhereStringFlag()) {
+			return "page=" + page+ "&size=" +size+ "&whereString="+whereString+ "&keyword=" + keyword;	
+		}
+		else if(getWhereStringFlag()) {
+			return "page=" + page+ "&size=" +size+ "&whereString="+whereString;
+			
+		}
+		else if(getWhereStringFlag()&&getWhereNoFlag()) {
+			return "page=" + page+ "&size=" +size+ "&whereString="+whereString+ "&whereNo="+whereNo;
+			
 		}
 			else { //목록이면
 				return "page=" + page +"&size=" +size;

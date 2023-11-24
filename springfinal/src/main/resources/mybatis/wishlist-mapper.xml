@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="wish">
+    
+    <insert id="add">
+    
+    	insert into wishlist(member_id,club_no) values(#{memberId},#{clubNo})
+    
+    </insert>
+    
+    <insert id="cancel">
+    	
+    	delete wishlist where member_id=#{memberId} and club_no=#{clubNo}
+    
+    </insert>
+    
+    <select id="doLike" resultType="int">
+    SELECT count(*) FROM wishlist 
+    w JOIN MEMBER m ON w.member_id = 
+    m.MEMBER_ID WHERE m.MEMBER_ID =#{memberId} AND w.club_no=#{clubNo}
+    </select>
+    
+    
+    </mapper>

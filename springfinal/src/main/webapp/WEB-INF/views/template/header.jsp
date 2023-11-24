@@ -538,14 +538,14 @@ function truncateClubDescription() {
 
             </div>
             <div class="title">
-                <div class="input-group d-flex justify-content-center">  
-                    <input type=" search" class="form-control rounded-pill" placeholder="Search" aria-label="Search"  
-                 
+                <form action="/club/searchList">
+                <div class="input-group d-flex justify-content-center"> 
+                    <input type="search" name="keyword" class="form-control rounded-pill" placeholder="Search" aria-label="Search"  
                     aria-describedby="search-addon" />  
-                    <button type="button" class="btn btn-outline-primary rounded-pill"><i class="fa-solid fa-magnifying-glass"></i></button>  
-                 
+                    <button type="submit" class="btn btn-outline-primary rounded-pill"><i class="fa-solid fa-magnifying-glass"></i></button>  
                   
                    </div>  
+                 </form>
             </div>
            <div class="etc container">
           <div class="col-4 ms-4" id="notifyContainer">
