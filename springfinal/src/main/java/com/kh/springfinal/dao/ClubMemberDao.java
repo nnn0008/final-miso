@@ -32,4 +32,7 @@ public interface ClubMemberDao {
 //	String attendMemberId(int clubMemberNo);
 	
 	List<MeetingAttendMemberVO> meetingAttendList(int meetingNo);
+	
+	boolean upgradeRank(int clubMemberNo);
+	
 }

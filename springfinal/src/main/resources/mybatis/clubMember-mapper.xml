@@ -53,8 +53,20 @@
     	
     	<select id="memberInfo" resultType="clubMemberVO">
     		
-    		SELECT m.member_id,m.member_name,cm.club_member_rank,cm.join_message,cm.join_date FROM club_member cm JOIN MEMBER m 
-    		ON m.MEMBER_ID=cm.CLUB_MEMBER_ID WHERE cm.CLUB_NO=#{clubNo}
+    		SELECT m.member_id,
+    		m.member_name,
+    		cm.club_member_no,
+    		cm.club_member_rank,
+    		cm.join_message,
+    		cm.join_date,
+    		a.attach_no 
+    		FROM club_member cm JOIN MEMBER m 
+    		ON m.MEMBER_ID=cm.CLUB_MEMBER_ID 
+    		left outer join member_profile mp 
+    		on m.member_id=mp.member_Id
+    		left outer join attach a 
+    		on mp.attach_no = a.attach_no
+    		WHERE cm.CLUB_NO=#{clubNo}
     	
     	</select>
     	
@@ -95,6 +107,14 @@
     mm.CLUB_MEMBER_NO = cm.CLUB_MEMBER_NO 
     WHERE mm.MEETING_NO = #{meetingNo}
     </select>
+    
+    <update id="lankUpgrade">
+    
+    	update club_member set club_member_rank='운영진' 
+    	where club_member_no=#{clubMemberNo}
+    </update>
+    
+    
     
     
      
