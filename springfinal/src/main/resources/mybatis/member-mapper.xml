@@ -38,4 +38,12 @@
 			update member set member_name=#{memberName}, member_addr=#{memberAddr}, member_email=#{memberEmail}, member_contact=#{memberContact}, member_birth=#{memberBirth, jdbcType=VARCHAR}
 			where member_id = #{memberId}
 		</update>
+		
+		<update id="updateLevel">
+			update member set member_level='파워유저' where member_id=#{memberId}
+		</update>
+		
+		<update id="updateDownLevel">
+			update member set member_level='일반유저' where member_id=#{memberId}
+		</update>
     </mapper>
