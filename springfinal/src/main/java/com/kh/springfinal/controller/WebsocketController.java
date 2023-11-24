@@ -88,7 +88,7 @@ public class WebsocketController {
 	}
 	
 	//채팅방
-	@RequestMapping("/enterRoom/{chatRoomNo}")
+	@GetMapping("/enterRoom/{chatRoomNo}")
 	public String enterRoom(@PathVariable int chatRoomNo, Model model) {
 		ClubDto clubInfo = chatRoomDao.clubInfo(chatRoomNo);
 		List<ChatMemberListVO> members = chatRoomDao.chatMemberList(chatRoomNo);

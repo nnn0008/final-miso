@@ -88,7 +88,7 @@ public class ChatRestController {
 
     
 	 @GetMapping("/download")
-	 public ResponseEntity<?> download(@RequestParam int attachNo) throws IOException {
+	 public ResponseEntity<ByteArrayResource> download(@RequestParam int attachNo) throws IOException {
 	     AttachDto attachDto = attachDao.selectOne(attachNo);
 
 	     File target = new File(dir, String.valueOf(attachNo));
