@@ -20,6 +20,9 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 마우스 오버 시 그림자 추가 */
         /* text-decoration: underline; /* 선택적으로 밑줄 추가할 수 있음 */ */
     }
+    .badge:hover{
+    	cursor:pointer;
+    }
 </style>
 <script>
 	function redirect(url){
@@ -43,13 +46,114 @@
         //초기페이지는 1
         var currentPage = 1;
         var keyword;
+        
         //최초의 페이지네이션
-        loadList(keyword, currentPage);
+        loadList(keyword, 1);
 		
-        var scrollIndicator = $('#scroll-indicator');
+        //추가목록을 로드
+        loadMore(keyword, currentPage);
+        
+ 		
+        $(".badge").click(function(e){
+        	e.preventDefault();
+        	$(".board-list").empty();
+        	var keyword = $(this).text().trim();
+        	if(keyword == "전체") keyword="";
+        	var currentPage = 1; 
+        	
+        	loadList(keyword, 1);
+        	loadMore(keyword, currentPage);
+        });
+    });
+	
+	//최초에 첫 5장을 불러올 함수	
+ 	function loadList(keyword, currentPage){
+ 		var params = new URLSearchParams(location.search);
+        var clubNo = params.get("clubNo");		 
+        $.ajax({
+        	url: window.contextPath + "/rest/clubBoard/page",
+            method: "get",
+            data: {
+                clubNo: clubNo,
+                page: currentPage,
+                keyword: keyword ? keyword : undefined 
+            },
+            success: function (response) {
+                //currentPage = response.currentPage;
+                //console.log('로딩 성공', response);
+
+                // 받아온 데이터를 현재 목록에 추가하는 로직
+                for (var i = 0; i < response.length; i++) {
+					console.log(response[i]);
+                    var clubBoardAllDto = response[i];
+                    
+                    var template = $("#list-template").html();
+					var htmlTemplate = $.parseHTML(template);
+					
+					//프로필 있는지 검토
+					if(clubBoardAllDto.attachNoMp != null){
+						var profile = $("<img>").attr("src", window.contextPath + "/clubBoard/download?attachNo="+clubBoardAllDto.attachNoMp)
+ 						.addClass("rounded-circle").attr("width", 80).attr("height", 80).attr("data-board-no", response[i].clubBoardNo);
+ 						$(htmlTemplate).find(".for-attach").html(profile);
+					}
+					else{
+						var profile = $("<img>").attr("src",  window.contextPath + "/images/basic-profile.png")
+						.addClass("rounded-circle").attr("width", 80).attr("height", 80).attr("data-board-no", response[i].clubBoardNo);
+						$(htmlTemplate).find(".for-attach").html(profile);
+					}
+					//이름
+					$(htmlTemplate).find(".text-name").text(clubBoardAllDto.clubBoardName);
+					//날짜
+					const originalDate = response[i].clubBoardDate;
+ 					const formattedDate = formatDate(originalDate);
+					$(htmlTemplate).find(".text-date").text(formattedDate);
+					//제목
+					$(htmlTemplate).find(".text-title").text(clubBoardAllDto.clubBoardName);
+					//내용
+					$(htmlTemplate).find(".text-content").text(clubBoardAllDto.clubBoardContent);
+					//사진이 어디에 있냐
+					if(clubBoardAllDto.attachNoCbi != null){
+						var photo = $("<img>").attr("src", window.contextPath + "/clubBoard/download?attachNo=" + clubBoardAllDto.attachNoCbi);
+						$(htmlTemplate).find(".text-image").html(photo);
+					}
+					else if(clubBoardAllDto.attachNoCbi == null && clubBoardAllDto.attachNoCbi2 != null){
+						var photo = $("<img>").attr("src", window.contextPath + "/clubBoard/download?attachNo=" + clubBoardAllDto.attachNoCbi2);
+						$(htmlTemplate).find(".text-image").html(photo);
+					}
+					else if(clubBoardAllDto.attachNoCbi == null && clubBoardAllDto.attachNoCbi2 == null && clubBoardAllDto.attachNoCbi3 != null){
+						var photo = $("<img>").attr("src", window.contextPath + "/clubBoard/download?attachNo=" + clubBoardAllDto.attachNoCbi3);
+						$(htmlTemplate).find(".text-image").html(photo);
+					}
+					//좋아요
+					$(htmlTemplate).find(".text-like-count").text(clubBoardAllDto.clubBoardLikecount);
+					//댓글 수
+					$(htmlTemplate).find(".text-reply-count").text(clubBoardAllDto.clubBoardReplyCount);
+					//카테고리
+					$(htmlTemplate).find(".text-category").text(clubBoardAllDto.clubBoardCategory);
+					
+					$(htmlTemplate).click(function(e){
+						var clubBoardNo = $(this).find(".rounded-circle").data("board-no");
+						console.log(clubBoardNo);
+                    	window.location.href = window.contextPath + "/clubBoard/detail?clubBoardNo=" + clubBoardNo;
+                    });
+					
+                    $('.board-list').append(htmlTemplate);
+                }
+            },
+        });          
+ 	}	
+ 	//날짜를 수정하는 코드
+ 	function formatDate(dateString) {
+ 	    const options = { month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+ 	    const formattedDate = new Date(dateString).toLocaleString('ko-KR', options);
+ 	    return formattedDate;
+ 	}
+ 	//뒤에 추가목록을 로드
+ 	function loadMore(keyword, currentPage){
+ 		var scrollIndicator = $('#scroll-indicator');
         var scrollPercent = $('#scroll-percent');
 
-        $(window).scroll(function() {
+        $(window).scroll(function(keyword) {
             var scrollTop = $(this).scrollTop();
             var windowHeight = $(window).height();
             var documentHeight = $(document).height();
@@ -149,96 +253,6 @@
 	            });       	
 	        }
         });
- 		
-        $(".category1").click(function(e){
-        	e.preventDefault();
-        	var keyword = $(this).text();
-        	loadList(keyword, 1);
-        });
-    });
-	
-	//최초에 첫 5장을 불러올 함수	
- 	function loadList(keyword, currentPage){
- 		var params = new URLSearchParams(location.search);
-        var clubNo = params.get("clubNo");		 
-        var keyword;
-        $.ajax({
-        	url: window.contextPath + "/rest/clubBoard/page",
-            method: "get",
-            data: {
-                clubNo: clubNo,
-                page: currentPage,
-                keyword: keyword ? keyword : undefined 
-            },
-            success: function (response) {
-                //currentPage = response.currentPage;
-                //console.log('로딩 성공', response);
-
-                // 받아온 데이터를 현재 목록에 추가하는 로직
-                for (var i = 0; i < response.length; i++) {
-					console.log(response[i]);
-                    var clubBoardAllDto = response[i];
-                    
-                    var template = $("#list-template").html();
-					var htmlTemplate = $.parseHTML(template);
-					
-					//프로필 있는지 검토
-					if(clubBoardAllDto.attachNoMp != null){
-						var profile = $("<img>").attr("src", window.contextPath + "/clubBoard/download?attachNo="+clubBoardAllDto.attachNoMp)
- 						.addClass("rounded-circle").attr("width", 80).attr("height", 80).attr("data-board-no", response[i].clubBoardNo);
- 						$(htmlTemplate).find(".for-attach").html(profile);
-					}
-					else{
-						var profile = $("<img>").attr("src",  window.contextPath + "/images/basic-profile.png")
-						.addClass("rounded-circle").attr("width", 80).attr("height", 80).attr("data-board-no", response[i].clubBoardNo);
-						$(htmlTemplate).find(".for-attach").html(profile);
-					}
-					//이름
-					$(htmlTemplate).find(".text-name").text(clubBoardAllDto.clubBoardName);
-					//날짜
-					const originalDate = response[i].clubBoardDate;
- 					const formattedDate = formatDate(originalDate);
-					$(htmlTemplate).find(".text-date").text(formattedDate);
-					//제목
-					$(htmlTemplate).find(".text-title").text(clubBoardAllDto.clubBoardName);
-					//내용
-					$(htmlTemplate).find(".text-content").text(clubBoardAllDto.clubBoardContent);
-					//사진이 어디에 있냐
-					if(clubBoardAllDto.attachNoCbi != null){
-						var photo = $("<img>").attr("src", window.contextPath + "/clubBoard/download?attachNo=" + clubBoardAllDto.attachNoCbi);
-						$(htmlTemplate).find(".text-image").html(photo);
-					}
-					else if(clubBoardAllDto.attachNoCbi == null && clubBoardAllDto.attachNoCbi2 != null){
-						var photo = $("<img>").attr("src", window.contextPath + "/clubBoard/download?attachNo=" + clubBoardAllDto.attachNoCbi2);
-						$(htmlTemplate).find(".text-image").html(photo);
-					}
-					else if(clubBoardAllDto.attachNoCbi == null && clubBoardAllDto.attachNoCbi2 == null && clubBoardAllDto.attachNoCbi3 != null){
-						var photo = $("<img>").attr("src", window.contextPath + "/clubBoard/download?attachNo=" + clubBoardAllDto.attachNoCbi3);
-						$(htmlTemplate).find(".text-image").html(photo);
-					}
-					//좋아요
-					$(htmlTemplate).find(".text-like-count").text(clubBoardAllDto.clubBoardLikecount);
-					//댓글 수
-					$(htmlTemplate).find(".text-reply-count").text(clubBoardAllDto.clubBoardReplyCount);
-					//카테고리
-					$(htmlTemplate).find(".text-category").text(clubBoardAllDto.clubBoardCategory);
-					
-					$(htmlTemplate).click(function(e){
-						var clubBoardNo = $(this).find(".rounded-circle").data("board-no");
-						console.log(clubBoardNo);
-                    	window.location.href = window.contextPath + "/clubBoard/detail?clubBoardNo=" + clubBoardNo;
-                    });
-					
-                    $('.board-list').append(htmlTemplate);
-                }
-            },
-        });          
- 	}	
- 	
- 	function formatDate(dateString) {
- 	    const options = { month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
- 	    const formattedDate = new Date(dateString).toLocaleString('ko-KR', options);
- 	    return formattedDate;
  	}
 
 </script>
@@ -272,105 +286,60 @@
 			</div>
 	</div>
 </script>
+<div class="container-fluid" style="max-width:550px; max-height:350px">
 	<div class="row">
-	
 		<div class="col">
-			<a href="${pageContext.request.contextPath}/clubBoard/write?clubNo=${clubNo}">글쓰기</a>
+			<h6>
+				<span class="badge bg-secondary">
+					전체
+				</span>
+			</h6>
 		</div>
 		<div class="col">
-			<a href="#" class="category1">
-				공지사항
-			</a>
+			<h6>
+				<span class="badge bg-secondary">
+					공지사항
+				</span>
+			</h6>
 		</div>
 		<div class="col">
-			<a href="${pageContext.request.contextPath}/rest/clubBoard/page?keyword=가입인사&clubNo=${clubNo}">
-				가입인사
-			</a>
+			<h6>
+				<span class="badge bg-secondary">
+					가입인사
+				</span>
+			</h6>
 		</div>
 		<div class="col">
-			<a href="${pageContext.request.contextPath}/rest/clubBoard/page?keyword=모임후기&clubNo=${clubNo}">
-				모임후기
-			</a>
+			<h6>
+				<span class="badge bg-secondary">
+					모임후기
+				</span>
+			</h6>
 		</div>
 		<div class="col">
-			<a href="${pageContext.request.contextPath}/rest/clubBoard/page?keyword=관심사&clubNo=${clubNo}">
-				관심사
-			</a>
+			<h6>
+				<span class="badge bg-secondary">
+					관심사
+				</span>
+			</h6>
 		</div>
 		<div class="col">
-			<a href="${pageContext.request.contextPath}/rest/clubBoard/page?keyword=자유&clubNo=${clubNo}">
-				자유
-			</a>
+			<h6>
+				<span class="badge bg-secondary">
+					자유
+				</span>
+			</h6>
+		</div>
+		<div class="col">
+			<h6>
+				<a href="${pageContext.request.contextPath}/clubBoard/write?clubNo=${clubNo}">글쓰기</a>
+			</h6>
 		</div>
 		
 	</div>
 	
-	<div class="row m-2 mt-4 board-list">
-<%-- 	<c:forEach var="clubBoardAllDto" items="${list}"> --%>
-<%-- 	<div class="col-12 clickable-item mt-2" data-url="<%= request.getContextPath() %>/clubBoard/detail?clubBoardNo=${clubBoardAllDto.clubBoardNo}"> --%>
-<!-- 			<div class="row"> -->
-<!-- 			<div class="col-3"> -->
-<%-- 				<c:if test="${clubBoardAllDto.attachNoMp != null}"> --%>
-<%-- 					<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardAllDto.attachNoMp}" class="rounded-circle" width="80" height="80"> --%>
-<%-- 				</c:if> --%>
-<%-- 				<c:if test="${clubBoardAllDto.attachNoMp == null}"> --%>
-<%-- 					<img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="80" height="80">		 --%>
-<%-- 				</c:if> --%>
-<!-- 			</div>			 -->
-<!-- 				<div class="col-3 text-start"> -->
-<%-- 					${clubBoardAllDto.clubBoardName} --%>
-<!-- 				</div> -->
-<!-- 				<div class="col-6 text-end"> -->
-<%-- 					${clubBoardAllDto.clubBoardDate} --%>
-<!-- 				</div> -->
-<!-- 			</div> -->
-<!-- 			<div class="row mt-2"> -->
-<!-- 				<div class="col"> -->
-<%-- 					${clubBoardAllDto.clubBoardTitle} --%>
-<!-- 				</div> -->
-<!-- 			</div> -->
-<!-- 			<div class="row mt-2"> -->
-<!-- 				<div class="col-6"> -->
-<%-- 					${clubBoardAllDto.clubBoardContent} --%>
-<!-- 				</div> -->
-<%-- 				<c:choose> --%>
-<%-- 					<c:when test="${clubBoardAllDto.attachNoCbi != null}"> --%>
-<!-- 						<div class="col thumbnail"> -->
-<%-- 							<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardAllDto.attachNoCbi}"> --%>
-<!-- 						</div> -->
-<%-- 					</c:when> --%>
-<%-- 					<c:when test="${clubBoardAllDto.attachNoCbi == null && clubBoardAllDto.attachNoCbi2 != null}"> --%>
-<!-- 						<div class="col thumbnail"> -->
-<%-- 							<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardAllDto.attachNoCbi2}"> --%>
-<!-- 						</div> -->
-<%-- 					</c:when> --%>
-<%-- 					<c:when test="${clubBoardAllDto.attachNoCbi == null && clubBoardAllDto.attachNoCbi2 == null && clubBoardAllDto.attachNoCbi != null}"> --%>
-<!-- 						<div class="col thumbnail"> -->
-<%-- 							<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardAllDto.attachNoCbi3}"> --%>
-<!-- 						</div> -->
-<%-- 					</c:when> --%>
-<%-- 				</c:choose> --%>
-<!-- 			</div> -->
-<!-- 			<div class="row"> -->
-<!-- 				<div class="col"> -->
-<!-- 					<hr/> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-<!-- 			<div class="row"> -->
-<!-- 				<div class="col-3"> -->
-<%-- 					<i class="fa-regular fa-heart" style="color: red"></i> ${clubBoardAllDto.clubBoardLikecount} --%>
-<!-- 				</div> -->
-<!-- 				<div class="col-3"> -->
-<%-- 					<i class="fa-solid fa-pen-to-square"></i> ${clubBoardAllDto.clubBoardReplyCount} --%>
-<!-- 				</div> -->
-<!-- 				<div class="col-6 text-end"> -->
-<%-- 					${clubBoardAllDto.clubBoardCategory} --%>
-<!-- 				</div> -->
-<!-- 			</div> -->
-<!-- 	</div> -->
-<%-- 	</c:forEach> --%>
-	</div>
-	
+	<div class="row m-2 mt-4 board-list"></div>
+</div>
 
 
 
