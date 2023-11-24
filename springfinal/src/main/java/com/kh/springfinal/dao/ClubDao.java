@@ -23,5 +23,7 @@ public interface ClubDao {
 	List<ClubListVO> majorClubList(String memberId, int majorCategoryNo);
 	List<ClubListVO> minorClubList(String memberId, int minorCategoryNo);
 	List<MemberPreferInfoVO> memberPreferInfo(String memberId);
+	boolean updatePremium(String memberId);
+	boolean updateDownPremium(String memberId);
 	
 }

@@ -169,6 +169,14 @@ ORDER BY
 
     </select>
     
+    <update id="updatePremium">
+    update club set club_premium = 'Y' where club_owner = #{clubOwner}
+    </update>
+    
+    <update id="updateDownPremium">
+    update club set club_premium = 'N' where club_owner = #{clubOwner}
+    </update>
+    
     
     
     

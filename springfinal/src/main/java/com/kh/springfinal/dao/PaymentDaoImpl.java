@@ -62,5 +62,15 @@ public class PaymentDaoImpl implements PaymentDao {
 	public List<PaymentListVO> selectTotalListByMember(String paymentMember) {
 		return sqlSession.selectList("payment.listAll",paymentMember);
 	}
+	
+	@Override
+	public void updateMemberLevel(PaymentDto paymentDto) {
+		sqlSession.update("payment.schedulerMember",paymentDto);
+	}
+	
+	@Override
+	public void updateClubPremium(PaymentDto paymentDto) {
+		sqlSession.update("payment.schedulerPremium",paymentDto);
+	}
 
 }

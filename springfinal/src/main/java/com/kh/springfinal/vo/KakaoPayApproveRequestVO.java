@@ -9,7 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-@JsonIgnoreProperties(ignoreUnknown = true)//모르는 항목은 무시하도록 지정
+//@JsonIgnoreProperties(ignoreUnknown = true)//모르는 항목은 무시하도록 지정
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class KakaoPayApproveRequestVO {
 	private String cid,tid,partnerOrderId,partnerUserId,pgToken;

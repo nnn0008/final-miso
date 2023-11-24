@@ -21,5 +21,8 @@ public interface PaymentDao {
 	void cancelDetail(int paymentDetailNo);
 	void cancel(PaymentDto paymentDto);
 	void cancelDetailGroup(int paymentDetailOrigin);
+	
+	void updateMemberLevel(PaymentDto paymentDto);
+	void updateClubPremium(PaymentDto paymentDto);
 
 }

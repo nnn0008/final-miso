@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.kh.springfinal.component.IsToday;
 import com.kh.springfinal.configuration.KakaoPayProperties;
+import com.kh.springfinal.dao.ClubDao;
+import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dao.PaymentDao;
 import com.kh.springfinal.dao.PaymentRegularDao;
 import com.kh.springfinal.dto.PaymentDto;
@@ -34,10 +36,17 @@ public class RegularSchedulerServiceImpl implements RegularSchedulerService {
 	PaymentDao paymentDao;
 	
 	@Autowired
+	MemberDao memberDao;
+	
+	@Autowired
+	ClubDao clubDao;
+	
+	@Autowired
 	IsToday isToday;
 	
 	
-	@Scheduled(cron = "0 0 9 * * *")//매일 9시 마다 데이터확인
+//	@Scheduled(cron = "0 0 9 * * *")//매일 9시 마다 데이터확인
+	@Scheduled(cron = "0 30 16 * * *")//매일 9시 마다 데이터확인
 
 	
 
@@ -88,11 +97,25 @@ public class RegularSchedulerServiceImpl implements RegularSchedulerService {
 				 log.debug("1년 완료");
 				}
 			}
-		
-	
 		}
 	 }
-
+	
+	@Override
+	public void payment() throws URISyntaxException {
+		log.debug("다운되나?");
+		List<PaymentDto> list = paymentDao.selectList();
+		for(PaymentDto paymentDto : list ) {
+			boolean today = isToday.endToday(paymentDto);
+			
+			if(today) {
+				memberDao.updateDownLevel(paymentDto.getPaymentMember());
+				clubDao.updateDownPremium(paymentDto.getPaymentMember());
+				log.debug("단건결제 취소스케줄러완료요");
+			}
+		
+	}
+		
+	}
 
 
 }
