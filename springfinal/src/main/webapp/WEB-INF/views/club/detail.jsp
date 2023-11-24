@@ -1180,6 +1180,14 @@ $(document).ready(function () {
                                 	</div>
                                 </div>
                             </div>
+                            
+                            <div class="row p-1 mt-4 text-center">
+                        <div class="col">
+                          <a href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}">
+                                   <button class="btn btn-success bg-miso w-100">사진 등록하기</button>
+                            </a>
+                        </div>
+                    </div>
    </c:when>
    <c:otherwise>
    
