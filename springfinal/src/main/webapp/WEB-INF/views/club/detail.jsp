@@ -65,7 +65,7 @@
     border-radius: 50%;
      background-color: #66DFD2;
 color: #ffffff;
-    top: 240px;
+    top: 260px;
     left: 63px;
     transform: translate(-50%, -50%);
 }
