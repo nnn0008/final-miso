@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 import com.kh.springfinal.dto.ClubBoardAllDto;
 import com.kh.springfinal.dto.ClubBoardDto;
 import com.kh.springfinal.dto.ClubMemberDto;
-import com.kh.springfinal.vo.ClubBoardPaginationVO;
 import com.kh.springfinal.vo.ClubDetailBoardListVO;
+import com.kh.springfinal.vo.PaginationVO;
 
 @Repository
 public class ClubBoardDaoImpl implements ClubBoardDao{
@@ -35,7 +35,7 @@ public class ClubBoardDaoImpl implements ClubBoardDao{
 	}
 	
 	@Override
-	public List<ClubBoardAllDto> selectListByPage(ClubBoardPaginationVO vo) {
+	public List<ClubBoardAllDto> selectListByPage(PaginationVO vo) {
 		//page가 페이지 번호
 		//size가 하나의 페이지에서 보여줄 게시글의 수 (ex) page(2) size(10)이라면 게시글은 11번~20번
 //		Integer end = page * size; // 총 글의 개수
@@ -80,8 +80,8 @@ public class ClubBoardDaoImpl implements ClubBoardDao{
 		return sqlSession.selectList("clubBoard.clubDetailBoardList",clubNo);
 	}
 	
-	@Override
-	public int boardCount(int clubNo) {
-		return sqlSession.selectOne("clubBoard.boardCount", clubNo);
-	}
+//	@Override
+//	public int clubboardCount(int clubNo) {
+//		return sqlSession.selectOne("clubBoard.boardCount", clubNo);
+//	}
 }

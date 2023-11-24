@@ -48,19 +48,28 @@
             scrollPercent.text(scrollPercentage.toFixed(2) + '%');
 
 	        if(scrollPercentage.toFixed >= 65 && !loading){
+	        	console.log('로딩 시작');
 	        	loading = true;
-	        	
+	        		
 	        	var currentPage = parseInt($("#currentPage").val()) + 1;
-	        	
+	        	var params = new URLSearchParams(location.search);
+	            var clubNo = params.get("clubNo");
+	            
 		        $.ajax({
 		        	url: window.contextPath + "/rest/clubBoard/page",
 		        	method: "post",
 		        	data: {
-	
+						clubNo: clubNo,
+						page: currentPage,
 		        	},
 		        	success: function(response){
-		        		
+		        		console.log('로딩 성공', response);
+		                loading = false;
 		        	},
+		        	 error: function(error) {
+		        	        console.error('로딩 실패', error);
+		        	        loading = false;
+		        	    }
 		        });        	
 	        }
         });
@@ -71,7 +80,7 @@
     });
 </script>
 <div class="row m-2 mt-4">
-<a href="${pageContext.request.contextPath}/clubBoard/write?clubNo=${vo.clubNo}">글쓰기</a>
+<a href="${pageContext.request.contextPath}/clubBoard/write?clubNo=${clubNo}">글쓰기</a>
 
 <c:forEach var="clubBoardAllDto" items="${list}">
 	<button type="button" class="btn-no-style" onclick="redirect('${clubBoardAllDto.clubBoardNo}')">
@@ -82,7 +91,7 @@
 				</div>			
 			</c:if>
 			<c:if test="${clubBoardAllDto.attachNoMp == null}">
-<%-- 				<img src="${pageContext.request.contextPath}/images/user.png" style="max-width: 100px;" alt="User Image"> --%>
+<%-- <img src="${pageContext.request.contextPath}/images/user.png" style="max-width: 100px;" alt="User Image"> --%>
 				<img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="80" height="80">		
 			</c:if>
 			<div class="col-3 text-start">
@@ -114,7 +123,7 @@
 		</div>
 		<div class="row">
 			<div class="col-3">
-				${clubBoardAllDto.clubBoardLikecount}
+				<i class="fa-regular fa-heart" style="color: red"></i> ${clubBoardAllDto.clubBoardLikecount}
 			</div>
 			<div class="col-3">
 				댓글 수 ${clubBoardAllDto.clubBoardReplyCount}
