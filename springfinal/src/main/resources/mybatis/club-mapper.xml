@@ -169,6 +169,38 @@ ORDER BY
 
     </select>
     
+    <select id="searchClub" resultType="ClubListVO">
+
+	select * from (
+			        SELECT c.CLUB_NO,
+    c.CLUB_NAME,
+    c.CLUB_EXPLAIN,
+    c.club_date,
+    zc.SIGUNGU,
+    zc.SIDO,
+    ma.MAJOR_CATEGORY_NAME,
+    mi.MINOR_CATEGORY_NAME,
+    mi.MINOR_CATEGORY_NO, 
+    a.attach_no 
+    FROM Club c
+	JOIN ZIP_CODE zc ON c.ZIP_CODE_NO =zc.ZIP_CODE_NO 
+	JOIN Minor_CATEGORY mi ON c.CLUB_CATEGORY = mi.MINOR_CATEGORY_NO 
+	JOIN MAJOR_CATEGORY ma ON mi.MAJOR_CATEGORY_NO = ma.MAJOR_CATEGORY_NO
+	left outer join club_image ci on c.club_no = ci.club_no
+	left outer join attach a on ci.attach_no = a.attach_no 
+	where instr(c.club_name,#{clubName})>0 OR  instr(c.club_explain,#{clubExplain})>0
+	ORDER by
+	CASE WHEN (c.ZIP_CODE_NO IN(SELECT zip_code_no FROM ZIP_CODE WHERE SIdo in
+	(SELECT z.sido FROM 
+	MEMBER m JOIN ZIP_CODE z ON m.MEMBER_ADDR = z.ZIP_CODE_NO WHERE m.MEMBER_ID=#{memberId})
+	))
+	THEN 0 ELSE 1 END
+			        ) TMP
+			    )
+			    where rn between #{startRow} and #{finishRow}
+    
+    </select>
+    
     
     
     

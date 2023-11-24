@@ -8,6 +8,7 @@ import com.kh.springfinal.dto.MajorCategoryDto;
 import com.kh.springfinal.vo.ClubImageVO;
 import com.kh.springfinal.vo.ClubListVO;
 import com.kh.springfinal.vo.MemberPreferInfoVO;
+import com.kh.springfinal.vo.PaginationVO;
 
 public interface ClubDao {
 	
@@ -22,6 +23,7 @@ public interface ClubDao {
 	List<ClubListVO> clubList(String memberId);
 	List<ClubListVO> majorClubList(String memberId, int majorCategoryNo);
 	List<ClubListVO> minorClubList(String memberId, int minorCategoryNo);
+	List<ClubListVO> clubSearchPageList(PaginationVO vo);
 	List<MemberPreferInfoVO> memberPreferInfo(String memberId);
 	
 }
