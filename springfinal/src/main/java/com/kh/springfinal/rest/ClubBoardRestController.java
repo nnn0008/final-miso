@@ -210,6 +210,7 @@ public class ClubBoardRestController {
 		if(keyword != null) {
 			vo.setKeyword(keyword);
 		}
+		log.debug("vo={}", vo);
 		List<ClubBoardAllDto> list = clubBoardDao.selectListByPage(vo, clubNo); 
 		log.debug("list={}", list);
 		return list;
