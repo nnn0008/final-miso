@@ -12,7 +12,6 @@ public interface ClubBoardDao {
 	int sequence();
 	void insert(ClubBoardDto clubBoardDto);
 	ClubMemberDto selectOneClubMemberNo(String memberId, int clubNo);
-	List<ClubBoardAllDto> selectListByPage(PaginationVO vo);
 	ClubBoardDto selectOnes(int clubBoardNo);
 	ClubBoardAllDto selectOne(int clubBoardNo);
 	boolean delete(int clubBoardNo);
@@ -20,5 +19,6 @@ public interface ClubBoardDao {
 	boolean updateReplyCount(int clubBoardNo);
 	boolean updateLikeCount(int clubBoardNo);
 	List<ClubDetailBoardListVO> clubDetailBoardList(int clubNo);
-//	int clubBoardCount(int clubNo, PaginationVO vo);
+	List<ClubBoardAllDto> selectListByPage(PaginationVO vo, int clubNo);
+	int clubBoardCount(PaginationVO vo, int clubNo);
 }

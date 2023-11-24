@@ -65,17 +65,7 @@
 <!-- 			) TMP -->
 <!-- 		) where rn between #{begin} and #{end} -->
 <!-- 	</select> -->
-	<select id="selectListByPage" resultType="clubBoardAllDto">
-		<include refid="pagingHeader"></include>
-			select * from club_board_all 
-			<where>
-				club_no  = #{clubNo}
-				<if test="keyword != null">
-					and club_board_category = #{keyword}
-				</if>		
-			</where> 
-		<include refid="pagingFooter"></include>
-	</select>
+
 	
 	<select id="finds" resultType="clubBoardDto">
 		select * from club_board where club_board_no = #{clubBoardNo}
@@ -111,25 +101,25 @@
 	MEMBER m 
 	ON 
 	cm.CLUB_MEMBER_ID = m.MEMBER_Id WHERE cb.CLUB_no=#{clubNo}
-	
 	</select>
+	
+	<select id="selectListByPage" resultType="clubBoardAllDto">
+		select * from (
+				select rownum rn, TMP.* from(
+			select * from club_board_all 
+			<where>
+				club_no  = #{clubNo}
+				<if test="keyword != null">
+					and club_board_category = #{keyword}
+				</if>		
+			</where> 
+				)TMP
+			) where rn between #{startRow} and #{finishRow}
+	</select>
+	
 	<select id="boardCount" resultType="int">
 		select count(*) from club_board_all where club_no = #{clubNo}
 	</select>
-	
-<!-- 탑 앤 쿼리 불러올 템플릿 -->
-	<sql id="pagingHeader">
-		<if test="begin != null and end != null">
-			select * from (
-				select rownum rn, TMP.* from(
-		</if>
-	</sql>
-	<sql id="pagingFooter">
-		<if test="begin != null and end != null">
-				)TMP
-			) where rn between #{begin} and #{end}
-		</if>
-	</sql>
 	
 
 	</mapper>

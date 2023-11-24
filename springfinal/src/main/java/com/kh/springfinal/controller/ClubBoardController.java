@@ -118,14 +118,15 @@ public class ClubBoardController {
 	
 	@RequestMapping("/list")
 	public String list(Model model, @ModelAttribute("vo") PaginationVO vo, @RequestParam int clubNo) {
-		
-//		int count = clubBoardDao.clubBoardCount(vo, clubNo); // 게시글의 총 게시글 수를 조회
-//		vo.setCount(count);
-		
-		List<ClubBoardAllDto> list = clubBoardDao.selectListByPage(vo);
-		
+		int count = clubBoardDao.clubBoardCount(vo, clubNo); // 게시글의 총 게시글 수를 조회
+		vo.setCount(count);
+		List<ClubBoardAllDto> list = clubBoardDao.selectListByPage(vo, clubNo);
 		model.addAttribute("clubNo", clubNo);
 		model.addAttribute("list", list);
+		
+		log.debug("list={}", list);
+		log.debug("count={}", count);
+		log.debug("clubNo={}", clubNo);
 
 		return "clubBoard/list";
 	}
