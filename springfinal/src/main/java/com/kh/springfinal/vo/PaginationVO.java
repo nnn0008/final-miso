@@ -16,7 +16,7 @@ public class PaginationVO {
 	
 	public boolean isSearch() {
 		return type != null && keyword != null;
-	}
+	} 
 	public int getBegin() {
 		return (page-1)/navigatorSize * navigatorSize + 1;
 	}
