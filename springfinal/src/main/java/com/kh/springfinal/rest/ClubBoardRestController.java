@@ -1,11 +1,14 @@
 package com.kh.springfinal.rest;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +23,7 @@ import com.kh.springfinal.dao.ClubBoardLikeDao;
 import com.kh.springfinal.dao.ClubBoardReplyDao;
 import com.kh.springfinal.dao.ClubMemberDao;
 import com.kh.springfinal.dao.MemberDao;
+import com.kh.springfinal.dto.ClubBoardAllDto;
 import com.kh.springfinal.dto.ClubBoardDto;
 import com.kh.springfinal.dto.ClubBoardImage2Dto;
 import com.kh.springfinal.dto.ClubBoardImage3Dto;
@@ -28,7 +32,7 @@ import com.kh.springfinal.dto.ClubBoardLikeDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.vo.ClubBoardLikeVO;
-import com.kh.springfinal.vo.ClubBoardPaginationVO;
+import com.kh.springfinal.vo.PaginationVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -196,9 +200,18 @@ public class ClubBoardRestController {
 		attachDao.delete(clubBoardImage3Dto.getAttachNo());
 	}
 	
-//	@PostMapping("/page")
-//	public ClubBoardPaginationVO page(@RequestParam integer  ) {
-//		
-//		return vo;
-//	}
+	@GetMapping("/page")
+	public List<ClubBoardAllDto> clubBoardList(@ModelAttribute("vo")PaginationVO vo, @RequestParam int clubNo, @RequestParam(required=false) int page, 
+			@RequestParam(required=false) String keyword) {
+		log.debug("keyword={}",keyword);
+		int count = clubBoardDao.clubBoardCount(vo, clubNo);
+		vo.setPage(page);
+		vo.setCount(count);
+		if(keyword != null) {
+			vo.setKeyword(keyword);
+		}
+		List<ClubBoardAllDto> list = clubBoardDao.selectListByPage(vo, clubNo); 
+		log.debug("list={}", list);
+		return list;
+	}
 }

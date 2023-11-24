@@ -533,10 +533,10 @@ $(function(){
 			<div class="row">
 				<div class="col-3">
 					<c:if test="${attachDto.attachNo == null }">
-						<img src="${pageContext.request.contextPath}/images/user.png" style="max-width: 25px;" alt="User Image">				
+						<img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="80" height="80">				
 					</c:if>
 					<c:if test="${attachDto.attachNo != null}">
-						<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${attachDto.attachNo}">
+						<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardAllDto.attachNoMp}" class="rounded-circle" width="80" height="80">
 					</c:if>
 				</div>
 				<div class="col-3">
