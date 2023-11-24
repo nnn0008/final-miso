@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.springfinal.dao.CategoryDao;
+import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dao.ClubMemberDao;
 import com.kh.springfinal.dao.ZipCodeDao;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MinorCategoryDto;
 import com.kh.springfinal.dto.OneDto;
 import com.kh.springfinal.dto.ZipCodeDto;
+import com.kh.springfinal.vo.ClubListVO;
 import com.kh.springfinal.vo.PaginationVO;
 
 @CrossOrigin
@@ -32,6 +34,9 @@ public class ClubRestController {
 		
 	@Autowired
 	private SqlSession sqlSession;
+	
+	@Autowired
+	private ClubDao clubDao;
 	
 	@Autowired
 	private ZipCodeDao zipCodeDao;
@@ -126,4 +131,22 @@ public class ClubRestController {
 		}
 	
 	}
+	
+	
+	
+	@GetMapping("/clubSearchPageList")
+	public List<ClubListVO> searchList(@ModelAttribute(name ="vo") PaginationVO vo,
+			HttpSession session){
+		
+		
+		List<ClubListVO> list= clubDao.clubSearchPageList(vo);
+		
+		return list;
+		
+		
+	}
+	
+	
+	
+	
 }

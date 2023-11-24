@@ -1,5 +1,7 @@
 package com.kh.springfinal.vo;
 
+import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,5 +14,7 @@ public class ClubMemberVO {
 	private String memberName;
 	private String clubMemberRank;
 	private String joinMessage;
+	private Date joinDate;
+	private String joinDateString;
 
 }

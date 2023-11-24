@@ -12,10 +12,12 @@ public class PaginationVO {
 	private int size = 5; //보여줄 게시판의 글 수(기본:20)
 	private int count; //전체 글 수
 	private int navigatorSize = 5; //하단 네비게이터 표시 개수(기본:10)
+	private int whereNo;
+	private int clubNo;
 	
 	public boolean isSearch() {
 		return type != null && keyword != null;
-	}
+	} 
 	public int getBegin() {
 		return (page-1)/navigatorSize * navigatorSize + 1;
 	}
@@ -26,9 +28,26 @@ public class PaginationVO {
 	public boolean isFirst() {
 		return getBegin() == 1;
 	}
+	public boolean getWhereNoFlag() {
+	    return whereNo != 0;
+	}
+	public boolean getClubNo() {
+		return clubNo != 0;
+	}
+	//동호회 게시판은 키워드만 있어도 됨
+	public boolean isCategory() {
+		return keyword != null;
+	}
+	
 	public String getPrevQueryString() {
 		if(isSearch()) { //검색이면
 		return "page="+ (getBegin()-1) +"&size=" +size+ "&type=" + type + "&keyword=" + keyword;
+		}
+		else if(getWhereNoFlag()) {
+			return "page=" + (getBegin()-1)+ "&size=" +size+ "&whereNo="+whereNo;	
+		}
+		else if(getClubNo()) {
+			return "page=" + (getBegin()-1) + "&size=" +size + "&clubNo=" + clubNo;
 		}
 		else { //목록이면
 			return "page=" + (getBegin()-1) + "&size=" +size;
@@ -45,6 +64,12 @@ public class PaginationVO {
 		if(isSearch()) { //검색이면
 		return "page="+ (getEnd()+1) + "&size=" +size+ "&type=" + type + "&keyword=" + keyword;
 		}
+		else if(getWhereNoFlag()) {
+			return "page=" + (getEnd()+1)+ "&size=" +size+ "&whereNo="+whereNo;	
+		}
+		else if(getClubNo()) {
+			return "page=" + (getEnd()+1)+ "&size=" +size + "&clubNo=" + clubNo;
+		}
 		else { //목록이면
 			return "page=" + (getEnd()+1)+ "&size=" +size;
 		}
@@ -54,6 +79,12 @@ public class PaginationVO {
 		if(isSearch()) { //검색이면
 			return "page="+ page + "&size=" +size+ "&type=" + type + "&keyword=" + keyword; //헤당페이지 내놔라
 			}
+		else if(getWhereNoFlag()) {
+			return "page=" + page+ "&size=" +size+ "&whereNo="+whereNo;
+		}
+		else if(getClubNo()) {
+			return "page=" + page+ "&size=" +size+ "&clubNo=" + clubNo;
+		}
 			else { //목록이면
 				return "page=" + page +"&size=" +size;
 			}

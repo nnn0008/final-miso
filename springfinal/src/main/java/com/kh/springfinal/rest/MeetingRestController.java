@@ -19,6 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,7 +39,9 @@ import com.kh.springfinal.dto.ChatRoomDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MeetingDto;
 import com.kh.springfinal.dto.MeetingMemberDto;
+import com.kh.springfinal.dto.ZipCodeDto;
 import com.kh.springfinal.vo.FileLoadVO;
+import com.kh.springfinal.vo.PaginationVO;
 
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
@@ -239,15 +242,17 @@ public class MeetingRestController {
 		
 	}
 	
-	
-	@GetMapping("/list")
-	public List<MeetingDto> list(int clubNo,HttpSession session) throws ParseException{
+	@GetMapping("/allList")
+	public List<MeetingDto> allList(int clubNo,HttpSession session) throws ParseException{
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd E a hh:mm:ss");
-		List<MeetingDto> meetingList = meetingDao.selectList(clubNo);
+		SimpleDateFormat date2Format = new SimpleDateFormat("MM-dd E");
 		
 		String memberId = (String) session.getAttribute("name");
 		
 		
+		List<MeetingDto> meetingList = meetingDao.selectList(clubNo);	//페이지네이션 안 한 리스트
+		
+	    
 		
 		int presentClubMemberNo=0;
 		
@@ -266,7 +271,6 @@ public class MeetingRestController {
 			
 			dto.setAttendMemberList(clubMemberDao.meetingAttendList(dto.getMeetingNo()));
 			
-			log.debug("setAttendMemberList={}",clubMemberDao.meetingAttendList(dto.getMeetingNo()));
 			
 			
 			boolean isManager=false;
@@ -293,6 +297,88 @@ public class MeetingRestController {
 		 	Date date = dto.getMeetingDate();
 	        String formattedDate = dateFormat.format(date);
 	        dto.setDateString(formattedDate); 
+	        
+	        
+	        String formatted2Date = date2Format.format(date);
+	        dto.setDate(formatted2Date);
+	        
+	        
+	        //디데이 설정
+	        
+	        int dday = (int) dto.getDday();
+	        
+	        dto.setDday(dday);
+	        
+	      
+		}
+		
+		return meetingList;
+		
+	}
+	
+	@GetMapping("/list")
+	public List<MeetingDto> list(int clubNo,HttpSession session,
+			@ModelAttribute(name ="vo") PaginationVO vo) throws ParseException{
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd E a hh:mm:ss");
+		SimpleDateFormat date2Format = new SimpleDateFormat("MM-dd E");
+		
+		String memberId = (String) session.getAttribute("name");
+		
+		int count = meetingDao.count(vo);
+		vo.setCount(count);
+		vo.setSize(3);
+		
+//		List<MeetingDto> meetingList = meetingDao.selectList(clubNo);	//페이지네이션 안 한 리스트
+	    List<MeetingDto> meetingList = meetingDao.meetingListByPage(vo);//한 리스트
+		
+	    
+		
+		int presentClubMemberNo=0;
+		
+		if(memberId!=null) {
+		
+		presentClubMemberNo = clubMemberDao.findClubMemberNo(clubNo, memberId);
+		
+		}
+		
+		for(MeetingDto dto : meetingList) {
+			
+			int attendCount = meetingMemberDao.attendCount(dto.getMeetingNo());
+			
+			
+			dto.setAttendCount(attendCount);
+			
+			dto.setAttendMemberList(clubMemberDao.meetingAttendList(dto.getMeetingNo()));
+			
+			
+			
+			boolean isManager=false;
+			boolean didAttend=false;
+			
+			if(presentClubMemberNo!=0) {
+			
+			isManager = clubMemberDao.isManeger(presentClubMemberNo);
+			didAttend = meetingMemberDao.didAttend(dto.getMeetingNo(), presentClubMemberNo);
+			
+			}
+
+			Integer attachNo = meetingImageDao.findAttachNo(dto.getMeetingNo());
+			dto.setAttachNo(attachNo != null ? attachNo : 0);
+			
+		
+			
+			
+			dto.setDidAttend(didAttend);
+			dto.setManager(isManager);
+			
+
+			//스트링 날짜 설정
+		 	Date date = dto.getMeetingDate();
+	        String formattedDate = dateFormat.format(date);
+	        dto.setDateString(formattedDate); 
+	        
+	        String formatted2Date = date2Format.format(date);
+	        dto.setDate(formatted2Date);
 	        
 	        
 	        
@@ -437,8 +523,6 @@ public class MeetingRestController {
 		
 		int clubMemberNo = clubMemberDao.findClubMemberNo(clubNo, memberId);
 		
-		log.debug("clubMemberNo={}",clubMemberNo);
-		log.debug("meetingNo={}",meetingNo);
 		
 		return meetingMemberDao.deleteAttend(meetingNo,clubMemberNo);
 		
