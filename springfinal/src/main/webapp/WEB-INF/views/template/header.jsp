@@ -532,21 +532,21 @@ function truncateClubDescription() {
 
 <main>
  <header>
-            <div class="col mt-2">
+
    
       <a href="#" class="link logo"><img src="${pageContext.request.contextPath}/images/miso_logo.png" width="200px"></a>
 
-            </div>
-            <div class="title">
-                <form action="/club/searchList">
-                <div class="input-group d-flex justify-content-center"> 
-                    <input type="search" name="keyword" class="form-control rounded-pill" placeholder="Search" aria-label="Search"  
-                    aria-describedby="search-addon" />  
-                    <button type="submit" class="btn btn-outline-primary rounded-pill"><i class="fa-solid fa-magnifying-glass"></i></button>  
-                  
-                   </div>  
-                 </form>
-            </div>
+         
+<div class="title ms-5 me-5 mb-3 mt-4">
+    <form action="/club/searchList" class="w-100">
+        <div class="title input-group d-flex justify-content-center align-items-center">
+            <input type="search" name="keyword" class="form-control rounded-pill " placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+            <button type="submit" class="btn btn-outline-primary rounded-pill"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+    </form>
+</div>
+
+            
            <div class="etc container">
           <div class="col-4 ms-4" id="notifyContainer">
         <i class="fa-regular fa-bell fa-2xl notifyContainer showNotifyButton" data-modal="notifyModal"></i>

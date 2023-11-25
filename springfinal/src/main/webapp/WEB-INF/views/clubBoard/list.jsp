@@ -23,6 +23,9 @@
     .badge:hover{
     	cursor:pointer;
     }
+       .bg-gray{
+   background-color: #BAB9B9;
+   }
 </style>
 <script>
 	function redirect(url){
@@ -286,60 +289,58 @@
 			</div>
 	</div>
 </script>
-<div class="container-fluid" style="max-width:550px; max-height:350px">
-	<div class="row">
-		<div class="col">
-			<h6>
-				<span class="badge bg-secondary">
-					전체
-				</span>
-			</h6>
-		</div>
-		<div class="col">
-			<h6>
-				<span class="badge bg-secondary">
-					공지사항
-				</span>
-			</h6>
-		</div>
-		<div class="col">
-			<h6>
-				<span class="badge bg-secondary">
-					가입인사
-				</span>
-			</h6>
-		</div>
-		<div class="col">
-			<h6>
-				<span class="badge bg-secondary">
-					모임후기
-				</span>
-			</h6>
-		</div>
-		<div class="col">
-			<h6>
-				<span class="badge bg-secondary">
-					관심사
-				</span>
-			</h6>
-		</div>
-		<div class="col">
-			<h6>
-				<span class="badge bg-secondary">
-					자유
-				</span>
-			</h6>
-		</div>
-		<div class="col">
-			<h6>
-				<a href="${pageContext.request.contextPath}/clubBoard/write?clubNo=${clubNo}">글쓰기</a>
-			</h6>
-		</div>
-		
-	</div>
-	
-	<div class="row m-2 mt-4 board-list"></div>
+
+<div class="row">
+    <div class="col-3 pe-0">
+        <a id="homeLink" href="${pageContext.request.contextPath}/club/detail?clubNo=${clubDto.clubNo}" class="btn btn-success bg-miso w-100 active">홈</a>
+    </div>
+    <div class="col-3 pe-0">
+        <a id="boardLink" href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDto.clubNo}" class="btn btn-success bg-miso w-100">게시판</a>
+    </div>
+    <div class="col-3 pe-0">
+        <a id="photoLink" href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}" class="btn btn-success bg-miso w-100">사진첩</a>
+    </div>
+    <div class="col-3">
+        <a id="chatLink" href="/chat/enterRoom/${clubDto.chatRoomNo}" class="btn btn-success bg-miso w-100">채팅</a>
+    </div>
 </div>
+
+<div class="row mt-3">
+    <div class="col-9 ml-auto">
+        <label class="badge rounded-pill bg-primary">
+            전체
+        </label>
+
+        <label class="badge rounded-pill bg-gray">
+            공지사항
+        </label>
+
+        <label class="badge rounded-pill bg-gray">
+            가입인사
+        </label>
+
+        <label class="badge rounded-pill bg-gray">
+            모임후기
+        </label>
+
+        <label class="badge rounded-pill bg-gray">
+            관심사
+        </label>
+
+        <label class="badge rounded-pill bg-gray">
+            자유
+        </label>
+    </div>
+    <div class="col ml-auto">
+        <h6 class="text-right">
+            <a href="${pageContext.request.contextPath}/clubBoard/write?clubNo=${clubNo}" class="btn btn-outline-secondary w-100">글쓰기</a>
+        </h6>
+    </div>
+</div>
+
+
+	<div class="row m-2 mt-2 board-list"></div>
+
 
 
 

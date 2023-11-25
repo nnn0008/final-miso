@@ -25,6 +25,7 @@ import com.kh.springfinal.vo.ChatListVO;
 import com.kh.springfinal.vo.ChatMemberListVO;
 import com.kh.springfinal.vo.ChatOneMemberListVO;
 import com.kh.springfinal.vo.ChatOneMemberVO;
+import com.kh.springfinal.vo.ClubImageVO;
 import com.kh.springfinal.vo.MeetingVO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -90,16 +91,25 @@ public class WebsocketController {
 	//채팅방
 	@GetMapping("/enterRoom/{chatRoomNo}")
 	public String enterRoom(@PathVariable int chatRoomNo, Model model) {
-		ClubDto clubInfo = chatRoomDao.clubInfo(chatRoomNo);
-		List<ChatMemberListVO> members = chatRoomDao.chatMemberList(chatRoomNo);
-		ChatOneMemberListVO oneMembers = chatRoomDao.oneMembers(chatRoomNo);
-		
-		model.addAttribute("clubInfo", clubInfo);
-		model.addAttribute("members", members);
-		model.addAttribute("oneMembers", oneMembers);
-	    return "chat/sockjs2";
+	    ClubDto clubInfo = chatRoomDao.clubInfo(chatRoomNo);
+	    List<ChatMemberListVO> members = chatRoomDao.chatMemberList(chatRoomNo);
+	    ChatOneMemberListVO oneMembers = chatRoomDao.oneMembers(chatRoomNo);
+
+
+	        if(clubInfo != null) {	        	
+	        	int clubNo = clubInfo.getClubNo(); // 클럽번호 가져오기
+	        	ClubImageVO clubDto = clubDao.clubDetail(clubNo);
+	        	model.addAttribute("clubDto", clubDto);
+	        }
+	        // 상단 바로가기 메뉴
+
+	        model.addAttribute("clubInfo", clubInfo);
+	        model.addAttribute("members", members);
+	        model.addAttribute("oneMembers", oneMembers);
+	        return "chat/sockjs2";
+
 	}
-	
+
 	
 	// 룸번호에 해당하는 이전 메시지 조회
     @GetMapping("/fetchChatHistory")

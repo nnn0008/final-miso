@@ -33,6 +33,9 @@ border-radius: 1%;
 .row .col .d-flex i {
     margin-right: 5px; 
 }
+.btn-outline-secondary{
+width: 127px;
+}
 
 </style>
 <script>
@@ -439,19 +442,34 @@ function clickHeart(photoNo, clubNo){
 		</form>
 </script>
 
-<div class="container-fluid">
+<!-- <div class="container-fluid"> -->
 
-	<!-- 전체 페이지 폭 관리 -->
-	<div class="col-me-10 offset-md-1">
+<!-- 	<!-- 전체 페이지 폭 관리 --> 
+<!-- 	<div class="col-me-10 offset-md-1"> -->
+
+<div class="row">
+    <div class="col-3 pe-0">
+        <a id="homeLink" href="${pageContext.request.contextPath}/club/detail?clubNo=${clubDto.clubNo}" class="btn btn-success bg-miso w-100 active">홈</a>
+    </div>
+    <div class="col-3 pe-0">
+        <a id="boardLink" href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDto.clubNo}" class="btn btn-success bg-miso w-100">게시판</a>
+    </div>
+    <div class="col-3 pe-0">
+        <a id="photoLink" href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}" class="btn btn-success bg-miso w-100">사진첩</a>
+    </div>
+    <div class="col-3">
+        <a id="chatLink" href="/chat/enterRoom/${clubDto.chatRoomNo}" class="btn btn-success bg-miso w-100">채팅</a>
+    </div>
+</div>
 
 		<!-- 제목 -->
-<div class="row">
+<div class="row mt-3">
     <div class="col-6 text-start d-flex align-items-center">
         <img src="${pageContext.request.contextPath}/images/logo-door.png" width="10%">
         <strong class="ms-2">사진첩</strong>
     </div>
     <div class="col-6 text-end">
-        <button type="button" class="btn btn-success bg-miso"
+        <button type="button" class="btn btn-outline-secondary"
                 data-bs-toggle="modal" data-bs-target="#exampleModal">
             사진 등록
         </button>
@@ -581,7 +599,7 @@ function clickHeart(photoNo, clubNo){
 			</div>
 			</div>
 		</div>
-	</div>
-</div>
+<!-- 	</div> -->
+<!-- </div> -->
 
 <jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>

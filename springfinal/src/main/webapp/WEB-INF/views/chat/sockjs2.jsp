@@ -42,9 +42,27 @@
 
 
 <body>
-	<div class="container-fluid">
+
+<c:if test="${not empty clubDto}">
+    <div class="row">
+        <div class="col-3 pe-0">
+            <a id="homeLink" href="${pageContext.request.contextPath}/club/detail?clubNo=${clubDto.clubNo}" class="btn btn-success bg-miso w-100 active">홈</a>
+        </div>
+        <div class="col-3 pe-0">
+            <a id="boardLink" href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDto.clubNo}" class="btn btn-success bg-miso w-100">게시판</a>
+        </div>
+        <div class="col-3 pe-0">
+            <a id="photoLink" href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}" class="btn btn-success bg-miso w-100">사진첩</a>
+        </div>
+        <c:if test="${not empty clubDto.chatRoomNo}">
+            <div class="col-3">
+                <a id="chatLink" href="${pageContext.request.contextPath}/chat/enterRoom/${clubDto.chatRoomNo}" class="btn btn-success bg-miso w-100">채팅</a>
+            </div>
+        </c:if>
+    </div>
+</c:if>
+
 		<div class="row">
-			<div class="col">
 
 
 				<!-- 메세지 헤더 -->
@@ -226,8 +244,6 @@
 						</div>
 					</div>
 				</div>
-			</div>
-		</div>
 
 <!-- 		<!-- 모달 -->
 <!-- 		<div class="modal" id="chatMoreModal"> -->
@@ -268,6 +284,16 @@
 	<script>
 	//연결 생성
 	//연결 후 해야할 일들을 콜백함수로 지정(onopen, onclose, onerror, onmessage)
+	
+	// jQuery를 사용하는 경우
+$(document).ready(function () {
+    // clubNo가 비어있는 경우 상단 메뉴를 숨김
+    if (!"${not empty clubDto.clubNo}") {
+        $("#homeLink, #boardLink, #photoLink, #chatLink").hide();
+    }
+});
+
+	
 
 	function connect() {
 	// 클라이언트에서 SockJS로 서버에 접속하는 부분
