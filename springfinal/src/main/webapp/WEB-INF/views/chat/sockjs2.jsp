@@ -117,6 +117,7 @@
 					     <span class="offline-icon"  id="clubMemberId_${member.clubMemberId}" value="${member.clubMemberId}"></span>
 					        <img src="/rest/member/profileShow?memberId=${member.clubMemberId}" class="rounded-circle" width="50" height="50">
 					        <span>${member.memberName}</span>
+				        
 					        <c:choose>
 				            <c:when test="${member.clubMemberRank eq '운영진'}">
 				                <span class="badge bg-primary rounded-pill">운영진</span>
@@ -339,8 +340,6 @@ $(document).ready(function () {
     }
 });
 
-	
-
 	function connect() {
 	// 클라이언트에서 SockJS로 서버에 접속하는 부분
 	window.socket = new SockJS("http://localhost:8080/ws/chat");
@@ -351,8 +350,6 @@ $(document).ready(function () {
 	//console.log(memberName);
 	var oneChatMemberName;
 	var prevMessageDate;
-	
-	
 
 // 	var mapToSend = ${mapToSend}
 //     console.log("mapToSend:", mapToSend);
@@ -469,7 +466,9 @@ $(document).ready(function () {
 		
 		var data = JSON.parse(e.data);
 		console.log(data);
-	
+		
+		var clubMemberRank;
+
 		
 		if (data.messageType === 'join') {
 		    var chatSender = data.chatSender;
@@ -592,7 +591,7 @@ if (data.messageType === "delete") {
 		   // console.log(memberId);
 		    var chatSender = data.memberId;
 		   // console.log("sender",chatSender)
-		    
+
 		    var memberName = data.memberName;
 		    var oneChatMemberName = data.oneChatMemberName;
 // 			console.log("oneChatMemberName",oneChatMemberName);
@@ -624,7 +623,7 @@ if (data.messageType === "delete") {
 		            
 		    var content = $("<div>").text(data.content);
 
-
+		    
 		    if (memberId === chatSender) {
 		        // 본인 메시지 (오른쪽에 표시)
 		        var messageDiv = $("<div>").addClass("d-flex justify-content-end mb-4 mt-2");
@@ -668,63 +667,77 @@ if (data.messageType === "delete") {
 
 		        var contentDiv = $("<div>").addClass("d-flex flex-column");
 		        contentDiv.append(messageContainer);
-
+				
 		        if (data.chatBlind === 'N') {
-		        	var deleteIcon = $("<span>")
-		            .addClass("delete-icon delete-right")
-		            .html('<i class="fas fa-times"></i>')
-		            .hide() // 일단 숨겨둠
-		            .on("click", function () {
-		                var messageDiv = $(this).closest(".d-flex");
-		                var messageContent = $(".msg_cotainer_send", messageDiv);
-		                var chatNo = messageContainer.attr("data-chatNo");
-		                console.log("chatNo", chatNo);
+		            var deleteIcon = $("<span>")
+		                .addClass("delete-icon delete-right")
+		                .html('<i class="fas fa-times"></i>')
+		                .hide() // 일단 숨겨둠
+		                .on("click", function () {
+		                    var messageDiv = $(this).closest(".d-flex");
+		                    var messageContent = $(".msg_cotainer_send", messageDiv);
+		                    var chatNo = messageContainer.attr("data-chatNo");
+		                    console.log("chatNo", chatNo);
+							
+		                    var memberId = "${sessionScope.name}";
+		                    
+		                    $.ajax({
+		                    	type:"GET",
+		                    	url: window.contextPath +'/getClubMemberRank',
+		                    	 data: {
+		                    	        memberId: memberId,
+		                    	        chatRoomNo: chatRoomNo
+		                    	    },
+		                    	    success: function (response) {
+		                                // 서버에서 받은 응답 처리
+		                                var clubMemberRank = response;
 
-					
-		                var confirmDelete = confirm("메시지를 정말 삭제하시겠습니까?");
-		                
-		                if (confirmDelete) {
-		                // 서버에 업데이트 요청을 보냄
-		                
-		               	 var deleteMessage = {
-	                		        messageType: "delete",
-	                		        chatNo: chatNo,
-	                		        chatRoomNo: chatRoomNo,
-	                		    };
+		                                // data.clubMemberRank 값이 '운영진'일 때만 삭제 동작
+		                                if (clubMemberRank === '운영진') {
+		                                    var confirmDelete = confirm("메시지를 정말 삭제하시겠습니까?");
 
-	                	window.socket.send(JSON.stringify(deleteMessage));
-	                	 $(this).hide();
-	                     messageContent.text("삭제된 메시지입니다");
-	                		 
-		                }
-		            });
-		        	
-		        // 삭제 아이콘을 메시지 박스에 추가하고 숨겨둠
-		        messageContainer.append(deleteIcon);
+		                                    if (confirmDelete) {
+		                                        // 서버에 업데이트 요청을 보냄
+		                                        var deleteMessage = {
+		                                            messageType: "delete",
+		                                            chatNo: chatNo,
+		                                            chatRoomNo: chatRoomNo,
+		                                        };
 
-		        // 마우스가 메시지 박스 위로 올라갈 때 삭제 아이콘을 표시
-		        messageContainer.on("mouseenter", function () {
-		            deleteIcon.show();
-		        });
+		                                        window.socket.send(JSON.stringify(deleteMessage));
+		                                        $(this).hide();
+		                                        messageContent.text("삭제된 메시지입니다");
+		                                    }
+		                                } else {
+		                                    alert("권한이 없습니다.");
+		                                }
+		                            },
+		                            error: function (error) {
+		                                // 오류 처리
+		                                console.error("Error fetching clubMemberRank:", error);
+		                            }
+		                        });
+		                    });
 
-		        // 마우스가 메시지 박스 바깥으로 나갈 때 삭제 아이콘을 숨김
-		        messageContainer.on("mouseleave", function () {
-		            deleteIcon.hide();
-		        });
-				   }
-		        
-// 		        else if (data.chatBlind === 'Y') {
-// 		            // Y라면 '삭제된 메시지입니다' 처리
-// 		            messageContainer.text("삭제된 메시지입니다");
-// 		        }
-		        messageDiv.append(timeSpan).append(contentDiv).append(imageContainer);
+		                // 삭제 아이콘을 메시지 박스에 추가하고 숨겨둠
+		                messageContainer.append(deleteIcon);
 
-		        $(".message-list").append(messageDiv);
-		        
-// 		        console.log("messageContainer:", messageContainer);
-// 		        console.log("deleteIcon:", deleteIcon);
+		                // 마우스가 메시지 박스 위로 올라갈 때 삭제 아이콘을 표시
+		                messageContainer.on("mouseenter", function () {
+		                    deleteIcon.show();
+		                });
 
-		    }  else {
+		                // 마우스가 메시지 박스 바깥으로 나갈 때 삭제 아이콘을 숨김
+		                messageContainer.on("mouseleave", function () {
+		                    deleteIcon.hide();
+		                });
+		            }
+
+		            messageDiv.append(timeSpan).append(contentDiv).append(imageContainer);
+
+		            $(".message-list").append(messageDiv);
+		            
+		    } else {
 		    	
 		    	// 상대방 메시지 (왼쪽에 표시)
 		    	var messageDiv = $("<div>").addClass("d-flex mb-4 align-items-start mt-2");
@@ -827,35 +840,55 @@ if (data.messageType === "delete") {
 				   contentDiv.append(nicknameDiv).append(messageContainer);
 				   
 				   if (data.chatBlind === 'N') {
-				       // 삭제 아이콘 및 클릭 이벤트 처리
-				       var deleteIcon = $("<span>")
-				           .addClass("delete-icon delete-left")
-				            .hide() // 일단 숨겨둠
-				           .html('<i class="fas fa-times"></i>')
-				           .on("click", function() {
-				               var messageDiv = $(this).closest(".d-flex");
-				               var messageContent = $(".msg_cotainer", messageDiv);
+			            var deleteIcon = $("<span>")
+			                .addClass("delete-icon delete-right")
+			                .html('<i class="fas fa-times"></i>')
+			                .hide() // 일단 숨겨둠
+			                .on("click", function () {
+			                    var messageDiv = $(this).closest(".d-flex");
+			                    var messageContent = $(".msg_cotainer_send", messageDiv);
+			                    var chatNo = messageContainer.attr("data-chatNo");
+			                    console.log("chatNo", chatNo);
+								
+			                    var memberId = "${sessionScope.name}";
+			                    
+			                    $.ajax({
+			                    	type:"GET",
+			                    	url: window.contextPath +'/getClubMemberRank',
+			                    	 data: {
+			                    	        memberId: memberId,
+			                    	        chatRoomNo: chatRoomNo
+			                    	    },
+			                    	    success: function (response) {
+			                                // 서버에서 받은 응답 처리
+			                                var clubMemberRank = response;
 
-				               var chatNo = messageContainer.attr("data-chatNo");
-				               console.log("chatNo", chatNo);
+			                                // data.clubMemberRank 값이 '운영진'일 때만 삭제 동작
+			                                if (clubMemberRank === '운영진') {
+			                                    var confirmDelete = confirm("메시지를 정말 삭제하시겠습니까?");
 
-				                var confirmDelete = confirm("메시지를 정말 삭제하시겠습니까?");
-				                
-				                if (confirmDelete) {
-				                	
-				                	 var deleteMessage = {
-				                		        messageType: "delete",
-				                		        chatNo: chatNo,
-				                		        chatRoomNo: chatRoomNo,
-				                		    };
+			                                    if (confirmDelete) {
+			                                        // 서버에 업데이트 요청을 보냄
+			                                        var deleteMessage = {
+			                                            messageType: "delete",
+			                                            chatNo: chatNo,
+			                                            chatRoomNo: chatRoomNo,
+			                                        };
 
-				                	window.socket.send(JSON.stringify(deleteMessage));
-				                	 $(this).hide();
-				                     messageContent.text("삭제된 메시지입니다");
-		                		 
-				                }
-				            });
-				       
+			                                        window.socket.send(JSON.stringify(deleteMessage));
+			                                        $(this).hide();
+			                                        messageContent.text("삭제된 메시지입니다");
+			                                    }
+			                                } else {
+			                                    alert("권한이 없습니다.");
+			                                }
+			                            },
+			                            error: function (error) {
+			                                // 오류 처리
+			                                console.error("Error fetching clubMemberRank:", error);
+			                            }
+			                        });
+			                    });
 				      
 
 				        // 삭제 아이콘을 메시지 박스에 추가하고 숨겨둠

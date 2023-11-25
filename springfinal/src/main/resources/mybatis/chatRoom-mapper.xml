@@ -244,4 +244,11 @@ WHERE cr.CHAT_ROOM_NO = #{chatRoomNo}
     <select id="clubInfo" resultType="ClubDto">
     SELECT * from CLUB c WHERE CHAT_ROOM_NO = #{chatRoomNo}
     </select>
+    
+    <select id="clubMemberRank" resultType="String">
+    SELECT CLUB_MEMBER_RANK
+FROM club_member
+WHERE CLUB_MEMBER_ID = #{memberId} AND CLUB_NO = #{clubNo}
+    </select>
+    
 </mapper>

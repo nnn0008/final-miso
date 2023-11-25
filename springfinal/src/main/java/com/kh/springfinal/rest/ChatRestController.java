@@ -146,6 +146,13 @@ public class ChatRestController {
 	             )
 	             .body(resource);
 	 }
+	 
+	 //멤버 프로필 사진
+	 @GetMapping("/getClubMemberRank")
+	 public String getClubMemberRank(@RequestParam String  memberId, @RequestParam int chatRoomNo) {
+		 int clubNo = chatRoomDao.clubInfo(chatRoomNo).getClubNo();
+	        return chatRoomDao.clubMemberRank(memberId, clubNo);
+	    }
 
 	 
 //	 @GetMapping("/getMemberList")

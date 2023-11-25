@@ -33,6 +33,7 @@ import com.kh.springfinal.dao.AttachDao;
 import com.kh.springfinal.dao.ChatDao;
 import com.kh.springfinal.dao.ChatOneDao;
 import com.kh.springfinal.dao.ChatRoomDao;
+import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dao.MemberProfileDao;
 import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.ChatDto;
@@ -72,6 +73,9 @@ public class WebSocketServer extends TextWebSocketHandler{
 	
 	@Autowired
 	private AttachDao attachDao;
+	
+	@Autowired
+	private ClubDao clubDao;
 	
 	@Autowired
 	private MemberProfileDao profileDao;
@@ -179,6 +183,7 @@ public class WebSocketServer extends TextWebSocketHandler{
         	profileImageUrl = "/getProfileImage?memberId=" + chatDto.getChatSender();
         }
 		
+        
 	    Map<String, Object> map = new HashMap<>();
 	    map.put("memberId", chatDto.getChatSender());
 	    map.put("chatTime", chatTime.toString());
@@ -272,7 +277,6 @@ public class WebSocketServer extends TextWebSocketHandler{
 	        Map<String, Object> map = new HashMap<>();
 	        map.put("chatRoomNo", chatRoomNo);        
 	        map.put("session", session);
-	        map.put("memberId", memberId);
 	        sessionList.add(map);
 
 	        System.out.println("Current sessionList: " + sessionList);
@@ -284,6 +288,9 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            ChatListVO firstChat = chatList.get(0);
 	            String clubName = firstChat.getClubName();
 	            String clubExplain = firstChat.getClubExplain();
+//	            int clubNo = firstChat.getClubNo();
+//	            
+//	            String clubMemberRank = chatRoomDao.clubMemberRank(memberId, clubNo);
 
 	            // 여기에서 chatRoomNo를 활용하여 처리
 	            // 채팅 내역이 있을 경우에만 채팅 내역을 전송
@@ -303,6 +310,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	                    mapToSend.put("clubExplain", clubExplain);
 	                    mapToSend.put("messageType", MessageType.join);
 	                    mapToSend.put("memberLevel", client.getMemberLevel());
+//	                    mapToSend.put("clubMemberRank", clubMemberRank);
 
 	                    String joinMessageJson = mapper.writeValueAsString(mapToSend);
 	                    TextMessage tm = new TextMessage(joinMessageJson);
@@ -421,7 +429,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	        ChatRoomDto chatRoomDto = new ChatRoomDto(); // ChatRoomDto 생성
 	        chatRoomDto.setChatRoomNo(chatRoomNo); // 생성된 룸 번호를 ChatRoomDto에 설정
 	        chatRoomDao.insert(chatRoomDto); // DB에 넣기        
-	        
+
 	        //새로운 채팅방 번호를 참여한 사용자들에게 전송
 	        Set<ClientVO> roomMembers = roomMembersMap.computeIfAbsent(chatRoomNo, k -> new HashSet<>());
 	        roomMembers.add(client);
