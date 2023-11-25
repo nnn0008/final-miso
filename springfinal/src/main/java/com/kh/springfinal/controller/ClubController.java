@@ -130,7 +130,6 @@ public class ClubController {
 		clubMemberDto.setClubMemberRank("운영진");
 		clubMemberDto.setJoinMessage("환영합니다.");
 		
-		log.debug("clubDto={}",clubDto);
 		
 		clubDao.insert(clubDto);
 		clubMemberDao.insert(clubMemberDto);
@@ -149,21 +148,28 @@ public class ClubController {
 		MajorCategoryDto major = categoryDao.findMajor(clubDto.getClubCategory());
 		ZipCodeDto zipDto = zipDao.findZip(clubNo);
 		List<ClubDetailBoardListVO> clubDetailBoardList  = clubBoardDao.clubDetailBoardList(clubNo);
+		
+		log.debug("clubDetailBoardList={}",clubDetailBoardList);
+		
 		List<PhotoDto> photoList = photoDao.selectList(clubNo);
+		
+		int clubMemberNo = clubMemberDao.findClubMemberNo(clubNo, memberId);
+		
+		
 		
 		boolean joinButton = !clubMemberDao.existMember(clubNo, memberId) && (memberId!=null);
 		boolean editPossible = clubMemberDao.editPossible(clubNo, memberId);
 		
-		List<ClubMemberVO> clubMemberList = clubMemberDao.memberInfo(clubNo);
+//		List<ClubMemberVO> clubMemberList = clubMemberDao.memberInfo(clubNo);
 		
 		
-		SimpleDateFormat joinDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		for(ClubMemberVO dto : clubMemberList) {
-			
-		String date = joinDateFormat.format(dto.getJoinDate());
-			
-		dto.setJoinDateString(date);
-		}
+//		SimpleDateFormat joinDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//		for(ClubMemberVO dto : clubMemberList) {
+//			
+//		String date = joinDateFormat.format(dto.getJoinDate());
+//			
+//		dto.setJoinDateString(date);
+//		}
 		
 		int meetingCount = meetingDao.count(clubNo);
 		
@@ -197,7 +203,7 @@ public class ClubController {
 		
 		model.addAttribute("memberCount",memberCount);
 		model.addAttribute("editPossible",editPossible);
-		model.addAttribute("clubMemberDto",clubMemberList);
+//		model.addAttribute("clubMemberDto",clubMemberList);
 		model.addAttribute("clubDto",clubDto);
 		model.addAttribute("major",major);
 		model.addAttribute("zipDto",zipDto);
@@ -205,6 +211,9 @@ public class ClubController {
 		model.addAttribute("meetingList",meetingList);
 		model.addAttribute("photoList",photoList);
 		model.addAttribute("meetingCount",meetingCount);
+		
+		
+		model.addAttribute("clubMemberNo",clubMemberNo);
 		
 		model.addAttribute("clubDetailBoardList",clubDetailBoardList);
 		

@@ -79,7 +79,9 @@ public class ClubMemberDaoImpl implements ClubMemberDao{
 		
 		String memberRank =  sqlSession.selectOne("clubMember.memberRank",params);
 		
-		boolean editPossible = "운영진".equals(memberRank) && memberRank != null;
+		boolean editPossible = "운영진".equals(memberRank) 
+				&& 
+				memberRank != null;	//클럽멤버가 아니면 번호가 안 나옴
 
 		return editPossible;
 		
@@ -97,7 +99,7 @@ public class ClubMemberDaoImpl implements ClubMemberDao{
 	}
 
 	@Override
-	public boolean isManeger(int clubMemberNo) {
+	public boolean isManeger(int clubMemberNo) { //editPossible이랑 사실상 같음
 		
 		String level = sqlSession.selectOne("clubMember.memberLevel",clubMemberNo);
 		
@@ -108,6 +110,12 @@ public class ClubMemberDaoImpl implements ClubMemberDao{
 	@Override
 	public List<MeetingAttendMemberVO> meetingAttendList(int meetingNo) {
 		return sqlSession.selectList("clubMember.meetingAttendMember",meetingNo);
+	}
+
+	@Override
+	public boolean upgradeRank(int clubMemberNo) {
+		
+		return sqlSession.update("clubMember.rankUpgrade",clubMemberNo)>0;
 	}
 
 //	@Override

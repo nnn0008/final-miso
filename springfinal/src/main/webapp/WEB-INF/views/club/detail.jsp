@@ -138,14 +138,114 @@ box-shadow: 0 0 10px #EBE8E8;
             });
         });
     </script>
+    
+  
 
 
 <script>
+
+
+
+
 $(function(){
+	
+	
+	var bodyClubMemberNo = $(".bodyClubMemberNo").data("no");
+	var memberRankIsMaster = ${editPossible}; 
+
+	if (memberRankIsMaster === false) {
+	    $("[name=makeMeeting]").remove();
+	}
+
+	
+	
+	 loadMemberList();
+	 
+		
+	  $(".upgradeRank").remove();
+	  
+	  function loadMemberList(){
+		  var params = new URLSearchParams(location.search);
+	        var clubNo = params.get("clubNo");
+              
+		  
+		  $.ajax({
+	            url: "http://localhost:8080/rest/clubMemberList",
+	            method: "get",
+	            data: { clubNo: clubNo},
+	            success: function (response) {
+	            	
+	            	$(".clubMemberList").empty();
+              	
+              for(var a=0;a<response.length;a++){
+	            	var clubMember = response[a];
+	            	var template = $("#clubMember-template").html();
+              	var htmlTemplate = $.parseHTML(template);
+              	
+              	$(htmlTemplate).find(".href").attr('href',"/member/mypage?memberId="+clubMember.memberId);
+              	
+              	if(clubMember.attachNo!=0){
+              	$(htmlTemplate).find(".profileImage").attr('src',"/rest/member/profileShow?memberId="+clubMember.memberId);
+              	}
+              		if(clubMember.clubMemberRank == '운영진'){
+              			var i =$('<i>');
+              			
+              			i.addClass("fa-solid fa-crown fa-lg pt-3 pb-3 ps-2 pe-2 club-member-badge");
+              			
+              		   $(htmlTemplate).find(".profileImage").after(i);
+              			
+              		}
+              		
+              	if(clubMember.attachNo==0){
+              		$(htmlTemplate).find(".profileImage").attr('src',"/images/basic-profile2.png");
+              		
+              	}
+              	
+              	$(htmlTemplate).find(".upgradeRank").data('clubMemberNo',clubMember.clubMemberNo);
+              	 if(clubMember.masterRank==false||clubMember.clubMemberRank=='운영진'){
+              		
+              		 $(htmlTemplate).find(".upgradeRank").hide(); 
+
+              		
+              	} 
+              	
+              	
+              	$(htmlTemplate).find(".memberName").html("<strong>" + clubMember.memberName + "</strong> | " + clubMember.joinDateString + " 가입");
+
+              	$(htmlTemplate).find(".joinMessage").text(clubMember.joinMessage);
+	            	
+              	$(".clubMemberList").append(htmlTemplate);
+              	
+              	}
+              	
+	            }
+	        })
+		  
+		  
+		  
+		  
+	  }
+	  
+	  
+	  $(document).on('click','.upgradeRank',function(){
+		  
+		  
+		  var clubMemberNo = $(this).data("clubMemberNo");
+		  
+		  $.ajax({
+			  url: "http://localhost:8080/rest/upgradeRank",
+	          method: "get",
+	          data: { clubMemberNo: clubMemberNo},
+	          success: function (response) {
+	        	  loadMemberList();
+			  
+		  }
+		  }) 
+	  })
+	
 	
 	$('#exampleModal').on('hidden.bs.modal', function () {
 	    // 모달이 닫힐 때 실행되는 코드 작성
-	    console.log("모달이 닫힐 때 실행되는 함수");
 	    // 여기에 원하는 동작을 추가하세요.
 	    
 	    $(".makeMeetingForm")[0].reset();
@@ -169,16 +269,32 @@ $(function(){
 	        $("[name=meetingFix]").val('N');
 	    }
 
-	$(".meetingFix").change(function(){
+	$(".meetingFixByEdit").change(function(){
 		
-		 if($(".meetingFix").prop("checked")){
-		        $("[name=meetingFix]").val('Y');
+		 if($("[name=meetingFixByEdit]").prop("checked")){
+		        $("[name=meetingFixByEdit]").val('Y');
 		    } else {
-		        $("[name=meetingFix]").val('N');
+		        $("[name=meetingFixByEdit]").val('N');
 		    }
 		
 	});
 	
+
+    if($(".meetingFix").prop("checked")){
+        $("[name=meetingFix]").val('Y');
+    } else {
+        $("[name=meetingFix]").val('N');
+    }
+
+$(".meetingFix").change(function(){
+	
+	 if($(".meetingFix").prop("checked")){
+	        $("[name=meetingFix]").val('Y');
+	    } else {
+	        $("[name=meetingFix]").val('N');
+	    }
+	
+});
 	
     /* $(".join").click(function(e){
         var clubNo = $(".clubNo").data("no");
@@ -199,9 +315,12 @@ $(function(){
     }); */
 
     $(".commit").click(function(){
+    	
+    	
         var clubNo = $(".clubNo").data("no");
         var memberId = $(".memberId").data("id");
-        var joinMessage = $(".joinMessage").val();
+        var joinMessage = $(".modalJoinMessage").val();
+        
 
         $.ajax({
             url: "http://localhost:8080/rest/clubMember",
@@ -214,6 +333,7 @@ $(function(){
              alert("가입되었습니다.");
              
              location.reload();
+             
                 
             }
         });
@@ -279,10 +399,6 @@ $(function(){
             		loadCutList();
             		
             	
-            },
-            error: function(error) {
-                console.error("파일 업로드 에러", error);
-                // 오류 처리 로직 추가
             }
         });
     });
@@ -360,9 +476,6 @@ $(function(){
             	
             	loadList();
             	}
-            },
-            error: function(error) {
-                console.error(error);
             }
         });
     	
@@ -390,7 +503,6 @@ $(function(){
     	
     function loadCutList(){
     	
-    	console.log(totalCount);
     	
     	 var params = new URLSearchParams(location.search);
          var clubNo = params.get("clubNo");
@@ -466,13 +578,34 @@ $(function(){
                     .addClass("d-flex align-items-center"); // 가로로 정렬
 
                 for (var a = 0; a < attendMemberList.length; a++) {
-                    var aLink = $('<a>').attr('href', "/profileShow?memberId=" + attendMemberList[a].clubMemberId);
+                    var aLink = $('<a>').attr('href', "/member/mypage?memberId=" + attendMemberList[a].clubMemberId);
                     
-                    var image = $('<img>')
+                    console.log(attendMemberList[a].attachNo);
+                    
+                    if(attendMemberList[a].attachNo != 0){
+                    	
+                    	console.log("있음");
+                    	var image = $('<img>')
                         .addClass("rounded-circle me-3")
                         .attr('src', "/rest/member/profileShow?memberId=" + attendMemberList[a].clubMemberId)
                         .attr('width', '50')
                         .attr('height', '50');
+                    	
+                    }
+                    if(attendMemberList[a].attachNo==0){
+                    	console.log("없음");
+                    	var image = $('<img>')
+                        .addClass("rounded-circle me-3")
+                        .attr('src', "/images/basic-profile.png")
+                        .attr('width', '50')
+                        .attr('height', '50');
+                    	
+                    	
+                    }
+                    
+                    	 aLink.append(image);
+                    
+                    
 
                     if (attendMemberList[a].clubMemberRank === '운영진') {
                         var crownIcon = $('<i>')
@@ -480,7 +613,7 @@ $(function(){
                             .appendTo(aLink);
                     }
 
-                    aLink.append(image);
+                   
 
                     $(htmlTemplate).find(".profileList").append(aLink);
                 }
@@ -489,19 +622,15 @@ $(function(){
                 var memberId = "${sessionScope.name}";
 
                 if (meeting.meetingFix === 'N') {
-                    console.log("N");
                     var divElement = $('<div>').addClass('secret-club');
                     var badgeElement = $('<span>').addClass('badge bg-danger ms-1 mb-1').text('비공개 정모');
                     var secretIcon = $('<i>').addClass("fa-solid fa-unlock-keyhole ms-2");
 
-                    // memberId가 attendMemberList에 포함되어 있는지 확인
-                    var memberIsAttending = attendMemberList.some(function(attendee) {
-                        return attendee.clubMemberId === memberId;
-                    });
+                  
 
-                    if (!memberIsAttending) {
-                        // memberId가 attendMemberList에 없다면 효과 적용
-                        secretIcon.removeClass('fa-unlock-keyhole').addClass('fa-lock');
+                    if (bodyClubMemberNo==0) {// 클럽멤버가 아닌 회원
+                       
+                    	secretIcon.removeClass('fa-unlock-keyhole').addClass('fa-lock');
                         divElement.css('opacity', '0.7');
                         
                     // alert 엘리먼트에도 오파시티 적용
@@ -621,9 +750,7 @@ $(function(){
     
     
     
-   	//동호회를 만들었을때 넣어줘야 할 목록
     function loadList() {
-    	console.log(totalCount);
         var params = new URLSearchParams(location.search);
         var clubNo = params.get("clubNo");
         
@@ -664,7 +791,7 @@ $(function(){
                 	
                 	        	
                 	$(htmlTemplate).find(".img").append(img);
-                	$(htmlTemplate).find(".ddayInput").text("D"+meeting.dday);
+                	$(htmlTemplate).find(".ddayInput").text("D-"+meeting.dday);
                 	$(htmlTemplate).find(".meetingNoInput").text(meeting.meetingNo);
                 	$(htmlTemplate).find(".meetingNameInput").text(meeting.meetingName);
                 	$(htmlTemplate).find(".dateStringInput").text(meeting.dateString);
@@ -674,6 +801,11 @@ $(function(){
                 	$(htmlTemplate).find(".attendCount").text(meeting.attendCount);
                 	$(htmlTemplate).find(".monthAndDay").text(meeting.date);
                 	
+                	var modifiedDateString = (meeting.date).replace(/-/g, '/');
+                    modifiedDateString = modifiedDateString.slice(0, -1) + '(' + modifiedDateString.slice(-1) + ')';
+                    	
+                    	$(htmlTemplate).find(".monthAndDay").text(modifiedDateString);
+                    	
                 	
                 	for (var a = 0; a < attendMemberList.length; a++) {
                 		
@@ -747,6 +879,28 @@ $(function(){
                 		
                 	}
                 	
+
+                     if (meeting.meetingFix === 'N') {
+                         var divElement = $('<div>').addClass('secret-club');
+                         var badgeElement = $('<span>').addClass('badge bg-danger ms-1 mb-1').text('비공개 정모');
+                         var secretIcon = $('<i>').addClass("fa-solid fa-unlock-keyhole ms-2");
+
+                        
+
+                         if (bodyClubMemberNo==0) {
+                             // memberId가 attendMemberList에 없다면 효과 적용
+                             secretIcon.removeClass('fa-unlock-keyhole').addClass('fa-lock');
+                             divElement.css('opacity', '0.7');
+                             
+                         // alert 엘리먼트에도 오파시티 적용
+                         var alertElement = $(htmlTemplate).find(".alert");
+                         alertElement.css('opacity', '0.7');
+                         }
+
+
+                         $(htmlTemplate).prepend(divElement.append(badgeElement.append(secretIcon)));
+                     }
+                	
                 	
                 	
                 	$(".attach-meeting-list").append(htmlTemplate);
@@ -758,13 +912,12 @@ $(function(){
                 	 
                  }
                  
-                 if (meeting.meetingFix === 'N') {
-                	    console.log("N");
+                /*  if (meeting.meetingFix === 'N') {
                 	    var divElement = $('<div>').addClass('secret-club');
                 	    var badgeElement = $('<span>').addClass('badge bg-danger ms-2 mb-1').text('비공개 정모');
                 	    
                 	    $(htmlTemplate).prepend(divElement.append(badgeElement));
-                	}
+                	} 중간중간 이상하게 나와서 주석처리 */
 
 
                  
@@ -782,10 +935,86 @@ $(function(){
         
     }
    	
+   	
+    	$(".boardWrite").click(function(e){
+   		
+
+   		if (bodyClubMemberNo==0) {
+   			
+   			e.preventDefault();
+   			
+   		 $(".join-modal-title").text("가입이 필요한 활동입니다!").css("color", "red");
+   			
+   			$(".joinModal").modal("show");
+   			
+   		} 
+   		
+   	})
+   	
+   	$(".joinModal").click(function(){
+   	
+   		$(".modalJoinMessage").val("");
+   		$(".join-modal-title").text("가입인사를 작성해주세요.").css("color","black");
+   		
+   		
+   	})
+   	
+   	
+   	$("[name=makeMeeting]").click(function(e){
+   		
+		 	if (bodyClubMemberNo==0) {
+		 		$(".join-modal-title").text("가입이 필요한 활동입니다!").css("color", "red");
+	   			
+	   			$(".joinModal").modal("show");
+   			
+   		}  
+		 	else{
+		 		
+		 		$("#exampleModal").modal("show");
+		 	}
+   		
+   		
+   		
+   	})
+   	
+   	$(".board-detail").click(function(e){
+   		
+   		console.log("링크클릭");
+   	
+   		
+   		if (bodyClubMemberNo==0) {
+   		e.preventDefault();
+	 		
+   			alert("동호회 멤버에게만 공개됩니다.");
+			
+		} 
+   		
+   	})
+   	
+   	
+  
+   	
+   	
+   	
    
    	
    	
    	$(document).on('click',".attend",function(){
+   		
+   		
+   		
+			console.log("가입이 하고싶어?");
+   		
+		if (bodyClubMemberNo==0) {
+   			
+   			
+   		 $(".join-modal-title").text("가입이 필요한 활동입니다!").css("color", "red");
+   			
+   			$(".joinModal").modal("show");
+   			
+   		} 
+		
+		else{
    	
    	  var params = new URLSearchParams(location.search);
       var clubNo = params.get("clubNo");
@@ -811,15 +1040,12 @@ $(function(){
             	
                 
                 
-            },
-            error: function(error) {
-                console.error("모임참석에러", error);
             }
         });
    		
    		
    		
-   		
+		}
    	})
    	
    	$(document).on('click',".attendDelete",function(){
@@ -846,9 +1072,6 @@ $(function(){
             	}
                 
                 
-            },
-            error: function(error) {
-                console.error("모임참석에러", error);
             }
         });
    		
@@ -891,15 +1114,16 @@ $(function(){
             		
             	}
             		
-   	        },
-   	        error: function (error) {
-   	            console.error("모임삭제에러", error);
    	        }
    	    });
    	});
    	
     	
 });
+
+
+
+
 
 $(document).ready(function () {
     // 각 링크에 대한 클릭 이벤트 처리
@@ -926,6 +1150,31 @@ $(document).ready(function () {
     }
 });
     </script>
+    
+    
+<script id="clubMember-template" type="text/template">
+<div class="row mt-3 mb-4">
+        <div class="col memberList">
+            <div class="row d-flex align-items-center">
+                <div class="col-2 position-relative">
+                <a href="/member/mypage?memberId=${clubMember.memberId}" class="href">
+                    <img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${clubMember.memberId}" width="100" height="100" class="rounded-circle profileImage">
+                    </a>
+                    <c:if test="${clubMember.clubMemberRank == '운영진'}">
+                        <i class="fa-solid fa-crown fa-lg pt-3 pb-3 ps-2 pe-2 club-member-badge"></i>
+                    </c:if>
+                </div>
+                <div class="col-9 ms-2">
+                    <div class="col memberName"><strong>${clubMember.memberName}</strong> | ${clubMember.joinDateString} 가입</div>
+                    <div class="col mt-2 joinMessage">${clubMember.joinMessage})</div>
+                </div>
+            </div>
+        </div>
+			<button class="btn btn-secondary w-30 upgradeRank">운영진 지정</button>
+    </div>
+	
+
+</script>
     
     <script id="meeting-template" type="text/template">
 
@@ -989,6 +1238,10 @@ $(document).ready(function () {
     
 
 <body>
+
+<div class="bodyClubMemberNo" data-no="${clubMemberNo}"></div>
+<!-- jsp에 있는 data를 스크립트로 보내주기 위한 태그-->
+
 <div class="row">
     <div class="col-3 pe-0">
         <a id="homeLink" href="#" class="btn btn-success bg-miso w-100 active">홈</a>
@@ -1053,7 +1306,7 @@ $(document).ready(function () {
 <div class="row">
 <div class="col">
   <c:if test="${joinButton==true}">
-<button type="button" class="btn btn-success bg-miso mt-4 join w-100" data-bs-toggle="modal"
+<button type="button" class="btn btn-success bg-miso mt-4 join w-100 joinOpen" data-bs-toggle="modal"
  data-bs-target=".joinModal">가입하기</button>
 </c:if>
 
@@ -1086,7 +1339,7 @@ $(document).ready(function () {
 <div class="row p-1 mt-4 text-center">
                         <div class="col">
                           <a href="${pageContext.request.contextPath}/clubBoard/write?clubNo=${clubDto.clubNo}">
-                                   <button class="btn btn-success bg-miso w-100">작성하기</button>
+                                   <button class="btn btn-success bg-miso w-100 boardWrite">작성하기</button>
                             </a>
                         </div>
                     </div>
@@ -1094,11 +1347,19 @@ $(document).ready(function () {
    
       <c:otherwise>
       
-   <a href="${pageContext.request.contextPath}/clubBoard/detail?clubBoardNo=${clubDetailBoardList[0].clubBoardNo}" class="link-dark link-underline link-underline-opacity-0">
+   <a href="${pageContext.request.contextPath}/clubBoard/detail?clubBoardNo=${clubDetailBoardList[0].clubBoardNo}" class="link-dark link-underline link-underline-opacity-0 board-detail">
     <div class="row mt-3">
         <div class="col-1">
-            <img src="/rest/member/profileShow?memberId=${clubDetailBoardList[0].memberId}"
-   width="50" height="50" class="rounded-circle">
+        	<c:choose>
+        	<c:when test="${clubDetailBoardList[0].attachNo!=0}">
+            <img src="/rest/member/profileShow?memberId=${clubDetailBoardList[0].memberId}" width="50" height="50" class="rounded-circle">
+   			</c:when>
+   			<c:otherwise>
+   			<img src="/images/basic-profile.png" width="50" height="50" class="rounded-circle">
+   			
+   			</c:otherwise>
+   
+   </c:choose>
         </div>
         <div class="col-10 ms-3">
             <div class="col">
@@ -1116,12 +1377,13 @@ $(document).ready(function () {
             <div class="col mt-1"">${clubDetailBoardList[0].clubBoardContent}</div>
         </div>
     </div>
+    </a>
     
 
     <div class="row mt-3">
         <div class="col">
         <a href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDetailBoardList[0].clubNo}">
-            <button class="btn btn-success bg-miso w-100">더보기</button>
+            <button class="btn btn-success bg-miso w-100">게시글 목록가기</button>
             </a>
         </div>
     </div>
@@ -1139,14 +1401,31 @@ $(document).ready(function () {
       
     <div class="row mt-3">
 		<div class="col">
-			<button type="button" class="btn btn-success bg-miso w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
+			<button type="button" name="makeMeeting" class="btn btn-success bg-miso w-100">
 			  	정모 만들기
 			</button>
 		</div>
 	</div>
   
+  <c:choose>
+  	<c:when test="${meetingCount==0}">
+  	<div class="row d-flex align-items-center mt-3">
+                                <div class="col-3 text-start">
+                                    <img src="${pageContext.request.contextPath}/images/open-door.png" width="100%">
+                                </div>
+                                <div class="col">
+                                	<div class="col">
+                                    <h5>아직 정모가 없어요!</h5><!-- 정모는 아무나 만들 수 없음 -->
+                                	</div>
+                                	<div class="col">
+                                	</div>
+                                </div>
+                            </div>
+  	</c:when>
+  	<c:otherwise>
 	<div class="attach-meeting-list mt-3"></div>
-	
+	</c:otherwise>
+	</c:choose>
    <div class="more-btn mt-3">
    <button class="btn btn-success bg-miso w-100 more">전체보기</button>
    <button class="btn btn-secondary w-100 cut">접기</button>
@@ -1184,7 +1463,7 @@ $(document).ready(function () {
                             <div class="row p-1 mt-4 text-center">
                         <div class="col">
                           <a href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}">
-                                   <button class="btn btn-success bg-miso w-100">사진 등록하기</button>
+                                   <button class="btn btn-success bg-miso w-100">사진첩</button>
                             </a>
                         </div>
                     </div>
@@ -1222,8 +1501,9 @@ $(document).ready(function () {
        </div>
 		</div>
 	</div>
+<div class="clubMemberList"></div>
 	
-<c:forEach var="clubMember" items="${clubMemberDto}" varStatus="loop">
+<%-- <c:forEach var="clubMember" items="${clubMemberDto}" varStatus="loop">
     <div class="row mt-3 mb-4">
         <div class="col memberList">
             <div class="row d-flex align-items-center">
@@ -1242,7 +1522,7 @@ $(document).ready(function () {
             </div>
         </div>
     </div>
-</c:forEach>
+</c:forEach> --%>
 
 
 	
@@ -1250,14 +1530,13 @@ $(document).ready(function () {
 	
 	
     
-</div>
     
       <div class="modal fade joinModal"
                  tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">가입인사를 작성해주세요</h5>
+                <h5 class="join-modal-title" id="exampleModalLabel">가입인사를 작성해주세요</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
@@ -1265,7 +1544,7 @@ $(document).ready(function () {
             <div class="modal-body">
                 <div class="row">
                   <div class="col">
-                    <input type="text" class="form-control joinMessage">
+                    <input type="text" class="form-control modalJoinMessage">
                   </div>
                 </div>
             </div>
@@ -1382,7 +1661,7 @@ $(document).ready(function () {
         </div>
     </div>
 </div>
-모임공개여부<input class="form-check-input meetingFixByEdit ms-1 " type="checkBox" name="meetingFix">
+모임공개여부<input class="form-check-input ms-1 meetingFixByEdit" type="checkBox" name="meetingFixByEdit">
         	
       </div>
       <div class="modal-footer">
@@ -1394,28 +1673,7 @@ $(document).ready(function () {
 </div> 
         
         
-          <div class="modal fade joinFinish">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">가입인사를 작성해주세요</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                  <div class="col">
-                  가입되었습니다.
-                  </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-success" data-bs-dismiss="modal">확인</button>
-            </div>
-            </div>
-        </div>
-      </div>
+         
     
      
 </body>

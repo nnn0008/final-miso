@@ -1,5 +1,6 @@
 package com.kh.springfinal.rest;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -23,6 +24,7 @@ import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MinorCategoryDto;
 import com.kh.springfinal.dto.ZipCodeDto;
 import com.kh.springfinal.vo.ClubListVO;
+import com.kh.springfinal.vo.ClubMemberVO;
 import com.kh.springfinal.vo.PaginationVO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -294,6 +296,41 @@ public class ClubRestController {
 		String memberId= (String) session.getAttribute("name");
 		
 		wishlistDao.delete(memberId, clubNo);
+		
+		
+	}
+	
+	@GetMapping("clubMemberList")
+	public List<ClubMemberVO> clubMemberList(int clubNo,HttpSession session){
+		
+		String memberId= (String) session.getAttribute("name");
+		
+		boolean master = clubMemberDao.editPossible(clubNo, memberId);
+		
+		log.debug("isMaster={}",master);
+		
+		List<ClubMemberVO> clubMemberList = clubMemberDao.memberInfo(clubNo);
+		SimpleDateFormat joinDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		for(ClubMemberVO dto : clubMemberList) {
+			
+		String date = joinDateFormat.format(dto.getJoinDate());
+		
+		dto.setMasterRank(master);	
+		dto.setJoinDateString(date);
+		}
+		
+		
+		
+		return clubMemberList;
+	}
+	
+	@GetMapping("/upgradeRank")
+	public boolean upgrade(int clubMemberNo) {
+		
+		boolean result = clubMemberDao.upgradeRank(clubMemberNo);
+		
+		return result; 
+		
 		
 		
 	}
