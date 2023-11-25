@@ -82,7 +82,107 @@
     		
     	})
 
+   	$("[name=createClub]").click(function(e){
+   		
+   		if($(".select2").val()==null){
+   		e.preventDefault();
+   			
+   		
+   		$(".select2").addClass("is-invalid");
+   			
+   		}
+   		
+   		
+   		if($("[name=clubName]").val().length==0){
+   			
+   			e.preventDefault();
+   			$("[name=clubName]").addClass("is-invalid");
+   			
+   		}
+   		
+		if($("[name=clubExplain]").val().length==0){
+   			
+   			e.preventDefault();
+   			$("[name=clubExplain]").addClass("is-invalid");
+   			
+   		}
+	if($("[name=clubPersonnel]").val().length==0){
+   			
+   			e.preventDefault();
+   			$("[name=clubPersonnel]").addClass("is-invalid");
+   			
+   		}
+		
+	if($(".search-input").data("pass")=='N'){
+   			
+   			e.preventDefault();
+   			$(".search-input").addClass("is-invalid");
+   			
+   		}
+   	});
+    	
+    	
+    	
+    	
+    	$("[name=clubName]").on('input',function(){
+    		
+    		$(this).removeClass("is-invalid");
+    		
+    		
+    		
+    	})
+    	$("[name=clubExplain]").on('input',function(){
+    		
+    		$(this).removeClass("is-invalid");
+    		
+    		
+    		
+    	})
+    	$("[name=clubPersonnel]").on('input',function(){
+    		
+    		$(this).removeClass("is-invalid");
+    		
+    		
+    		
+    	})
+    	$(".search-input").on('input',function(){
+    		
+    		$(this).removeClass("is-invalid");
+    		
+    		//newInput 제거
+    		$('.newInput').remove();
+    		$(this).data("pass","N");
+
+    		
+    		
+    		
+    	})
+    	$(".select2").change(function(){
+    		
+    		$(this).removeClass("is-invalid");
+    		
+
+    		
+    		
+    		
+    	})
+    
+    	
+    	
+   	
+   	
+   	
+   	
+   	
     });
+    
+    
+    
+   	
+    
+    
+    
+    
     </script>
     
     	<script>
@@ -93,7 +193,6 @@
     		    $(".addr-list").show();
 
     		    var keyword = $(this).val();
-    		    console.log("검색 키워드:" + keyword);
 
     		    if (searchTimeout) {
     		        clearTimeout(searchTimeout); // 이전 타이머가 있다면 제거
@@ -149,9 +248,10 @@
         	    			
         	    	
         	    	
-
         	        var selectedAddress = $(this).data("result");
-        	        $(".search-input").val(selectedAddress);
+        	        $(".search-input").val(selectedAddress); 
+        	        $(".search-input").data("pass","Y");
+        	        
         	        $(".addr-list").hide();
         	        
         	    });
@@ -236,6 +336,9 @@
     	
     	<select class="form-select select2" name="clubCategory">
     	</select>
+    	   <div class="invalid-feedback">
+      카테고리를 선택해주세요
+    		</div>
   		
     	
     	
@@ -244,19 +347,28 @@
     		<div class="col">
     	<label class="mt-2">모임 이름</label>
     	<input class="form-control" type="text" name="clubName">
+    	<div class="invalid-feedback">
+      동호회 이름을 추가해주세요
+    		</div>
     	</div>
     	</div>
     	<div class="row">
     		<div class="col">
     	<label class="mt-2">모임 설명</label>
     	<input class="form-control" type="text" name="clubExplain">
+    	<div class="invalid-feedback">
+      동호회 설명을 추가해주세요
+    		</div>
     	</div>
     	</div>
     	
     	<div class="row">
     		<div class="col">
     	<label class="mt-2">정원</label>
-    	<input class="form-control" type="number" name="clubPersonnel">
+    	<input class="form-control" type="number" name="clubPersonnel" min="2">
+    	<div class="invalid-feedback">
+      		동호회 인원을 선택해주세요
+    		</div>
     	</div>
     	</div>
     	
@@ -264,7 +376,10 @@
                     <div class="col">
                        <label class="mt-2">지역</label>
                        <input type="search" class="form-control search-input"
-                            placeholder="동,읍,면을 입력해주세요">
+                            placeholder="동,읍,면을 입력해주세요" data-pass="N">
+                            <div class="invalid-feedback">
+      동호회 지역을 선택해주세요
+    		</div>
                     </div>                    
                 </div>
                 <div class="row">
@@ -278,7 +393,7 @@
     	
     	<div class="row mt-4 mb-2">
     		<div class="col">
-    	<button class="btn btn-success btn-lg bg-miso w-100" type="submit">
+    	<button class="btn btn-success btn-lg bg-miso w-100" type="submit" name="createClub">
     	<strong>모임 만들기</strong>
     	</button>
     	</div>

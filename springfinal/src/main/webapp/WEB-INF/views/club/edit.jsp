@@ -15,6 +15,15 @@ width: 550px;
 height: 300px;
 border-radius: 1%;
 }
+
+ .addr-list {
+    position: absolute;
+    z-index: 1000;
+    max-height: 250px; /* 적절한 높이로 설정 */
+    width: 545px;
+    overflow: auto; /* 스크롤이 필요한 경우 스크롤 허용 */
+    margin-top: 5px;
+    }
 </style>
 
  <script>
@@ -45,10 +54,14 @@ border-radius: 1%;
 
 <script>
 	$(function() {
+		
+		
+		
 
 		var no = $(this).find(":selected").val()
-
-		console.log(no);
+		var minorNo = ${clubDto.clubCategory}
+		
+		console.log(minorNo);
 
 		$.ajax({
 			url : "http://localhost:8080/rest/category",
@@ -57,16 +70,25 @@ border-radius: 1%;
 				majorCategoryNo : no
 			},
 			success : function(response) {
-				console.log(response)
 
 				var select2 = $('.select2');
 				select2.empty();
 
 				for (var i = 0; i < response.length; i++) {
-					select2.append($("<option>").val(
-							response[i].minorCategoryNo).text(
-							response[i].minorCategoryName));
+					
+					  var minor = response[i].minorCategoryNo;
+
+			            var option = $("<option>").val(response[i].minorCategoryNo).text(response[i].minorCategoryName);
+
+			            // 선택된 값이면 selected 속성을 추가
+			            if (minor == minorNo) {
+			                option.attr('selected', true);
+			            }
+
+			            select2.append(option);
+					
 				}
+				
 			},
 		});
 
@@ -75,7 +97,6 @@ border-radius: 1%;
 
 					var no = $(this).find(":selected").val()
 
-					console.log(no);
 
 					$.ajax({
 						url : "http://localhost:8080/rest/category",
@@ -104,93 +125,229 @@ border-radius: 1%;
 
 			$(this).val(no);
 
-			console.log($(this).val());
 
 		})
+		
+		
+		$("[name=editClub]").click(function(e){
+   		
+   		if($(".select2").val()==null){
+   		e.preventDefault();
+   			
+   		
+   		$(".select2").addClass("is-invalid");
+   			
+   		}
+   		
+   		
+   		if($("[name=clubName]").val().length==0){
+   			
+   			e.preventDefault();
+   			$("[name=clubName]").addClass("is-invalid");
+   			
+   		}
+   		
+		if($("[name=clubExplain]").val().length==0){
+   			
+   			e.preventDefault();
+   			$("[name=clubExplain]").addClass("is-invalid");
+   			
+   		}
+	if($("[name=clubPersonnel]").val().length==0){
+   			
+   			e.preventDefault();
+   			$("[name=clubPersonnel]").addClass("is-invalid");
+   			
+   		}
+	if($(".search-input").data("pass")=='N'){
+   			
+   			e.preventDefault();
+   			$(".search-input").addClass("is-invalid");
+   			
+   		}
+   	});
+    	
+    	
+    	
+    	
+    	$("[name=clubName]").on('input',function(){
+    		
+    		$(this).removeClass("is-invalid");
+    		
+    		
+    		
+    	})
+    	$("[name=clubExplain]").on('input',function(){
+    		
+    		$(this).removeClass("is-invalid");
+    		
+    		
+    		
+    	})
+    	$("[name=clubPersonnel]").on('input',function(){
+    		
+    		$(this).removeClass("is-invalid");
+    		
+    		
+    		
+    	})
+    	$(".search-input").on('input',function(){
+    		
+    		$(this).removeClass("is-invalid");
+    		
+    		//newInput 제거
+    		$('.newInput').val(0);
+    		$(this).data("pass","N");
+
+    		
+    		
+    		
+    	})
+    	$(".select2").change(function(){
+    		
+    		$(this).removeClass("is-invalid");
+    		
+
+    		
+    		
+    		
+    	})
 
 	});
 </script>
 
 <script>
-	$(function() {
+$(function () {
+	
 
-		var form = $('.add');
+	var form = $('.add');
 
-		form.append(
-		    $("<input>")
-		        .addClass("newInput")
-		        .prop("type", "hidden")
-		        .attr("name", "zipCodeNo")
-		        .val($(".search-input").data("no"))
-		);
-		
-		
-		
+	form.append(
+	    $("<input>")
+	        .addClass("newInput")
+	        .prop("type", "hidden")
+	        .attr("name", "zipCodeNo")
+	        .val($(".search-input").data("no"))
+	);
+	
+	
+	var searchTimeout;
 
-		// [2] 검색어 입력 처리
-		$(".search-input").on('input',function() {
-							console.log("검색중");
+	$(".search-input").on('input', function () {
+	    $(".addr-list").show();
 
-							if (!/^[가-힣]/.test($(this).val())) {
-								return;
-							}
+	    var keyword = $(this).val();
 
-							var keyword = $(this).val();
-							console.log(keyword);
+	    if (searchTimeout) {
+	        clearTimeout(searchTimeout); // 이전 타이머가 있다면 제거
+	    }
 
-							if (keyword.length === 0) {
-								$(".zip").hide();
-								return;
-							}
+	    // 300ms 후에 Ajax 요청을 보냄
+	    searchTimeout = setTimeout(function () {
+	        if (keyword.length === 0) {
+	            $(".zip").hide();
+	            return;
+	        }
 
-							$.ajax({
-										url : "http://localhost:8080/rest/zip",
-										method : "get",
-										data : {
-											keyword : keyword},
-										success : function(response) {
-											// 검색 결과를 처리
-											var zipList = $('.addr-list');
-											// 이전 검색 결과 지우기
-											zipList.empty();
+	        $.ajax({
+	            url: "http://localhost:8080/rest/zipPage",
+	            method: "get",
+	            data: { keyword: keyword },
+	            success: function (response) {
+	                // 검색 결과를 처리
+	                var zipList = $('.addr-list');
+	                // 이전 검색 결과 지우기
+	                zipList.empty();
 
-											for (var i = 0; i < response.length; i++) {
-												 var text = (response[i].sido != null ? response[i].sido + ' ' : '') +
-					    	                        (response[i].sigungu != null ? response[i].sigungu + ' ' : '') +
-					    	                        (response[i].eupmyun != null ? response[i].eupmyun + ' ' : '') +
-					    	                        (response[i].hdongName != null ? response[i].hdongName + ' ' : '');
+	                for (var i = 0; i < response.length; i++) {
+	                    var text = (response[i].sido != null ? response[i].sido + ' ' : '') +
+	                        (response[i].sigungu != null ? response[i].sigungu + ' ' : '') +
+	                        (response[i].eupmyun != null ? response[i].eupmyun + ' ' : '') +
+	                        (response[i].hdongName != null ? response[i].hdongName + ' ' : '');
 
-												console.log(text);
-
-												zipList.append($("<li>")
-																.addClass("list-group-item zip")
-																.val(response[i].zipCodeNo)
-																.text(text));
-											}
-
-										}
-									});
-
-							// [3] 목록을 클릭하면 입력창에 채우고 .zip 엘리먼트 숨기기
-							$(".addr-list")
-									.on("click",".zip",function() {
-
-
-														
-											$(".newInput").val($(this).val());
-
-												var selectedAddress = $(this).text();
-												$(".search-input").val(selectedAddress);
-												$(".zip").hide();
-
-												//console.log($('.newInput').val())
-											});
-
-						});
-
+	                    zipList.append($("<li>")
+	                        .addClass("list-group-item zip")
+	                        .val(response[i].zipCodeNo)
+	                        .text(text)
+	                        .data("result", response[i].sigungu)
+	                    );
+	                }
+	            }
+	        });
+	    }, 300); // 300ms 딜레이
 	});
+
+        
+        // [3] 목록을 클릭하면 입력창에 채우고 .zip 엘리먼트 숨기기
+	    $(".addr-list").on("click", ".zip", function () {
+	    	
+	    	$(".newInput").val($(this).val());
+	    			
+	    	
+	    	
+	        var selectedAddress = $(this).data("result");
+	        $(".search-input").val(selectedAddress); 
+	        $(".search-input").data("pass","Y");
+	        
+	        $(".addr-list").hide();
+	        
+	    });
+        
+        	    
+    var page = 1; // 초기 페이지
+    var scrollTimeout; // 스크롤 이벤트를 지연시키기 위한 타이머
+
+    // 스크롤 이벤트 핸들러
+    $('.addr-list').scroll(function () {
+        var zipList = $(this);
+
+        if (scrollTimeout) {
+            clearTimeout(scrollTimeout); // 이전 타이머가 있다면 제거
+        }
+
+        // 200ms 후에 스크롤 이벤트를 처리
+        scrollTimeout = setTimeout(function () {
+            if (zipList.scrollTop() + zipList.innerHeight() >= zipList[0].scrollHeight - 100) {
+                // 스크롤이 zipList의 하단에 도달하면 새로운 데이터 로드
+                loadMoreData($(".search-input").val());
+            }
+        }, 200);
+    });
+
+ // 데이터 로드 함수
+ function loadMoreData() {
+     page++; // 다음 페이지로 이동
+     var keyword = $(".search-input").val();
+
+     $.ajax({
+         url: "http://localhost:8080/rest/zipPage",
+         method: "get",
+         data: { keyword: keyword, page: page }, // 페이지 정보를 서버에 전달
+         success: function (response) {
+             var zipList = $('.addr-list');
+
+             for (var i = 0; i < response.length; i++) {
+                 var text = (response[i].sido != null ? response[i].sido + ' ' : '') +
+                     (response[i].sigungu != null ? response[i].sigungu + ' ' : '') +
+                     (response[i].eupmyun != null ? response[i].eupmyun + ' ' : '') +
+                     (response[i].hdongName != null ? response[i].hdongName + ' ' : '');
+
+
+                 zipList.append($("<li>")
+                     .addClass("list-group-item zip")
+                     .val(response[i].zipCodeNo)
+                     .text(text)
+                     .data("result", response[i].sigungu)
+                 );
+             }
+         }
+     });
+ }
+
+
+});
 </script>
-<script>
+<!-- <script>
 $(function(){
 	
 	var form=$(".add")
@@ -222,7 +379,7 @@ $(function(){
 	
 })
 
-</script>
+</script> -->
 
 
 
@@ -257,6 +414,9 @@ $(function(){
 	<label class="mt-2">지역</label>
 	<input class="form-control search-input" type="text"
 		value="${zipDto.sigungu}" data-no="${zipDto.zipCodeNo}">
+		<div class="invalid-feedback">
+      동호회 지역을 선택해주세요
+    		</div>
 	<div class="row">
 		<div class="col">
 			<ul class="list-group addr-list">
@@ -285,20 +445,29 @@ $(function(){
 	</div>
 	<div class="col-10	">
 	<input class="form-control name" value="${clubDto.clubName}" name="clubName">
+	<div class="invalid-feedback">
+      동호회 이름을 추가해주세요
+    		</div>
 	</div>
 	</div>
 	<div class="row mt-2">
 	<div class="col">
 	<textarea class="form-control" name="clubExplain" rows="3">${clubDto.clubExplain}</textarea>
+	<div class="invalid-feedback">
+      동호회 설명을 추가해주세요
+    		</div>
 	</div>
 	</div>
 	<div class="row">
 	<div class="col">
 		<label class="mt-2">정원</label>
-		<input type="number" name="clubPersonnel" class="form-control" value="${clubDto.clubPersonnel}">
+		<input type="number" name="clubPersonnel" class="form-control" value="${clubDto.clubPersonnel}" min="2">
+	<div class="invalid-feedback">
+      		동호회 인원을 선택해주세요
+    		</div>
 	</div>
 	</div>	
-	<div class="row mt-3">
+<%-- 	<div class="row mt-3">
 	<div class="col">
 	<c:choose>
 	<c:when test="${clubDto.clubPremium=='Y'}">
@@ -315,21 +484,21 @@ $(function(){
 	</c:otherwise>
 	</c:choose>
 	</div>
-	</div>
+	</div> --%>
 	
-	<div class="row">
+<%-- 	<div class="row">
 	<div class="col">
 	<label>
 	모임 개설일 : 	
 	${clubDto.clubDate}	
 	</label>
 	</div>
-	</div>
+	</div> --%>
 	
 	
 	<div class="row mt-4 mb-2">
 	<div class="col">
-	<button class="btn btn-success btn-lg bg-miso w-100"><strong>수정하기</strong></button>
+	<button class="btn btn-success btn-lg bg-miso w-100" name="editClub"><strong>수정하기</strong></button>
 	</div>
 	</div>
 

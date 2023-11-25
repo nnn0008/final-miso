@@ -159,6 +159,12 @@ public class ClubDaoImpl implements ClubDao{
 	public boolean updateDownPremium(String memberId) {
 		return sqlSession.update("club.updateDownPremium",memberId)>0;
 	}
+
+	@Override
+	public int memberMakeClubCount(String memberId) {
+		
+		return sqlSession.selectOne("club.memberMakeClubCount",memberId);
+	}
 	
 	
 	
