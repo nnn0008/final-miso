@@ -49,7 +49,7 @@ $(function(){
                     var notifyType = "reply";
                     var replyWriterMember = response.replyWriterMember;
                     var boardWriterMember = response.boardWriterMember;
-                    var boardNo = response.boardNo;
+                    var clubBoardNo = response.boardNo;
                     var boardTitle = response.boardTitle;
                     var replyWriterName = response.replyWriterName;
 
@@ -58,7 +58,7 @@ $(function(){
                             notifyType: notifyType,
                             replyWriterMember: replyWriterMember,
                             boardWriterMember: boardWriterMember,
-                            boardNo: boardNo,
+                            clubBoardNo: clubBoardNo,
                             boardTitle: boardTitle,
                             replyWriterName : replyWriterName
                         });
@@ -97,23 +97,23 @@ $(function(){
                 loadList();
                 $(".div-for-insert-reply").show();
 
-					//소켓 전송
-	                    var notifyType = "reply";
-	                    var replyWriterMember = response.replyWriterMember;
-	                    var boardWriterMember = response.boardWriterMember;
-	                    var boardNo = response.boardNo;
-	                    var boardTitle = response.boardTitle;
-	                    var replyWriterName = response.replyWriterName;
+              //소켓 전송
+                var notifyType = "reply";
+                var replyWriterMember = response.replyWriterMember;
+                var boardWriterMember = response.boardWriterMember;
+                var clubBoardNo = response.boardNo;
+                var boardTitle = response.boardTitle;
+                var replyWriterName = response.replyWriterName;
 
-	                    if(boardWriterMember != replyWriterMember){
-	                        let socketMsg = JSON.stringify({
-	                            notifyType: notifyType,
-	                            replyWriterMember: replyWriterMember,
-	                            boardWriterMember: boardWriterMember,
-	                            boardNo: boardNo,
-	                            boardTitle: boardTitle,
-	                            replyWriterName : replyWriterName
-	                        });
+                if(boardWriterMember != replyWriterMember){
+                    let socketMsg = JSON.stringify({
+                        notifyType: notifyType,
+                        replyWriterMember: replyWriterMember,
+                        boardWriterMember: boardWriterMember,
+                        clubBoardNo: clubBoardNo,
+                        boardTitle: boardTitle,
+                        replyWriterName : replyWriterName
+                    });
 
 	                        notifySocket.send(socketMsg);                 
 			     		} 
