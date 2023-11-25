@@ -1368,13 +1368,13 @@ $(document).ready(function () {
             <div class="col mt-1">
                 <strong>${clubDetailBoardList[0].memberName}</strong>
             </div>
-            <div class="col mt-1"">
+            <div class="col mt-1">
                 <span class="club-explain">${clubDetailBoardList[0].clubBoardDate}</span>
             </div>
-            <div class="col mt-1"">
+            <div class="col mt-1">
                 <strong>${clubDetailBoardList[0].clubBoardTitle}</strong>
             </div>
-            <div class="col mt-1"">${clubDetailBoardList[0].clubBoardContent}</div>
+            <div class="col mt-1">${clubDetailBoardList[0].clubBoardContent}</div>
         </div>
     </div>
     </a>

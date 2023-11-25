@@ -534,18 +534,17 @@ function truncateClubDescription() {
  <header>
             <div class="col mt-2">
    
-      <a href="#" class="link logo"><img src="${pageContext.request.contextPath}/images/miso_logo.png" width="200px"></a>
+      <a href="${pageContext.request.contextPath}/" class="link logo"><img src="${pageContext.request.contextPath}/images/miso_logo.png" width="200px"></a>
 
             </div>
             <div class="title">
-                <form action="/club/searchList">
+               <form action="/club/searchList">
                 <div class="input-group d-flex justify-content-center"> 
                     <input type="search" name="keyword" class="form-control rounded-pill" placeholder="Search" aria-label="Search"  
                     aria-describedby="search-addon" />  
                     <button type="submit" class="btn btn-outline-primary rounded-pill"><i class="fa-solid fa-magnifying-glass"></i></button>  
-                  
-                   </div>  
-                 </form>
+                 </div>  
+              </form>
             </div>
            <div class="etc container">
           <div class="col-4 ms-4" id="notifyContainer">

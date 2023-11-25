@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="forHome">
+	<select id="meeting" resultType="HomeForMeetingVO">
+		select * from(
+			 select rownum rn, TMP.* from(
+				 	SELECT 
+				m.meeting_no,
+				m.meeting_name,
+				m.meeting_location,
+				m.club_no,
+				m.meeting_date,
+				m.MEETING_DATE - SYSDATE as dday,
+				c.CLUB_NAME,
+				a.attach_no 
+				FROM 
+				meeting m 
+				JOIN club c ON m.CLUB_NO = c.CLUB_NO 
+				LEFT OUTER JOIN MEETING_IMAGE mi ON m.MEETING_NO = mi.MEETING_NO 
+				LEFT OUTER JOIN ATTACH a ON mi.ATTACH_NO = a.ATTACH_NO 
+				WHERE m.club_NO IN (SELECT c.CLUB_NO FROM MEMBER m JOIN club_member cm ON m.MEMBER_ID =cm.CLUB_MEMBER_ID 
+				JOIN CLUB c ON cm.CLUB_NO = c.CLUB_NO WHERE m.member_id= #{memberId})
+				order by 
+					case when dday > 0 then 1 else 0 end desc, dday asc
+			 )TMP
+		) where rn between #{startRow} and #{finishRow}
+	</select>
+	
+	<select id="meetingMember" resultType="HomeForMeetingMemberVO">
+		select 
+			mm.meeting_no, mm.club_member_no, cm.club_member_id, mf.attach_no from
+			meeting_member mm join club_member cm on mm.club_member_no = cm.club_member_no
+			left outer join member_profile mf on mf.member_id = cm.club_member_id 
+		order by mm.meeting_no
+	</select>
+	
+	<select id="checkAttend" resultType="MeetingMemberDto">
+		select * from meeting_member where meeting_no = #{meetingNo} and club_member_no = #{clubMemberNo}
+	</select>
+	
+	<select id="meetingCount" resultType="int">
+		SELECT count(*) from
+			meeting m 
+			JOIN club c ON m.CLUB_NO = c.CLUB_NO 
+			LEFT OUTER JOIN MEETING_IMAGE mi ON m.MEETING_NO = mi.MEETING_NO 
+			LEFT OUTER JOIN ATTACH a ON mi.ATTACH_NO = a.ATTACH_NO 
+			WHERE m.club_NO IN (SELECT c.CLUB_NO FROM MEMBER m JOIN club_member cm ON m.MEMBER_ID =cm.CLUB_MEMBER_ID 
+			JOIN CLUB c ON cm.CLUB_NO = c.CLUB_NO WHERE m.member_id= #{memberId})
+	</select>
+	
+	
+	
+</mapper>    

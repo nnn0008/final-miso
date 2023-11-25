@@ -15,6 +15,7 @@ public class PaginationVO {
 	private int whereNo;
 	private int clubNo;
 	private String whereString;
+	private String memberId;
 	
 	public boolean isSearch() {
 		return type != null && keyword != null;

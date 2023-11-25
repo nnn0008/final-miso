@@ -3,8 +3,8 @@ package com.kh.springfinal.dao;
 import java.util.List;
 
 import com.kh.springfinal.dto.ClubMemberDto;
-import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.vo.ClubMemberVO;
+import com.kh.springfinal.vo.HomeForClubVO;
 import com.kh.springfinal.vo.MeetingAttendMemberVO;
 
 public interface ClubMemberDao {
@@ -35,4 +35,5 @@ public interface ClubMemberDao {
 	
 	boolean upgradeRank(int clubMemberNo);
 	
+	List<HomeForClubVO> selectListByMemberId(String memberId);
 }

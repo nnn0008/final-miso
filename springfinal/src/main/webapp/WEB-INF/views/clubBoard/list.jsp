@@ -58,7 +58,7 @@
         });
     });
 	
-	//최초에 첫 5장을 불러올 함수	
+	//최초에 첫 5장을 비동기로
  	function loadList(keyword, currentPage){
  		var params = new URLSearchParams(location.search);
         var clubNo = params.get("clubNo");		 
