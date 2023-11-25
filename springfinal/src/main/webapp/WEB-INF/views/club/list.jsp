@@ -16,6 +16,16 @@
 .categori-text{
 font-size: 13px;
 }
+
+.heart, .heart-fill {
+width:20px;
+   position: absolute;
+    top: 58px;
+    left: 70px; 
+    display: inline-block;
+    opacity: 1;
+    z-index: 3;
+}
 </style>
  
 <script>
@@ -109,13 +119,13 @@ font-size: 13px;
 	                	
 	                	if(clubDto.likeClub==true){
 	                	$(htmlTemplate).find("[name=heart]").attr
-	                	('src', "/images/suit-heart-fill.svg")
+	                	('src', "/images/suit-heart-fill.png")
 			            .attr('class',"heart-fill");
 	                	}
 	                	if(clubDto.likeClub==false){
 	                		
 	                		$(htmlTemplate).find("[name=heart]")
-	                		.attr('src', "/images/suit-heart.svg")
+	                		.attr('src', "/images/suit-heart.png")
 	    		            .attr('class',"heart")
 	                		
 	                		
@@ -175,13 +185,13 @@ font-size: 13px;
 	                	
 	                	if(clubDto.likeClub==true){
 		                	$(htmlTemplate).find("[name=heart]").attr
-		                	('src', "/images/suit-heart-fill.svg")
+		                	('src', "/images/suit-heart-fill.png")
 				            .attr('class',"heart-fill");
 		                	}
 		                	if(clubDto.likeClub==false){
 		                		
 		                		$(htmlTemplate).find("[name=heart]")
-		                		.attr('src', "/images/suit-heart.svg")
+		                		.attr('src', "/images/suit-heart.png")
 		    		            .attr('class',"heart")
 		                		
 		                		
@@ -226,7 +236,7 @@ font-size: 13px;
 		            clubNo: clubNo
 		        },
 		        success: function (response) {
-		            $(event.currentTarget).attr('src', "/images/suit-heart-fill.svg")
+		            $(event.currentTarget).attr('src', "/images/suit-heart-fill.png")
 		            .attr('class',"heart-fill");
 		            event.stopPropagation(); 
 		        }
@@ -248,7 +258,7 @@ font-size: 13px;
 		        },
 		        success: function (response) {
 		        	console.log("지움성공");
-		            $(event.currentTarget).attr('src', "/images/suit-heart.svg")
+		            $(event.currentTarget).attr('src', "/images/suit-heart.png")
 		            .attr('class',"heart");
 		            event.stopPropagation(); 
 		        }
@@ -344,6 +354,7 @@ font-size: 13px;
         <div class="d-flex align-items-center">
                     <img width="80" height="80" class="club-image-list">
             <span class="badge rounded-pill bg-danger badge-new ms-2">NEW</span>
+		<img src="/images/suit-heart.png" class="heart" name="heart"></img>
         </div>
     </div>
     <div class="col-10">
@@ -358,7 +369,6 @@ font-size: 13px;
             <span class="club-member">멤버 ${clubListVO.memberCount}</span> |
             <span class="badge bg-info">${clubListVO.majorCategoryName}</span>
             <span class="badge rounded-pill bg-gray">${clubListVO.minorCategoryName}</span>
-		<img src="/images/suit-heart.svg" class="heart" name="heart"></img>
 </div>
     </div>
 </div>
