@@ -16,6 +16,16 @@
 .categori-text{
 font-size: 13px;
 }
+
+.heart, .heart-fill {
+width:20px;
+   position: absolute;
+    top: 58px;
+    left: 70px; 
+    display: inline-block;
+    opacity: 1;
+    z-index: 3;
+}
 </style>
  
 <script>
@@ -109,13 +119,13 @@ font-size: 13px;
 	                	
 	                	if(clubDto.likeClub==true){
 	                	$(htmlTemplate).find("[name=heart]").attr
-	                	('src', "/images/suit-heart-fill.svg")
+	                	('src', "/images/suit-heart-fill.png")
 			            .attr('class',"heart-fill");
 	                	}
 	                	if(clubDto.likeClub==false){
 	                		
 	                		$(htmlTemplate).find("[name=heart]")
-	                		.attr('src', "/images/suit-heart.svg")
+	                		.attr('src', "/images/suit-heart.png")
 	    		            .attr('class',"heart")
 	                		
 	                		
@@ -175,13 +185,13 @@ font-size: 13px;
 	                	
 	                	if(clubDto.likeClub==true){
 		                	$(htmlTemplate).find("[name=heart]").attr
-		                	('src', "/images/suit-heart-fill.svg")
+		                	('src', "/images/suit-heart-fill.png")
 				            .attr('class',"heart-fill");
 		                	}
 		                	if(clubDto.likeClub==false){
 		                		
 		                		$(htmlTemplate).find("[name=heart]")
-		                		.attr('src', "/images/suit-heart.svg")
+		                		.attr('src', "/images/suit-heart.png")
 		    		            .attr('class',"heart")
 		                		
 		                		
@@ -226,7 +236,7 @@ font-size: 13px;
 		            clubNo: clubNo
 		        },
 		        success: function (response) {
-		            $(event.currentTarget).attr('src', "/images/suit-heart-fill.svg")
+		            $(event.currentTarget).attr('src', "/images/suit-heart-fill.png")
 		            .attr('class',"heart-fill");
 		            event.stopPropagation(); 
 		        }
@@ -248,7 +258,7 @@ font-size: 13px;
 		        },
 		        success: function (response) {
 		        	console.log("지움성공");
-		            $(event.currentTarget).attr('src', "/images/suit-heart.svg")
+		            $(event.currentTarget).attr('src', "/images/suit-heart.png")
 		            .attr('class',"heart");
 		            event.stopPropagation(); 
 		        }
@@ -293,12 +303,24 @@ font-size: 13px;
                             </div>
                         </div>
 <div class="text-center">
-    <span class="badge bg-miso mt-3">${memberPreferList[0].memberName}</span>님의 주소 
-    <span class="badge bg-success">${memberPreferList[0].sido}</span>
-    지역을 중심으로 한 카테고리 동호회<br>
-    <c:forEach var="memberPrefer" items="${memberPreferList}">
-        <span class="badge bg-info mt-2">${memberPrefer.majorCategoryName}</span>
-    </c:forEach>
+    <c:if test="${not empty memberPreferList}">
+        <span class="badge bg-miso mt-3">${memberPreferList[0].memberName}</span>님의 주소 
+        <span class="badge bg-success">${memberPreferList[0].sido}</span>
+        지역을 중심으로 한 카테고리 동호회<br>
+        <c:forEach var="memberPrefer" items="${memberPreferList}">
+            <span class="badge bg-info mt-2">${memberPrefer.majorCategoryName}</span>
+        </c:forEach>
+    </c:if>
+    <c:if test="${empty memberPreferList}">
+         <div class="row d-flex align-items-center mt-3">
+                <div class="col-3 text-start">
+                    <img src="${pageContext.request.contextPath}/images/open-door.png" width="100%">
+                </div>
+                	<div class="col">
+                    <h3>내가 사는 지역을 등록해보세요!</h3>
+                	</div>
+            </div>
+    </c:if>
 </div>
 
 	
@@ -344,6 +366,7 @@ font-size: 13px;
         <div class="d-flex align-items-center">
                     <img width="80" height="80" class="club-image-list">
             <span class="badge rounded-pill bg-danger badge-new ms-2">NEW</span>
+		<img src="/images/suit-heart.png" class="heart" name="heart"></img>
         </div>
     </div>
     <div class="col-10">
@@ -358,7 +381,6 @@ font-size: 13px;
             <span class="club-member">멤버 ${clubListVO.memberCount}</span> |
             <span class="badge bg-info">${clubListVO.majorCategoryName}</span>
             <span class="badge rounded-pill bg-gray">${clubListVO.minorCategoryName}</span>
-		<img src="/images/suit-heart.svg" class="heart" name="heart"></img>
 </div>
     </div>
 </div>

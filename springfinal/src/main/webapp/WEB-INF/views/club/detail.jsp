@@ -15,12 +15,18 @@
 }
 .attached-image {
     width: 100% !important;
-    height: 100% !important;
+    height: 100%; !important;
     object-fit: cover !important; 
 }
 .img-thumbnail {
     border: none !important; 
 }
+.img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .row .col .d-flex {
     display: flex;
     align-items: center;
@@ -620,28 +626,43 @@ $(".meetingFix").change(function(){
 
 
                 var memberId = "${sessionScope.name}";
+            	if (meeting.meetingFix === 'N') {
+            	    // 새로운 div 엘리먼트 생성
+            	    var divElement = $('<div>').addClass('secret-club');
+            	    var badgeElement = $('<span>').addClass('badge bg-danger ms-1 mb-1').text('비공개 정모');
+            	    var secretIcon = $('<i>').addClass("fa-solid fa-unlock-keyhole ms-2");
+            	    var secretIconBig = $('<i>').addClass("fa-solid fa-lock ms-2").css({
+            	        'font-size': '150px',
+            	        'height': '250px',
+            	        'display': 'flex',
+            	        'justify-content': 'center', // 좌우 가운데 정렬
+            	        'align-items': 'center' // 상하 가운데 정렬
+            	    });
+					
+            	    
 
-                if (meeting.meetingFix === 'N') {
-                    var divElement = $('<div>').addClass('secret-club');
-                    var badgeElement = $('<span>').addClass('badge bg-danger ms-1 mb-1').text('비공개 정모');
-                    var secretIcon = $('<i>').addClass("fa-solid fa-unlock-keyhole ms-2");
+            	    if (bodyClubMemberNo == 0) {
+            	        // 클럽 멤버가 아닌 경우 효과 적용
+            	        secretIcon.removeClass('fa-unlock-keyhole').addClass('fa-lock');
+            	        divElement.css('opacity', '0.7');
 
-                  
+            	        // alert 엘리먼트에 새로운 텍스트 추가
+            	        var alertElement = $(htmlTemplate).find(".alert");
+            	        alertElement.empty(); // 글자를 없애는 부분
+            	          
+            	        // 큰 좌물쇠 아이콘 추가
+            	        alertElement.append(secretIconBig);
+            	    }
+            	    
 
-                    if (bodyClubMemberNo==0) {// 클럽멤버가 아닌 회원
-                       
-                    	secretIcon.removeClass('fa-unlock-keyhole').addClass('fa-lock');
-                        divElement.css('opacity', '0.7');
-                        
-                    // alert 엘리먼트에도 오파시티 적용
-                    var alertElement = $(htmlTemplate).find(".alert");
-                    alertElement.css('opacity', '0.7');
-                    }
+            	    // 새로 생성한 엘리먼트들을 기존 템플릿에 추가
+            	    $(htmlTemplate).prepend(divElement.append(badgeElement.append(secretIcon)));
+            	}
 
-
-                    $(htmlTemplate).prepend(divElement.append(badgeElement.append(secretIcon)));
-                }
-
+            	// 최종 결과를 화면에 추가
+            	$(".attach-meeting-list").append(htmlTemplate);
+            
+            
 
 
 						
@@ -879,30 +900,38 @@ $(".meetingFix").change(function(){
                 		
                 	}
                 	
-
-                     if (meeting.meetingFix === 'N') {
-                         var divElement = $('<div>').addClass('secret-club');
-                         var badgeElement = $('<span>').addClass('badge bg-danger ms-1 mb-1').text('비공개 정모');
-                         var secretIcon = $('<i>').addClass("fa-solid fa-unlock-keyhole ms-2");
-
-                        
-
-                         if (bodyClubMemberNo==0) {
-                             // memberId가 attendMemberList에 없다면 효과 적용
-                             secretIcon.removeClass('fa-unlock-keyhole').addClass('fa-lock');
-                             divElement.css('opacity', '0.7');
-                             
-                         // alert 엘리먼트에도 오파시티 적용
-                         var alertElement = $(htmlTemplate).find(".alert");
-                         alertElement.css('opacity', '0.7');
-                         }
+                	if (meeting.meetingFix === 'N') {
+                	    // 새로운 div 엘리먼트 생성
+                	    var divElement = $('<div>').addClass('secret-club');
+                	    var badgeElement = $('<span>').addClass('badge bg-danger ms-1 mb-1').text('비공개 정모');
+                	    var secretIcon = $('<i>').addClass("fa-solid fa-unlock-keyhole ms-2");
+                	    var secretIconBig = $('<i>').addClass("fa-solid fa-lock ms-2").css({
+                	        'font-size': '150px',
+                	        'height': '250px',
+                	        'display': 'flex',
+                	        'justify-content': 'center', // 좌우 가운데 정렬
+                	        'align-items': 'center' // 상하 가운데 정렬
+                	    });
 
 
-                         $(htmlTemplate).prepend(divElement.append(badgeElement.append(secretIcon)));
-                     }
-                	
-                	
-                	
+                	    if (bodyClubMemberNo == 0) {
+                	        // 클럽 멤버가 아닌 경우 효과 적용
+                	        secretIcon.removeClass('fa-unlock-keyhole').addClass('fa-lock');
+                	        divElement.css('opacity', '0.7');
+
+                	        // alert 엘리먼트에 새로운 텍스트 추가
+                	        var alertElement = $(htmlTemplate).find(".alert");
+                	        alertElement.empty(); // 글자를 없애는 부분
+                	          
+                	        // 큰 좌물쇠 아이콘 추가
+                	        alertElement.append(secretIconBig);
+                	    }
+
+                	    // 새로 생성한 엘리먼트들을 기존 템플릿에 추가
+                	    $(htmlTemplate).prepend(divElement.append(badgeElement.append(secretIcon)));
+                	}
+
+                	// 최종 결과를 화면에 추가
                 	$(".attach-meeting-list").append(htmlTemplate);
                 }
                 
@@ -1472,9 +1501,9 @@ $(document).ready(function () {
    
 <a href="/photo/list?clubNo=${clubDto.clubNo}">
     <div class="container">
-        <div class="row">
+        <div class="row mt-2">
             <c:forEach var="photoDto" items="${photoList}" varStatus="loop">
-                <div class="col-4 p-0">
+                <div class="col-4 p-0 img-box">
                     <img src="/rest/photo/download/${photoDto.photoNo}" class="attached-image img-thumbnail">
                 </div>
                 <c:if test="${loop.index % 3 == 2}">

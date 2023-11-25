@@ -8,6 +8,22 @@
     <script src="https://unpkg.com/hangul-js" type="text/javascript"></script>
   <link href="${pageContext.request.contextPath}/css/club.css" rel="stylesheet"> 
   
+  <style>
+       .badge.rounded-pill.bg-gray{
+     font-size: 14px;
+     }
+     
+     .heart, .heart-fill {
+width:20px;
+   position: absolute;
+    top: 58px;
+    left: 70px; 
+    display: inline-block;
+    opacity: 1;
+    z-index: 3;
+}
+  </style>
+  
   <script>
   $(function(){
 		 // 300ms 후에 Ajax 요청을 보냄
@@ -97,13 +113,13 @@
 	               	
 	               	if(clubDto.likeClub==true){
 	                	$(htmlTemplate).find("[name=heart]").attr
-	                	('src', "/images/suit-heart-fill.svg")
+	                	('src', "/images/suit-heart-fill.png")
 			            .attr('class',"heart-fill");
 	                	}
 	                	if(clubDto.likeClub==false){
 	                		
 	                		$(htmlTemplate).find("[name=heart]")
-	                		.attr('src', "/images/suit-heart.svg")
+	                		.attr('src', "/images/suit-heart.png")
 	    		            .attr('class',"heart")
 	                		
 	                		
@@ -163,13 +179,13 @@
 	               	
 	               	if(clubDto.likeClub==true){
 	                	$(htmlTemplate).find("[name=heart]").attr
-	                	('src', "/images/suit-heart-fill.svg")
+	                	('src', "/images/suit-heart-fill.png")
 			            .attr('class',"heart-fill");
 	                	}
 	                	if(clubDto.likeClub==false){
 	                		
 	                		$(htmlTemplate).find("[name=heart]")
-	                		.attr('src', "/images/suit-heart.svg")
+	                		.attr('src', "/images/suit-heart.png")
 	    		            .attr('class',"heart")
 	                		
 	                		
@@ -208,7 +224,7 @@
 		            clubNo: clubNo
 		        },
 		        success: function (response) {
-		            $(event.currentTarget).attr('src', "/images/suit-heart-fill.svg")
+		            $(event.currentTarget).attr('src', "/images/suit-heart-fill.png")
 		            .attr('class',"heart-fill");
 		            event.stopPropagation(); 
 		        }
@@ -230,7 +246,7 @@
 		        },
 		        success: function (response) {
 		        	console.log("지움성공");
-		            $(event.currentTarget).attr('src', "/images/suit-heart.svg")
+		            $(event.currentTarget).attr('src', "/images/suit-heart.png")
 		            .attr('class',"heart");
 		            event.stopPropagation(); 
 		        }
@@ -308,7 +324,7 @@
             <span class="club-member">멤버 ${clubListVO.memberCount}</span> |
             <span class="badge bg-info">${clubListVO.majorCategoryName}</span>
             <span class="badge rounded-pill bg-gray">${clubListVO.minorCategoryName}</span>
-			<img src="/images/suit-heart.svg" class="heart" name="heart"></img>       
+			<img src="/images/suit-heart.png" class="heart" name="heart"></img>       
  </div>
     </div>
 </div>

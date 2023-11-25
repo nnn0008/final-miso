@@ -1,5 +1,6 @@
 package com.kh.springfinal.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -159,4 +160,13 @@ public class ChatRoomDaoImpl implements ChatRoomDao{
 public ChatOneMemberListVO oneMembers(int chatRoomNo) {
 	return sqlSession.selectOne("chatRoom.chatOneMemberListDetail", chatRoomNo);
 }
+
+@Override
+public String clubMemberRank(String memberId, int clubNo) {
+    Map<String, Object> parameters = new HashMap<>();
+    parameters.put("memberId", memberId);
+    parameters.put("clubNo", clubNo);   
+    return sqlSession.selectOne("chatRoom.clubMemberRank", parameters);
+}
+
 }

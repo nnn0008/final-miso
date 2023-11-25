@@ -10,7 +10,7 @@ header {
         min-height: 80px;
     }
     header > .logo {
-        width: 25%;
+        width: 20%;
     }
     header > .title {
         flex-grow: 1;
