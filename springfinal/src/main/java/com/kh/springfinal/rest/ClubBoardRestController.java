@@ -203,16 +203,21 @@ public class ClubBoardRestController {
 	@GetMapping("/page")
 	public List<ClubBoardAllDto> clubBoardList(@ModelAttribute("vo")PaginationVO vo, @RequestParam int clubNo, @RequestParam(required=false) int page, 
 			@RequestParam(required=false) String keyword) {
-		log.debug("keyword={}",keyword);
 		int count = clubBoardDao.clubBoardCount(vo, clubNo);
 		vo.setPage(page);
 		vo.setCount(count);
 		if(keyword != null) {
 			vo.setKeyword(keyword);
 		}
+		List<ClubBoardAllDto> list = clubBoardDao.selectListByPage(vo, clubNo);
+		//더 불러 올 것이 없다면?
+//		if(list.size() == 0) {
+//			return;
+//		}
+		log.debug("page={}", page);
+		log.debug("keyword={}",keyword);
 		log.debug("vo={}", vo);
-		List<ClubBoardAllDto> list = clubBoardDao.selectListByPage(vo, clubNo); 
-		log.debug("list={}", list);
+		log.debug("list={}", list.size());
 		return list;
 	}
 }

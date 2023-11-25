@@ -24,45 +24,37 @@
     	cursor:pointer;
     }
 </style>
-<script>
-	function redirect(url){
-		window.location.href = "detail?clubBoardNo="+url;
-	}
-    document.addEventListener("DOMContentLoaded", function() {
-        var clickableItems = document.querySelectorAll(".clickable-item");
 
-        clickableItems.forEach(function(item) {
-            item.addEventListener("click", function() {
-                var url = item.getAttribute("data-url");
-                window.location.href = url;
-            });
-        });
-    });
-</script>
 <script>
+    //초기페이지는 1
+    var currentPage = 1;
 	var loading = false; // 전역으로 선언
 	//jQuery를 이용한 스크롤바의 위치를 보기
 	 $(function() {
-        //초기페이지는 1
-        var currentPage = 1;
         var keyword;
         
-        //최초의 페이지네이션
-        loadList(keyword, 1);
-		
-        //추가목록을 로드
-        loadMore(keyword, currentPage);
+        if(keyword == null){
+	        //최초의 페이지네이션
+	        loadList(keyword, 1);
+			
+	        //추가목록을 로드
+	        loadMore(keyword, currentPage);        	
+        }
         
- 		
+
         $(".badge").click(function(e){
+        	console.log("작동중");
         	e.preventDefault();
         	$(".board-list").empty();
         	var keyword = $(this).text().trim();
         	if(keyword == "전체") keyword="";
-        	var currentPage = 1; 
         	
         	loadList(keyword, 1);
+        	var currentPage = 1; 
+        	console.log("최초 로딩 성공");
         	loadMore(keyword, currentPage);
+        	console.log("추가 로딩 성공");
+
         });
     });
 	
@@ -103,10 +95,10 @@
 					}
 					//이름
 					$(htmlTemplate).find(".text-name").text(clubBoardAllDto.clubBoardName);
-					//날짜
+					//시간
 					const originalDate = response[i].clubBoardDate;
  					const formattedDate = formatDate(originalDate);
-					$(htmlTemplate).find(".text-date").text(formattedDate);
+					$(htmlTemplate).find(".text-date").text(formattedDate +"분");
 					//제목
 					$(htmlTemplate).find(".text-title").text(clubBoardAllDto.clubBoardName);
 					//내용
@@ -144,16 +136,31 @@
  	}	
  	//날짜를 수정하는 코드
  	function formatDate(dateString) {
- 	    const options = { month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
- 	    const formattedDate = new Date(dateString).toLocaleString('ko-KR', options);
- 	    return formattedDate;
- 	}
+	    const options = {
+	        month: 'long',
+	        day: 'numeric',
+	        hour: 'numeric',
+	        minute: 'numeric',
+	        hour12: false,  // 24시간 형식으로 표시
+	        hourFormat: '2-digit',  // 시를 2자리로 표시
+	        minuteFormat: '2-digit',  // 분을 2자리로 표시
+	    };
+	
+	    // 날짜 형식을 월 일 시 분으로 변환
+	    var formattedDate = new Date(dateString).toLocaleString('ko-KR', options);
+	
+	    // 분 뒤에 '분'을 추가
+	    formattedDate = formattedDate.replace(':', '시 ');
+	
+	    return formattedDate;
+	}
+ 	
  	//뒤에 추가목록을 로드
  	function loadMore(keyword, currentPage){
  		var scrollIndicator = $('#scroll-indicator');
         var scrollPercent = $('#scroll-percent');
 
-        $(window).scroll(function(keyword) {
+        $(window).scroll(function() {
             var scrollTop = $(this).scrollTop();
             var windowHeight = $(window).height();
             var documentHeight = $(document).height();
@@ -162,7 +169,7 @@
             var scrollPercentage = (scrollTop / (documentHeight - windowHeight)) * 100;
             
         	//콘솔에 스크롤 위치 출력
-            console.log('스크롤 위치:', scrollPercentage.toFixed(2) + '%');
+            //console.log('스크롤 위치:', scrollPercentage.toFixed(2) + '%');
 
             // 표시할 퍼센트 값을 업데이트
             scrollPercent.text(scrollPercentage.toFixed(2) + '%');
@@ -189,6 +196,7 @@
 
 	                    // 받아온 데이터를 현재 목록에 추가하는 로직
 	                    for (var i = 0; i < response.length; i++) {
+// 	                    	console.log(response);
 	                        var clubBoardAllDto = response[i];
 	                        
 	                    	var template = $("#list-template").html();
@@ -207,10 +215,10 @@
 	    					}
 	    					//이름
 	    					$(htmlTemplate).find(".text-name").text(clubBoardAllDto.clubBoardName);
-	    					//날짜
+	    					//시간
 							const originalDate = response[i].clubBoardDate;
 		 					const formattedDate = formatDate(originalDate);
-							$(htmlTemplate).find(".text-date").text(formattedDate);	
+							$(htmlTemplate).find(".text-date").text(formattedDate + "분");	
 	    					//제목
 	    					$(htmlTemplate).find(".text-title").text(clubBoardAllDto.clubBoardTitle);
 	    					//내용
@@ -252,9 +260,15 @@
 	                }
 	            });       	
 	        }
+// 	        else if(scrollPercentage.toFixed(2) >= 95){
+// 	        	pageReset();
+// 	        }
+	        
         });
  	}
-
+function pageReset(){
+	currentPage = 1;
+}
 </script>
 <script id="list-template" type="text/template">
 	<div class="col-12 clickable-item mt-2">
@@ -286,7 +300,7 @@
 			</div>
 	</div>
 </script>
-<div class="container-fluid" style="max-width:550px; max-height:350px">
+<div class="container-fluid" style="max-width:526px; max-height:350px">
 	<div class="row">
 		<div class="col">
 			<h6>
@@ -339,6 +353,11 @@
 	</div>
 	
 	<div class="row m-2 mt-4 board-list"></div>
+	<div class="row go-upside">
+		<div class="col">
+			<a href="#" class="btn btn-success w-100">위로</a>
+		</div>
+	</div>
 </div>
 
 
