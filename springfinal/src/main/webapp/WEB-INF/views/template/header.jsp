@@ -16,6 +16,7 @@
    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.2/zephyr/bootstrap.min.css" rel="stylesheet">
 
+
 <!-- 스타일시트 로딩 코드 -->
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/reset.css">
     <link href="${pageContext.request.contextPath}/css/misolayout.css" rel="stylesheet">
@@ -383,6 +384,58 @@ function getChatRoomList() {
     });
 }
 
+$(document).ready(function() {
+    // 로컬 스토리지에서 체크박스 상태 가져오기
+    var isChecked = localStorage.getItem("notifyCheckbox") === "true";
+
+    // 메시지 변경
+    if (isChecked) {
+        $(".form-check-label").text("실시간 알림 끄기");
+    } else {
+        $(".form-check-label").text("실시간 알림 켜기");
+    }
+    
+    // 체크박스 초기 상태 설정
+    $("#flexSwitchCheckChecked").prop("checked", isChecked);
+
+    // 체크박스의 상태가 변경될 때
+    $("#flexSwitchCheckChecked").change(function() {
+        console.log("체크박스 상태 변경됨");
+        var notifyReceiver = "${sessionScope.name}";
+        // 체크박스의 상태를 가져오기
+        var isChecked = $(this).prop("checked");
+
+        // 로컬 스토리지에 체크박스 상태 저장
+        localStorage.setItem("notifyCheckbox", isChecked);
+        
+     // 메시지 변경
+        if (isChecked) {
+            $(".form-check-label").text("실시간 알림 끄기");
+        } else {
+            $(".form-check-label").text("실시간 알림 켜기");
+        }
+
+        // 서버로 Ajax 요청 보내기
+        $.ajax({
+            url: "/rest/notify/notifyOff", 
+            method: "GET",  
+            data: { isEnabled: !isChecked, notifyReceiver: notifyReceiver },  
+            success: function(response) {
+                // 성공적으로 서버에서 응답을 받았을 때 실행할 코드
+                console.log("서버 응답:", response);
+            },
+            error: function(error) {
+                // Ajax 요청이 실패했을 때 실행할 코드
+                console.error("Ajax 오류:", error);
+            }
+        });
+    });
+});
+
+
+
+
+
 
 function populateChatModal(data) {
     var modalContent = $("#chatModal .notifyAlert .row");
@@ -571,6 +624,10 @@ function truncateClubDescription() {
       <!-- 각 모달창 -->
    <div id="notifyModal" class="notifyLayer">
        <div class="alert alert-dismissible alert-light notifyAlert">
+   <div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked="">
+    <label class="form-check-label" for="flexSwitchCheckChecked">실시간 알림 끄기</label>
+</div>
            <div class="row d-flex justify-content-center">
            </div>
        </div>

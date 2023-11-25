@@ -680,6 +680,8 @@ if (data.messageType === "delete") {
 		                    console.log("chatNo", chatNo);
 							
 		                    var memberId = "${sessionScope.name}";
+		                    var memberLevel = "${sessionScope.level}";
+		                    console.log("memberLevel",memberLevel);
 		                    
 		                    $.ajax({
 		                    	type:"GET",
@@ -693,7 +695,7 @@ if (data.messageType === "delete") {
 		                                var clubMemberRank = response;
 
 		                                // data.clubMemberRank 값이 '운영진'일 때만 삭제 동작
-		                                if (clubMemberRank === '운영진') {
+		                                if (clubMemberRank === '운영진' || memberLevel === '파워유저') {
 		                                    var confirmDelete = confirm("메시지를 정말 삭제하시겠습니까?");
 
 		                                    if (confirmDelete) {
@@ -709,7 +711,32 @@ if (data.messageType === "delete") {
 		                                        messageContent.text("삭제된 메시지입니다");
 		                                    }
 		                                } else {
-		                                    alert("권한이 없습니다.");
+		                                	// 경고창을 띄워서 권한이 없음을 알림
+		                                	var alertDiv = $("<div>").addClass("alert alert-dismissible alert-light alert-container")
+											    .css({
+											        textAlign: "center", // 텍스트를 가운데 정렬
+											    })
+											    .append('<button type="button" class="btn-close" data-bs-dismiss="alert"></button>')
+											    .append('<strong>권한이 없습니다. </strong><br>')
+											    .append('<span class="badge bg-success rounded-pill bg-miso">파워유저</span>가 되어보세요! <br>')
+											    .append('<a href="/pay/product" class="alert-link btn btn-success bg-miso w-100 mt-2">구매하기</a>');
+
+
+		                                	// 경고창을 body에 표시
+		                                	$("body").append(alertDiv);
+
+		                                	// 메세지 리스트 위로 띄우기
+		                                	var messageList = $(".message-list");
+		                                	alertDiv.insertBefore(messageList); // 메세지 리스트 앞에 추가
+
+		                                	alertDiv.css({
+		                                	    position: "absolute",
+		                                	    width:"350px",
+		                                	    top:"340px",
+		                                	    left:"320px",
+		                                	    "z-index": 3, 
+		                                	});
+
 		                                }
 		                            },
 		                            error: function (error) {
@@ -880,7 +907,29 @@ if (data.messageType === "delete") {
 			                                        messageContent.text("삭제된 메시지입니다");
 			                                    }
 			                                } else {
-			                                    alert("권한이 없습니다.");
+			                                	// 경고창을 띄워서 권한이 없음을 알림
+			                                	var alertDiv = $("<div>").addClass("alert alert-dismissible alert-light alert-container")
+												    .css({
+												        textAlign: "center", // 텍스트를 가운데 정렬
+												    })
+												    .append('<button type="button" class="btn-close" data-bs-dismiss="alert"></button>')
+												    .append('<strong>권한이 없습니다. </strong><br>')
+												    .append('<span class="badge bg-primary rounded-pill">운영진</span>만 가능해요! <br>')
+
+			                                	// 경고창을 body에 표시
+			                                	$("body").append(alertDiv);
+
+			                                	// 메세지 리스트 위로 띄우기
+			                                	var messageList = $(".message-list");
+			                                	alertDiv.insertBefore(messageList); // 메세지 리스트 앞에 추가
+
+			                                	alertDiv.css({
+			                                	    position: "absolute",
+			                                	    width:"350px",
+			                                	    top:"340px",
+			                                	    left:"320px",
+			                                	    "z-index": 3, 
+			                                	});
 			                                }
 			                            },
 			                            error: function (error) {

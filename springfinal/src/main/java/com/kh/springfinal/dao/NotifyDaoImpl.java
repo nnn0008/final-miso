@@ -35,5 +35,20 @@ public class NotifyDaoImpl implements NotifyDao{
 	public boolean delete(int notifyNo) {
 		return sqlSession.delete("notify.del", notifyNo) > 0;
 	}
+	
+	@Override
+	public boolean notifyEnabledOff(@RequestParam String notifyReceiver) {
+		return sqlSession.update("notify.notifyEnabledOff", notifyReceiver) > 0;
+	}
+	
+	@Override
+	public boolean notifyEnabledOn(@RequestParam String notifyReceiver) {
+		return sqlSession.update("notify.notifyEnabledOn", notifyReceiver) > 0;
+	}
+	
+	 @Override
+	    public boolean isNotificationEnabled(@RequestParam String notifyReceiver) {
+	        return sqlSession.selectOne("notify.isNotificationEnabled", notifyReceiver);
+	    }
 
 }
