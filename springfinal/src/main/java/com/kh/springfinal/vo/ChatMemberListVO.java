@@ -15,4 +15,5 @@ public class ChatMemberListVO {
 	private int clubNo;
 	
 	private int meetingNo;
+	private String meetingName;
 }

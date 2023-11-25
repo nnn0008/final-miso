@@ -303,12 +303,24 @@ width:20px;
                             </div>
                         </div>
 <div class="text-center">
-    <span class="badge bg-miso mt-3">${memberPreferList[0].memberName}</span>님의 주소 
-    <span class="badge bg-success">${memberPreferList[0].sido}</span>
-    지역을 중심으로 한 카테고리 동호회<br>
-    <c:forEach var="memberPrefer" items="${memberPreferList}">
-        <span class="badge bg-info mt-2">${memberPrefer.majorCategoryName}</span>
-    </c:forEach>
+    <c:if test="${not empty memberPreferList}">
+        <span class="badge bg-miso mt-3">${memberPreferList[0].memberName}</span>님의 주소 
+        <span class="badge bg-success">${memberPreferList[0].sido}</span>
+        지역을 중심으로 한 카테고리 동호회<br>
+        <c:forEach var="memberPrefer" items="${memberPreferList}">
+            <span class="badge bg-info mt-2">${memberPrefer.majorCategoryName}</span>
+        </c:forEach>
+    </c:if>
+    <c:if test="${empty memberPreferList}">
+         <div class="row d-flex align-items-center mt-3">
+                <div class="col-3 text-start">
+                    <img src="${pageContext.request.contextPath}/images/open-door.png" width="100%">
+                </div>
+                	<div class="col">
+                    <h3>내가 사는 지역을 등록해보세요!</h3>
+                	</div>
+            </div>
+    </c:if>
 </div>
 
 	

@@ -632,13 +632,14 @@ $(".meetingFix").change(function(){
             	    var badgeElement = $('<span>').addClass('badge bg-danger ms-1 mb-1').text('비공개 정모');
             	    var secretIcon = $('<i>').addClass("fa-solid fa-unlock-keyhole ms-2");
             	    var secretIconBig = $('<i>').addClass("fa-solid fa-lock ms-2").css({
-            	        'font-size': '200px',
+            	        'font-size': '150px',
             	        'height': '250px',
             	        'display': 'flex',
             	        'justify-content': 'center', // 좌우 가운데 정렬
             	        'align-items': 'center' // 상하 가운데 정렬
             	    });
-
+					
+            	    
 
             	    if (bodyClubMemberNo == 0) {
             	        // 클럽 멤버가 아닌 경우 효과 적용
@@ -652,6 +653,7 @@ $(".meetingFix").change(function(){
             	        // 큰 좌물쇠 아이콘 추가
             	        alertElement.append(secretIconBig);
             	    }
+            	    
 
             	    // 새로 생성한 엘리먼트들을 기존 템플릿에 추가
             	    $(htmlTemplate).prepend(divElement.append(badgeElement.append(secretIcon)));
@@ -904,7 +906,7 @@ $(".meetingFix").change(function(){
                 	    var badgeElement = $('<span>').addClass('badge bg-danger ms-1 mb-1').text('비공개 정모');
                 	    var secretIcon = $('<i>').addClass("fa-solid fa-unlock-keyhole ms-2");
                 	    var secretIconBig = $('<i>').addClass("fa-solid fa-lock ms-2").css({
-                	        'font-size': '200px',
+                	        'font-size': '150px',
                 	        'height': '250px',
                 	        'display': 'flex',
                 	        'justify-content': 'center', // 좌우 가운데 정렬

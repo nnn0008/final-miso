@@ -98,10 +98,11 @@ public class WebSocketServer extends TextWebSocketHandler{
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		 ClientVO client = new ClientVO(session);
 		clients.add(client);
-		
+
 		log.debug("사용자 접속 {}명", clients.size());
 	}
 	
+
 	// 접속 종료
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
@@ -121,6 +122,21 @@ public class WebSocketServer extends TextWebSocketHandler{
 	        }
 	    }
 	}
+//	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+//	    Iterator<ClientVO> iterator = clients.iterator();
+//	    while (iterator.hasNext()) {
+//	        ClientVO client = iterator.next();
+//	        WebSocketSession existingSession = client.getSession();
+//	        if (existingSession.getId().equals(session.getId())) {
+//	            // 세션을 찾았으므로 제거
+//	            iterator.remove();
+//
+//	            log.debug("사용자 종료! 현재 {}명", clients.size());
+//
+//	            break;
+//	        }
+//	    }
+//	}
 
 
 	// 특정 채팅방 입장 시 이전 메시지 조회 및 전송
@@ -231,12 +247,11 @@ public class WebSocketServer extends TextWebSocketHandler{
 	    session.sendMessage(tm);
 	}
 
-
+	
 	
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-	    ClientVO client = clientService.createClientVO(session);
-	    
+		ClientVO client = new ClientVO(session);
 	    // 메시지를 JSON으로 파싱
 	    ObjectMapper mapper = new ObjectMapper();
 	    MessageDto messageDto = mapper.readValue(message.getPayload(), MessageDto.class);
@@ -251,11 +266,13 @@ public class WebSocketServer extends TextWebSocketHandler{
 	    if (MessageType.join.equals(messageType)) {
 	        // 해당 룸번호를 가져옴 
 	        Integer chatRoomNo = messageDto.getChatRoomNo();
+	        String memberId = client.getMemberId();
 	        
 	        //map에 룸번호, 세션 정보를 담는다
 	        Map<String, Object> map = new HashMap<>();
 	        map.put("chatRoomNo", chatRoomNo);        
 	        map.put("session", session);
+	        map.put("memberId", memberId);
 	        sessionList.add(map);
 
 	        System.out.println("Current sessionList: " + sessionList);

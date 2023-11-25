@@ -62,50 +62,81 @@ public class WebsocketController {
 
 	    // 해당 사용자가 가지고 있는 동호회 목록 조회
 	    List<ChatRoomDto> chatRoomList = chatRoomDao.chatRoomList(memberId);
-	    //해당 사용자가 가지고 있는 1:1룸 목록 조회
+	    // 해당 사용자가 가지고 있는 1:1룸 목록 조회
 	    List<ChatOneMemberVO> oneChatRoomList = chatOneDao.oneChatRoomList2(memberId, memberId);
-	    //해당 사용자가 가지고 있는 정모 목록 조회
-	    List<MeetingVO> meetingRoomList = chatRoomDao.meetingRoomList2(memberId); 
-
-//	    ChatDto lastMessage = chatDao.chatLastMsg(chatRoomNo); //채팅방 마지막 메세지
-//	    log.debug("lastMessage={}",lastMessage);
-	    
-	    // 해당 동호회의 번호, 이름, 내용 조회
-	    List<ChatListVO> roomList = new ArrayList<>();
-	    for (ChatRoomDto chatRoom : chatRoomList) {
-	        int chatRoomNo = chatRoom.getChatRoomNo();
-	        List<ChatListVO> chatRoomInfoList = chatRoomDao.chatRoomList(chatRoomNo);
-	        roomList.addAll(chatRoomInfoList);
-	    }
+	    // 해당 사용자가 가지고 있는 정모 목록 조회
+	    List<MeetingVO> meetingRoomList = chatRoomDao.meetingRoomList2(memberId);
 
 
-//	    model.addAttribute("list", chatRoomList);
+	 // 해당 동호회의 번호, 이름, 내용 조회
+	 List<ChatListVO> roomList = new ArrayList<>();
+	 for (ChatRoomDto chatRoom : chatRoomList) {
+	     int chatRoomNo = chatRoom.getChatRoomNo();
+	     List<ChatListVO> chatRoomInfoList = chatRoomDao.chatRoomList(chatRoomNo);
+	     roomList.addAll(chatRoomInfoList);
+	 }
+
+
+	    // model.addAttribute("list", chatRoomList);
 	    model.addAttribute("roomList", roomList);
 	    model.addAttribute("oneChatRoomList", oneChatRoomList);
 	    model.addAttribute("meetingRoomList", meetingRoomList);
-//	    model.addAttribute("lastMessage", lastMessage);
+	    // model.addAttribute("lastMessage", lastMessage);
 
 	    return "chat/roomList";
 	}
+
 	
 	//채팅방
 	@GetMapping("/enterRoom/{chatRoomNo}")
-	public String enterRoom(@PathVariable int chatRoomNo, Model model) {
+	public String enterRoom(@PathVariable int chatRoomNo, Model model, HttpSession session) {
 	    ClubDto clubInfo = chatRoomDao.clubInfo(chatRoomNo);
 	    List<ChatMemberListVO> members = chatRoomDao.chatMemberList(chatRoomNo);
 	    ChatOneMemberListVO oneMembers = chatRoomDao.oneMembers(chatRoomNo);
-
+	    List<ChatMemberListVO> meetingMembers = chatRoomDao.meetingMemberList(chatRoomNo);
 
 	        if(clubInfo != null) {	        	
 	        	int clubNo = clubInfo.getClubNo(); // 클럽번호 가져오기
 	        	ClubImageVO clubDto = clubDao.clubDetail(clubNo);
+	        	// 상단 바로가기 메뉴
 	        	model.addAttribute("clubDto", clubDto);
+	        	
 	        }
-	        // 상단 바로가기 메뉴
+	        
+	        String circleName = null;
+	        if (clubInfo != null && clubInfo.getClubName() != null) {
+	            circleName = clubInfo.getClubName();
+	        } else {
+	            String sessionName = (String) session.getAttribute("name");
+	            String chatSender = oneMembers != null ? oneMembers.getChatSender() : null;
+	            String chatReceiver = oneMembers != null ? oneMembers.getChatReceiver() : null;
+	            String meetingName = null;
 
+	            if (chatSender != null && chatReceiver != null) {
+	                if (chatSender.equals(sessionName)) {
+	                    circleName = chatReceiver;
+	                } else if (chatReceiver.equals(sessionName)) {
+	                    circleName = chatSender;
+	                }
+	            }
+
+	            if (meetingMembers != null && !meetingMembers.isEmpty()) {
+	                meetingName = meetingMembers.get(0).getMeetingName();
+	            }
+	            
+	            if (circleName == null) {
+	                circleName = meetingName;
+	            }
+	        }
+	        model.addAttribute("circleName", circleName);
+
+	        
+	        model.addAttribute("meetingMembers", meetingMembers);
 	        model.addAttribute("clubInfo", clubInfo);
 	        model.addAttribute("members", members);
 	        model.addAttribute("oneMembers", oneMembers);
+	        
+	        
 	        return "chat/sockjs2";
 
 	}

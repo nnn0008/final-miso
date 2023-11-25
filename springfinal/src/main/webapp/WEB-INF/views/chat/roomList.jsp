@@ -17,7 +17,8 @@
     font-size: 20px;
     }
 	.explain-text{
-	color: A69D9D
+	color: A69D9D;
+	font-size:15px;
 	}
 	.club-box:hover {
         background-color: #f0f0f0; /* 호버 효과 배경색 설정 */
@@ -51,13 +52,31 @@
 </script>
 
 <body>
-
-	<div class="row">
-            <div class="col text-start d-flex align-items-center ms-3 mt-3">
-                <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
-                <strong class="ms-2 main-text">모임채팅</strong>
+        <c:if test="${empty roomList}">
+    <div class="row d-flex align-items-center mt-5">
+                <div class="col-3 text-start">
+                    <img src="${pageContext.request.contextPath}/images/open-door.png" width="100%">
+                </div>
+                <div class="col">
+                	<div class="col">
+                    <h5>채팅방이 존재하지 않습니다. </h5>
+                	</div>
+                	<div class="col">
+                    <h1>동호회에 가입해보세요!</h1>
+                	</div>
+                </div>
             </div>
+</c:if>
+
+	<c:if test="${not empty roomList or not empty oneChatRoomList or not empty meetingRoomList}">
+    <div class="row">
+        <div class="col text-start d-flex align-items-center ms-3 mt-3">
+            <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+            <strong class="ms-2 main-text">모임채팅</strong>
         </div>
+    </div>
+</c:if>
+
         
     <c:forEach var="roomList" items="${roomList}">
        <div class="row mt-3 ms-2 d-flex align-items-center club-box" onclick="enterRoom(${roomList.chatRoomNo})">
@@ -76,12 +95,18 @@
             <span class="clubname-text">${roomList.clubName}</span> 
         </div>
         <div class="col">
-            <span class="explain-text">${roomList.clubExplain}</span> 
+         <c:if test="${roomList.chatBlind eq 'Y'}">
+                        <span class="explain-text">삭제된 메시지입니다</span>
+                    </c:if>
+                    <c:if test="${roomList.chatBlind eq 'N'}">
+            <span class="explain-text">${roomList.chatContent}</span> 
+        </c:if>
         </div>
     </div>
 </div>
     </c:forEach>
     
+	<c:if test="${not empty roomList or not empty oneChatRoomList or not empty meetingRoomList}">
 <hr>
 <div class="row">
             <div class="col text-start d-flex align-items-center ms-3 mt-3">
@@ -89,7 +114,7 @@
                 <strong class="ms-2 main-text">개인채팅</strong>
             </div>
         </div>
-
+</c:if>
  <c:forEach var="oneChatRoom" items="${oneChatRoomList}">
     <div class="row mt-3 ms-2 d-flex align-items-center club-box" onclick="enterRoom(${oneChatRoom.chatRoomNo})" onmouseover="hoverEffect(this)" onmouseout="removeHoverEffect(this)">
         <div class="col-2">
@@ -135,6 +160,7 @@
     <br/>
 </c:forEach>
 
+	<c:if test="${not empty roomList or not empty oneChatRoomList or not empty meetingRoomList}">
 <hr>
 <div class="row">
             <div class="col text-start d-flex align-items-center ms-3 mt-3">
@@ -142,6 +168,7 @@
                 <strong class="ms-2 main-text">정모채팅</strong>
             </div>
         </div>
+        </c:if>
         
         <c:forEach var="meetingRoom" items="${meetingRoomList}">
        <div class="row mt-3 ms-2 d-flex align-items-center club-box" onclick="enterRoom(${meetingRoom.chatRoomNo})">
@@ -160,7 +187,12 @@
             <span class="clubname-text">${meetingRoom.meetingName}</span> 
         </div>
         <div class="col">
-            <span class="explain-text">${meetingRoom.meetingLocation}</span> 
+          <c:if test="${meetingRoom.chatBlind eq 'Y'}">
+                        <span class="explain-text">삭제된 메시지입니다</span>
+                    </c:if>
+                    <c:if test="${meetingRoom.chatBlind eq 'N'}">
+            <span class="explain-text">${meetingRoom.chatContent}</span> 
+        </c:if>
         </div>
     </div>
 </div>
