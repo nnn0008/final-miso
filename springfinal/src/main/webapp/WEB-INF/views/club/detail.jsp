@@ -1882,6 +1882,7 @@ $(document).ready(function () {
                         name="meetingLocation" placeholder="위치를 입력하세요">
                      <div class="invalid-feedback">모임 위치를 지정해주세요</div>
                   </div>
+                  
                   <div class="row mt-2 mb-2">
                      <div class="col-7">
                         <div class="input-group">

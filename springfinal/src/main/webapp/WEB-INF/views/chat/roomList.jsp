@@ -175,7 +175,7 @@
     <div class="col-2">
     <c:choose>
                  <c:when test="${meetingRoom.attachNo > 0}">
-                    <img src="${pageContext.request.contextPath}/club/image?clubNo=${meetingRoom.clubNo}" class="rounded-circle" width="80" height="80">
+                    <img src="${pageContext.request.contextPath}/rest/meeting/attchImage?attachNo=${meetingRoom.attachNo}" class="rounded-circle" width="80" height="80">
                 </c:when>
                 <c:otherwise>
                     <img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="80" height="80">

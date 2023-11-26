@@ -548,7 +548,7 @@ if (Array.isArray(data.meetingRoomList)) {
         var message =
             '<div class="row mt-3 ms-2 d-flex align-items-center club-box2" onclick="enterRoom(' + meetingRoom.chatRoomNo + ')">' +
             '<div class="col-2">' +
-            '<img src="' + contextPath + '/images/dog.png" class="club-image2">' +
+            '<img src="' + contextPath + '/rest/meeting/attchImage?attachNo=' + meetingRoom.attachNo + '" class="rounded-circle" width="50" height="50">' +
             '</div>' +
             '<div class="col-10">' +
             '<div class="col ms-3">' +

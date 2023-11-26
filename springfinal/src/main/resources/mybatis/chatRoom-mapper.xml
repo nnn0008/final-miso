@@ -47,7 +47,7 @@ SELECT
         FROM MEETING_IMAGE mi
         WHERE mi.meeting_no = m.meeting_no
         FETCH FIRST 1 ROWS ONLY
-    ) AS meeting_attach_no,
+    ) AS attach_no,
     (
         SELECT c2.CHAT_CONTENT
         FROM CHAT c2
