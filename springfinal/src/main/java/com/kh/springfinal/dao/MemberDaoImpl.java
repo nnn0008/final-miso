@@ -92,4 +92,14 @@ public class MemberDaoImpl implements MemberDao{
 	public boolean updateDownLevel(String memberId) {
 		return sqlSession.update("member.updateDownLevel",memberId)>0;
 	}
+	
+	@Override
+	public boolean schedulerMember(String memberId) {
+		return sqlSession.update("member.schedulerMember",memberId)>0;
+	}
+	
+	@Override
+	public MemberDto memberFindId(String memberId) {
+		return sqlSession.selectOne("member.memberFindId",memberId);
+	}
 }

@@ -7,24 +7,8 @@
     <mapper namespace="payment">
     
     	<!-- 단건결제 스케줄러 -->
-    	<update id="schedulerMember">
-	    update member
-	    set member_level = '일반'
-	    where member_id = (
-        select p.payment_member
-        from payment p
-        where p.payment_member = member_id
-  		  )
-		</update>
-		<update id="schedulerClub">
-		 update club
-	    set club_premium = 'N'
-	    where club_owner = (
-        select p.payment_member
-        from payment p
-        where p.payment_member = club_owner
-    )
-		</update>
+    	
+		
     	<select id="sequence" resultType="int">
     		select payment_seq.nextval from dual
     	</select>

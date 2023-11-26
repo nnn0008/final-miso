@@ -16,4 +16,8 @@ public interface MemberDao {
 	boolean memberEdit(MemberEditDto memberDto);
 	boolean updateLevel(String memberId);//회원등급변경
 	boolean updateDownLevel(String memberId);//회원등급내리기
+	
+	boolean schedulerMember(String memberId);
+	
+	MemberDto memberFindId(String memberId);//아이디 찾을려고 만듬
 }
