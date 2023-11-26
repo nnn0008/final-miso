@@ -560,8 +560,11 @@ $(function(){
 				</strong>
 				</div>
 				<div class="col">
-					  <div class="btn-group dropend" role="group">
-					    <button type="button" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
+						
+					<div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+ 
+					  <div class="btn-group dropstart" role="group">
+					    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
 					      <i class="fa-solid fa-ellipsis-vertical"></i>
 					    </button>
 					    <ul class="dropdown-menu">
@@ -571,6 +574,23 @@ $(function(){
 					      <li><a class="dropdown-item" href="#">신고</a></li>
 					    </ul>
 					  </div>
+					  
+					</div>
+						
+						
+					  <div class="btn-group dropend" role="group">
+					    <button type="button" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
+					      <i class="fa-solid fa-ellipsis-vertical"></i>
+					    </button>
+					    <ul class="dropdown-menu">
+						<li class="nav-item dropdown">
+					      <li><a class="dropdown-item" href="#">목록</a></li>
+					      <li><a class="dropdown-item" href="#">수정</a></li>
+					      <li><a class="dropdown-item" href="#">삭제</a></li>
+					      <li><a class="dropdown-item" href="#">신고</a></li>
+					    </ul>
+					  </div>
+					  
 					<div class="row">
 						<a href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubBoardDto.clubNo}">목록</a>
 					</div>
@@ -697,5 +717,8 @@ $(function(){
     </div>
   </div>
 </div>
+
+
+
 
 <jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>

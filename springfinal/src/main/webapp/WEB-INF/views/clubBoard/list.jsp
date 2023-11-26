@@ -123,7 +123,7 @@ font-size: 18px;
  					const formattedDate = formatDate(originalDate);
 					$(htmlTemplate).find(".text-date").text(formattedDate +"분");
 					//제목
-					$(htmlTemplate).find(".text-title").text(clubBoardAllDto.clubBoardName);
+					$(htmlTemplate).find(".text-title").text(clubBoardAllDto.clubBoardTitle);
 					//내용
 					$(htmlTemplate).find(".text-content").text(clubBoardAllDto.clubBoardContent);
 					//사진이 어디에 있냐
