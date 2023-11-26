@@ -37,7 +37,7 @@ public class ChatDaoImpl implements ChatDao{
 	
 	//채팅방 마지막 메세지
 	@Override
-	public ChatDto chatLastMsg(int chatRoomNo) {
+	public List<ChatDto> chatLastMsg(int chatRoomNo) {
 		return sqlSession.selectOne("chat.chatLastMsg", chatRoomNo);
 	}
 	
@@ -74,6 +74,12 @@ public class ChatDaoImpl implements ChatDao{
 		return sqlSession.update("chat.chatBlindUpdate", chatNo) > 0;
 	}
 	
+	@Override
+	public String chatBliindCheck(int chatNo) {
+		return sqlSession.selectOne("chat.chatBliindCheck", chatNo);
+	}
+	
+	@Override
 	public int sequence() {
 		return sqlSession.selectOne("chat.sequence");
 	}

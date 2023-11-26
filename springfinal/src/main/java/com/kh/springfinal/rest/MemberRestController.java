@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -130,6 +131,7 @@ public class MemberRestController {
 		ByteArrayResource resource = new ByteArrayResource(data);
 		
 
+		if (attachDto != null) {
 		return ResponseEntity.ok()
 				.header(HttpHeaders.CONTENT_ENCODING, StandardCharsets.UTF_8.name())
 				.contentLength(attachDto.getAttachSize())
@@ -140,6 +142,11 @@ public class MemberRestController {
 				.build().toString()
 				)
 			.body(resource);
+		}
+		else {
+            // attachDto가 null이면 에러 응답
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 	}
 	
 	@PostMapping("/searchAddr")

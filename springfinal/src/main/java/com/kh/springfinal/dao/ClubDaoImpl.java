@@ -12,6 +12,8 @@ import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.ClubDto;
 import com.kh.springfinal.vo.ClubImageVO;
 import com.kh.springfinal.vo.ClubListVO;
+import com.kh.springfinal.vo.MemberPreferInfoVO;
+import com.kh.springfinal.vo.PaginationVO;
 
 @Repository
 public class ClubDaoImpl implements ClubDao{
@@ -78,12 +80,12 @@ public class ClubDaoImpl implements ClubDao{
 		return sqlSession.selectOne("club.findImage",clubNo);
 	}
 
-	@Override
-	public List<ClubListVO> clubList(String memberId) {
-		
-		return sqlSession.selectList("club.clubList",memberId);
-		
-	}
+//	@Override
+//	public List<ClubListVO> clubList(String memberId) {
+//		
+//		return sqlSession.selectList("club.clubList",memberId);
+//		
+//	}
 
 	@Override
 	public List<ClubListVO> majorClubList
@@ -109,9 +111,70 @@ public class ClubDaoImpl implements ClubDao{
 		
 		
 	}
+
+	@Override
+	public List<MemberPreferInfoVO> memberPreferInfo(String memberId) {
+		
+		return sqlSession.selectList("club.memberPreferInfo",memberId);
+	}
+
+	@Override
+	public List<ClubListVO> clubSearchPageList(PaginationVO vo) {
+		
+		return sqlSession.selectList("club.searchClub",vo);
+	}
+
+	@Override
+	public int searchCount(PaginationVO vo) {
+		return sqlSession.selectOne("club.countList", vo);
+	}
+
+	@Override
+	public List<ClubListVO> clubListPage(PaginationVO vo) {//list1 페이지네이션
+		return sqlSession.selectList("club.clubListPage",vo);
+	}
+
+	@Override
+	public int preferCount(PaginationVO vo) {//list1 페이지네이션 카운트
+		return sqlSession.selectOne("club.clubListCount",vo);
+	}
+
+	@Override
+	public List<ClubListVO> majorClubListPage(PaginationVO vo) {
+		return sqlSession.selectList("club.majorClubListPage",vo);
+	}
+
+	@Override
+	public List<ClubListVO> minorClubListPage(PaginationVO vo) {
+		
+		return sqlSession.selectList("club.minorClubListPage",vo);
+	}
 	
+	@Override
+	public boolean updatePremium(String memberId) {
+		return sqlSession.update("club.updatePremium",memberId)>0;
+	}
 	
+	@Override
+	public boolean updateDownPremium(String memberId) {
+		return sqlSession.update("club.updateDownPremium",memberId)>0;
+	}
+
+	@Override
+	public int memberMakeClubCount(String memberId) {
+		
+		return sqlSession.selectOne("club.memberMakeClubCount",memberId);
+	}
 	
+	@Override
+	public boolean schedulerClub(String clubOwner) {
+		return sqlSession.update("club.schedulerClub",clubOwner)>0;
+	}
+	
+	@Override
+	public ClubDto clubFindOwner(String clubOwner) {
+		return sqlSession.selectOne("club.clubFindOwner",clubOwner);
+	}
 	
 
 	

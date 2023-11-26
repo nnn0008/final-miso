@@ -17,4 +17,5 @@ public class ClubBoardDto {
 	private int clubBoardReplyCount;
 	private int clubMemberNo;
 	private int clubNo;
+
 }

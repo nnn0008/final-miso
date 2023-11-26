@@ -3,11 +3,13 @@ package com.kh.springfinal.rest;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.http.HttpRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +88,7 @@ public class ChatRestController {
 
     
 	 @GetMapping("/download")
-	 public ResponseEntity<?> download(@RequestParam int attachNo) throws IOException {
+	 public ResponseEntity<ByteArrayResource> download(@RequestParam int attachNo) throws IOException {
 	     AttachDto attachDto = attachDao.selectOne(attachNo);
 
 	     File target = new File(dir, String.valueOf(attachNo));
@@ -144,6 +146,13 @@ public class ChatRestController {
 	             )
 	             .body(resource);
 	 }
+	 
+	 //멤버 프로필 사진
+	 @GetMapping("/getClubMemberRank")
+	 public String getClubMemberRank(@RequestParam String  memberId, @RequestParam int chatRoomNo) {
+		 int clubNo = chatRoomDao.clubInfo(chatRoomNo).getClubNo();
+	        return chatRoomDao.clubMemberRank(memberId, clubNo);
+	    }
 
 	 
 //	 @GetMapping("/getMemberList")
@@ -165,12 +174,13 @@ public class ChatRestController {
 //	 }
 
 	 
-	 @PostMapping("/updateBlind")
-	 public void update(@RequestBody Map<String, Object> requestBody) {
-		System.out.println("들어오나");
-		 int chatNo = (int) requestBody.get("chatNo");
-	     chatDao.chatBlindUpdate(chatNo);
-	 }
+//	 @PostMapping("/updateBlind")
+//	 public void update(HttpServletRequest request) {
+//		 Map<String, String[]> map = request.getParameterMap();
+//		 System.out.println("들어오나");
+//		 int chatNo = (int) requestBody.get("chatNo");
+//	     chatDao.chatBlindUpdate(chatNo);
+//	 }
 	 
 }
 

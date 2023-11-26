@@ -8,7 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-
+import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.OneDto;
 import com.kh.springfinal.vo.PaginationVO;
 
@@ -66,23 +66,21 @@ public class OneDaoImpl implements OneDao {
 	    return sqlSession.selectOne("one.countListByPage", vo);
 	}
 
+
 	@Override
-	public void insertImage(int oneNo, int attachNo) {
+	public void connect(int oneNo, int attachNo) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("oneNo", oneNo);
 		params.put("attachNo", attachNo);
-		sqlSession.insert("one.insertImage",params);
-		
+		sqlSession.update("one.connect",params);
 	}
-
 	@Override
 	public boolean deleteImage(int oneNo) {
 		return sqlSession.delete("one.deleteImage",oneNo)>0;
 	}
 
 	@Override
-	public Integer findImage(int oneNo) {
-		try {
+	public AttachDto findImage(int oneNo) {
 		return sqlSession.selectOne("one.findImage",oneNo);
 		}
 		catch(Exception e) {

@@ -1,5 +1,6 @@
 package com.kh.springfinal.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -158,5 +159,37 @@ public class ChatRoomDaoImpl implements ChatRoomDao{
 @Override
 public ChatOneMemberListVO oneMembers(int chatRoomNo) {
 	return sqlSession.selectOne("chatRoom.chatOneMemberListDetail", chatRoomNo);
+}
+
+@Override
+public String clubMemberRank(String memberId, int clubNo) {
+    Map<String, Object> parameters = new HashMap<>();
+    parameters.put("memberId", memberId);
+    parameters.put("clubNo", clubNo);   
+    return sqlSession.selectOne("chatRoom.clubMemberRank", parameters);
+}
+
+@Override
+public int isChatRoomMember(String memberId, int chatRoomNo) {
+    Map<String, Object> params = new HashMap<>();
+    params.put("memberId", memberId);
+    params.put("chatRoomNo", chatRoomNo);
+    return sqlSession.selectOne("chatRoom.isChatRoomMember", params);
+}
+
+@Override
+public int isMeetingRoomMember(String memberId, int chatRoomNo) {
+    Map<String, Object> params = new HashMap<>();
+    params.put("memberId", memberId);
+    params.put("chatRoomNo", chatRoomNo);
+    return sqlSession.selectOne("chatRoom.isMeetingRoomMember", params);
+}
+
+@Override
+public int isOneChatRoomMember(String memberId, int chatRoomNo) {
+    Map<String, Object> params = new HashMap<>();
+    params.put("memberId", memberId);
+    params.put("chatRoomNo", chatRoomNo);
+    return sqlSession.selectOne("chatOne.isOnechatRoomMember", params);
 }
 }

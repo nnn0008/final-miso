@@ -2,6 +2,7 @@ package com.kh.springfinal.dao;
 
 import java.util.List;
 
+import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.OneDto;
 import com.kh.springfinal.vo.PaginationVO;
 
@@ -23,9 +24,9 @@ public interface OneDao {
 	
 	
 	//이미지
-	void insertImage(int oneNo,int attachNo);
+	void connect(int oneNo,int attachNo);
 	boolean deleteImage(int oneNo);
-	Integer findImage(int oneNo);
+	AttachDto findImage(int oneNo);
 	
 	
 	

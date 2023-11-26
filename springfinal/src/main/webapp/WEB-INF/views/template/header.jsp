@@ -13,13 +13,13 @@
    
 
 <!-- 부트스트랩 CDN -->
-   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.2/zephyr/bootstrap.min.css" rel="stylesheet">
-
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+ <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.2/zephyr/bootstrap.min.css" rel="stylesheet">
+    
 <!-- 스타일시트 로딩 코드 -->
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/reset.css">
-    <link href="${pageContext.request.contextPath}/css/misolayout.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/css/miso.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/css/misolayout.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/css/miso.css" rel="stylesheet">
 <!-- <link rel="stylesheet" type="text/css" href="/css/test.css"> -->
 
 
@@ -147,9 +147,10 @@
 function updateDataAndOpenModal(modalId, updateFunction) {
     $(".notifyLayer").not("#" + modalId).removeClass("show");
     $("#" + modalId).toggleClass("show");
-
+ 
     updateFunction();
 }
+
 
 $(document).ready(function () {
     $(".showNotifyButton").click(function () {
@@ -164,11 +165,13 @@ $(document).ready(function () {
 
     // 모달창 클릭 시 데이터 갱신
     $("#notifyModal").click(function () {
+       truncateClubDescription();
         getNotifyList();
     });
 
     // 모달창 클릭 시 데이터 갱신
     $("#chatModal").click(function () {
+       truncateClubDescription();
         getChatRoomList();
     });
 
@@ -305,24 +308,25 @@ function populateModal(data) {
         return new Date(b.notifyDate) - new Date(a.notifyDate);
     }).slice(0, 10);
 
-    // 알림 갯수 표시
+ // 알림 갯수 표시
     var notificationCount = sortedData.length;
     showNotificationCount(notificationCount); // 알림 개수 업데이트
 
-    var notificationCountMessage = $("<div class='col-12 mb-2 text-center'>" + notificationCount + "개의 알림이 있습니다</div>");
-    modalContent.append(notificationCountMessage);
+    if (notificationCount > 0) {
+        // 알림이 있을 경우
+        var notificationCountMessage = $("<div class='col-12 mb-2 text-center'>" + notificationCount + "개의 알림이 있습니다</div>");
+        modalContent.append(notificationCountMessage);
 
-    if (notificationCount === 0) {
-        // 데이터가 없으면 '알림이 없습니다' 메시지를 추가
-        var noNotificationMessage = $("<div class='col-12 mb-2 text-center'>알림이 없습니다</div>");
-        modalContent.append(noNotificationMessage);
-    } else {
         // 데이터가 있으면 각 알림 메시지를 추가
         sortedData.forEach(function (item, index) {
             var message = createNotificationMessage(item);
             var listItem = $("<div class='col-12 mb-2'>" + message + "</div>");
             modalContent.append(listItem);
         });
+    } else {
+        // 알림이 없을 경우
+        var noNotificationMessage = $("<div class='col-12 mb-2 text-center'>알림이 없습니다</div>");
+        modalContent.append(noNotificationMessage);
     }
 }
 
@@ -379,6 +383,64 @@ function getChatRoomList() {
     });
 }
 
+$(document).ready(function() {
+    // 로컬 스토리지에서 체크박스 상태 가져오기
+    var isChecked = localStorage.getItem("notifyCheckbox");
+
+    // 만약 로컬 스토리지에 값이 없다면 기본적으로 체크된 상태로 설정
+    if (isChecked === null) {
+        isChecked = true;
+    } else {
+        // 문자열 "true" 또는 "false"를 불리언 값으로 변환
+        isChecked = isChecked === "true";
+    }
+
+    // 메시지 변경
+    if (isChecked) {
+        $(".form-check-label").text("실시간 알림 끄기");
+    } else {
+        $(".form-check-label").text("실시간 알림 켜기");
+    }
+    
+    // 체크박스 초기 상태 설정
+    $("#flexSwitchCheckChecked").prop("checked", isChecked);
+
+    // 체크박스의 상태가 변경될 때
+    $("#flexSwitchCheckChecked").change(function() {
+        console.log("체크박스 상태 변경됨");
+        var notifyReceiver = "${sessionScope.name}";
+        // 체크박스의 상태를 가져오기
+        var isChecked = $(this).prop("checked");
+
+        // 로컬 스토리지에 체크박스 상태 저장
+        localStorage.setItem("notifyCheckbox", isChecked);
+        
+        // 메시지 변경
+        if (isChecked) {
+            $(".form-check-label").text("실시간 알림 끄기");
+        } else {
+            $(".form-check-label").text("실시간 알림 켜기");
+        }
+
+        // 서버로 Ajax 요청 보내기
+        $.ajax({
+            url: "/rest/notify/notifyOff", 
+            method: "GET",  
+            data: { isEnabled: !isChecked, notifyReceiver: notifyReceiver },  
+            success: function(response) {
+                // 성공적으로 서버에서 응답을 받았을 때 실행할 코드
+                console.log("서버 응답:", response);
+            },
+            error: function(error) {
+                // Ajax 요청이 실패했을 때 실행할 코드
+                console.error("Ajax 오류:", error);
+            }
+        });
+    });
+});
+
+
+
 
 function populateChatModal(data) {
     var modalContent = $("#chatModal .notifyAlert .row");
@@ -388,31 +450,37 @@ function populateChatModal(data) {
     // 예시: 채팅 모달에는 사용자의 채팅방 리스트를 표시
 // roomList 스타일 적용
 if (Array.isArray(data.roomList)) {
-       var sectionHeader =
-           '<div class="row">' +
-           '<div class="col text-start d-flex align-items-center ms-3 mt-3">' +
-           '<img src="' + contextPath + '/images/logo-door.png" width="10%">' +
-           '<strong class="ms-2">모임채팅</strong>' +
-           '</div>' +
-           '</div>';
+    var sectionHeader =
+        '<div class="row">' +
+        '<div class="col text-start d-flex align-items-center ms-3 mt-3">' +
+        '<img src="' + contextPath + '/images/logo-door.png" width="10%">' +
+        '<strong class="ms-2">모임채팅</strong>' +
+        '</div>' +
+        '</div>';
 
-       var sectionHeaderItem = $("<div class='col-12 mb-2'>" + sectionHeader + "</div>");
-       modalContent.append(sectionHeaderItem);   
-       
+    var sectionHeaderItem = $("<div class='col-12 mb-2'>" + sectionHeader + "</div>");
+    modalContent.append(sectionHeaderItem);
+
     data.roomList.forEach(function (chatRoom) {
-
         var message =
             '<div class="row mt-3 ms-2 d-flex align-items-center club-box2" onclick="enterRoom(' + chatRoom.chatRoomNo + ')">' +
             '<div class="col-2">' +
-            '<img src="${pageContext.request.contextPath}/club/image?clubNo=' + chatRoom.clubNo + '" class="rounded-circle" width="50" height="50">'+
+            '<img src="' + contextPath + '/club/image?clubNo=' + chatRoom.clubNo + '" class="rounded-circle" width="50" height="50">' +
             '</div>' +
             '<div class="col-10">' +
             '<div class="col ms-3">' +
             '<span class="clubname-text2">' + chatRoom.clubName + '</span>' +
             '</div>' +
-            '<div class="col ms-3">' +
-            '<span class="explain-text2">' + chatRoom.clubExplain + '</span>' +
-            '</div>' +
+            '<div class="col ms-3">';
+
+        if (chatRoom.chatBlind === 'Y') {
+            message += '<span class="explain-text2 d-inline-block text-truncate" style="max-width: 160px;">삭제된 메시지입니다</span>';
+        } else {
+            var chatContent = chatRoom.chatContent !== null ? chatRoom.chatContent : '';
+            message += '<span class="explain-text2 d-inline-block text-truncate" style="max-width: 160px;">' + chatContent + '</span>';
+        }
+
+        message += '</div>' +
             '</div>' +
             '</div>';
 
@@ -422,6 +490,8 @@ if (Array.isArray(data.roomList)) {
 } else {
     console.error("roomList is not an array:", data.roomList);
 }
+
+
 
 //oneChatRoomList 스타일 적용
 if (Array.isArray(data.oneChatRoomList)) {
@@ -463,7 +533,6 @@ if (Array.isArray(data.oneChatRoomList)) {
 
 // meetingRoomList 스타일 적용
 if (Array.isArray(data.meetingRoomList)) {
-
     var sectionHeader =
         '<div class="row">' +
         '<div class="col text-start d-flex align-items-center ms-3 mt-3">' +
@@ -476,7 +545,6 @@ if (Array.isArray(data.meetingRoomList)) {
     modalContent.append(sectionHeaderItem);
 
     data.meetingRoomList.forEach(function (meetingRoom) {
-
         var message =
             '<div class="row mt-3 ms-2 d-flex align-items-center club-box2" onclick="enterRoom(' + meetingRoom.chatRoomNo + ')">' +
             '<div class="col-2">' +
@@ -484,11 +552,18 @@ if (Array.isArray(data.meetingRoomList)) {
             '</div>' +
             '<div class="col-10">' +
             '<div class="col ms-3">' +
-            '<span class="clubname-text2">' + meetingRoom.meetingName + '</span>' +
+            '<span class="clubname-text2 text-truncate">' + meetingRoom.meetingName + '</span>' +
             '</div>' +
-            '<div class="col ms-3">' +
-            '<span class="explain-text2">' + meetingRoom.meetingLocation + '</span>' +
-            '</div>' +
+            '<div class="col ms-3">';
+
+        if (meetingRoom.chatBlind === 'Y') {
+            message += '<span class="explain-text2 d-inline-block text-truncate" style="max-width: 160px;">삭제된 메시지입니다</span>';
+        } else {
+            var chatContent = meetingRoom.chatContent !== null ? meetingRoom.chatContent : '';
+            message += '<span class="explain-text2 d-inline-block text-truncate" style="max-width: 160px;">' + chatContent + '</span>';
+        }
+
+        message += '</div>' +
             '</div>' +
             '</div>';
 
@@ -501,6 +576,23 @@ if (Array.isArray(data.meetingRoomList)) {
 
 }
 
+function truncateClubDescription() {
+    console.log('truncateClubDescription 함수 호출됨');
+
+    const clubDescriptions = document.querySelectorAll('.explain-text2');
+
+    clubDescriptions.forEach(function (description) {
+        const maxLength = 30; // 최대 길이 설정
+        const text = description.textContent;
+
+        console.log('현재 텍스트:', text);
+
+        if (text.length > maxLength) {
+            description.textContent = text.substring(0, maxLength) + '...';
+            console.log('텍스트가 제한됨:', description.textContent);
+        }
+    });
+}
 
 </script>
 
@@ -511,21 +603,21 @@ if (Array.isArray(data.meetingRoomList)) {
 
 <main>
  <header>
-            <div class="col mt-2">
-   
-      <a href="#" class="link logo"><img src="${pageContext.request.contextPath}/images/miso_logo.png" width="200px"></a>
 
-            </div>
-            <div class="title">
-                <div class="input-group d-flex justify-content-center">  
-                    <input type=" search" class="form-control rounded-pill" placeholder="Search" aria-label="Search"  
-                 
-                    aria-describedby="search-addon" />  
-                    <button type="button" class="btn btn-outline-primary rounded-pill"><i class="fa-solid fa-magnifying-glass"></i></button>  
-                 
-                  
-                   </div>  
-            </div>
+   
+      <a href="${pageContext.request.contextPath}/" class="link logo"><img src="${pageContext.request.contextPath}/images/miso_logo.png" width="200px"></a>
+
+         
+<div class="title ms-5 me-5 mb-3 mt-4">
+    <form action="/club/searchList" class="w-100">
+        <div class="title input-group d-flex justify-content-center align-items-center">
+            <input type="search" name="keyword" class="form-control rounded-pill " placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+            <button type="submit" class="btn btn-outline-primary rounded-pill"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+    </form>
+</div>
+
+            
            <div class="etc container">
           <div class="col-4 ms-4" id="notifyContainer">
         <i class="fa-regular fa-bell fa-2xl notifyContainer showNotifyButton" data-modal="notifyModal"></i>
@@ -550,6 +642,10 @@ if (Array.isArray(data.meetingRoomList)) {
       <!-- 각 모달창 -->
    <div id="notifyModal" class="notifyLayer">
        <div class="alert alert-dismissible alert-light notifyAlert">
+   <div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked="">
+    <label class="form-check-label" for="flexSwitchCheckChecked">실시간 알림 끄기</label>
+</div>
            <div class="row d-flex justify-content-center">
            </div>
        </div>

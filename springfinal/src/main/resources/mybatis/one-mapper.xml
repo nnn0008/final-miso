@@ -123,9 +123,15 @@
 	 		select * from one where one_no = #{oneNo}
 	 	</select>
 	 	
-	 	<!-- 이미지 등록 -->
+	 	<!-- 이미지 등록 
 	 	<insert id="insertImage">
 	 		insert into one_image
+	 		values(${oneNo},${attachNo})
+	 	</insert>
+	 	-->
+	 	<!-- 이미지 연결 -->
+	 	<insert id="connect">
+	 		insert into one_image(one_no,attach_no)
 	 		values(${oneNo},${attachNo})
 	 	</insert>
 	 	
@@ -135,9 +141,15 @@
 	 	</delete>
 	 	
 	 	<!-- 이미지 찾기 -->
-	 	<update id="findImage">
-	 		select attach_no from one_image where one_no=${oneNo}
-	 	</update>
+	 	<select id="findImage" resultType="AttachDto">
+	 		SELECT * 
+		    FROM attach 
+		    WHERE attach_no = (
+		        SELECT attach_no 
+		        FROM one_image 
+		        WHERE one_no = #{oneNo}
+		    )
+	 	</select>
 	 	
 	 	<!-- 답변 상태 업데이트 -->
 	 	<update id="answer">

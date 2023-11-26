@@ -16,6 +16,8 @@ public class PaymentDto {
 	private int paymentPrice;//PG사 결제 가격
 	private int paymentRemain;//잔여 결제 금액(취소 가능 금액)
 	private Date paymentTime;//결제시간
+	private Date paymentBegin;
+	private Date paymentEnd;
 }
 	
 

@@ -47,4 +47,27 @@
 		<delete id="deleteMember">
 			delete member where member_id = #{memberId}
 		</delete>
+		
+		<update id="updateLevel">
+			update member set member_level='파워유저' where member_id=#{memberId}
+		</update>
+		
+		<update id="updateDownLevel">
+			update member set member_level='일반유저' where member_id=#{memberId}
+		</update>
+		<!-- 단건 스케쥴러 -->
+		<update id="schedulerMember">
+	  	UPDATE member m
+	    SET m.member_level = '일반유저'
+	    WHERE m.member_id IN (
+        SELECT p.payment_member
+        FROM payment p
+        INNER JOIN member m ON m.member_id = p.payment_member
+        WHERE m.member_id = #{memberId}
+   		 )
+		</update>
+		
+		<select id="memberFindId" resultType="MemberDto">
+			select * from member where member_id = #{memberId}
+		</select>
     </mapper>

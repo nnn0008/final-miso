@@ -15,6 +15,11 @@ public class ReportDaoImpl implements ReportDao{
 	private SqlSession sqlSession;
 	
 	@Override
+	public int sequence() {
+		return sqlSession.selectOne("report.sequence");
+	}
+	
+	@Override
 	public void insert(ReportDto reportDto) {
 		sqlSession.insert("report.insert", reportDto);
 	}

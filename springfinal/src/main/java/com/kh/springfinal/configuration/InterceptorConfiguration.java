@@ -5,6 +5,7 @@
 //import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 //import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 //
+//import com.kh.springfinal.interceptor.ChatRoomIntercepter;
 //import com.kh.springfinal.interceptor.MemberInterceptor;
 //
 ///**
@@ -21,6 +22,9 @@
 //	
 //	@Autowired
 //	private MemberInterceptor memberInterceptor;	
+//	
+//	@Autowired
+//	private ChatRoomIntercepter chatRoomIntercepter;
 //	
 //	
 //	//인터셉트를 추가할 수 있는 설정 메소드(registry 저장소에 설정)
@@ -53,6 +57,10 @@
 ////				"/board/detail*",
 ////				"/rest/reply/list"
 //				); 
+//		
+//		registry.addInterceptor(chatRoomIntercepter)
+//		.addPathPatterns("/chat/enterRoom/**"
+//				);
 //		
 ////		//[3] 게시글 소유자 외의 접근을 차단하는 인터셉터 등록
 ////		registry.addInterceptor(boardOwnerInterceptor)

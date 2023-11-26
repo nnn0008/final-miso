@@ -10,12 +10,6 @@ import com.kh.springfinal.vo.KakaoPayDetailRequestVO;
 import com.kh.springfinal.vo.KakaoPayDetailResponseVO;
 import com.kh.springfinal.vo.KakaoPayReadyRequestVO;
 import com.kh.springfinal.vo.KakaoPayReadyResponseVO;
-import com.kh.springfinal.vo.KakaoPayRegularApproveRequestVO;
-import com.kh.springfinal.vo.KakaoPayRegularCancelRequestVO;
-import com.kh.springfinal.vo.KakaoPayRegularCancelResponseVO;
-import com.kh.springfinal.vo.KakaoPayRegularDetailRequestVO;
-import com.kh.springfinal.vo.KakaoPayRegularDetailResponseVO;
-import com.kh.springfinal.vo.KakaoPayRegularReadyResponseVO;
 import com.kh.springfinal.vo.PurchaseListVO;
 
 public interface KakaoPayService {

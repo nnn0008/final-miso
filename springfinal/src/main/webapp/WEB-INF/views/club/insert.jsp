@@ -3,25 +3,34 @@
    <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 <jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/hangul-js" type="text/javascript"></script>
     
-    <style>
-    .addr-list {
-    max-height: 300px; /* 예시: 최대 높이 설정 */
+  <style>
+
+ .addr-list {
+    position: absolute;
+    z-index: 1000;
+    max-height: 250px; /* 적절한 높이로 설정 */
+    width: 545px;
     overflow: auto; /* 스크롤이 필요한 경우 스크롤 허용 */
+    margin-top: 5px;
+    }
+
+/* 입력창의 상단에 위치하도록 설정 */
+.position-relative {
+    position: relative;
 }
+
  </style>   
-    
-    
-    <script>
+ 
+<script>
  
     $(function(){
     	
     	var no = $(this).find(":selected").val()
-		
-    		
+		  		
     	$.ajax({
             url:"http://localhost:8080/rest/category",
             method:"get",
@@ -73,55 +82,157 @@
     		
     	})
 
+   	$("[name=createClub]").click(function(e){
+   		
+   		if($(".select2").val()==null){
+   		e.preventDefault();
+   			
+   		
+   		$(".select2").addClass("is-invalid");
+   			
+   		}
+   		
+   		
+   		if($("[name=clubName]").val().length==0){
+   			
+   			e.preventDefault();
+   			$("[name=clubName]").addClass("is-invalid");
+   			
+   		}
+   		
+		if($("[name=clubExplain]").val().length==0){
+   			
+   			e.preventDefault();
+   			$("[name=clubExplain]").addClass("is-invalid");
+   			
+   		}
+	if($("[name=clubPersonnel]").val().length==0){
+   			
+   			e.preventDefault();
+   			$("[name=clubPersonnel]").addClass("is-invalid");
+   			
+   		}
+		
+	if($(".search-input").data("pass")=='N'){
+   			
+   			e.preventDefault();
+   			$(".search-input").addClass("is-invalid");
+   			
+   		}
+   	});
+    	
+    	
+    	
+    	
+    	$("[name=clubName]").on('input',function(){
+    		
+    		$(this).removeClass("is-invalid");
+    		
+    		
+    		
+    	})
+    	$("[name=clubExplain]").on('input',function(){
+    		
+    		$(this).removeClass("is-invalid");
+    		
+    		
+    		
+    	})
+    	$("[name=clubPersonnel]").on('input',function(){
+    		
+    		$(this).removeClass("is-invalid");
+    		
+    		
+    		
+    	})
+    	$(".search-input").on('input',function(){
+    		
+    		$(this).removeClass("is-invalid");
+    		
+    		//newInput 제거
+    		$('.newInput').remove();
+    		$(this).data("pass","N");
+
+    		
+    		
+    		
+    	})
+    	$(".select2").change(function(){
+    		
+    		$(this).removeClass("is-invalid");
+    		
+
+    		
+    		
+    		
+    	})
+    
+    	
+    	
+   	
+   	
+   	
+   	
+   	
     });
+    
+    
+    
+   	
+    
+    
+    
+    
     </script>
     
     	<script>
     	$(function () {
-    	    // [1] 모든 .zip 엘리먼트 숨기기
+    		var searchTimeout;
 
-    	    // [2] 검색어 입력 처리
-    	    $(".search-input").on('input', function () {
-    	        console.log("검색중");
+    		$(".search-input").on('input', function () {
+    		    $(".addr-list").show();
 
-    	        
+    		    var keyword = $(this).val();
 
-    	        var keyword = $(this).val();
-    	        console.log("검색 키워드:"+keyword);
+    		    if (searchTimeout) {
+    		        clearTimeout(searchTimeout); // 이전 타이머가 있다면 제거
+    		    }
 
-    	        if (keyword.length === 0) {
-    	            $(".zip").hide();
-    	            return;
-    	        }
+    		    // 300ms 후에 Ajax 요청을 보냄
+    		    searchTimeout = setTimeout(function () {
+    		        if (keyword.length === 0) {
+    		            $(".zip").hide();
+    		            return;
+    		        }
 
-    	        $.ajax({
-    	            url: "http://localhost:8080/rest/zipPage",
-    	            method: "get",
-    	            data: { keyword: keyword },
-    	            success: function (response) {
-    	                // 검색 결과를 처리
-    	                var zipList = $('.addr-list');
-    	                // 이전 검색 결과 지우기
-    	                zipList.empty();
+    		        $.ajax({
+    		            url: "http://localhost:8080/rest/zipPage",
+    		            method: "get",
+    		            data: { keyword: keyword },
+    		            success: function (response) {
+    		                // 검색 결과를 처리
+    		                var zipList = $('.addr-list');
+    		                // 이전 검색 결과 지우기
+    		                zipList.empty();
 
-    	                for (var i = 0; i < response.length; i++) {
-    	                    var text = (response[i].sido != null ? response[i].sido + ' ' : '') +
-    	                        (response[i].sigungu != null ? response[i].sigungu + ' ' : '') +
-    	                        (response[i].eupmyun != null ? response[i].eupmyun + ' ' : '') +
-    	                        (response[i].hdongName != null ? response[i].hdongName + ' ' : '');
+    		                for (var i = 0; i < response.length; i++) {
+    		                    var text = (response[i].sido != null ? response[i].sido + ' ' : '') +
+    		                        (response[i].sigungu != null ? response[i].sigungu + ' ' : '') +
+    		                        (response[i].eupmyun != null ? response[i].eupmyun + ' ' : '') +
+    		                        (response[i].hdongName != null ? response[i].hdongName + ' ' : '');
 
+    		                    zipList.append($("<li>")
+    		                        .addClass("list-group-item zip")
+    		                        .val(response[i].zipCodeNo)
+    		                        .text(text)
+    		                        .data("result", response[i].sigungu)
+    		                    );
+    		                }
+    		            }
+    		        });
+    		    }, 300); // 300ms 딜레이
+    		});
 
-    	                    zipList.append($("<li>")
-    	                    	    .addClass("list-group-item zip")
-    	                    	    .val(response[i].zipCodeNo)
-    	                    	    .text(text)
-    	                    	    .data("result", response[i].sigungu)
-    	                    	);
-
-    	                }
-    	   
-    	            }
-    	        });
     	        
     	        // [3] 목록을 클릭하면 입력창에 채우고 .zip 엘리먼트 숨기기
         	    $(".addr-list").on("click", ".zip", function () {
@@ -137,18 +248,15 @@
         	    			
         	    	
         	    	
-
         	        var selectedAddress = $(this).data("result");
-        	        $(".search-input").val(selectedAddress);
-        	        $(".zip").hide();
+        	        $(".search-input").val(selectedAddress); 
+        	        $(".search-input").data("pass","Y");
+        	        
+        	        $(".addr-list").hide();
         	        
         	    });
     	        
-    	        
-    	    });
-    	    
-	
-    	    
+    	        	    
     	    var page = 1; // 초기 페이지
     	    var scrollTimeout; // 스크롤 이벤트를 지연시키기 위한 타이머
 
@@ -207,57 +315,71 @@
     
     
     
-    <h1>동호회 등록</h1>
+    <div class="row">
+                            <div class="col text-start d-flex align-items-center"">
+                                <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+                                <strong class="ms-2">모임 만들기</strong>
+                            </div>
+                        </div>
     
     <div class="row mt-4">
           <div class="col">
-    <form action="insert" class="form-control form-control-lg add" method="post">
+    <form action="insert" class="form-control add" method="post">
     	
-    	상위 카테고리
+    	<label>관심사 선택</label>
     	<select class="form-select select1">
     		<c:forEach var="majorCategoryDto" items="${majorCategory}">
     		<option value="${majorCategoryDto.majorCategoryNo}">${majorCategoryDto.majorCategoryName}</option>
     		</c:forEach>
     	</select>
-    	하위 카테고리
+    	<label class="mt-2">하위 카테고리</label>
+    	
     	<select class="form-select select2" name="clubCategory">
     	</select>
-    		
-    	
-    	
+    	   <div class="invalid-feedback">
+      카테고리를 선택해주세요
+    		</div>
+  		
     	
     	
     	
     	<div class="row">
     		<div class="col">
-    	모임 이름<input class="form-control" type="text" name="clubName">
+    	<label class="mt-2">모임 이름</label>
+    	<input class="form-control" type="text" name="clubName">
+    	<div class="invalid-feedback">
+      동호회 이름을 추가해주세요
+    		</div>
     	</div>
     	</div>
     	<div class="row">
     		<div class="col">
-    	모임 설명<input class="form-control" type="text" name="clubExplain">
+    	<label class="mt-2">모임 설명</label>
+    	<input class="form-control" type="text" name="clubExplain">
+    	<div class="invalid-feedback">
+      동호회 설명을 추가해주세요
+    		</div>
     	</div>
     	</div>
     	
     	<div class="row">
     		<div class="col">
-    	정원<input class="form-control" type="number" name="clubPersonnel">
+    	<label class="mt-2">정원</label>
+    	<input class="form-control" type="number" name="clubPersonnel" min="2">
+    	<div class="invalid-feedback">
+      		동호회 인원을 선택해주세요
+    		</div>
     	</div>
     	</div>
-    	<div class="row mt-3">
-    		<div class="col">
-    	<button class="btn btn-primary" type="submit">모임 만들기</button>
-    	</div>
-    	</div>
-    
-   
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-10 offset-md-1">
-                <div class="row mt-4">
+    	
+    	<div class="row">
                     <div class="col">
-                       지역 <input type="search" class="form-control search-input"
-                            placeholder="동,읍,면을 입력해주세요">
+                       <label class="mt-2">지역</label>
+                       <input type="search" class="form-control search-input"
+                            placeholder="동,읍,면을 입력해주세요" data-pass="N">
+                            <div class="invalid-feedback">
+      동호회 지역을 선택해주세요
+    		</div>
                     </div>                    
                 </div>
                 <div class="row">
@@ -266,9 +388,37 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-        </div>        
-    </div>
+
+
+    	
+    	<div class="row mt-4 mb-2">
+    		<div class="col">
+    	<button class="btn btn-miso btn-lg bg-miso w-100" type="submit" name="createClub">
+    	<strong>모임 만들기</strong>
+    	</button>
+    	</div>
+    	
+    	</div>
+    
+   
+<!--     <div class="container-fluid"> -->
+<!--         <div class="row"> -->
+<!--             <div class="col-md-10 offset-md-1"> -->
+<!--                 <div class="row mt-4"> -->
+<!--                     <div class="col"> -->
+<!--                        지역 <input type="search" class="form-control search-input" -->
+<!--                             placeholder="동,읍,면을 입력해주세요"> -->
+<!--                     </div>                     -->
+<!--                 </div> -->
+<!--                 <div class="row"> -->
+<!--                     <div class="col"> -->
+<!--                         <ul class="list-group addr-list"> -->
+<!--                         </ul> -->
+<!--                     </div> -->
+<!--                 </div> -->
+<!--             </div> -->
+<!--         </div>         -->
+<!--     </div> -->
   
     
 

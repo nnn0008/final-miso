@@ -118,7 +118,7 @@ public class MemberController {
 	         session.setAttribute("memberName", memberDto.getMemberName());
 	       
 	         //메인페이지로 이동
-	         return "redirect:/"; 
+	         return "redirect:/club/list"; 
 	      };
 	
 //	@PostMapping("/login")

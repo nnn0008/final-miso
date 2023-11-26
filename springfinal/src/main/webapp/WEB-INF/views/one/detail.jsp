@@ -13,7 +13,7 @@
 
 	<div class="container">
 		<div class="row mt-4">
-		  <div class="col text-start d-flex align-items-center ms-3 mt-3">
+		  <div class="col text-start d-flex align-items-center mt-3">
                                 <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
                                 <strong class="ms-2">1대 1 문의</strong>
                             </div>
@@ -30,7 +30,12 @@
 						<tr>
 						<td><i class="fa-regular fa-calendar"></i> ${OneDto.oneDate}</td>
 						</tr>
-					<td height="350px" style="background-color:#ACCEFF;">${OneDto.oneContent}</td>
+					<td height="350px" style="background-color:#ACCEFF;">
+					<img src="${pageContext.request.contextPath}/one/image?oneNo=${OneDto.oneNo}" width="200" height="200">
+					<br>
+					<br>
+					${OneDto.oneContent}
+					</td>
 					
 				</table>
 				
@@ -68,12 +73,7 @@
 		</a>
 	</div>
 	</div>
-	
-		<div class="row mt-4">
-			<div class="col">
-				이미지
-			</div>
-		</div>
+		
 	</div>
 
 

@@ -18,7 +18,8 @@ public class MessageDto {
 	private String chatReceiver;
 	private String chatContent;
 	private String memberName;
-	private boolean chatNo;
+	private int chatNo;
+	private String chatBlind;
 	
 	private String fileName;
 	private long fileSize;

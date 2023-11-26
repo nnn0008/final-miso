@@ -21,5 +21,6 @@ public interface PaymentDao {
 	void cancelDetail(int paymentDetailNo);
 	void cancel(PaymentDto paymentDto);
 	void cancelDetailGroup(int paymentDetailOrigin);
+	
 
 }

@@ -4,8 +4,48 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 <jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
 
+<style>
+.preview-wrapper1{
+    width: auto;
+    height: auto;
+    overflow: hidden;
+}
 
-	<form method="post" action="insert" autocomplete="off">
+.attach-selected {
+    width: 100%;
+    height: 100%;
+     border-radius: 5%;
+    object-fit: cover;
+}
+
+</style>
+
+
+<script>
+$(function(){
+    $("#attach-selector").change(function(){
+    	
+    	 $(".preview-wrapper1").empty();
+    	 
+        if(this.files.length == 0) {
+            //초기화
+            return;
+        }
+
+
+            $("<img>").attr("src", URL.createObjectURL(this.files[0]))
+                            .css("max-width", "300px")
+                            .appendTo(".preview-wrapper1");
+        
+       
+    });
+    
+});
+
+
+</script>
+
+	<form method="post" action="insert" autocomplete="off" enctype="multipart/form-data">
 	<%-- 답글일 때만 추가 정보를 전송 --%>
 	<c:if test="${isReply}">
 	<input type="hidden" name="oneParent" value="${originDto.oneNo}">
@@ -15,13 +55,13 @@
 			<div class="col">
 				<c:choose>
 	            <c:when test="${isReply}">
-					<div class="col text-start d-flex align-items-center ms-3 mt-3">
+					<div class="col text-start d-flex align-items-center mt-3">
                                 <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
                                 <strong class="ms-2">답글 작성</strong>
                         </div>
 				</c:when>
 				<c:otherwise>
-                            <div class="col text-start d-flex align-items-center ms-3 mt-3">
+                            <div class="col text-start d-flex align-items-center mt-3">
                                 <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
                                 <strong class="ms-2">게시글 작성</strong>
                         </div>
@@ -63,34 +103,26 @@
 			</div>
 		</div>
 		
-		<div class="row mt-3">
-			<div class="col">
-				<input type="file">
+<!-- 		<div class="row mt-4">	 -->
+<!-- 			<div class="col-4 first-attached"> -->
+<!-- 				<input type="file" name="attach" multiple id="attach-selector" class="form-control first-attach attach-selector"> -->
+<!-- 			</div> -->
+		
+		<div class="row mt-4">	
+			<div class="col-4 first-attached">
+				<input type="file" class="form-control first-attach attach-selector" name="attach" multiple id="attach-selector">
 			</div>
-		</div>
+		
+		<div class="preview-wrapper1"></div>
+		
 		
 		<div class="row mt-3">
 			<div class="col">
-				<label>
-					<input type="file" class="profile-chooser" accept="image/*" style="display:none;">
-				<br>
-					<i class="fa-regular fa-image blue fa-2x"></i>
-				</label>
-				<i class="fa-regular fa-trash-can red fa-2x profile-delete"></i>
-			</div>
-		</div>
-		
-		<div class="row mt-3">
-			<div class="col">
-				<button type="submit" class="btn  bg-miso w-100 mt-3">
-				<i class= "fa-solid fa-pen"></i>
-				등록
+			<button type="submit" class="btn btn-miso btn-lg bg-miso w-100 btn-send">
+				<strong>작성하기</strong>
 				</button>
 			</div>
 		</div>
-		
-		
-		
 		
 		
 		

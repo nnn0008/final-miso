@@ -34,10 +34,11 @@ import com.kh.springfinal.dto.ClubBoardDto;
 import com.kh.springfinal.dto.ClubBoardImage2Dto;
 import com.kh.springfinal.dto.ClubBoardImage3Dto;
 import com.kh.springfinal.dto.ClubBoardImageDto;
-import com.kh.springfinal.dto.ClubBoardLikeDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MemberDto;
+import com.kh.springfinal.vo.ClubImageVO;
 import com.kh.springfinal.vo.FileLoadVO;
+import com.kh.springfinal.vo.PaginationVO;
 
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
@@ -117,10 +118,22 @@ public class ClubBoardController {
 	}
 	
 	@RequestMapping("/list")
-	public String list(Model model, @RequestParam int clubNo) {
-		List<ClubBoardAllDto> list = clubBoardDao.selectListByPage(1, 10, clubNo);
+	public String list(Model model, @ModelAttribute("vo") PaginationVO vo, @RequestParam int clubNo) {
+		int count = clubBoardDao.clubBoardCount(vo, clubNo); // 게시글의 총 게시글 수를 조회
+		vo.setCount(count);
+		List<ClubBoardAllDto> list = clubBoardDao.selectListByPage(vo, clubNo);
+		model.addAttribute("clubNo", clubNo);
 		model.addAttribute("list", list);
-//		log.debug("list = {}", list);
+		
+		//상단 바로가기 메뉴
+		ClubImageVO clubDto = clubDao.clubDetail(clubNo);
+		
+		model.addAttribute("clubDto",clubDto);
+		
+		log.debug("list={}", list);
+		log.debug("count={}", count);
+		log.debug("clubNo={}", clubNo);
+
 		return "clubBoard/list";
 	}
 	
@@ -129,7 +142,7 @@ public class ClubBoardController {
 		ClubBoardDto clubBoardDto = clubBoardDao.selectOnes(clubBoardNo);
 		ClubMemberDto clubMemberDto = clubMemberDao.selectOne(clubBoardDto.getClubMemberNo());
 		AttachDto attachDto = memberProfileDao.profileFindOne(clubMemberDto.getClubMemberId());
-		ClubBoardLikeDto clubBoardLikeDto = clubBoardLikeDao.selectOne(clubBoardNo);
+		//ClubBoardLikeDto clubBoardLikeDto = clubBoardLikeDao.selectOne(clubBoardNo);
 		ClubBoardImageDto clubBoardImageDto = clubBoardImageDao.selectOne(clubBoardNo);
 		ClubBoardImage2Dto clubBoardImage2Dto = clubBoardImage2Dao.selectOne(clubBoardNo);
 		ClubBoardImage3Dto clubBoardImage3Dto = clubBoardImage3Dao.selectOne(clubBoardNo);
@@ -137,9 +150,11 @@ public class ClubBoardController {
 		if(clubBoardImageDto != null) model.addAttribute("clubBoardImageDto", clubBoardImageDto);
 		if(clubBoardImage2Dto != null) model.addAttribute("clubBoardImage2Dto", clubBoardImage2Dto);
 		if(clubBoardImage3Dto != null) model.addAttribute("clubBoardImage3Dto", clubBoardImage3Dto);
+		
+		model.addAttribute("clubMemberDto", clubMemberDto);
 		model.addAttribute("clubBoardDto", clubBoardDto);
-		//model.addAttribute("attachDto", attachDto);
-		model.addAttribute("likeDto", clubBoardLikeDto);
+		model.addAttribute("attachDto", attachDto);
+		//model.addAttribute("likeDto", clubBoardLikeDto);
 		return "clubBoard/detail";
 	}
 	
@@ -149,6 +164,9 @@ public class ClubBoardController {
 		ClubBoardImageDto clubBoardImageDto = clubBoardImageDao.selectOne(clubBoardNo);
 		ClubBoardImage2Dto clubBoardImage2Dto = clubBoardImage2Dao.selectOne(clubBoardNo);
 		ClubBoardImage3Dto clubBoardImage3Dto = clubBoardImage3Dao.selectOne(clubBoardNo);
+//		log.debug("clubBoardImageDto ={}", clubBoardImageDto);
+//		log.debug("clubBoardImage2Dto ={}", clubBoardImage2Dto);
+//		log.debug("clubBoardImage3Dto ={}", clubBoardImage3Dto);
 		model.addAttribute("clubBoardDto",clubBoardDto);
 		model.addAttribute("clubBoardImageDto", clubBoardImageDto);
 		model.addAttribute("clubBoardImage2Dto", clubBoardImage2Dto);
@@ -158,33 +176,44 @@ public class ClubBoardController {
 	
 	@PostMapping("/edit")
 	public String edit(@ModelAttribute ClubBoardDto clubBoardDto, @ModelAttribute MemberDto memberDto,
-			HttpSession session, @RequestParam int clubNo, @ModelAttribute ClubBoardImageDto clubBoardImageDto,
-			@ModelAttribute ClubBoardImage2Dto clubBoardImage2Dto, @RequestParam int clubBoardNo,
-			@ModelAttribute ClubBoardImage3Dto clubBoardImage3Dto, @RequestParam MultipartFile attach,
+			HttpSession session, @RequestParam int clubNo, @RequestParam MultipartFile attach, 
 			@RequestParam MultipartFile attachSecond, @RequestParam MultipartFile attachThird) throws IllegalStateException, IOException {
-		log.debug("clubBoardDto = {}", clubBoardDto);
-		ClubBoardDto newBoardDto = clubBoardDao.selectOnes(clubBoardNo);
-		clubBoardDao.update(clubBoardDto);
+//		log.debug("clubBoardDto = {}", clubBoardDto);
+//		log.debug("clubBoardNo = {}", clubBoardDto.getClubBoardNo());
+//		ClubBoardDto newBoardDto = clubBoardDao.selectOnes(clubBoardDto.getClubBoardNo());
+		clubBoardDao.update(clubBoardDto, clubBoardDto.getClubBoardNo());
+		ClubBoardImageDto clubBoardImageDto = clubBoardImageDao.selectOne(clubBoardDto.getClubBoardNo());
+		ClubBoardImage2Dto clubBoardImage2Dto = clubBoardImage2Dao.selectOne(clubBoardDto.getClubBoardNo());
+		ClubBoardImage3Dto clubBoardImage3Dto = clubBoardImage3Dao.selectOne(clubBoardDto.getClubBoardNo());
+//		log.debug("attach ={}", attach);
+//		log.debug("attachSecond ={}", attachSecond);
+//		log.debug("attachThird ={}", attachThird);
+//		log.debug("clubBoardImageDto ={}", clubBoardImageDto);
+//		log.debug("clubBoardImage2Dto ={}", clubBoardImage2Dto);
+//		log.debug("clubBoardImage3Dto ={}", clubBoardImage3Dto);
 		
-		if(!attach.isEmpty()) {
-			fileLoadVO.delete(clubBoardImageDto, attach);
+		if(!attach.isEmpty()) { //사진을 미리 등록해뒀거나 수정에서 추가한 경우
+			fileLoadVO.delete(clubBoardImageDto, attach, clubBoardDto.getClubBoardNo());
 		}
 		if(!attachSecond.isEmpty()) {
-			fileLoadVO.delete2(clubBoardImage2Dto, attachSecond);
+			fileLoadVO.delete2(clubBoardImage2Dto, attachSecond, clubBoardDto.getClubBoardNo());
 		}
 		if(!attachThird.isEmpty()) {
-			fileLoadVO.delete3(clubBoardImage3Dto, attachThird);
+			fileLoadVO.delete3(clubBoardImage3Dto, attachThird, clubBoardDto.getClubBoardNo());
 		}
-		
-		return "redirect:/clubBoard/detail?clubBoardNo="+clubBoardNo;
+		return "redirect:/clubBoard/detail?clubBoardNo="+clubBoardDto.getClubBoardNo();
 	}
 	
 	@RequestMapping("/delete")
 	public String delete(@RequestParam int clubBoardNo) {
 		ClubBoardDto clubBoardDto = clubBoardDao.selectOnes(clubBoardNo);
-		clubBoardDao.delete(clubBoardNo);
-		
-		return "redirect:/clubBoard/list?clubNo="+clubBoardDto.getClubNo();
+		boolean result = clubBoardDao.delete(clubBoardNo);
+		if(result) {
+			return "redirect:/clubBoard/list?clubNo="+clubBoardDto.getClubNo();
+		}
+		else {
+			return "error/500";
+		}
 	}
 	
 	//파일 다운로드

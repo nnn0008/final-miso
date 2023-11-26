@@ -11,7 +11,20 @@
 </style>
 <script>
 $(function(){
-	//$(".content-length").text() = $("[name=clubBoardContent]").length();
+	//$(".content-length").val() = $("[name=clubBoardContent]").length();
+	//console.log($(".first-attach").val() || $(".second-attach").val() == undefined);
+	/*  if($(".first-attach").val() === "") {
+		$(".first-row").hide();
+		$(".first-attached-image").hide();
+	} */
+	/*if($(".second-attach").val() == "" || $(".second-attach").val() == undefined) {
+		$(".second-row").hide();
+		$(".second-attached-image").hide();
+	}
+	if($(".third-attach").val() == "" || $(".third-attach").val() == undefined) {
+		$(".third-row").hide();
+		$(".third-attached-image").hide();
+	} */
 	
 	$(".fail-feedback").hide();
 	 var status = {
@@ -93,14 +106,87 @@ $(function(){
     });
 	
 	//사진을 등록했을 때 다음 파일첨부 input을 보여주는 기능
-	/* $(".second-attach").hide();
-	$(".third-attach").hide();
 	$(".first-attach").on("input",function(){
-		$(".second-attach").show();
+		$(".btn-first-delete").show();
+		$(".first-attached-image").show();
+		$(".first-row").show();
 	});
 	$(".second-attach").on("input",function(){
-		$(".third-attach").show();
-	}); */
+		$(".btn-second-delete").show();
+		$(".second-attached-image").show();
+		$(".second-row").show();
+	});
+	$(".third-attach").on("input", function(){
+		$(".btn-third-delete").show();
+		$(".third-attached-image").show();
+		$(".third-row").show();
+	}); 
+	$(".btn-first-delete").on("click", function(){
+		$(this).hide();
+		$(this).parents(".first-attached").find(".for-attached-image").empty();
+		var image = $(this).parents(".first-attached").find(".first-attach");
+		if(image.val() == ""){
+			var params = new URLSearchParams(location.search);
+			var clubBoardNo = params.get("clubBoardNo");
+			
+			$.ajax({
+				url: window.contextPath + "/rest/clubBoard/deletePhoto",
+				method: "post",
+				data: {
+					clubBoardNo: clubBoardNo,
+				},
+				success: function(response){
+					console.log("등록된 사진 삭제 성공");
+				},
+			});
+		}
+		image.val("");
+	});
+	
+	$(".btn-second-delete").on("click", function(){
+		$(this).hide();
+		$(this).parents(".second-attached").find(".for-attached-image").empty();
+		//$(this).parents(".second-attached").find(".second-attach").val("");
+		var image = $(this).parents(".second-attached").find(".second-attach");
+		if(image.val() == ""){
+			var params = new URLSearchParams(location.search);
+			var clubBoardNo = params.get("clubBoardNo");
+			
+			$.ajax({
+				url: window.contextPath + "/rest/clubBoard/deletePhoto2",
+				method: "post",
+				data: {
+					clubBoardNo: clubBoardNo,
+				},
+				success: function(response){
+					console.log("등록된 사진 삭제 성공2");
+				},
+			});
+		}
+		image.val("");
+	});
+	$(".btn-third-delete").on("click", function(){
+		$(this).hide();
+		$(this).parents(".third-attached").find(".for-attached-image").empty();
+		//$(this).parents(".third-attached").find(".third-attach").val("");
+		var image = $(this).parents(".third-attached").find(".third-attach");
+		if(image.val() == ""){
+			var params = new URLSearchParams(location.search);
+			var clubBoardNo = params.get("clubBoardNo");
+			
+			$.ajax({
+				url: window.contextPath + "/rest/clubBoard/deletePhoto3",
+				method: "post",
+				data: {
+					clubBoardNo: clubBoardNo,
+				},
+				success: function(response){
+					console.log("등록된 사진 삭제 성공3");
+				},
+			});
+		}
+		image.val("");
+	});
 		
 	//사진 미리보기
 	$(".attach-selector").change(function(e){
@@ -121,7 +207,7 @@ $(function(){
 	
 	//Modal로 사진을 볼 때(사진을 클릭하면 Modal을 띄우고 그 사진을 Modal에서 미리보기 할 수 있게)
 	$(document).on("click", ".attach-selected", function(e){
-		console.log(e);
+		//console.log(e);
 		$(".attach-preview-zoomIn").empty();
 		$("<img>").attr("src", $(e.currentTarget).attr("src")).css("max-width", "400px").appendTo(".attach-preview-zoomIn");
 	});
@@ -133,8 +219,11 @@ $(function(){
 
 <form method="post" action="edit" class="write-form" enctype="multipart/form-data" autocomplete="off"> 
 	
-	<input type="hidden" name="clubNo" value="${clubBoardDto.clubNo}">
 	<input type="hidden" name="clubBoardNo" value="${clubBoardDto.clubBoardNo}">
+	<input type="hidden" name="clubNo" value="${clubBoardDto.clubNo}">
+	<%-- <input type="hidden" name="clubMemberNo" value="${clubBoardDto.clubBoardName}">
+	<input type="hidden" name="clubBoardName" value="${clubBoardDto.clubBoardName}">
+	<input type="hidden" name="clubBoardName" value="${clubBoardDto.clubBoardName}"> --%>
 	
 	<div class="row m-2 mt-4">
 		
@@ -142,12 +231,43 @@ $(function(){
 		<div class="row">
 			<div class="col">
 				<select name="clubBoardCategory" class="form-select mt-2">
-					<option value="">카테고리를 고르세요</option>
-					<option value="자유">자유</option>
-					<option value="관심사">관심사</option>
-					<option value="모임후기">모임후기</option>
-					<option value="가입인사">가입인사</option>
-					<option value="공지사항">공지사항</option>
+					<!-- <option value="">카테고리를 고르세요</option> -->
+					<c:if test="${clubBoardDto.clubBoardCategory == '자유'}">
+						<option value="자유" selected>자유</option>
+						<option value="관심사">관심사</option>
+						<option value="모임후기">모임후기</option>
+						<option value="가입인사">가입인사</option>
+						<option value="공지사항">공지사항</option>
+					</c:if>
+					<c:if test="${clubBoardDto.clubBoardCategory == '관심사'}">
+						<option value="자유" selected>자유</option>
+						<option value="관심사" selected>관심사</option>
+						<option value="모임후기">모임후기</option>
+						<option value="가입인사">가입인사</option>
+						<option value="공지사항">공지사항</option>
+					</c:if>
+					<c:if test="${clubBoardDto.clubBoardCategory == '모임후기'}">
+						<option value="자유" selected>자유</option>
+						<option value="관심사">관심사</option>
+						<option value="모임후기" selected>모임후기</option>
+						<option value="가입인사">가입인사</option>
+						<option value="공지사항">공지사항</option>
+					</c:if>
+					<c:if test="${clubBoardDto.clubBoardCategory == '가입인사'}">
+						<option value="자유" selected>자유</option>
+						<option value="관심사">관심사</option>
+						<option value="모임후기">모임후기</option>
+						<option value="가입인사" selected>가입인사</option>
+						<option value="공지사항">공지사항</option>
+					</c:if>
+					<c:if test="${clubBoardDto.clubBoardCategory == '공지사항'}">
+						<option value="자유" selected>자유</option>
+						<option value="관심사">관심사</option>
+						<option value="모임후기">모임후기</option>
+						<option value="가입인사">가입인사</option>
+						<option value="공지사항" selected>공지사항</option>
+					</c:if>
+
 				</select>
 			</div>
 		</div>
@@ -184,48 +304,96 @@ $(function(){
 		</div>
 		
 		<!-- 등록된 이미지가 있다면 보여주기 -->
-		<div class="row mt-4">	
-			<div class="col-4">
-				<input type="file" class="form-control first-attach attach-selector" accept="image/*" name="attach" value="${clubBoardImageDto.attachNo}">
-				<div class="mt-2"></div>
-				<c:if test="${clubBoardImageDto != null }">
-					<div class="row">
+		<div class="row mt-4">
+		<c:choose>
+			<c:when test="${clubBoardImageDto != null }">
+				<div class="col-4 first-attached image-attached">
+					<input type="file" class="form-control first-attach attach-selector w-100" accept="image/*" name="attach" value="${clubBoardImageDto.clubBoardNo}">
+					<div class="mt-2 first-attached-image for-attached-image">
+						<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardImageDto.attachNo}" style="width:162.66px" class="attach-selected" data-bs-toggle="modal" data-bs-target="#exampleModal">
+					</div>
+					<div class="row delete-row first-row">
 						<div class="col">
-							<button type="button" class="btn">기존 사진 지우기</button>
+							<button type="button" class="btn btn-first-delete w-100 btn-photo-delete">사진 지우기</button>
+						</div>
+					</div>	
+				</div>
+			</c:when>	
+			
+			<c:otherwise>
+				<div class="col-4 first-attached image-attached">
+					<input type="file" class="form-control first-attach attach-selector w-100" accept="image/*" name="attach" value="${clubBoardImageDto.clubBoardNo}">
+					<div class="mt-2 first-attached-image for-attached-image">
+					</div>
+					<div class="row delete-row first-row" style="display: none;">
+						<div class="col">
+							<button type="button" class="btn btn-first-delete w-100 btn-photo-delete">사진 지우기</button>
+						</div>
+					</div>	
+				</div>
+			</c:otherwise>
+		</c:choose>
+		
+		<c:choose>
+			<c:when test="${clubBoardImage2Dto != null }">
+				<div class="col-4 second-attached image-attached">
+					<input type="file" class="form-control second-attach attach-selector" accept="image/*" name="attachSecond">
+					<div class="mt-2 second-attached-image for-attached-image">
+						<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardImage2Dto.attachNo}" style="width:162.66px" class="attach-selected" data-bs-toggle="modal" data-bs-target="#exampleModal">
+					</div>
+					<div class="row delete-row second-row">
+						<div class="col">
+							<button type="button" class="btn btn-second-delete w-100 btn-photo-delete">사진 지우기</button>
 						</div>
 					</div>
-				</c:if>			
-			</div>
-
-			<div class="col-4">
-				<input type="file" class="form-control second-attach attach-selector" accept="image/*" name="attachSecond">
-				<div class="mt-2"></div>
-				<c:if test="${clubBoardImage2Dto != null }">
-					<div class="row">
+				</div>
+			</c:when>
+			<c:otherwise>
+				<div class="col-4 second-attached image-attached">
+					<input type="file" class="form-control second-attach attach-selector" accept="image/*" name="attachSecond">
+					<div class="mt-2 second-attached-image for-attached-image">
+					</div>
+					<div class="row delete-row second-row">
 						<div class="col">
-							<button type="button" class="btn">기존 사진 지우기</button>
+							<button type="button" class="btn btn-second-delete w-100 btn-photo-delete" style="display: none;">사진 지우기</button>
 						</div>
 					</div>
-				</c:if>
-			</div>
-
-			<div class="col-4">
-				<input type="file" class="form-control third-attach attach-selector" accept="image/*" name="attachThird">
-				<div class="mt-2"></div>
-				<c:if test="${clubBoardImage3Dto != null }">
-					<div class="row">
+				</div>
+			</c:otherwise>
+		</c:choose>
+		<c:choose>
+			<c:when test="${clubBoardImage3Dto != null}">
+				<div class="col-4 third-attached image-attached">
+					<input type="file" class="form-control third-attach attach-selector" accept="image/*" name="attachThird" class="attach-selected">
+					<div class="mt-2 third-attached-image">
+						<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardImage3Dto.attachNo}" style="width:162.66px" class="attach-selected" data-bs-toggle="modal" data-bs-target="#exampleModal">
+					</div>
+					<div class="row delete-row third-row">
 						<div class="col">
-							<button type="button" class="btn">기존 사진 지우기</button>
+							<button type="button" class="btn btn-third-delete w-100 btn-photo-delete">사진 지우기</button>
 						</div>
 					</div>
-				</c:if>
+				</div>
+			</c:when>
+			<c:otherwise>
+				<div class="col-4 third-attached image-attached">
+					<input type="file" class="form-control third-attach attach-selector" accept="image/*" name="attachThird" class="attach-selected">
+					<div class="mt-2 third-attached-image">
+					</div>
+					<div class="row delete-row third-row">
+						<div class="col">
+							<button type="button" class="btn btn-third-delete w-100 btn-photo-delete" style="display: none;">사진 지우기</button>
+						</div>
+					</div>
+				</div>
+			</c:otherwise>
+		</c:choose>
 				
-			</div>
 		</div>
 		
 		<div class="row mt-2">
 			<div class="col-12">
-				<button type="submit" class="btn btn-success w-100 btn-send">작성하기</button>
+				<button type="submit" class="btn btn-miso w-100 btn-send">수정하기</button>
 			</div>
 		</div>
 		

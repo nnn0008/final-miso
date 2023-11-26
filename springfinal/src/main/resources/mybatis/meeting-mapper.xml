@@ -25,7 +25,8 @@
 		meeting_location = #{meetingLocation},
 		meeting_price = #{meetingPrice},
 		meeting_number = #{meetingNumber},
-		meeting_fix = #{meetingFix}
+		meeting_fix = #{meetingFix},
+		meeting_date = #{meetingDate}
 		where meeting_no = #{meetingNo}
 	</update>
 	
@@ -36,8 +37,29 @@
 	</select>
 	
 	<select id="selectByClubNo" resultType="MeetingDto">
-		select * from meeting where club_no = #{clubNo} order by meeting_no desc
+		select meeting.*,MEETING_DATE -SYSDATE as dday from meeting where club_no = #{clubNo} order by meeting_no desc
 	</select>
+	
+	<select id="meetingListByPage" resultType="MeetingDto">
+	
+	
+	 select * from (
+			        select rownum rn, TMP.* from (
+			        select meeting.*,MEETING_DATE -SYSDATE as dday from meeting 
+			        where club_no = #{whereNo} order by meeting_no desc
+			        ) TMP
+			    )
+			    where rn between #{startRow} and #{finishRow}
+	
+	</select>
+	
+		<select id="countListByPage" resultType="int">
+
+	 				select count(*) from meeting where club_no = #{whereNo} order by meeting_no desc
+
+	 	</select>
+	 	
+	 	
 	
 	<delete id="remove">
 		delete meeting where meeting_no = #{meetingNo}

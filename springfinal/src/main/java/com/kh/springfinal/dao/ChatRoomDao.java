@@ -46,4 +46,10 @@ public interface ChatRoomDao {
 	
 	ClubDto clubInfo(int chatRoomNo);
 	ChatOneMemberListVO oneMembers(int chatRoomNo);
+	
+	String clubMemberRank(String memberId, int clubNo);
+	
+	int isChatRoomMember( String memberId, int chatRoomNo);
+	int isMeetingRoomMember(String memberId, int chatRoomNo);
+	int isOneChatRoomMember(String memberId, int chatRoomNo);
 }

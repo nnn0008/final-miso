@@ -13,7 +13,7 @@ public class PhotoReplyDto {
 	private String photoReplyContent;
 	private Date photoReplyDate;
 	private int photoReplyGroup;
-	private int photoReplyParent;
+	private Integer photoReplyParent;
 	private int photoNo;
 	private int clubMemberNo;
 }

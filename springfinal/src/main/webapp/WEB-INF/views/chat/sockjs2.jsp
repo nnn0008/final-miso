@@ -36,15 +36,51 @@
   width: 70px;
   height: 70px;
   }
+  
+  .online-icon {
+    width: 10px;
+    height: 10px;
+    background-color: #00ff4e;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.offline-icon {
+    width: 10px;
+    height: 10px;
+    background-color: #cfcdcd; 
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+
 </style>
 
 </head>
 
 
 <body>
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col">
+
+<c:if test="${not empty clubDto}">
+    <div class="row">
+        <div class="col-3 pe-0">
+            <a id="homeLink" href="${pageContext.request.contextPath}/club/detail?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100 active">홈</a>
+        </div>
+        <div class="col-3 pe-0">
+            <a id="boardLink" href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100">게시판</a>
+        </div>
+        <div class="col-3 pe-0">
+            <a id="photoLink" href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100">사진첩</a>
+        </div>
+        <c:if test="${not empty clubDto.chatRoomNo}">
+            <div class="col-3">
+                <a id="chatLink" href="${pageContext.request.contextPath}/chat/enterRoom/${clubDto.chatRoomNo}" class="btn btn-miso bg-miso w-100">채팅</a>
+            </div>
+        </c:if>
+    </div>
+</c:if>
+		<div class="row"> 
+
 
 
 				<!-- 메세지 헤더 -->
@@ -55,7 +91,7 @@
                             </div>
                             <div class="user_info">
                                 <span class="circle-name">
-                                   ${clubInfo.clubName} 
+                                   ${circleName}
                                 </span>
                             </div>
                             <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
@@ -78,8 +114,10 @@
 								 <ul class="list-group">
 								 <c:forEach var="member" items="${members}">
 					    <li class="list-group-item d-flex justify-content-between align-items-center">
+					     <span class="offline-icon"  id="clubMemberId_${member.clubMemberId}" value="${member.clubMemberId}"></span>
 					        <img src="/rest/member/profileShow?memberId=${member.clubMemberId}" class="rounded-circle" width="50" height="50">
 					        <span>${member.memberName}</span>
+				        
 					        <c:choose>
 				            <c:when test="${member.clubMemberRank eq '운영진'}">
 				                <span class="badge bg-primary rounded-pill">운영진</span>
@@ -146,6 +184,32 @@
     </li>
 </c:if>
 
+<c:if test="${not empty meetingMembers}">
+ <c:forEach var="member" items="${meetingMembers}">
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <img src="/rest/member/profileShow?memberId=${member.clubMemberId}" class="rounded-circle" width="50" height="50">
+        <span>${member.memberName}</span>
+        <c:choose>
+            <c:when test="${member.clubMemberRank eq '운영진'}">
+                <span class="badge bg-primary rounded-pill">운영진</span>
+            </c:when>
+            <c:otherwise>
+                <span class="badge rounded-pill bg-miso">일반</span>
+            </c:otherwise>
+        </c:choose>
+        <c:choose>
+            <c:when test="${member.clubMemberId eq sessionScope.name}">
+                <span class="badge rounded-pill bg-warning">나</span>
+            </c:when>
+            <c:otherwise>
+                <span class="badge rounded-pill bg-null"> </span>
+            </c:otherwise>
+        </c:choose>
+    </li>
+</c:forEach>
+
+</c:if>
+
                               </ul>
 								
 								</div>
@@ -183,7 +247,7 @@
 								  
 								<input type="text" class="form-control message-input"
 									placeholder="메세지를 입력하세요">
-								<button type="button" class="btn send-btn btn-success bg-miso send-file-btn">
+								<button type="button" class="btn send-btn btn-miso bg-miso send-file-btn">
 									<i class="fa-regular fa-paper-plane"></i> 보내기
 								</button>
 							</div>
@@ -219,37 +283,36 @@
 								<h4 class="mb-2 modal-profile-name">줄리 L. 아르소노</h4>
 								<p class="text-muted mb-4 modal-profile-id"></p>
 								<div class="mb-4 pb-2">
-									<button type="button" class="btn btn-success bg-miso dm-send">메세지
+									<button type="button" class="btn btn-miso bg-miso dm-send">메세지
 										보내기</button>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</div>
-
-		<!-- 모달 -->
-		<div class="modal" id="chatMoreModal">
-		    <div class="modal-dialog">
-		        <div class="modal-content">
-		            <!-- 모달 내용 -->
-		            <div class="modal-body">
-		                <p>채팅방을 지우거나 나가시겠습니까?</p>
-		            </div>
+				</div>
+</div>
+<!-- 		<!-- 모달 -->
+<!-- 		<div class="modal" id="chatMoreModal"> -->
+<!-- 		    <div class="modal-dialog"> -->
+<!-- 		        <div class="modal-content"> -->
+<!-- 		            모달 내용 -->
+<!-- 		            <div class="modal-body"> -->
+<!-- 		                <p>채팅방을 지우거나 나가시겠습니까?</p> -->
+<!-- 		            </div> -->
 		
-		            <!-- 모달 하단 버튼 -->
-		            <div class="modal-footer">
-		                <button type="button" class="btn btn-danger" id="deleteChatRoomBtn">채팅방 지우기</button>
-		                <button type="button" class="btn btn-secondary" id="leaveChatRoomBtn">채팅방 나가기</button>
-		                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-		            </div>
-		        </div>
-		    </div>
-		</div>
+<!-- 		            모달 하단 버튼 -->
+<!-- 		            <div class="modal-footer"> -->
+<!-- 		                <button type="button" class="btn btn-danger" id="deleteChatRoomBtn">채팅방 지우기</button> -->
+<!-- 		                <button type="button" class="btn btn-secondary" id="leaveChatRoomBtn">채팅방 나가기</button> -->
+<!-- 		                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button> -->
+<!-- 		            </div> -->
+<!-- 		        </div> -->
+<!-- 		    </div> -->
+<!-- 		</div> -->
 
 
-	</div>
+<!-- 	</div> -->
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -264,9 +327,18 @@
     window.contextPath = "${pageContext.request.contextPath}";
 </script>
 	
+	
 	<script>
 	//연결 생성
 	//연결 후 해야할 일들을 콜백함수로 지정(onopen, onclose, onerror, onmessage)
+	
+	// jQuery를 사용하는 경우
+$(document).ready(function () {
+    // clubNo가 비어있는 경우 상단 메뉴를 숨김
+    if (!"${not empty clubDto.clubNo}") {
+        $("#homeLink, #boardLink, #photoLink, #chatLink").hide();
+    }
+});
 
 	function connect() {
 	// 클라이언트에서 SockJS로 서버에 접속하는 부분
@@ -278,8 +350,6 @@
 	//console.log(memberName);
 	var oneChatMemberName;
 	var prevMessageDate;
-	
-	
 
 // 	var mapToSend = ${mapToSend}
 //     console.log("mapToSend:", mapToSend);
@@ -388,178 +458,6 @@
 			}
 		});
 	
-	
-// 	function updateChatRoomMembersUI(roomMembers) {
-// 	    $(".client-list").empty();
-// 	    var ul = $("<ul>").addClass("list-group");
-// 	    var loggedInUserItem = null;
-
-// 	    for (var i = 0; i < roomMembers.length; i++) {
-// 	        var clubMemberId = roomMembers[i].clubMemberId;
-// 	        var chatRoomNo = roomMembers[i].chatRoomNo;
-// 	        var clubMemberRank = roomMembers[i].clubMemberRank;
-// 	        var memberName = roomMembers[i].memberName;
-
-// 	        // 레벨에 따라 배지 스타일 변경
-// 	        var badgeClass = "bg-warning";
-// 	        if (clubMemberRank === "운영진") {
-// 	            badgeClass = "bg-success";
-// 	        } else if (clubMemberRank === "일반") {
-// 	            badgeClass = "bg-miso";
-// 	        }
-
-// 	        var listItem = $("<li>")
-// 	            .addClass("list-group-item d-flex justify-content-between align-items-center")
-// 	            .append(
-// 	                $("<img>").addClass("rounded-circle user_img").attr("src", "${pageContext.request.contextPath}/images/member.png").css("width", "50px")
-// 	            )
-// 	            .append(
-// 	                $("<span>").text(memberName)
-// 	            )
-// 	            .append(
-// 	                $("<span>").addClass("badge rounded-pill").addClass(badgeClass)
-// 	                    .text(clubMemberRank)
-// 	            );
-
-// 	        if (clubMemberId === loggedInUserId) {
-// 	            loggedInUserItem = listItem;
-// 	            listItem.append($("<span>").addClass("badge rounded-pill bg-warning").text("나"));
-// 	        } else {
-// 	            listItem.append($("<span>").addClass("badge rounded-pill bg-null").text(" "));
-// 	            ul.append(listItem);
-// 	        }
-// 	    }
-
-// 	    if (loggedInUserItem) {
-// 	        ul.prepend(loggedInUserItem);
-// 	    }
-
-// 	    ul.appendTo(".client-list");
-// 	}
-
-// 	function updateChatOneMembersUI(oneChatMembers) {
-// 	    $(".client-list").empty();
-// 	    var ul = $("<ul>").addClass("list-group");
-// 	    var loggedInUserItem = null;
-
-// 	    for (var i = 0; i < oneChatMembers.length; i++) {
-// 	        var chatSender = oneChatMembers[i].chatSender;
-// 	        var chatReceiver = oneChatMembers[i].chatReceiver;
-// 	        var senderName = oneChatMembers[i].senderName;
-// 	        var receiverName = oneChatMembers[i].receiverName;
-// 	        var senderLevel = oneChatMembers[i].senderLevel;
-// 	        var receiverLevel = oneChatMembers[i].receiverLevel;
-
-// 	        // 레벨에 따라 배지 스타일 변경
-// 	        var badgeClass = "bg-warning";
-// 	        if (senderLevel === "운영진" || receiverLevel === "운영진") {
-// 	            badgeClass = "bg-success";
-// 	        } else if (senderLevel === "일반유저" || receiverLevel === "일반유저") {
-// 	            badgeClass = "bg-miso";
-// 	        }
-
-// 	        // 각 사용자 정보에 대한 리스트 아이템 생성
-// 	        var senderItem = $("<li>")
-// 	            .addClass("list-group-item d-flex justify-content-between align-items-center")
-// 	            .append(
-// 	                $("<img>").addClass("rounded-circle user_img").attr("src", "${pageContext.request.contextPath}/images/member.png").css("width", "50px")
-// 	            )
-// 	            .append(
-// 	                $("<span>").text(senderName)
-// 	            )
-// 	            .append(
-// 	                $("<span>").addClass("badge rounded-pill").addClass(badgeClass)
-// 	                    .text(senderLevel)
-// 	            );
-
-// 	        var receiverItem = $("<li>")
-// 	            .addClass("list-group-item d-flex justify-content-between align-items-center")
-// 	            .append(
-// 	                $("<img>").addClass("rounded-circle user_img").attr("src", "${pageContext.request.contextPath}/images/member.png").css("width", "50px")
-// 	            )
-// 	            .append(
-// 	                $("<span>").text(receiverName)
-// 	            )
-// 	            .append(
-// 	                $("<span>").addClass("badge rounded-pill").addClass(badgeClass)
-// 	                    .text(receiverLevel)
-// 	            );
-
-// 	     // 생성된 아이템을 목록에 추가
-// 	        if (chatSender === loggedInUserId) {
-// 	            loggedInUserItem = senderItem;
-// 	            senderItem.append($("<span>").addClass("badge rounded-pill bg-warning").text("나"));
-// 	        } else {
-// 	            senderItem.append($("<span>").addClass("badge rounded-pill bg-null").text(" "));
-// 	            ul.append(senderItem);
-// 	        }
-
-// 	        if (chatReceiver === loggedInUserId) {
-// 	            loggedInUserItem = receiverItem;
-// 	            receiverItem.append($("<span>").addClass("badge rounded-pill bg-warning").text("나"));
-// 	        } else {
-// 	            receiverItem.append($("<span>").addClass("badge rounded-pill bg-null").text(" "));
-// 	            ul.append(receiverItem);
-// 	        }
-// 	    }
-
-// 	    // 현재 로그인한 사용자의 아이템을 목록 맨 위로 이동
-// 	    if (loggedInUserItem) {
-// 	        ul.prepend(loggedInUserItem);
-// 	    }
-
-// 	    // 목록을 페이지에 추가
-// 	    ul.appendTo(".client-list");
-// 	}
-
-// 	$(document).ready(function() {
-// 	    // 페이지 로드 시 실행되는 코드
-// 	    var chatRoomNo = getRoomNoFromURL();
-	    
-// 	    // getMemberList 호출
-// 	    $.ajax({
-// 	        url: window.contextPath+"/getMemberList",
-// 	        type: "GET",
-// 	        data: { chatRoomNo: chatRoomNo },
-// 	        success: function(data) {
-// 	            console.log("Member List:", data);
-// 	            // 업데이트 함수 호출
-// 	            updateChatRoomMembersUI(data, loggedInUserId);
-// 	        },
-// 	        error: function(xhr, status, error) {
-// 	            console.error("Error fetching member list:", status, error);
-// 	        }
-// 	    });
-	    
-// 	    // getChatOneMemberList 호출
-// 	    $.ajax({
-// 	        url: window.contextPath+"/getChatOneMemberList",
-// 	        type: "GET",
-// 	        data: { chatRoomNo: chatRoomNo },
-// 	        success: function(data) {
-// 	            console.log("Chat One Member List:", data);
-// 	            updateChatOneMembersUI(data, loggedInUserId);
-// 	        },
-// 	        error: function(xhr, status, error) {
-// 	            console.error("Error fetching chat one member list:", status, error);
-// 	        }
-// 	    });
-	    
-// 	    $.ajax({
-// 	    	url:window.contextPath+"/getMettingMemberList",
-// 	    	type: "GET",
-// 	    	data : {chatRoomNo : chatRoomNo},
-// 	    	success: function (data) {
-// 	    		console.log("Metting Member List:", data);
-// 				updateChatRoomMembersUI(data, loggedInUserId);
-// 			},
-// 			 error: function(xhr, status, error) {
-// 		            console.error("Error fetching meeting member list:", status, error);
-// 			 }	    
-// 	});
-
-	    
-// 	});
 
 	
 		//메세지 처리
@@ -567,11 +465,64 @@
 		
 		
 		var data = JSON.parse(e.data);
-// 		console.log(data);
-// 		console.log(clubName);
+		console.log(data);
 		
-	
+		var clubMemberRank;
 
+		
+		if (data.messageType === 'join') {
+		    var chatSender = data.chatSender;
+		    
+		    var onlineMemberElement = document.getElementById("clubMemberId_" + chatSender);
+		    console.log(onlineMemberElement);
+
+		    if (onlineMemberElement) {
+		        // 온라인 상태인 경우
+		        if (onlineMemberElement.classList.contains('offline-icon')) {
+		            onlineMemberElement.classList.remove('offline-icon');
+		            onlineMemberElement.classList.add('online-icon');
+		            console.log('온라인 상태입니다.');
+		        } else {
+		            console.log('이미 온라인 상태입니다.');
+		        }
+		    } else {
+		        // 오프라인 상태인 경우
+		        console.log('오프라인 상태입니다.');
+		    }
+		}
+
+
+
+if (data.messageType === "delete") {
+    console.log("Received delete event:", data);
+
+    // 여기서 data.chatNo를 사용하도록 수정
+    var chatNo = data.chatNo;
+    console.log("chatNo:", chatNo);
+
+    // 내가 보낸 메시지인 경우
+    var messageContainerSend = $(".message-list").find(".msg_cotainer_send[data-chatNo='" + chatNo + "']");
+    console.log("Found message container (send):", messageContainerSend);
+
+    // 상대방이 보낸 메시지인 경우
+    var messageContainerReceive = $(".message-list").find(".msg_cotainer[data-chatNo='" + chatNo + "']");
+    console.log("Found message container (receive):", messageContainerReceive);
+
+    if (messageContainerSend.length > 0) {
+        console.log("Before updating text (send):", messageContainerSend.text());
+        messageContainerSend.text("삭제된 메시지입니다");
+        console.log("After updating text (send):", messageContainerSend.text());
+    } else if (messageContainerReceive.length > 0) {
+        console.log("Before updating text (receive):", messageContainerReceive.text());
+        messageContainerReceive.text("삭제된 메시지입니다");
+        console.log("After updating text (receive):", messageContainerReceive.text());
+    } else {
+        console.log("Message container not found for chatNo:", chatNo);
+    }
+}
+
+
+	
 		//메세지 타입이 디엠이라면 해당 룸번호로 이동
 		if(data.messageType === "dm" && data.chatRoomNo){
 			moveToRoom(data.chatRoomNo);
@@ -634,13 +585,13 @@
 
 		
 		if (data.content) { // 메세지 처리 
-		
+			
 			
 		    var memberId = "${sessionScope.name}";
 		   // console.log(memberId);
 		    var chatSender = data.memberId;
 		   // console.log("sender",chatSender)
-		    
+
 		    var memberName = data.memberName;
 		    var oneChatMemberName = data.oneChatMemberName;
 // 			console.log("oneChatMemberName",oneChatMemberName);
@@ -650,7 +601,7 @@
 		    var chatTimeAsString = data.chatTime; // JSON에서 문자열로 가져온 chatTime
 		    var chatTime = new Date(chatTimeAsString); // 문자열을 Date 객체로 변환
 		    var messageDate = chatTime.toDateString(); // 날짜 정보만 추출
-		    
+		    	    
 		    var profileImageUrl = data.profileImageUrl
 // 		    console.log(data.profileImageUrl);
 
@@ -671,23 +622,14 @@
 		    }
 		            
 		    var content = $("<div>").text(data.content);
-		    var memberLevel = $("<span>").text(data.memberLevel).addClass("badge rounded-pill ms-2");
 
-		    // 메세지 레벨에 따라 배지 스타일 변경
-		    if (data.memberLevel == "일반") {
-		        memberLevel.addClass("bg-gray");
-		    } else if (data.memberLevel == "관리자") {
-		        memberLevel.addClass("bg-danger");
-		    } else if (data.memberLevel == "VIP") {
-		        memberLevel.addClass("bg-warning");
-		    }
-		  
+		    
 		    if (memberId === chatSender) {
 		        // 본인 메시지 (오른쪽에 표시)
 		        var messageDiv = $("<div>").addClass("d-flex justify-content-end mb-4 mt-2");
-
-		        var messageContainer = $("<div>").addClass("msg_cotainer_send");
-
+		        var messageContainer = $("<div>").addClass("msg_cotainer_send").attr("data-chatNo", data.chatNo);
+// 		 		console.log(messageContainer);
+		        
 		        // 파일인 경우 이미지 태그를 추가
 		        if (data.messageType === "file") {
 // 		            console.log("file data: ", data);
@@ -697,9 +639,9 @@
 		            messageContainer.append(img);
 		        } else {
 		            // 텍스트인 경우 텍스트 추가
-		            messageContainer.text(data.content);
+		        	 messageContainer.text(data.content);
 		        }
-
+		        
 		        var imageContainer = $("<div>").addClass("img_cont_msg");
 		        var profileImage = $("<img>").css("width", "45px").addClass("rounded-circle user_img_msg");
 
@@ -716,6 +658,7 @@
 		                $(this).attr("src", defaultImageUrl);
 		            });
 		        }
+		        
 
 		        imageContainer.append(profileImage);
 
@@ -724,81 +667,111 @@
 
 		        var contentDiv = $("<div>").addClass("d-flex flex-column");
 		        contentDiv.append(messageContainer);
-
+				
 		        if (data.chatBlind === 'N') {
-		        	var deleteIcon = $("<span>")
-		            .addClass("delete-icon delete-right")
-		            .html('<i class="fas fa-times"></i>')
-		            .hide() // 일단 숨겨둠
-		            .on("click", function () {
-		                var messageDiv = $(this).closest(".d-flex");
-		                var messageContent = $(".msg_cotainer_send", messageDiv);
+		            var deleteIcon = $("<span>")
+		                .addClass("delete-icon delete-right")
+		                .html('<i class="fas fa-times"></i>')
+		                .hide() // 일단 숨겨둠
+		                .on("click", function () {
+		                    var messageDiv = $(this).closest(".d-flex");
+		                    var messageContent = $(".msg_cotainer_send", messageDiv);
+		                    var chatNo = messageContainer.attr("data-chatNo");
+		                    console.log("chatNo", chatNo);
+							
+		                    var memberId = "${sessionScope.name}";
+		                    var memberLevel = "${sessionScope.level}";
+		                    console.log("memberLevel",memberLevel);
+		                    
+		                    $.ajax({
+		                    	type:"GET",
+		                    	url: window.contextPath +'/getClubMemberRank',
+		                    	 data: {
+		                    	        memberId: memberId,
+		                    	        chatRoomNo: chatRoomNo
+		                    	    },
+		                    	    success: function (response) {
+		                                // 서버에서 받은 응답 처리
+		                                var clubMemberRank = response;
 
-		                var chatNo = data.chatNo;
-		                console.log("chatNo", chatNo);
-					
-		                var confirmDelete = confirm("메시지를 정말 삭제하시겠습니까?");
-		                
-		                if (confirmDelete) {
-		                // 서버에 업데이트 요청을 보냄
-		                $.ajax({
-		                    url: window.contextPath +'/updateBlind',
-		                    type: 'POST',
-		                    contentType: 'application/json',
-		                    data: JSON.stringify({ chatNo: chatNo }),
-		                    success: function (response) {
-		                        // 업데이트 성공 시 클라이언트에서 추가 작업을 수행
-		                        console.log('업데이트 성공');
-				                messageContent.html("삭제된 메시지입니다");
-				                
-				             // 서버로 delete 메시지 타입을 보냄
-				                socket.send(JSON.stringify({ 
-				                	messageType: 'delete',
-				                	chatNo: chatNo,
-				                	chatRoomNo: chatRoomNo
-				                }));
-				                
-				                deleteIcon.remove();
-			                    deleteIcon.hide();	
-		                    },
-		                    error: function (error) {
-		                        console.error(error);
-		                    }
+		                                // data.clubMemberRank 값이 '운영진'일 때만 삭제 동작
+		                                if (clubMemberRank === '운영진' || memberLevel === '파워유저') {
+		                                    var confirmDelete = confirm("메시지를 정말 삭제하시겠습니까?");
+
+		                                    if (confirmDelete) {
+		                                        // 서버에 업데이트 요청을 보냄
+		                                        var deleteMessage = {
+		                                            messageType: "delete",
+		                                            chatNo: chatNo,
+		                                            chatRoomNo: chatRoomNo,
+		                                        };
+
+		                                        window.socket.send(JSON.stringify(deleteMessage));
+		                                        $(this).hide();
+		                                        messageContent.text("삭제된 메시지입니다");
+		                                    }
+		                                } else {
+		                                	// 경고창을 띄워서 권한이 없음을 알림
+		                                	var alertDiv = $("<div>").addClass("alert alert-dismissible alert-light alert-container")
+											    .css({
+											        textAlign: "center", // 텍스트를 가운데 정렬
+											    })
+											    .append('<button type="button" class="btn-close" data-bs-dismiss="alert"></button>')
+											    .append('<strong>권한이 없습니다. </strong><br>')
+											    .append('<span class="badge bg-success rounded-pill bg-miso">파워유저</span>가 되어보세요! <br>')
+											    .append('<a href="/pay/product" class="alert-link btn btn-miso bg-miso w-100 mt-2">구매하기</a>');
+
+
+		                                	// 경고창을 body에 표시
+		                                	$("body").append(alertDiv);
+
+		                                	// 메세지 리스트 위로 띄우기
+		                                	var messageList = $(".message-list");
+		                                	alertDiv.insertBefore(messageList); // 메세지 리스트 앞에 추가
+
+		                                	alertDiv.css({
+		                                	    position: "absolute",
+		                                	    width:"350px",
+		                                	    top:"340px",
+		                                	    left:"320px",
+		                                	    "z-index": 3, 
+		                                	});
+
+		                                }
+		                            },
+		                            error: function (error) {
+		                                // 오류 처리
+		                                console.error("Error fetching clubMemberRank:", error);
+		                            }
+		                        });
+		                    });
+
+		                // 삭제 아이콘을 메시지 박스에 추가하고 숨겨둠
+		                messageContainer.append(deleteIcon);
+
+		                // 마우스가 메시지 박스 위로 올라갈 때 삭제 아이콘을 표시
+		                messageContainer.on("mouseenter", function () {
+		                    deleteIcon.show();
 		                });
-		                }
-		                else{
-		                	
-		                }
-		            });
 
-		        // 삭제 아이콘을 메시지 박스에 추가하고 숨겨둠
-		        messageContainer.append(deleteIcon);
+		                // 마우스가 메시지 박스 바깥으로 나갈 때 삭제 아이콘을 숨김
+		                messageContainer.on("mouseleave", function () {
+		                    deleteIcon.hide();
+		                });
+		            }
 
-		        // 마우스가 메시지 박스 위로 올라갈 때 삭제 아이콘을 표시
-		        messageContainer.on("mouseenter", function () {
-		            deleteIcon.show();
-		        });
+		            messageDiv.append(timeSpan).append(contentDiv).append(imageContainer);
 
-		        // 마우스가 메시지 박스 바깥으로 나갈 때 삭제 아이콘을 숨김
-		        messageContainer.on("mouseleave", function () {
-		            deleteIcon.hide();
-		        });
-
-				   }
-
-		        messageDiv.append(timeSpan).append(contentDiv).append(imageContainer);
-
-		        $(".message-list").append(messageDiv);
-		        
-		        // 새로운 메시지가 추가된 후에 isBlind 값을 확인하여 UI 업데이트
-// 		        updateMessageVisibility(data);
-		    }  else {
+		            $(".message-list").append(messageDiv);
+		            
+		    } else {
 		    	
 		    	// 상대방 메시지 (왼쪽에 표시)
 		    	var messageDiv = $("<div>").addClass("d-flex mb-4 align-items-start mt-2");
 
 		    	   var imageContainer = $("<div>").addClass("img_cont_msg");
 			        var profileImage = $("<img>").css("width", "45px").addClass("rounded-circle user_img_msg");
+			        
 
 			        // 프로필 이미지 URL이 존재하는 경우
 			        if (profileImageUrl) {
@@ -868,8 +841,9 @@
 				   var nicknameDiv = $("<div>").addClass("msg_nickname")
 				       .text(data.memberId === data.memberName ? oneChatMemberName : memberName);
 
-				   var messageContainer = $("<div>").addClass("msg_cotainer");
-
+				   var messageContainer = $("<div>").addClass("msg_cotainer").attr("data-chatNo", data.chatNo);
+				   console.log(messageContainer);
+					
 				   // 파일인 경우 이미지 태그를 추가
 				   if (data.messageType === "file") {
 // 				       console.log("file data: ", data);
@@ -881,52 +855,90 @@
 				       // 텍스트인 경우 텍스트 추가
 				       messageContainer.text(data.content);
 				   }
-
+				   
+// 				   if(data.messageType === "delete"){
+// 					   console.log("Received delete event:", data);
+// 					   var messageContainer = $(".message-list").find(".msg_cotainer[data-chatNo='" + chatNo + "']");
+// 					   console.log("Found message container:", messageContainer);
+// 					    console.log("Before updating text:", messageContainer.text());
+// 					   messageContainer.text("삭제된 메시지라고");
+// 				   }
+				   
 				   contentDiv.append(nicknameDiv).append(messageContainer);
-
+				   
 				   if (data.chatBlind === 'N') {
-				       // 삭제 아이콘 및 클릭 이벤트 처리
-				       var deleteIcon = $("<span>")
-				           .addClass("delete-icon delete-left")
-				            .hide() // 일단 숨겨둠
-				           .html('<i class="fas fa-times"></i>')
-				           .on("click", function() {
-				               var messageDiv = $(this).closest(".d-flex");
-				               var messageContent = $(".msg_cotainer", messageDiv);
+			            var deleteIcon = $("<span>")
+			                .addClass("delete-icon delete-right")
+			                .html('<i class="fas fa-times"></i>')
+			                .hide() // 일단 숨겨둠
+			                .on("click", function () {
+			                    var messageDiv = $(this).closest(".d-flex");
+			                    var messageContent = $(".msg_cotainer_send", messageDiv);
+			                    var chatNo = messageContainer.attr("data-chatNo");
+			                    console.log("chatNo", chatNo);
+								
+			                    var memberId = "${sessionScope.name}";
+			                    
+			                    $.ajax({
+			                    	type:"GET",
+			                    	url: window.contextPath +'/getClubMemberRank',
+			                    	 data: {
+			                    	        memberId: memberId,
+			                    	        chatRoomNo: chatRoomNo
+			                    	    },
+			                    	    success: function (response) {
+			                                // 서버에서 받은 응답 처리
+			                                var clubMemberRank = response;
 
-				               var chatNo = data.chatNo;
-				               console.log("chatNo", chatNo);
+			                                // data.clubMemberRank 값이 '운영진'일 때만 삭제 동작
+			                                if (clubMemberRank === '운영진') {
+			                                    var confirmDelete = confirm("메시지를 정말 삭제하시겠습니까?");
 
-				                var confirmDelete = confirm("메시지를 정말 삭제하시겠습니까?");
-				                
-				                if (confirmDelete) {
-				               // 서버에 업데이트 요청을 보냄
-				               $.ajax({
-				                   url: window.contextPath +'/updateBlind',
-				                   type: 'POST',
-				                   contentType: 'application/json',
-				                   data: JSON.stringify({ chatNo: chatNo }),
-				                   success: function(response) {
-				                       console.log('업데이트 성공');
-						                messageContent.html("삭제된 메시지입니다");
-						                
-						             // 서버로 delete 메시지 타입을 보냄
-						                socket.send(JSON.stringify({ messageType: 'delete', chatNo: chatNo }));
+			                                    if (confirmDelete) {
+			                                        // 서버에 업데이트 요청을 보냄
+			                                        var deleteMessage = {
+			                                            messageType: "delete",
+			                                            chatNo: chatNo,
+			                                            chatRoomNo: chatRoomNo,
+			                                        };
 
-						                
-						                deleteIcon.remove();
-					                    deleteIcon.hide();						                    
-		
-				                   },
-				                   error: function (error) {
-				                        console.error(error);
-				                    }
-				                });
-				                }
-				                else{
-				                	
-				                }
-				            });
+			                                        window.socket.send(JSON.stringify(deleteMessage));
+			                                        $(this).hide();
+			                                        messageContent.text("삭제된 메시지입니다");
+			                                    }
+			                                } else {
+			                                	// 경고창을 띄워서 권한이 없음을 알림
+			                                	var alertDiv = $("<div>").addClass("alert alert-dismissible alert-light alert-container")
+												    .css({
+												        textAlign: "center", // 텍스트를 가운데 정렬
+												    })
+												    .append('<button type="button" class="btn-close" data-bs-dismiss="alert"></button>')
+												    .append('<strong>권한이 없습니다. </strong><br>')
+												    .append('<span class="badge bg-primary rounded-pill">운영진</span>만 가능해요! <br>')
+
+			                                	// 경고창을 body에 표시
+			                                	$("body").append(alertDiv);
+
+			                                	// 메세지 리스트 위로 띄우기
+			                                	var messageList = $(".message-list");
+			                                	alertDiv.insertBefore(messageList); // 메세지 리스트 앞에 추가
+
+			                                	alertDiv.css({
+			                                	    position: "absolute",
+			                                	    width:"350px",
+			                                	    top:"340px",
+			                                	    left:"320px",
+			                                	    "z-index": 3, 
+			                                	});
+			                                }
+			                            },
+			                            error: function (error) {
+			                                // 오류 처리
+			                                console.error("Error fetching clubMemberRank:", error);
+			                            }
+			                        });
+			                    });
+				      
 
 				        // 삭제 아이콘을 메시지 박스에 추가하고 숨겨둠
 				        messageContainer.append(deleteIcon);
@@ -940,33 +952,23 @@
 				        messageContainer.on("mouseleave", function () {
 				            deleteIcon.hide();
 				        });
-
 				   }
-
+				 
+				   
+				   
 				   var timeSpan = $("<div>").addClass("time-left")
 				       .append($("<span>").addClass("msg_time").text(formattedTime));
-
+				   
 				   messageDiv.append(imageContainer).append(contentDiv).append(timeSpan);
 
 				   $(".message-list").append(messageDiv);
 
-				   // 새로운 메시지가 추가된 후에 isBlind 값을 확인하여 UI 업데이트
-// 				    updateMessageVisibility(data);
 		}
 		// 스크롤바 이동
 		$(".message-list").scrollTop($(".message-list")[0].scrollHeight);		
 		    }
 	}
 
-// 		// 메시지의 가시성을 업데이트하는 함수
-// 		function updateMessageVisibility(data) {
-// 		    // isBlind 값이 'true'인 경우 해당 메시지를 숨김
-// 		    console.log(data.isBlind);
-// 		    if (data.isBlind === true) {
-// 		        var lastMessage =  messageContent.html("삭제된 메시지입니다");
-// 		        lastMessage.hide();
-// 		    }
-// 		}
 		
 		//메세지를 전송하는 코드
 		//-메세지가 @로 시작하면 DM으로 처리(아이디 유무 검사정도 하면 좋음)
@@ -981,30 +983,66 @@
 		$(".send-btn").click(function () {
 		    sendMessage();
 		});
+
+
 		
-	 
-		// dm 요청 함수
-		$(".dm-send").on("click", function () {
-		    // 모달에서 상대방 정보 가져오기
-		    var chatReceiver = $("#profileModal .modal-profile-id").text().trim();
+// dm 요청 함수
+$(".dm-send").on("click", function () {
+    // 모달에서 상대방 정보 가져오기
+    var chatReceiver = $("#profileModal .modal-profile-id").text().trim();
+    var memberLevel = "${sessionScope.level}";
 
-		    // "@" 이후의 문자열 추출
-		    var atSymbolIndex = chatReceiver.indexOf("@");
-		    var relativeUserId = atSymbolIndex !== -1 ? chatReceiver.slice(atSymbolIndex + 1) : null;
+    if (memberLevel === '파워유저') {
+        // "@" 이후의 문자열 추출
+        var atSymbolIndex = chatReceiver.indexOf("@");
+        var relativeUserId = atSymbolIndex !== -1 ? chatReceiver.slice(atSymbolIndex + 1) : null;
 
-		    // 채팅 메시지 객체 생성
-		    var dm = {
-		        messageType: "dm",
-		        chatSender: "${sessionScope.name}", // 사용자 이름 또는 아이디 등
-		        chatReceiver: relativeUserId, // "@" 이후의 문자열을 상대방 아이디로 사용
-		    };
+        // 채팅 메시지 객체 생성
+        var dm = {
+            messageType: "dm",
+            chatSender: "${sessionScope.name}", // 사용자 이름 또는 아이디 등
+            chatReceiver: relativeUserId, // "@" 이후의 문자열을 상대방 아이디로 사용
+        };
 
-		    // WebSocket을 통해 서버로 메시지 전송
-		    window.socket.send(JSON.stringify(dm));
+        // WebSocket을 통해 서버로 메시지 전송
+        window.socket.send(JSON.stringify(dm));
 
-		    console.log("DM 메시지 전송 완료");
-		    console.log(dm);
-		});
+        console.log("DM 메시지 전송 완료");
+        console.log(dm);
+    } else {
+        // '파워유저'가 아닌 경우에는 경고창 표시
+    	var alertDiv = $("<div>").addClass("alert alert-dismissible alert-light alert-container")
+	    .css({
+	        textAlign: "center", // 텍스트를 가운데 정렬
+	    })
+	    .append('<button type="button" class="btn-close" data-bs-dismiss="alert"></button>')
+	    .append('<strong>권한이 없습니다. </strong><br>')
+	    .append('<span class="badge bg-success rounded-pill bg-miso">파워유저</span>가 되어보세요! <br>')
+	    .append('<a href="/pay/product" class="alert-link btn btn-miso bg-miso w-100 mt-2">구매하기</a>');
+
+
+	// 경고창을 body에 표시
+	$("body").append(alertDiv);
+
+	// 메세지 리스트 위로 띄우기
+	var messageList = $(".message-list");
+	alertDiv.insertBefore(messageList); // 메세지 리스트 앞에 추가
+
+	// 모달창의 z-index 값 확인
+	var modalZIndex = $('#profileModal').css('z-index');
+
+	// 경고창의 z-index 설정
+	alertDiv.css({
+	    position: "absolute",
+	    width: "350px",
+	    top: "340px",
+	    left: "320px",
+	    "z-index": parseInt(modalZIndex) + 1, // 모달창의 z-index보다 큰 값으로 설정
+	});
+
+    }
+});
+
 
 		
 		// 메시지 전송 함수

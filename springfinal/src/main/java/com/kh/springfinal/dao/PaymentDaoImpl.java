@@ -62,5 +62,7 @@ public class PaymentDaoImpl implements PaymentDao {
 	public List<PaymentListVO> selectTotalListByMember(String paymentMember) {
 		return sqlSession.selectList("payment.listAll",paymentMember);
 	}
+	
+
 
 }

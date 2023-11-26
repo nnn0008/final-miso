@@ -47,30 +47,25 @@
 	<update id="editUnit">
 		update club_board
 		<set>
-			<if test="clubBoardCategory != null">
-				club_board_category = #{clubBoardDto.clubBoardCategory}
-			</if>
-			<if test="clubBoardTitle != null">
-				club_board_category = #{clubBoardDto.clubBoardCategory}
-			</if>
-			<if test="clubBoardContent != null">
-				club_board_category = #{clubBoardDto.clubBoardCategory}
-			</if>
+			club_board_category = #{clubBoardDto.clubBoardCategory},
+			club_board_title = #{clubBoardDto.clubBoardTitle},
+			club_board_content = #{clubBoardDto.clubBoardContent}
 		</set>
-		where club_board_no = #{clubBoardDto.clubBoardNo}
+		where club_board_no = #{clubBoardNo}
 	</update>
 	
 	<select id="findClubMemberNo" resultType="clubMemberDto">
 		select * from club_member where club_no = #{clubNo} and club_member_id = #{clubMemberId}
 	</select>
 	
-	<select id="selectListByPage" resultType="clubBoardAllDto">
-		select * from (
-			select rownum rn, TMP.* from (
-				select * from club_board_all where club_no = #{clubNo}
-			) TMP
-		) where rn between #{begin} and #{end}
-	</select>
+<!-- 	<select id="selectListByPage" resultType="clubBoardAllDto"> -->
+<!-- 		select * from ( -->
+<!-- 			select rownum rn, TMP.* from ( -->
+<!-- 				select * from club_board_all where club_no = #{clubNo} -->
+<!-- 			) TMP -->
+<!-- 		) where rn between #{begin} and #{end} -->
+<!-- 	</select> -->
+
 	
 	<select id="finds" resultType="clubBoardDto">
 		select * from club_board where club_board_no = #{clubBoardNo}
@@ -94,6 +89,50 @@
 		update club_board set club_board_likecount = (select count(*) from club_board_like
 		where club_board_no = #{clubBoardNo}) where club_board_no = #{clubBoardNo}
 	</update>
+	
+	<select id="clubDetailBoardList" resultType="clubDetailBoardListVO">
+	SELECT cb.club_board_no,
+	cb.club_no,
+	cb.club_board_title,
+	cb.club_board_content,
+	cb.club_board_date,
+	cb.club_board_category,
+	m.member_id,m.member_name,
+	a.attach_no 
+	FROM club_board cb 
+	JOIN 
+	club_member cm 
+	ON
+	cm.CLUB_MEMBER_NO = cb.CLUB_MEMBER_NO 
+	JOIN 
+	MEMBER m 
+	ON 
+	cm.CLUB_MEMBER_ID = m.MEMBER_Id 
+	left outer join member_profile mp 
+	on m.member_id = mp.member_id 
+	left outer join attach a 
+	on mp.attach_no = a.attach_no
+	WHERE cb.CLUB_no=#{clubNo}
+	</select>
+	
+	<select id="selectListByPage" resultType="clubBoardAllDto">
+		select * from (
+				select rownum rn, TMP.* from(
+			select * from club_board_all 
+			<where>
+				club_no  = #{clubNo}
+				<if test="keyword != null">
+					and club_board_category = #{keyword}
+				</if>		
+			</where>
+			order by club_board_no desc 
+				)TMP
+			) where rn between #{startRow} and #{finishRow}
+	</select>
+	
+	<select id="boardCount" resultType="int">
+		select count(*) from club_board_all where club_no = #{clubNo}
+	</select>
 	
 
 	</mapper>

@@ -4,14 +4,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.kh.springfinal.dto.ChatDto;
-import com.kh.springfinal.dto.ClubDto;
 
 public interface ChatDao {
 	void insert(ChatDto dto); 
 	List<ChatDto> list(); //채팅 전체 리스트 
 	List<ChatDto> getChatHistory(int chatRoomNo); //채팅 내역
 
-	ChatDto chatLastMsg(int chatRoomNo); //채팅방 마지막 메세지
+	List<ChatDto> chatLastMsg(int chatRoomNo); //채팅방 마지막 메세지
 	
 	List<ChatDto> getChatHistoryDetail(int chatRoomNo, String chatSender); //멤버별 채팅방 메시지
 	List<ChatDto> getMeetingHistory(int chatRoomNo, String chatSender); //정모 멤버별 채팅방 메시지
@@ -23,5 +22,6 @@ public interface ChatDao {
 	int sequence();
 	
 	boolean chatBlindCheck(int chatNo); //채팅 블라인드 처리 확인
+	String chatBliindCheck(int chatNo);
 
 }
