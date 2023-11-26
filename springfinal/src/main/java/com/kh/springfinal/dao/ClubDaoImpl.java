@@ -156,6 +156,11 @@ public class ClubDaoImpl implements ClubDao{
 	}
 	
 	@Override
+	public boolean updatePremiumClub(int clubNo) {
+		return sqlSession.update("club.updatePremiumClub",clubNo)>0;
+	}
+	
+	@Override
 	public boolean updateDownPremium(String memberId) {
 		return sqlSession.update("club.updateDownPremium",memberId)>0;
 	}
@@ -176,9 +181,15 @@ public class ClubDaoImpl implements ClubDao{
 		return sqlSession.selectOne("club.clubFindOwner",clubOwner);
 	}
 	
-
+@Override
+public List<ClubDto> clubListFindOwner(String clubOwner) {
+	return sqlSession.selectList("club.clubFindOwner",clubOwner);
+}
 	
-	
+	@Override
+	public ClubDto clubSelectOne(int clubNo) {
+		return sqlSession.selectOne("club.clubSelectOne", clubNo);
+	}
 	
 
 }

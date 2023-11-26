@@ -35,6 +35,7 @@ public interface ClubDao {
 	
 	List<MemberPreferInfoVO> memberPreferInfo(String memberId);
 	boolean updatePremium(String memberId);
+	boolean updatePremiumClub(int clubNo);
 	boolean updateDownPremium(String memberId);
 	boolean schedulerClub(String clubOwner);
 	
@@ -42,4 +43,6 @@ public interface ClubDao {
 	
 	int memberMakeClubCount(String memberId);
 	
+	List<ClubDto> clubListFindOwner(String clubOwner);
+	ClubDto clubSelectOne(int clubNo);
 }

@@ -69,20 +69,40 @@
    font-size: 16px; /* 아이콘의 크기 조절 */
 }
 
+/* .position-relative { */
+/*     position: relative; */
+/* } */
+
+
+/* .meeting-member-badge{ */
+/*    border-radius: 50%; */
+/*    background-color: #66DFD2; */
+/*    color: #ffffff; */
+/*    top: 50px;  */
+/*    left:0px;  */
+/*     z-index: 2;  */
+/* } */
+
+.parent-container {
+    position: relative;
+}
+
+.meeting-member-badge {
+ 	 border-radius: 50%;
+    position: absolute;
+    top: -25px; 
+    left: 30px; 
+    background-color: #66DFD2;
+    color: #ffffff;
+}
+
+
 .fa-star {
    border-radius: 50%;
    background-color: #FFBCF0;
    color: #ffffff;
 }
 
-.translate-middle {
-   border-radius: 50%;
-   background-color: #66DFD2;
-   color: #ffffff;
-   top: 260px;
-   left: 63px;
-   transform: translate(-50%, -50%);
-}
 
 .preview-wrapper2 {
    width: 466px; /* 부모 요소의 너비 지정 */
@@ -745,48 +765,43 @@ $(".meetingFix").change(function(){
                     
                     $(htmlTemplate).find(".monthAndDay").text(modifiedDateString);
                     
-           
+                    
+                    var profileList = $(htmlTemplate).find(".profileList");
+                    profileList.addClass("d-flex align-items-center flex-wrap"); // flex-wrap 추가
 
-                    $(htmlTemplate).find(".profileList")
-                    .addClass("d-flex align-items-center"); // 가로로 정렬
+                    for (var a = 0; a < attendMemberList.length; a++) {
+                        var aLink = $('<a>').attr('href', "/member/mypage?memberId=" + attendMemberList[a].clubMemberId);
 
-                for (var a = 0; a < attendMemberList.length; a++) {
-                    var aLink = $('<a>').attr('href', "/member/mypage?memberId=" + attendMemberList[a].clubMemberId);
-                    
-                    
-                    if(attendMemberList[a].attachNo != 0){
-                       
-                       var image = $('<img>')
-                        .addClass("rounded-circle me-3")
-                        .attr('src', "/rest/member/profileShow?memberId=" + attendMemberList[a].clubMemberId)
-                        .attr('width', '50')
-                        .attr('height', '50');
-                       
-                    }
-                    if(attendMemberList[a].attachNo==0){
-                       var image = $('<img>')
-                        .addClass("rounded-circle me-3")
-                        .attr('src', "/images/basic-profile.png")
-                        .attr('width', '50')
-                        .attr('height', '50');
-                       
-                       
-                    }
-                    
+                        if (attendMemberList[a].attachNo != 0) {
+                            var image = $('<img>')
+                                .addClass("rounded-circle me-3")
+                                .attr('src', "/rest/member/profileShow?memberId=" + attendMemberList[a].clubMemberId)
+                                .attr('width', '50')
+                                .attr('height', '50');
+                        } else {
+                            var image = $('<img>')
+                                .addClass("rounded-circle me-3")
+                                .attr('src', "/images/basic-profile.png")
+                                .attr('width', '50')
+                                .attr('height', '50');
+                        }
+
                         aLink.append(image);
-                    
-                    
 
-                    if (attendMemberList[a].clubMemberRank === '운영진') {
-                        var crownIcon = $('<i>')
-                            .addClass("fa-solid fa-crown p-1 position-absolute translate-middle")
-                            .appendTo(aLink);
+                        if (attendMemberList[a].clubMemberRank === '운영진') {
+                            // '운영진'일 경우 배지를 aLink에 추가
+                            $('<i>')
+                                .addClass("fa-solid fa-crown p-1 meeting-member-badge")
+                                .appendTo($('<div>').addClass("col parent-container").appendTo(aLink)); // parent-container 추가
+                        }
+
+                        profileList.append(aLink);
+
                     }
 
-                   
 
-                    $(htmlTemplate).find(".profileList").append(aLink);
-                }
+
+
 
 
                 var memberId = "${sessionScope.name}";
@@ -992,48 +1007,26 @@ $(".meetingFix").change(function(){
                        $(htmlTemplate).find(".monthAndDay").text(modifiedDateString);
                        
                    
-                   for (var a = 0; a < attendMemberList.length; a++) {
-                      
-                      var aLink= $('<a>').attr('href',"/");
-                      
-                       var image = $('<img>')
-                           .addClass("rounded-circle")
-                           .attr('src', "/rest/member/profileShow?memberId=" + attendMemberList[a].clubMemberId)
-                           .attr('width', '50')
-                           .attr('height', '50');
+                       for (var a = 0; a < attendMemberList.length; a++) {
+                    	    var aLink = $('<a>').attr('href', "/");
+                    	    var image = $('<img>')
+                    	        .addClass("rounded-circle")
+                    	        .attr('src', "/rest/member/profileShow?memberId=" + attendMemberList[a].clubMemberId)
+                    	        .attr('width', '50')
+                    	        .attr('height', '50');
 
-                       if (attendMemberList[a].clubMemberRank === '운영진') {
-                          
-                          $(htmlTemplate).find(".profileList")
-                            .addClass("d-flex align-items-center"); // 가로로 정렬
+                    	    if (attendMemberList[a].clubMemberRank === '운영진') {
+                    	        var crownIcon = $('<i>')
+                    	            .addClass("fa-solid fa-crown p-1 meeting-member-badge")
+                    	            .appendTo($('<div>').addClass("col parent-container").append(aLink)); // parent-container 추가
+                    	    }
 
-                        for (var a = 0; a < attendMemberList.length; a++) {
-                            var aLink = $('<a>').attr('href', "/");
-                            
-                            var image = $('<img>')
-                                .addClass("rounded-circle me-3")
-                                .attr('src', "/rest/member/profileShow?memberId=" + attendMemberList[a].clubMemberId)
-                                .attr('width', '50')
-                                .attr('height', '50');
+                    	    aLink.append(image);
 
-                            if (attendMemberList[a].clubMemberRank === '운영진') {
-                                var crownIcon = $('<i>')
-                                    .addClass("fa-solid fa-crown p-1 position-absolute translate-middle")
-                                    .appendTo(aLink);
-                            }
+                    	    $(htmlTemplate).find(".profileList").append(aLink);
+                    	}
 
-                            aLink.append(image);
 
-                            $(htmlTemplate).find(".profileList").append(aLink);
-                        }
-
-                       } 
-                       
-                       aLink.append(image);
-
-                       $(htmlTemplate).find(".profileList").append(aLink);
-
-                   }
                    
                    //버튼
                    $(htmlTemplate).find(".meetingEdit").attr("data-no",meeting.meetingNo).attr("data-number",i);

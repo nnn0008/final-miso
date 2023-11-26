@@ -316,6 +316,10 @@ ORDER BY
     update club set club_premium = 'Y' where club_owner = #{clubOwner}
     </update>
     
+    <update id="updatePremiumClub">
+    update club set club_premium = 'Y' where CLUB_NO = #{clubNo}
+    </update>
+    
     <update id="updateDownPremium">
     update club set club_premium = 'N' where club_owner = #{clubOwner}
     </update>
@@ -388,14 +392,14 @@ ORDER BY
     
     </select>
     
-    <select id="memberMakeClubCount" resultType="int">
-    
+    <select id="memberMakeClubCount" resultType="int"> 
     SELECT count(*) FROM MEMBER m JOIN 
     club c ON c.CLUB_OWNER = m.MEMBER_ID WHERE m.MEMBER_ID =#{memberId}
-    
     </select>
     
     
-    
+    <select id="clubSelectOne" resultType="ClubDto">
+	SELECT * FROM club WHERE CLUB_NO = #{clubNo}
+    </select>
     
     </mapper>
