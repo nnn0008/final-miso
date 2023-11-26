@@ -393,7 +393,7 @@ $(function(){
 		
 		<div class="row mt-2">
 			<div class="col-12">
-				<button type="submit" class="btn btn-success w-100 btn-send">수정하기</button>
+				<button type="submit" class="btn btn-miso w-100 btn-send">수정하기</button>
 			</div>
 		</div>
 		

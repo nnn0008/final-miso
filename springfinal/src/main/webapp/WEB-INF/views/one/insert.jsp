@@ -118,7 +118,7 @@ $(function(){
 		
 		<div class="row mt-3">
 			<div class="col">
-			<button type="submit" class="btn btn-success btn-lg bg-miso w-100 btn-send">
+			<button type="submit" class="btn btn-miso btn-lg bg-miso w-100 btn-send">
 				<strong>작성하기</strong>
 				</button>
 			</div>

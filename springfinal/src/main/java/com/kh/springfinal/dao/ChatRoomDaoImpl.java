@@ -169,4 +169,27 @@ public String clubMemberRank(String memberId, int clubNo) {
     return sqlSession.selectOne("chatRoom.clubMemberRank", parameters);
 }
 
+@Override
+public int isChatRoomMember(String memberId, int chatRoomNo) {
+    Map<String, Object> params = new HashMap<>();
+    params.put("memberId", memberId);
+    params.put("chatRoomNo", chatRoomNo);
+    return sqlSession.selectOne("chatRoom.isChatRoomMember", params);
+}
+
+@Override
+public int isMeetingRoomMember(String memberId, int chatRoomNo) {
+    Map<String, Object> params = new HashMap<>();
+    params.put("memberId", memberId);
+    params.put("chatRoomNo", chatRoomNo);
+    return sqlSession.selectOne("chatRoom.isMeetingRoomMember", params);
+}
+
+@Override
+public int isOneChatRoomMember(String memberId, int chatRoomNo) {
+    Map<String, Object> params = new HashMap<>();
+    params.put("memberId", memberId);
+    params.put("chatRoomNo", chatRoomNo);
+    return sqlSession.selectOne("chatOne.isOnechatRoomMember", params);
+}
 }

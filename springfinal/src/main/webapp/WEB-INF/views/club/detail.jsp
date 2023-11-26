@@ -1493,21 +1493,21 @@ $(document).ready(function () {
 	<div class="row">
 		<div class="col-3 pe-0">
 			<a id="homeLink" href="#"
-				class="btn btn-success bg-miso w-100 active">홈</a>
+				class="btn btn-miso bg-miso w-100 active">홈</a>
 		</div>
 		<div class="col-3 pe-0">
 			<a id="boardLink"
 				href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDto.clubNo}"
-				class="btn btn-success bg-miso w-100">게시판</a>
+				class="btn btn-miso bg-miso w-100">게시판</a>
 		</div>
 		<div class="col-3 pe-0">
 			<a id="photoLink"
 				href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}"
-				class="btn btn-success bg-miso w-100">사진첩</a>
+				class="btn btn-miso bg-miso w-100">사진첩</a>
 		</div>
 		<div class="col-3">
 			<a id="chatLink" href="/chat/enterRoom/${clubDto.chatRoomNo}"
-				class="btn btn-success bg-miso w-100">채팅</a>
+				class="btn btn-miso bg-miso w-100">채팅</a>
 		</div>
 	</div>
 
@@ -1564,7 +1564,7 @@ $(document).ready(function () {
 		<div class="col">
 			<c:if test="${joinButton==true}">
 				<button type="button"
-					class="btn btn-success bg-miso mt-4 join w-100 joinOpen"
+					class="btn btn-miso bg-miso mt-4 join w-100 joinOpen"
 					data-bs-toggle="modal" data-bs-target=".joinModal">가입하기</button>
 			</c:if>
 
@@ -1599,7 +1599,7 @@ $(document).ready(function () {
 				<div class="col">
 					<a
 						href="${pageContext.request.contextPath}/clubBoard/write?clubNo=${clubDto.clubNo}">
-						<button class="btn btn-success bg-miso w-100 boardWrite">작성하기</button>
+						<button class="btn btn-miso bg-miso w-100 boardWrite">작성하기</button>
 					</a>
 				</div>
 			</div>
@@ -1649,7 +1649,7 @@ $(document).ready(function () {
 				<div class="col">
 					<a
 						href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDetailBoardList[0].clubNo}">
-						<button class="btn btn-success bg-miso w-100">게시글 목록가기</button>
+						<button class="btn btn-miso bg-miso w-100">게시글 목록가기</button>
 					</a>
 				</div>
 			</div>
@@ -1668,7 +1668,7 @@ $(document).ready(function () {
 	<div class="row mt-3">
 		<div class="col">
 			<button type="button" name="makeMeeting"
-				class="btn btn-success bg-miso w-100">정모 만들기</button>
+				class="btn btn-miso bg-miso w-100">정모 만들기</button>
 		</div>
 	</div>
 
@@ -1694,7 +1694,7 @@ $(document).ready(function () {
 
 
 	<div class="more-btn mt-3">
-		<button class="btn btn-success bg-miso w-100 more">전체보기</button>
+		<button class="btn btn-miso bg-miso w-100 more">전체보기</button>
 		<button class="btn btn-secondary w-100 cut">접기</button>
 	</div>
 	<hr>
@@ -1732,7 +1732,7 @@ $(document).ready(function () {
 				<div class="col">
 					<a
 						href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}">
-						<button class="btn btn-success bg-miso w-100">사진첩</button>
+						<button class="btn btn-miso bg-miso w-100">사진첩</button>
 					</a>
 				</div>
 			</div>
@@ -1822,7 +1822,7 @@ $(document).ready(function () {
 				</div>
 				<div class="modal-footer">
 					<button class="btn btn-secondary cancel" data-bs-dismiss="modal">취소</button>
-					<button class="btn btn-success commit">확인</button>
+					<button class="btn btn-miso commit">확인</button>
 				</div>
 			</div>
 		</div>
@@ -1914,7 +1914,7 @@ $(document).ready(function () {
 						<button type="button" class="btn btn-secondary addModalCancel"
 							data-bs-dismiss="modal">취소</button>
 						<button type="submit"
-							class="btn btn-success bg-miso btn-make-meeting">만들기</button>
+							class="btn btn-miso bg-miso btn-make-meeting">만들기</button>
 					</div>
 				</div>
 			</div>
@@ -2001,7 +2001,7 @@ $(document).ready(function () {
 					<button type="button" class="btn btn-secondary"
 						data-bs-dismiss="modal">취소</button>
 					<button type="submit"
-						class="btn btn-success bg-miso btn-edit-commit">수정하기</button>
+						class="btn btn-miso bg-miso btn-edit-commit">수정하기</button>
 				</div>
 			</div>
 		</div>

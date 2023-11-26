@@ -498,7 +498,7 @@ $(function(){
 	
 	<div class="row mt-4 mb-2">
 	<div class="col">
-	<button class="btn btn-success btn-lg bg-miso w-100" name="editClub"><strong>수정하기</strong></button>
+	<button class="btn btn-miso btn-lg bg-miso w-100" name="editClub"><strong>수정하기</strong></button>
 	</div>
 	</div>
 

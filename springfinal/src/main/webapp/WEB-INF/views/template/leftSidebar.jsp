@@ -92,7 +92,7 @@
                         <div class="col">
                             <a href="/pay/product" class="link d-flex align-items-center">
                                 <img src="${pageContext.request.contextPath}/images/Vector4.png" width="20%">
-                                <strong class="ms-3">상품</strong>
+                                <strong class="ms-3">회원권</strong>
                             </a>
                         </div>
                     </div>
