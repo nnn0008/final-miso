@@ -5,10 +5,32 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 <jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
 
+<!-- 부트스트랩 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Popper.js, Bootstrap JS, jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+
 <style>
 .fa-ellipsis-vertical:hover{
 	cursor:pointer;
 }
+
+.text-title{
+font-size: 18px;
+}
+
+.board-like-count{
+color: #43adff;
+}
+
+.card.bg-miso{
+width:500px;
+}
+
 </style>
 <script>
 
@@ -70,8 +92,8 @@ $(function(){
 	});
     
     //대댓글 작성
-    //$(replyHtmlTemplate).find(".btn-success").click(function(e){
-    $(document).on("click", ".btn-successs", function(e){
+    //$(replyHtmlTemplate).find(".btn-miso").click(function(e){
+    $(document).on("click", ".btn-misos", function(e){
 		var params = new URLSearchParams(location.search);
         var clubBoardNo = params.get("clubBoardNo");
         var originReplyNo = $(this).parents(".for-reply-edit").find(".btn-subReply").data("reply-no");
@@ -157,8 +179,9 @@ $(function(){
 						
 						//대댓글 이라면
                       	if(response[i].clubBoardReplyParent != null){
-                            $(htmlTemplate).addClass("ms-4");
+                            $(htmlTemplate).addClass("ms-5");
                             $(htmlTemplate).find(".only-attach-reply").remove();
+                            $(htmlTemplate).find("hr").remove();
                         }
 						
 						$(htmlTemplate).find(".btn-reply-delete").attr("data-reply-no", response[i].clubBoardReplyNo).click(function(e){
@@ -446,61 +469,67 @@ $(function(){
 </script>
 
 <script id="reply-template" type="text/template">
- <div class="col-12 for-reply-edit mt-2">
-	<div class="row">
-		<div class="col">
-			<h6 class="clubBoardReplyWriter">작성자</h6>
-		</div>
-		<div class="col">
-			<span class="clubBoardReplyDate">MM-dd E HH:mm</span>
-		</div>
-		<div class="col edit-delete">
-			<button type="button" class="btn btn-info btn-open-reply-edit">수정</button>
-			<button type="button" class="btn btn-danger btn-reply-delete">삭제</button>
-		</div>
-	</div>
-	<div class="row mt-2">
-		<div class="col">
-			<pre class="clubBoardReplyContent fs-6">내용</pre>
-		</div>
-	</div>
-<hr>
-	<div class="row mt-2 only-attach-reply">
-		<div class="col">
-			<button type="button" class="btn-subReply"><i class="fa-solid fa-pen-to-square"></i>답글 달기</button>
-		</div>
-	</div>
- </div>
+<div class="col-12 for-reply-edit mt-2">
+    <div class="card bg-miso mb-3"">
+        <div class="card-header d-flex align-items-center reply-box">
+            <div class="co-3 me-2">
+                <h6 class="clubBoardReplyWriter">작성자</h6>
+            </div>
+            <div class="col">
+                <span class="clubBoardReplyDate">MM-dd E HH:mm</span>
+            </div>
+            <div class="col edit-delete text-end">
+                <i class="fa-solid fa-eraser ms-auto p-2 fa-gray btn-open-reply-edit"></i>
+                <i class="fa-solid fa-trash-can p-2 fa-gray btn-reply-delete"></i>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row mt-2 mb-2">
+                <div class="col reply-content">
+                    <span class="clubBoardReplyContent fs-6">내용</span>
+                </div>
+            </div>
+            <hr>
+            <div class="row mt-2 only-attach-reply">
+                <div class="col mb-2">
+                    <i class="fa-regular fa-message btn-subReply"><span class="ms-2">답글 달기</span></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 </script>
 <script id="reply-edit-template" type="text/template">
-		<form class="reply-edit-form edit-container">
-		<input type="hidden" name="clubBoardReplyNo" value="?">
-		<div class="row">
-			<div class="col-10">
-				<textarea name="clubBoardReplyContent" class="form-control" rows="3"></textarea>
-			</div>
-			<div class="col">
-				<button type="submit" class="btn btn-success btn-reply-edit">
-					수정
-				</button>
-				<button type="button" class="btn btn-danger btn-cancel">
-					취소
-				</button>
-			</div>
-		</div>
-		</form>
+<form class="reply-edit-form edit-container">
+    <input type="hidden" name="clubBoardReplyNo" value="?">
+    <div class="row mt-2">
+        <div class="col-12">
+            <div class="input-group">
+            <textarea name="clubBoardReplyContent" class="form-control" rows="1"></textarea>
+                <button type="submit" class="btn btn-miso btn-reply-edit">
+                    수정
+                </button>
+                <button type="button" class="btn btn-cancel">
+                    취소
+                </button>
+        </div>
+            </div>
+    </div>
+</form>
 </script>
 <!-- 댓글 작성용 템플릿 -->
 <script id="reply-insert-form" type="text/template">
-	<div class="row mt-5">
-		<div class="col-10">
-			<textarea type="text" class="form-control w-100 reply-write" rows="3" placeholder="댓글을 달아주세요"></textarea>
-		</div>
-		<div class="col">
-			<button type="button" class="btn btn-reply-send btn-success btn-successs w-100">전송</button>
-			<button type="button" class="btn btn-reply-cancel btn-reReply-cancel w-100">취소</button>
-		</div>
-	</div>
+<div class="row">
+    <div class="col-12">
+        <div class="input-group">
+            <textarea type="text" class="form-control reply-write" rows="1" placeholder="댓글을 달아주세요"></textarea>
+            <button type="button" class="btn btn-reply-send btn-miso btn-misos">전송</button>
+            <button type="button" class="btn btn-reply-cancel btn-reReply-cancel">취소</button>
+        </div>
+    </div>
+</div>
+
 </script>
 <script id="reReply-template" type="text/template">
 	<form class="reReply-edit-form">
@@ -510,7 +539,7 @@ $(function(){
 				<input type="text" name="clubBoardReReplyContent" class="form-control"></textarea>
 			</div>
 			<div class="col">
-				<button type="submit" class="btn btn-success btn-reReply-send">
+				<button type="submit" class="btn btn-miso btn-reReply-send">
 					<i class="fa-solid fa-check"></i>
 					작성
 				</button>
@@ -526,57 +555,54 @@ $(function(){
 </script>
 
 
-<div class="container-fluid">
-	<div class="row">
+	<div class="row mt-2">
 		<div class="col">
 			
-			<div class="row">
-				<div class="col-3">
+			<div class="row d-flex align-items-center">
+				<div class="col-1">
 					<c:if test="${attachDto.attachNo == null }">
-						<img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="80" height="80">				
+						<img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="60" height="60">				
 					</c:if>
 					<c:if test="${attachDto.attachNo != null}">
-						<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardAllDto.attachNoMp}" class="rounded-circle" width="80" height="80">
+						<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardAllDto.attachNoMp}" class="rounded-circle" width="60" height="60">
 					</c:if>
 				</div>
-				<div class="col-3">
+				<div class="col ms-4">
 					${clubBoardDto.clubBoardName}
 				</div>
-				<div class="col-6 text-end">
-					${clubBoardDto.clubBoardCategory}
+				<div class="col text-end">
+				<span class="badge bg-success">${clubBoardDto.clubBoardCategory}</span>
 					<%-- <fmt:formatDate value="${clubBoardDto.clubBoardDate}" pattern="M월 d일 a h시 m분"/> --%>
 					${clubBoardDto.clubBoardDate}
 				</div>
-			</div>
+				
+    <div class="col-1 text-end">
+            <div class="btn-group" role="group">
+                <i class="fas fa-ellipsis-vertical"  id="btnGroupDrop1"  class="btn dropdown-toggle show" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></i>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" data-popper-placement="bottom-start" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, 41px);">
+                    <a class="dropdown-item" href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubBoardDto.clubNo}"">목록</a>
+                    <a class="dropdown-item" href="${pageContext.request.contextPath}/clubBoard/edit?clubBoardNo=${clubBoardDto.clubBoardNo}">수정</a>
+                     <a class="dropdown-item" href="${pageContext.request.contextPath}/clubBoard/delete?clubBoardNo=${clubBoardDto.clubBoardNo}"">삭제</a>
+                      <a class="dropdown-item" href="#exampleModal" data-bs-toggle="modal" data-bs-target="#exampleModal">신고</a>
+                </div>
+        </div>
+</div>
+
+	</div>
+	</div>
+</div>
 			
 			<div class="row mt-4">
-				<div class="col">
+				<div class="col text-title">
+				<strong>
 					${clubBoardDto.clubBoardTitle}
+				</strong>
 				</div>
-				<div class="col">
-					<i class="fa-solid fa-ellipsis-vertical"></i>
-					<div class="row">
-						<a href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubBoardDto.clubNo}">목록</a>
-					</div>
-					<c:if test="${sessionScope.name != clubMemberDto.clubMemberId}">
-						<div class="row">
-							<a href="#exampleModal" data-bs-toggle="modal" data-bs-target="#exampleModal">신고</a>					
-						</div>
-					</c:if>
-					<div class="row board-match">
-						<div class="col">
-							<a href="${pageContext.request.contextPath}/clubBoard/edit?clubBoardNo=${clubBoardDto.clubBoardNo}">수정</a>
-							<a href="${pageContext.request.contextPath}/clubBoard/delete?clubBoardNo=${clubBoardDto.clubBoardNo}">삭제</a>
-						</div>
-					</div>
-				</div>
-			</div>
+				
+						
 			<div class="row mt-4">
 				<div class="col" style="min-height: 200px;">
 					${clubBoardDto.clubBoardContent}
-				</div>
-			</div>
-			
 			<%-- 사진 등록이 되어있다면 보여주자 --%>
 			<c:if test="${clubBoardImageDto != null}">
 				<div class="row mt-3">
@@ -596,12 +622,13 @@ $(function(){
 				</div>
 			</c:if>
 			
-			<div class="row">
+
+							
+			</div>
+			
+			<div class="row mt-4 mb-3">
 				<div class="col">
-					<i class="fa-regular fa-heart" style="color: red"></i>
-					<p class="board-like-count">
-						${clubBoardDto.clubBoardLikecount}
-					</p>
+					<i class="fa-regular fa-heart me-1" style="color: red"></i>좋아요<span class="board-like-count ms-1">	${clubBoardDto.clubBoardLikecount}</span>
 				</div>
 			</div>
 			<hr>
@@ -610,19 +637,21 @@ $(function(){
 			<div class="row mt-2 reply-list"></div>
 			
 			<%-- 댓글 작성할 곳이 있는 곳 --%>
-			<div class="row mt-2 div-for-insert-reply">
-				<form class="reply-insert-form">
-				<input type="hidden" name="clubBoardNo" value="${clubBoardDto.clubBoardNo}">
-				<div class="row mt-5">
-					<div class="col-10">
-						<textarea type="text" class="form-control w-100 reply-write" rows="3" placeholder="댓글을 달아주세요"></textarea>
-					</div>
-					<div class="col">
-						<button type="submit" class="btn btn-reply-send btn-success">전송</button>
-					</div>
-				</div>
-			</form> 
-			</div>
+<div class="row mt-2 div-for-insert-reply">
+    <form class="reply-insert-form">
+        <input type="hidden" name="clubBoardNo" value="${clubBoardDto.clubBoardNo}">
+        <div class="row mt-3 mb-4">
+            <div class="col-12">
+                <div class="input-group">
+                    <textarea type="text" class="form-control reply-write" rows="1" placeholder="댓글을 달아주세요"></textarea>
+                    <button type="submit" class="btn btn-reply-send btn-miso">전송</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
 		
 			
 		</div>
@@ -681,6 +710,5 @@ $(function(){
     </div>
   </div>
 </div>
-
 
 <jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>

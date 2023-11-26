@@ -1,11 +1,15 @@
 package com.kh.springfinal.dao;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.kh.springfinal.dto.WishlistDto;
+import com.kh.springfinal.vo.WishlistVO;
 
 @Repository
 public class WishDaoImpl implements WishlistDao{
@@ -51,4 +55,10 @@ public class WishDaoImpl implements WishlistDao{
 		return result>0;
 	}
 
+	
+	@Override
+	public List<WishlistVO> selectListForHome(String memberId) {
+		List<WishlistVO> list = sqlSession.selectList("wish.findAllByMemberId",memberId);
+		return list;
+	}
 }

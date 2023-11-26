@@ -116,6 +116,7 @@
     	where club_member_no=#{clubMemberNo}
     </update>
     
+
     <delete id="clubMemberDelete">
     
     delete club_member where club_member_no=#{clubMemberNo}
@@ -129,6 +130,19 @@
     
     </select>
     
+
+
+    <select id="findListByMemberId" resultType="HomeForClubVO">
+	    select * from(
+			select rownum rn, TMP.* from(
+				select cm.club_no, cm.club_member_id, cm.join_date, c.club_name, ci.attach_no, cm.club_member_rank from
+				club_member cm join club c on cm.club_no = c.club_no
+				left outer join club_image ci on cm.club_no = ci.club_no
+				where cm.club_member_id = #{memberId}
+				order by cm.club_member_rank, cm.join_date desc
+			)TMP
+		)where rn between 1 and 12
+    </select>
 
     
     

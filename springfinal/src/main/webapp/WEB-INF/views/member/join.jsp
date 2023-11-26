@@ -37,7 +37,7 @@
 
             <style>
                 .check, .choice {
-            	  display: none;   
+              display: none;   
                 }
                 
                
@@ -455,7 +455,7 @@
 						                           var text = (response[i].sido != null ? response[i].sido + ' ' : '') +
 						                               (response[i].sigungu != null ? response[i].sigungu + ' ' : '') +
 						                               (response[i].eupmyun != null ? response[i].eupmyun + ' ' : '') +
-						                               (response[i].hdongName != null ? response[i].hdongName + ' ' : '');
+						                               (response[i].hdongName != null ? response[i].hdongName : '');
 
 						                           console.log(text);
 
@@ -659,7 +659,6 @@
                                                     	</div>
                                                     </div>
 							                    </div>                    
-							                </div>
 							                <div class="row">
 							                    <div class="col">
 							                        <ul class="list-group addr-list">

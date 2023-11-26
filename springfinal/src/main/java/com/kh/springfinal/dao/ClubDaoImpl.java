@@ -172,7 +172,15 @@ public class ClubDaoImpl implements ClubDao{
 		return sqlSession.delete("club.deleteClub",clubNo)>0;
 	}
 	
+	@Override
+	public boolean schedulerClub(String clubOwner) {
+		return sqlSession.update("club.schedulerClub",clubOwner)>0;
+	}
 	
+	@Override
+	public ClubDto clubFindOwner(String clubOwner) {
+		return sqlSession.selectOne("club.clubFindOwner",clubOwner);
+	}
 	
 
 	

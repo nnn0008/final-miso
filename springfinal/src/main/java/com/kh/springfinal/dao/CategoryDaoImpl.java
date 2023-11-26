@@ -34,6 +34,7 @@ public class CategoryDaoImpl implements CategoryDao{
 	}
 
 	@Override
+
 	public String majorName(int majorCategoryNo) {
 		return sqlSession.selectOne("category.majorCategoryName",majorCategoryNo);
 	}
@@ -41,6 +42,10 @@ public class CategoryDaoImpl implements CategoryDao{
 	@Override
 	public String minorName(int minorCategoryNo) {
 		return sqlSession.selectOne("category.minorCategoryName",minorCategoryNo);
+  }
+	public MinorCategoryDto selectOneMajor(int minorCategoryNo) {
+		return sqlSession.selectOne("category.selectOneMajor", minorCategoryNo);
+
 	}
 
 	

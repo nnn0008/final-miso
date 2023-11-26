@@ -267,6 +267,11 @@ ORDER BY
     
     </select>
     
+    <select id="findClubBymemberId" resultType="clubDto">
+    	select * from club where club_no in(
+			select club_no from club_member where club_member_id = ${memberId}
+		)
+    </select>
     <select id="minorClubListPage" resultType="ClubListVO">
     
       select * from (
@@ -320,6 +325,21 @@ ORDER BY
     <update id="updateDownPremium">
     update club set club_premium = 'N' where club_owner = #{clubOwner}
     </update>
+    <!-- 단건 스케쥴러 -->
+    <update id="schedulerClub">
+    UPDATE club c
+	SET c.club_premium = 'N'
+	WHERE c.club_owner IN (
+    SELECT p.payment_member
+    FROM payment p
+    INNER JOIN club c ON c.club_owner = p.payment_member
+    WHERE c.club_owner = #{clubOwner}
+	)
+	</update>
+
+	<select id="clubFindOwner" resultType="ClubDto">
+		select * from club where club_owner = #{clubOwner}	
+	</select>
 
     <select id="searchClub" resultType="ClubListVO">
 

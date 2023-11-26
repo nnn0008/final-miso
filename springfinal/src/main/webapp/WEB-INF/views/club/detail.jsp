@@ -1,116 +1,116 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+   pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 <jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
 
 <script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+   src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://unpkg.com/hangul-js" type="text/javascript"></script>
 
 <link href="${pageContext.request.contextPath}/css/club.css"
-	rel="stylesheet">
+   rel="stylesheet">
 
 <style>
 .img-thumbnail:hover {
-	cursor: pointer;
+   cursor: pointer;
 }
 
 .attached-image {
-	width: 100% !important;
-	height: 100%; ! important;
-	object-fit: cover !important;
+   width: 100% !important;
+   height: 100%; ! important;
+   object-fit: cover !important;
 }
 
 .img-thumbnail {
-	border: none !important;
+   border: none !important;
 }
 
 .img-box img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
 }
 
 .row .col .d-flex {
-	display: flex;
-	align-items: center;
+   display: flex;
+   align-items: center;
 }
 
 .row .col .d-flex i {
-	margin-right: 5px;
+   margin-right: 5px;
 }
 
 .club-box-detail {
-	width: 550px;
-	height: 250px;
+   width: 550px;
+   height: 250px;
 }
 
 .club-detail-image {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	border-radius: 1%;
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+   border-radius: 1%;
 }
 
 .fa-gray {
-	border-radius: 50%;
-	background-color: #EBE8E8;
+   border-radius: 50%;
+   background-color: #EBE8E8;
 }
 
 .club-member-badge {
-	border-radius: 50%;
-	background-color: #66DFD2;
-	color: #ffffff;
-	position: absolute;
-	top: 70px; /* 상단 여백 조절 */
-	left: 80px; /* 좌측 여백 조절 */
-	font-size: 16px; /* 아이콘의 크기 조절 */
+   border-radius: 50%;
+   background-color: #66DFD2;
+   color: #ffffff;
+   position: absolute;
+   top: 70px; /* 상단 여백 조절 */
+   left: 80px; /* 좌측 여백 조절 */
+   font-size: 16px; /* 아이콘의 크기 조절 */
 }
 
 .fa-star {
-	border-radius: 50%;
-	background-color: #FFBCF0;
-	color: #ffffff;
+   border-radius: 50%;
+   background-color: #FFBCF0;
+   color: #ffffff;
 }
 
 .translate-middle {
-	border-radius: 50%;
-	background-color: #66DFD2;
-	color: #ffffff;
-	top: 260px;
-	left: 63px;
-	transform: translate(-50%, -50%);
+   border-radius: 50%;
+   background-color: #66DFD2;
+   color: #ffffff;
+   top: 260px;
+   left: 63px;
+   transform: translate(-50%, -50%);
 }
 
 .preview-wrapper2 {
-	width: 466px; /* 부모 요소의 너비 지정 */
-	height: 200px; /* 부모 요소의 높이 지정 */
-	overflow: hidden; /* 부모 요소를 넘치는 내용 숨김 */
+   width: 466px; /* 부모 요소의 너비 지정 */
+   height: 200px; /* 부모 요소의 높이 지정 */
+   overflow: hidden; /* 부모 요소를 넘치는 내용 숨김 */
 }
 
 .preview, .preview2 {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
 }
 
 .meeting-box {
-	box-shadow: 0 0 10px #EBE8E8;
+   box-shadow: 0 0 10px #EBE8E8;
 }
 </style>
 
 
 <script>
-	
-	
-	$(function(){
-		
-		
-		disablePastDates();
-		
-	    function getCurrentDate() {
+   
+   
+   $(function(){
+      
+      
+      disablePastDates();
+      
+       function getCurrentDate() {
             var today = new Date();
             var dd = today.getDate();
             var mm = today.getMonth() + 1; // January is 0!
@@ -133,23 +133,23 @@
             
             $('[name=meetingDate]').prop('min', currentDate);
         }
-		
-		
-		
-	})
-	
+      
+      
+      
+   })
+   
 
 
 </script>
 
 <script>
         $(function(){
-        	
-        	
-        	
-        	
+           
+           
+           
+           
             $("#selector").change(function(){
-            	
+               
                 if(this.files.length == 0) {
                     //초기화
                     return;
@@ -170,8 +170,8 @@
                 }
             });
             
-			$("#selector2").change(function(){
-            	
+         $("#selector2").change(function(){
+               
                 if(this.files.length == 0) {
                     //초기화
                     return;
@@ -203,6 +203,7 @@
 
 
 $(function(){
+
 	
 	
 	var bodyClubMemberNo = $(".bodyClubMemberNo").data("no");
@@ -225,118 +226,119 @@ $(function(){
 	  function loadMemberList(){
 		  var params = new URLSearchParams(location.search);
 	        var clubNo = params.get("clubNo");
+
               
-		  
-		  $.ajax({
-	            url: "http://localhost:8080/rest/clubMemberList",
-	            method: "get",
-	            data: { clubNo: clubNo},
-	            success: function (response) {
-	            	
-	            	$(".clubMemberList").empty();
-              	
+        
+        $.ajax({
+               url: "http://localhost:8080/rest/clubMemberList",
+               method: "get",
+               data: { clubNo: clubNo},
+               success: function (response) {
+                  
+                  $(".clubMemberList").empty();
+                 
               for(var a=0;a<response.length;a++){
-	            	var clubMember = response[a];
-	            	var template = $("#clubMember-template").html();
-              	var htmlTemplate = $.parseHTML(template);
-              	
-              	$(htmlTemplate).find(".href").attr('href',"/member/mypage?memberId="+clubMember.memberId);
-              	
-              	if(clubMember.attachNo!=0){
-              	$(htmlTemplate).find(".profileImage").attr('src',"/rest/member/profileShow?memberId="+clubMember.memberId);
-              	}
-              		if(clubMember.clubMemberRank == '운영진'){
-              			var i =$('<i>');
-              			
-              			i.addClass("fa-solid fa-crown fa-lg pt-3 pb-3 ps-2 pe-2 club-member-badge");
-              			
-              		   $(htmlTemplate).find(".profileImage").after(i);
-              			
-              		}
-              		
-              	if(clubMember.attachNo==0){
-              		$(htmlTemplate).find(".profileImage").attr('src',"/images/basic-profile2.png");
-              		
-              	}
-              	
-              	$(htmlTemplate).find(".upgradeRank").data('clubMemberNo',clubMember.clubMemberNo);
-              	 if(clubMember.masterRank==false||clubMember.clubMemberRank=='운영진'){
-              		
-              		 $(htmlTemplate).find(".upgradeRank").hide(); 
+                  var clubMember = response[a];
+                  var template = $("#clubMember-template").html();
+                 var htmlTemplate = $.parseHTML(template);
+                 
+                 $(htmlTemplate).find(".href").attr('href',"/member/mypage?memberId="+clubMember.memberId);
+                 
+                 if(clubMember.attachNo!=0){
+                 $(htmlTemplate).find(".profileImage").attr('src',"/rest/member/profileShow?memberId="+clubMember.memberId);
+                 }
+                    if(clubMember.clubMemberRank == '운영진'){
+                       var i =$('<i>');
+                       
+                       i.addClass("fa-solid fa-crown fa-lg pt-3 pb-3 ps-2 pe-2 club-member-badge");
+                       
+                       $(htmlTemplate).find(".profileImage").after(i);
+                       
+                    }
+                    
+                 if(clubMember.attachNo==0){
+                    $(htmlTemplate).find(".profileImage").attr('src',"/images/basic-profile2.png");
+                    
+                 }
+                 
+                 $(htmlTemplate).find(".upgradeRank").data('clubMemberNo',clubMember.clubMemberNo);
+                  if(clubMember.masterRank==false||clubMember.clubMemberRank=='운영진'){
+                    
+                     $(htmlTemplate).find(".upgradeRank").hide(); 
 
-              		
-              	} 
-              	
-              	
-              	$(htmlTemplate).find(".memberName").html("<strong>" + clubMember.memberName + "</strong> | " + clubMember.joinDateString + " 가입");
+                    
+                 } 
+                 
+                 
+                 $(htmlTemplate).find(".memberName").html("<strong>" + clubMember.memberName + "</strong> | " + clubMember.joinDateString + " 가입");
 
-              	$(htmlTemplate).find(".joinMessage").text(clubMember.joinMessage);
-	            	
-              	$(".clubMemberList").append(htmlTemplate);
-              	
-              	}
-              	
-	            }
-	        })
-		  
-		  
-		  
-		  
-	  }
-	  
-	  
-	  $(document).on('click','.upgradeRank',function(){
-		  
-		  
-		  var clubMemberNo = $(this).data("clubMemberNo");
-		  
-		  $.ajax({
-			  url: "http://localhost:8080/rest/upgradeRank",
-	          method: "get",
-	          data: { clubMemberNo: clubMemberNo},
-	          success: function (response) {
-	        	  loadMemberList();
-			  
-		  }
-		  }) 
-	  })
-	
-	
-	$('#exampleModal').on('hidden.bs.modal', function () {
-	    // 모달이 닫힐 때 실행되는 코드 작성
-	    // 여기에 원하는 동작을 추가하세요.
-	    
-	    $(".makeMeetingForm")[0].reset();
-	    $("#exampleModal .preview").attr("src","/images/noimage.jpg");
-	    
-	    
-	});
-	
-	
-	
-	var page = 1;
-	 var totalCount = $(".totalCount").val();
-	
-	
-	
-	loadCutList();
-	
-	    if($(".meetingFix").prop("checked")){
-	        $("[name=meetingFix]").val('Y');
-	    } else {
-	        $("[name=meetingFix]").val('N');
-	    }
+                 $(htmlTemplate).find(".joinMessage").text(clubMember.joinMessage);
+                  
+                 $(".clubMemberList").append(htmlTemplate);
+                 
+                 }
+                 
+               }
+           })
+        
+        
+        
+        
+     }
+     
+     
+     $(document).on('click','.upgradeRank',function(){
+        
+        
+        var clubMemberNo = $(this).data("clubMemberNo");
+        
+        $.ajax({
+           url: "http://localhost:8080/rest/upgradeRank",
+             method: "get",
+             data: { clubMemberNo: clubMemberNo},
+             success: function (response) {
+                loadMemberList();
+           
+        }
+        }) 
+     })
+   
+   
+   $('#exampleModal').on('hidden.bs.modal', function () {
+       // 모달이 닫힐 때 실행되는 코드 작성
+       // 여기에 원하는 동작을 추가하세요.
+       
+       $(".makeMeetingForm")[0].reset();
+       $("#exampleModal .preview").attr("src","/images/noimage.jpg");
+       
+       
+   });
+   
+   
+   
+   var page = 1;
+    var totalCount = $(".totalCount").val();
+   
+   
+   
+   loadCutList();
+   
+       if($(".meetingFix").prop("checked")){
+           $("[name=meetingFix]").val('Y');
+       } else {
+           $("[name=meetingFix]").val('N');
+       }
 
-	$(".meetingFixByEdit").change(function(){
-		
-		 if($("[name=meetingFixByEdit]").prop("checked")){
-		        $("[name=meetingFixByEdit]").val('Y');
-		    } else {
-		        $("[name=meetingFixByEdit]").val('N');
-		    }
-		
-	});
-	
+   $(".meetingFixByEdit").change(function(){
+      
+       if($("[name=meetingFixByEdit]").prop("checked")){
+              $("[name=meetingFixByEdit]").val('Y');
+          } else {
+              $("[name=meetingFixByEdit]").val('N');
+          }
+      
+   });
+   
 
     if($(".meetingFixByEdit").prop("checked")){
         $("[name=meetingFixByEdit]").val('Y');
@@ -345,15 +347,15 @@ $(function(){
     }
 
 $(".meetingFix").change(function(){
-	
-	 if($(".meetingFix").prop("checked")){
-	        $("[name=meetingFix]").val('Y');
-	    } else {
-	        $("[name=meetingFix]").val('N');
-	    }
-	
+   
+    if($(".meetingFix").prop("checked")){
+           $("[name=meetingFix]").val('Y');
+       } else {
+           $("[name=meetingFix]").val('N');
+       }
+   
 });
-	
+   
     /* $(".join").click(function(e){
         var clubNo = $(".clubNo").data("no");
         var memberId = $(".memberId").data("id");
@@ -373,9 +375,11 @@ $(".meetingFix").change(function(){
     }); */
 
     $(".commit").click(function(){
+
     	
     	
     	var message = $(".modalJoinMessage").val();
+
         var clubNo = $(".clubNo").data("no");
         var memberId = $(".memberId").data("id");
         var joinMessage = $(".modalJoinMessage").val();
@@ -445,11 +449,11 @@ $(".meetingFix").change(function(){
         var meetingLocation = $(".meetingLocation").val();
         var meetingPrice = $(".meetingPrice").val();
         var meetingNumber = $(".meetingMaxPeople").val();
-		var formatDateTime = meetingDate + " " + meetingTime; 
-		
-		var meetingFix = $(".meetingFix").val();
+      var formatDateTime = meetingDate + " " + meetingTime; 
+      
+      var meetingFix = $(".meetingFix").val();
 
-			
+         
         // FormData 객체 생성
         var formData = new FormData();
         
@@ -466,24 +470,24 @@ $(".meetingFix").change(function(){
         
 
         if(!pass){
-        	if(!nameOk){
-        		$(".meetingName").addClass("is-invalid");
-           		}
-           		if(!dateOk){
-           			$(".meetingDate").addClass("is-invalid");
-           		}
-        		if(!timeOk){
-           			$(".meetingTime").addClass("is-invalid");
-           		}
-        	if(!priceOk){
-           			$(".meetingPrice").addClass("is-invalid");
-           		}
-        	if(!locationOk){
-        		$(".meetingLocation").addClass("is-invalid");
-        	}
-        	if(!peopleOk){
-           			$(".meetingMaxPeople").addClass("is-invalid");
-           		}
+           if(!nameOk){
+              $(".meetingName").addClass("is-invalid");
+                 }
+                 if(!dateOk){
+                    $(".meetingDate").addClass("is-invalid");
+                 }
+              if(!timeOk){
+                    $(".meetingTime").addClass("is-invalid");
+                 }
+           if(!priceOk){
+                    $(".meetingPrice").addClass("is-invalid");
+                 }
+           if(!locationOk){
+              $(".meetingLocation").addClass("is-invalid");
+           }
+           if(!peopleOk){
+                    $(".meetingMaxPeople").addClass("is-invalid");
+                 }
         }
         
         else{
@@ -495,26 +499,26 @@ $(".meetingFix").change(function(){
             contentType: false,
             processData: false,
             success: function(response) {
-            	
+               
           
                  
-            	$(".notMeeting").remove();
-            	
+               $(".notMeeting").remove();
+               
                 totalCount++;
-			/* if($(".cut").is(":hidden")){
-            		
-            		loadCutList();
-            	}
-            	else{
-            	
-            	loadList();
-            	} */
-            		
-            	$("#exampleModal").modal('hide');
-            	
-            		loadCutList();
-            		
-            	
+         /* if($(".cut").is(":hidden")){
+                  
+                  loadCutList();
+               }
+               else{
+               
+               loadList();
+               } */
+                  
+               $("#exampleModal").modal('hide');
+               
+                  loadCutList();
+                  
+               
             }
         });
         
@@ -529,7 +533,7 @@ $(".meetingFix").change(function(){
     $(document).on('click', '.meetingEdit', function(){
         
       
-    	 var meetingNo = $(this).data("no");
+        var meetingNo = $(this).data("no");
         
         
         $.ajax({
@@ -537,9 +541,9 @@ $(".meetingFix").change(function(){
             method: "get",
             data: {meetingNo:meetingNo},
             success: function(response) {
-            	
-            	
-            	fillModalWithData(response);
+               
+               
+               fillModalWithData(response);
                 
             }
         });
@@ -548,10 +552,10 @@ $(".meetingFix").change(function(){
     
     
     $(".btn-edit-commit").click(function(){
-    	
-    	
-    	
-    	 var meetingImageInput = $(".meetingImageByEdit")[0];
+       
+       
+       
+        var meetingImageInput = $(".meetingImageByEdit")[0];
          var attach = meetingImageInput.files[0];
 
          // 각 필드 값을 가져오기
@@ -562,14 +566,14 @@ $(".meetingFix").change(function(){
          var meetingLocation = $(".meetingLocationByEdit").val();
          var meetingPrice = $(".meetingPriceByEdit").val();
          var meetingNumber = $(".meetingMaxPeopleByEdit").val();
- 		var formatDateTime = meetingDate + " " + meetingTime; 
- 		
- 		var meetingFix = $(".meetingFixByEdit").val();
+       var formatDateTime = meetingDate + " " + meetingTime; 
+       
+       var meetingFix = $(".meetingFixByEdit").val();
 
- 		console.log(meetingDate);
- 		console.log(meetingTime);
- 		console.log(formatDateTime);
- 			
+       console.log(meetingDate);
+       console.log(meetingTime);
+       console.log(formatDateTime);
+          
          // FormData 객체 생성
          var formData = new FormData();
          formData.append("meetingNo", meetingNo);
@@ -580,7 +584,7 @@ $(".meetingFix").change(function(){
          formData.append("meetingNumber", meetingNumber);
          formData.append("meetingFix", meetingFix);
          formData.append("attach", attach);
-    	
+       
          var meetingNo = $(this).data("no");
          
          var nameOk= $(".meetingNameByEdit").val().length!=0;
@@ -603,88 +607,88 @@ $(".meetingFix").change(function(){
          
          
          var pass = nameOk&&dateOk&&timeOk&&locationOk&&priceOk&&peopleOk;
-    	
+       
          if(!pass){
-        	 
-        	 if(!nameOk){
-         		$(".meetingNameByEdit").addClass("is-invalid");
-            	}
-        	 
-            if(!dateOk){
-            			$(".meetingDateByEdit").addClass("is-invalid");
-            		}
             
-         	if(!timeOk){
-            			$(".meetingTimeByEdit").addClass("is-invalid");
-            		}
-         	
-         	if(!priceOk){
-            			$(".meetingPriceByEdit").addClass("is-invalid");
-            		}
-         	
-         	if(!locationOk){
-         		$(".meetingLocationByEdit").addClass("is-invalid");
-         	}
-         	
-         	if(!peopleOk){
-            			$(".meetingMaxPeopleByEdit").addClass("is-invalid");
-            		}
-        	 
+            if(!nameOk){
+               $(".meetingNameByEdit").addClass("is-invalid");
+               }
+            
+            if(!dateOk){
+                     $(".meetingDateByEdit").addClass("is-invalid");
+                  }
+            
+            if(!timeOk){
+                     $(".meetingTimeByEdit").addClass("is-invalid");
+                  }
+            
+            if(!priceOk){
+                     $(".meetingPriceByEdit").addClass("is-invalid");
+                  }
+            
+            if(!locationOk){
+               $(".meetingLocationByEdit").addClass("is-invalid");
+            }
+            
+            if(!peopleOk){
+                     $(".meetingMaxPeopleByEdit").addClass("is-invalid");
+                  }
+            
          }
          
          else{
-        	 
-        	 
-    	$.ajax({
+            
+            
+       $.ajax({
             url: window.contextPath + "/rest/meeting/edit",
             method: "post",
             data: formData,
             contentType: false,
             processData: false,
             success: function(response) {
-            	
+               
             
-            	
-				if	($(".cut").is(":hidden")){
-            		
-            		loadCutList();
+               
+            if   ($(".cut").is(":hidden")){
+                  
+                  loadCutList();
 
-            	}
-            	else{
-            	
-            	loadList();
-            	}
-				
-				$("#meetingEditModal").modal('hide')
+               }
+               else{
+               
+               loadList();
+               }
+            
+            $("#meetingEditModal").modal('hide')
             }
         });
     }
-    	
-    	
+       
+       
     })
     
    
     
     
     $(".more").click(function(){
-    	
-    	loadList();
-    	
+       
+       loadList();
+       
     })
     
     $(".cut").click(function(){
-    	
-    	loadCutList();
-    	
-    	
+       
+       loadCutList();
+       
+       
     })
     
     
-    	
+       
     function loadCutList(){
-    	
-    	
-    	 var params = new URLSearchParams(location.search);
+       
+       
+        var params = new URLSearchParams(location.search);
          var clubNo = params.get("clubNo");
          
          $.ajax({
@@ -694,47 +698,48 @@ $(".meetingFix").change(function(){
                  whereNo: clubNo, page:page,clubNo:clubNo
              },
              success: function (response) {
-            	 
-            	 
-            	 
-             /* 	if(response.length<count){
-             		
-             		$(".more").remove();
-             	var pageCancel=	$('<button>').addClass("btn btn-danger w-100 origin")
-             		.text("접기");
-             		
-             		$(".more-btn").append(pageCancel);
-             		
-             	} */
-             	
-             	$(".attach-meeting-list").empty(); 
-            	
-             	
+                
+                
+                
+             /*    if(response.length<count){
+                   
+                   $(".more").remove();
+                var pageCancel=   $('<button>').addClass("btn btn-danger w-100 origin")
+                   .text("접기");
+                   
+                   $(".more-btn").append(pageCancel);
+                   
+                } */
+                
+                $(".attach-meeting-list").empty(); 
+               
+                
                  for(var i=0; i<response.length; i++){
-                 	var meeting = response[i];
-                 	var attendMemberList = meeting.attendMemberList;
-                 	
-                 	
-                 	var template = $("#meeting-template").html();
-                 	var htmlTemplate = $.parseHTML(template);
-                 	
-                 	
-                 	
-                 	
-                 	if(meeting.attachNo!=0){
-                 	
-                 	var img = $('<img>')
+                    var meeting = response[i];
+                    var attendMemberList = meeting.attendMemberList;
+                    
+                    
+                    var template = $("#meeting-template").html();
+                    var htmlTemplate = $.parseHTML(template);
+                    
+                    
+                    
+                    
+                    if(meeting.attachNo!=0){
+                    
+                    var img = $('<img>')
                      .attr('src', "/rest/meeting/attchImage?attachNo=" + meeting.attachNo)
                      .attr('width', '230')
                      .attr('height', '130')
-                 	.css('border-radius', '10px'); 
-                 	}
-                 	else{
-                 		var img = $('<img>')
+                    .css('border-radius', '10px'); 
+                    }
+                    else{
+                       var img = $('<img>')
                          .attr('src', "/images/noimage.jpg")
                          .attr('width', '230')
                          .attr('height', '130')
                          .css('border-radius', '10px'); 
+
                  	}
                  	           	
                  	$(htmlTemplate).find(".img").append(img);
@@ -748,13 +753,14 @@ $(".meetingFix").change(function(){
                  	$(htmlTemplate).find(".attendCount").text(meeting.attendCount).data("no",meeting.attendCount);
                  	
                  	var modifiedDateString = (meeting.date).replace(/-/g, '/');
-                 modifiedDateString = modifiedDateString.slice(0, -1) + '(' + modifiedDateString.slice(-1) + ')';
-                 	
-                 	$(htmlTemplate).find(".monthAndDay").text(modifiedDateString);
-                 	
-        	
 
-                 	$(htmlTemplate).find(".profileList")
+                 modifiedDateString = modifiedDateString.slice(0, -1) + '(' + modifiedDateString.slice(-1) + ')';
+                    
+                    $(htmlTemplate).find(".monthAndDay").text(modifiedDateString);
+                    
+           
+
+                    $(htmlTemplate).find(".profileList")
                     .addClass("d-flex align-items-center"); // 가로로 정렬
 
                 for (var a = 0; a < attendMemberList.length; a++) {
@@ -763,22 +769,26 @@ $(".meetingFix").change(function(){
                     
                     
                     if(attendMemberList[a].attachNo != 0){
-                    	
-                    	var image = $('<img>')
+                       
+                       var image = $('<img>')
                         .addClass("rounded-circle me-3")
                         .attr('src', "/rest/member/profileShow?memberId=" + attendMemberList[a].clubMemberId)
                         .attr('width', '50')
                         .attr('height', '50');
+
+
                     }
                     if(attendMemberList[a].attachNo==0){
-                    	var image = $('<img>')
+                       var image = $('<img>')
                         .addClass("rounded-circle me-3")
                         .attr('src', "/images/basic-profile.png")
                         .attr('width', '50')
                         .attr('height', '50');
+
                     	
                     }
                     
+
                     
                     	 aLink.append(image);
                     
@@ -798,82 +808,82 @@ $(".meetingFix").change(function(){
 
 
                 var memberId = "${sessionScope.name}";
-            	if (meeting.meetingFix === 'N') {
-            	    // 새로운 div 엘리먼트 생성
-            	    var divElement = $('<div>').addClass('secret-club');
-            	    var badgeElement = $('<span>').addClass('badge bg-danger ms-1 mb-1').text('비공개 정모');
-            	    var secretIcon = $('<i>').addClass("fa-solid fa-unlock-keyhole ms-2");
-            	    var secretIconBig = $('<i>').addClass("fa-solid fa-lock ms-2").css({
-            	        'font-size': '150px',
-            	        'height': '250px',
-            	        'display': 'flex',
-            	        'justify-content': 'center', // 좌우 가운데 정렬
-            	        'align-items': 'center' // 상하 가운데 정렬
-            	    });
-					
-            	    
+               if (meeting.meetingFix === 'N') {
+                   // 새로운 div 엘리먼트 생성
+                   var divElement = $('<div>').addClass('secret-club');
+                   var badgeElement = $('<span>').addClass('badge bg-danger ms-1 mb-1').text('비공개 정모');
+                   var secretIcon = $('<i>').addClass("fa-solid fa-unlock-keyhole ms-2");
+                   var secretIconBig = $('<i>').addClass("fa-solid fa-lock ms-2").css({
+                       'font-size': '150px',
+                       'height': '250px',
+                       'display': 'flex',
+                       'justify-content': 'center', // 좌우 가운데 정렬
+                       'align-items': 'center' // 상하 가운데 정렬
+                   });
+               
+                   
 
-            	    if (bodyClubMemberNo == 0) {
-            	        // 클럽 멤버가 아닌 경우 효과 적용
-            	        secretIcon.removeClass('fa-unlock-keyhole').addClass('fa-lock');
-            	        divElement.css('opacity', '0.7');
+                   if (bodyClubMemberNo == 0) {
+                       // 클럽 멤버가 아닌 경우 효과 적용
+                       secretIcon.removeClass('fa-unlock-keyhole').addClass('fa-lock');
+                       divElement.css('opacity', '0.7');
 
-            	        // alert 엘리먼트에 새로운 텍스트 추가
-            	        var alertElement = $(htmlTemplate).find(".alert");
-            	        alertElement.empty(); // 글자를 없애는 부분
-            	          
-            	        // 큰 좌물쇠 아이콘 추가
-            	        alertElement.append(secretIconBig);
-            	    }
-            	    
+                       // alert 엘리먼트에 새로운 텍스트 추가
+                       var alertElement = $(htmlTemplate).find(".alert");
+                       alertElement.empty(); // 글자를 없애는 부분
+                         
+                       // 큰 좌물쇠 아이콘 추가
+                       alertElement.append(secretIconBig);
+                   }
+                   
 
-            	    // 새로 생성한 엘리먼트들을 기존 템플릿에 추가
-            	    $(htmlTemplate).prepend(divElement.append(badgeElement.append(secretIcon)));
-            	}
+                   // 새로 생성한 엘리먼트들을 기존 템플릿에 추가
+                   $(htmlTemplate).prepend(divElement.append(badgeElement.append(secretIcon)));
+               }
 
-            	// 최종 결과를 화면에 추가
-            	$(".attach-meeting-list").append(htmlTemplate);
+               // 최종 결과를 화면에 추가
+               $(".attach-meeting-list").append(htmlTemplate);
             
             
 
 
-						
-                 	//버튼
-                 	$(htmlTemplate).find(".meetingEdit").attr("data-no",meeting.meetingNo).attr("data-number",i);
-                 	$(htmlTemplate).find(".meetingDelete").attr("data-no",meeting.meetingNo).attr("data-number",i);
-                 	$(htmlTemplate).find(".attend").attr("data-no",meeting.meetingNo).attr("data-number",i);
-                	$(htmlTemplate).find(".attendDelete").attr("data-no",meeting.meetingNo).attr("data-number",i);
-                 	
-                 	
-                 	if(meeting.didAttend){
-                 		
-                     	$(htmlTemplate).find(".attend").remove();
-                 		
-                 		
-             		
-                 		
-                 	}
-                 	
-                 	if(!meeting.didAttend){
-                 		
-                 		$(htmlTemplate).find(".attendDelete").remove();
-                 		
-                 	}
-                 	
-                 	if(!meeting.manager){
-                 		
-                     	$(htmlTemplate).find(".meetingEdit").remove();
-                     	$(htmlTemplate).find(".meetingDelete").remove();
-                 		
-                 		
-                 		
-                 	}
-                 	
-                 	
-					
-                 	
-                 	
-                 	$(".attach-meeting-list").append(htmlTemplate);
+                  
+                    //버튼
+                    $(htmlTemplate).find(".meetingEdit").attr("data-no",meeting.meetingNo).attr("data-number",i);
+                    $(htmlTemplate).find(".meetingDelete").attr("data-no",meeting.meetingNo).attr("data-number",i);
+                    $(htmlTemplate).find(".attend").attr("data-no",meeting.meetingNo).attr("data-number",i);
+                   $(htmlTemplate).find(".attendDelete").attr("data-no",meeting.meetingNo).attr("data-number",i);
+                    
+                    
+                    if(meeting.didAttend){
+                       
+                        $(htmlTemplate).find(".attend").remove();
+                       
+                       
+                   
+                       
+                    }
+                    
+                    if(!meeting.didAttend){
+                       
+                       $(htmlTemplate).find(".attendDelete").remove();
+                       
+                    }
+                    
+                    if(!meeting.manager){
+                       
+                        $(htmlTemplate).find(".meetingEdit").remove();
+                        $(htmlTemplate).find(".meetingDelete").remove();
+                       
+                       
+                       
+                    }
+                    
+                    
+               
+                    
+                    
+                    $(".attach-meeting-list").append(htmlTemplate);
                  }
                  
              
@@ -881,25 +891,25 @@ $(".meetingFix").change(function(){
               
                  
                  if(totalCount>response.length){
-                	 $(".more").show();
-                	 $(".cut").hide();
+                    $(".more").show();
+                    $(".cut").hide();
                  }
                  if(totalCount<=response.length){
-                	 $(".cut").hide();
-                	 $(".more").hide();
+                    $(".cut").hide();
+                    $(".more").hide();
                  }
                 
-                	 
+                    
                  }
                  
                  
              
          });
-    	
+       
 }
-    	
-    	
-    	
+       
+       
+       
     
     
     
@@ -921,13 +931,13 @@ $(".meetingFix").change(function(){
         $("#meetingEditModal .meetingMaxPeopleByEdit").val(meetingData.meetingNumber);
         
         if(meetingData.attachNo!=0){
-        	$("#meetingEditModal .preview2").attr("src","/rest/meeting/attchImage?attachNo=" + meetingData.attachNo);
+           $("#meetingEditModal .preview2").attr("src","/rest/meeting/attchImage?attachNo=" + meetingData.attachNo);
         }
         
         else{
-        	
-        	$("#meetingEditModal .preview2").attr("src","/images/noimage.jpg");
-        	
+           
+           $("#meetingEditModal .preview2").attr("src","/images/noimage.jpg");
+           
         }
         // 나머지 필드에 대해서도 필요한 데이터 채우기
 
@@ -955,54 +965,70 @@ $(".meetingFix").change(function(){
                 clubNo:clubNo
             },
             success: function (response) {
-            	
+               
       $(".attach-meeting-list").empty(); 
-            	
+               
                 for(var i=0; i<response.length; i++){
-                	var meeting = response[i];
-                	var attendMemberList = meeting.attendMemberList;
-                	
-                	
-                	var template = $("#meeting-template").html();
-                	var htmlTemplate = $.parseHTML(template);
-                	             	
-                	
-                	if(meeting.attachNo!=0){
-                	
-                	var img = $('<img>')
+                   var meeting = response[i];
+                   var attendMemberList = meeting.attendMemberList;
+                   
+                   
+                   var template = $("#meeting-template").html();
+                   var htmlTemplate = $.parseHTML(template);
+                                   
+                   
+                   if(meeting.attachNo!=0){
+                   
+                   var img = $('<img>')
                     .attr('src', "/rest/meeting/attchImage?attachNo=" + meeting.attachNo)
                     .attr('width', '230')
                     .attr('height', '130');}
-                	else{
-                		var img = $('<img>')
+                   else{
+                      var img = $('<img>')
                         .attr('src', "/images/noimage.jpg")
                         .attr('width', '230')
                         .attr('height', '130');
-                		
-                	}
-                	
-                	
-                	        	
-                	$(htmlTemplate).find(".img").append(img);
-                	$(htmlTemplate).find(".ddayInput").text("D-"+meeting.dday);
-                	$(htmlTemplate).find(".meetingNoInput").text(meeting.meetingNo);
-                	$(htmlTemplate).find(".meetingNameInput").text(meeting.meetingName);
-                	$(htmlTemplate).find(".dateStringInput").text(meeting.dateString);
-                	$(htmlTemplate).find(".locationInput").text(meeting.meetingLocation);
-                	$(htmlTemplate).find(".meetingPriceInput").text(meeting.meetingPrice);
-                	$(htmlTemplate).find(".meetingNumberInput").text(meeting.meetingNumber).data("no",meeting.meetingNumber);
+
+                      
+                   }
+                   
+                   
+                              
+                   $(htmlTemplate).find(".img").append(img);
+                   $(htmlTemplate).find(".ddayInput").text("D-"+meeting.dday);
+                   $(htmlTemplate).find(".meetingNoInput").text(meeting.meetingNo);
+                   $(htmlTemplate).find(".meetingNameInput").text(meeting.meetingName);
+                   $(htmlTemplate).find(".dateStringInput").text(meeting.dateString);
+                   $(htmlTemplate).find(".locationInput").text(meeting.meetingLocation);
+                   $(htmlTemplate).find(".meetingPriceInput").text(meeting.meetingPrice);
+                  	$(htmlTemplate).find(".meetingNumberInput").text(meeting.meetingNumber).data("no",meeting.meetingNumber);
                 	$(htmlTemplate).find(".attendCount").text(meeting.attendCount).data("no",meeting.attendCount);
-                	$(htmlTemplate).find(".monthAndDay").text(meeting.date);
-                	
-                	var modifiedDateString = (meeting.date).replace(/-/g, '/');
+                   $(htmlTemplate).find(".monthAndDay").text(meeting.date);
+                   
+                   var modifiedDateString = (meeting.date).replace(/-/g, '/');
                     modifiedDateString = modifiedDateString.slice(0, -1) + '(' + modifiedDateString.slice(-1) + ')';
-                    	
-                    	$(htmlTemplate).find(".monthAndDay").text(modifiedDateString);
-                    	
-                	
-                    	for (var a = 0; a < attendMemberList.length; a++) {
-                            var aLink = $('<a>').attr('href', "/member/mypage?memberId=" + attendMemberList[a].clubMemberId);
-                            
+                       
+                       $(htmlTemplate).find(".monthAndDay").text(modifiedDateString);
+                       
+                   
+                   for (var a = 0; a < attendMemberList.length; a++) {
+                      
+                      var aLink= $('<a>').attr('href',"/");
+                      
+                       var image = $('<img>')
+                           .addClass("rounded-circle")
+                           .attr('src', "/rest/member/profileShow?memberId=" + attendMemberList[a].clubMemberId)
+                           .attr('width', '50')
+                           .attr('height', '50');
+
+                       if (attendMemberList[a].clubMemberRank === '운영진') {
+                          
+                          $(htmlTemplate).find(".profileList")
+                            .addClass("d-flex align-items-center"); // 가로로 정렬
+
+                        for (var a = 0; a < attendMemberList.length; a++) {
+                            var aLink = $('<a>').attr('href', "/");
+
                             
                             if(attendMemberList[a].attachNo != 0){
                             	
@@ -1037,6 +1063,7 @@ $(".meetingFix").change(function(){
 
                             $(htmlTemplate).find(".profileList").append(aLink);
                         }
+
                 	
                 	//버튼
                 	$(htmlTemplate).find(".meetingEdit").attr("data-no",meeting.meetingNo).attr("data-number",i);
@@ -1100,20 +1127,21 @@ $(".meetingFix").change(function(){
 
                 	// 최종 결과를 화면에 추가
                 	$(".attach-meeting-list").append(htmlTemplate);
+
                 }
                 
                 
                  if(totalCount<=3) {
-                	 loadCutList();
-                	 
+                    loadCutList();
+                    
                  }
                  
                 /*  if (meeting.meetingFix === 'N') {
-                	    var divElement = $('<div>').addClass('secret-club');
-                	    var badgeElement = $('<span>').addClass('badge bg-danger ms-2 mb-1').text('비공개 정모');
-                	    
-                	    $(htmlTemplate).prepend(divElement.append(badgeElement));
-                	} 중간중간 이상하게 나와서 주석처리 */
+                       var divElement = $('<div>').addClass('secret-club');
+                       var badgeElement = $('<span>').addClass('badge bg-danger ms-2 mb-1').text('비공개 정모');
+                       
+                       $(htmlTemplate).prepend(divElement.append(badgeElement));
+                   } 중간중간 이상하게 나와서 주석처리 */
 
 
                  
@@ -1130,6 +1158,7 @@ $(".meetingFix").change(function(){
         });
         
     }
+
    	
    	
     	$(".boardWrite").click(function(e){
@@ -1231,11 +1260,13 @@ $(".meetingFix").change(function(){
    	    })
    	    
    	});
+
   
-   	
-   	
-   	
+      
+      
+      
    
+
    	
    	
    	$(document).on('click',".attend",function(e){
@@ -1264,63 +1295,65 @@ $(".meetingFix").change(function(){
 		else{
    	
    	  var params = new URLSearchParams(location.search);
+
       var clubNo = params.get("clubNo");
       var meetingNo = $(this).data("no");
       var number = $(this).data("number");
       
-   		
-   	    $.ajax({
+         
+          $.ajax({
             url: window.contextPath +"/rest/meeting/attend",
             method: "post",
             data: { clubNo: clubNo, meetingNo : meetingNo },
             success: function () {
-            	
-            	
-            	if($(".cut").is(":hidden")){
-            		
-            		loadCutList();
-            	}
-            	else{
-            	
-            	loadList();
-            	}
-            	
+               
+               
+               if($(".cut").is(":hidden")){
+                  
+                  loadCutList();
+               }
+               else{
+               
+               loadList();
+               }
+               
                 
                 
             }
         });
-   		
-   		
-   		
-		}
-   	})
-   	
-   	$(document).on('click',".attendDelete",function(){
-   		
-   	
-   	  var params = new URLSearchParams(location.search);
+         
+         
+         
+      }
+      })
+      
+      $(document).on('click',".attendDelete",function(){
+         
+      
+        var params = new URLSearchParams(location.search);
       var clubNo = params.get("clubNo");
       var meetingNo = $(this).data("no");
       var number = $(this).data("number");
 
-   		
-   	    $.ajax({
+         
+          $.ajax({
             url: window.contextPath +"/rest/meeting/attendDelete",
             method: "post",
             data: { clubNo: clubNo, meetingNo : meetingNo },
             success: function (response) {
-				if	($(".cut").is(":hidden")){
-            		
-            		loadCutList();
-            	}
-            	else{
-            	
-            	loadList();
-            	}
+            if   ($(".cut").is(":hidden")){
+                  
+                  loadCutList();
+               }
+               else{
+               
+               loadList();
+               }
                 
                 
             }
         });
+
    		
    		
    		
@@ -1431,7 +1464,7 @@ $(".meetingFix").change(function(){
     	})
 
    	
-    	
+
 });
 
 
@@ -1467,7 +1500,7 @@ $(document).ready(function () {
 
 
 
-	
+   
 
 
 
@@ -1500,9 +1533,9 @@ $(document).ready(function () {
                 </div>
             </div>
         </div>
-			<button class="btn btn-secondary w-30 upgradeRank">운영진 지정</button>
+         <button class="btn btn-secondary w-30 upgradeRank">운영진 지정</button>
     </div>
-	
+   
 
 </script>
 
@@ -1563,7 +1596,7 @@ $(document).ready(function () {
                             </div>
 
 
-		
+      
 </script>
 
 
@@ -1863,6 +1896,7 @@ $(document).ready(function () {
 	</form>
 	</c:if>
 	<%-- <c:forEach var="clubMember" items="${clubMemberDto}" varStatus="loop">
+
     <div class="row mt-3 mb-4">
         <div class="col memberList">
             <div class="row d-flex align-items-center">
@@ -1890,212 +1924,214 @@ $(document).ready(function () {
 
 
 
-	<div class="modal fade joinModal" tabIndex="-1" role="dialog"
-		aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="join-modal-title" id="exampleModalLabel">가입인사를
-						작성해주세요</h5>
-					<button type="button" class="close" data-bs-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div class="row">
-						<div class="col">
-							<input type="text" class="form-control modalJoinMessage">
-							<div class="invalid-feedback">가입인사를 작성해주세요</div>
-						</div>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button class="btn btn-secondary cancel" data-bs-dismiss="modal">취소</button>
-					<button class="btn btn-success commit">확인</button>
-				</div>
-			</div>
-		</div>
-	</div>
 
-	<!-- 동호회 모임 만드는 Modal -->
-	<!-- Button trigger modal -->
+   <div class="modal fade joinModal" tabIndex="-1" role="dialog"
+      aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="join-modal-title" id="exampleModalLabel">가입인사를
+                  작성해주세요</h5>
+               <button type="button" class="close" data-bs-dismiss="modal"
+                  aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <div class="row">
+                  <div class="col">
+                     <input type="text" class="form-control modalJoinMessage">
+                  </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-secondary cancel" data-bs-dismiss="modal">취소</button>
+               <button class="btn btn-miso commit">확인</button>
+            </div>
+         </div>
+      </div>
+   </div>
 
-
-	<!-- Modal -->
-	<form action="" enctype="multipart/form-data" class="makeMeetingForm">
-		<div class="modal fade" id="exampleModal" tabindex="-1"
-			aria-labelledby="exampleModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<div class="row">
-							<div
-								class="col text-start d-flex align-items-center modal-title fs-5">
-								<img
-									src="${pageContext.request.contextPath}/images/logo-door.png"
-									width="5%"> <strong class="ms-2" id="exampleModalLabel">정모
-									만들기</strong>
-							</div>
-						</div>
-
-						<button type="button" class="btn-close addModalCancel"
-							data-bs-dismiss="modal" aria-label="Close"></button>
-					</div>
-					<div class="modal-body">
-						<div class="preview-wrapper2">
-							<img src="/images/noimage.jpg" width="200" height="200"
-								class="preview">
-						</div>
-						<input type="hidden" class="meetingClubNo"
-							data-no="${clubDto.clubNo}" name="clubNo"
-							value="${clubDto.clubNo}"> <input type="file"
-							class="form-control  meetingImage mt-2" name="attach"
-							id="selector">
-						<div>
-							<input type="text" class="form-control meetingName mt-2"
-								name="meetingName" placeholder="정모 이름">
-							<div class="invalid-feedback">모임 이름을 추가해주세요</div>
-						</div>
-						<div>
-							<input type="date" class="form-control meetingDate mt-2"
-								name="meetingDate">
-							<div class="invalid-feedback">모임 날짜를 지정해주세요</div>
-						</div>
-						<div>
-							<input type="time" class="form-control meetingTime mt-2"
-								name="meetingTime">
-							<div class="invalid-feedback">시간을 지정해주세요</div>
-						</div>
-						<div>
-							<input type="text" class="form-control meetingLocation mt-2"
-								name="meetingLocation" placeholder="위치를 입력하세요">
-							<div class="invalid-feedback">모임 위치를 지정해주세요</div>
-						</div>
-						<div class="row mt-2 mb-2">
-							<div class="col-7">
-								<div class="input-group">
-									<input type="number" class="form-control meetingPrice"
-										name="meetingPrice" placeholder="모임비" min="1">
-									<div class="invalid-feedback">모임비를 지정해주세요(0이상)</div>
-									<div class="input-group-append">
-										<span class="input-group-text">원</span>
-									</div>
-								</div>
-							</div>
-							<div class="col-5">
-								<div class="input-group">
-									<input type="number" class="form-control meetingMaxPeople"
-										name="meetingNumber" placeholder="모임 정원" min="1">
-									<div class="invalid-feedback">모임 정원을 설정해주세요(0이상)</div>
-									<div class="input-group-append">
-										<span class="input-group-text">명</span>
-									</div>
-								</div>
-							</div>
-						</div>
+   <!-- 동호회 모임 만드는 Modal -->
+   <!-- Button trigger modal -->
 
 
-						모임공개여부<input class="form-check-input meetingFix ms-1 "
-							type="checkBox" name="meetingFix">
+   <!-- Modal -->
+   <form action="" enctype="multipart/form-data" class="makeMeetingForm">
+      <div class="modal fade" id="exampleModal" tabindex="-1"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+         <div class="modal-dialog">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <div class="row">
+                     <div
+                        class="col text-start d-flex align-items-center modal-title fs-5">
+                        <img
+                           src="${pageContext.request.contextPath}/images/logo-door.png"
+                           width="5%"> <strong class="ms-2" id="exampleModalLabel">정모
+                           만들기</strong>
+                     </div>
+                  </div>
 
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary addModalCancel"
-							data-bs-dismiss="modal">취소</button>
-						<button type="submit"
-							class="btn btn-success bg-miso btn-make-meeting">만들기</button>
-					</div>
-				</div>
-			</div>
-		</div>
+                  <button type="button" class="btn-close addModalCancel"
+                     data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div class="modal-body">
+                  <div class="preview-wrapper2">
+                     <img src="/images/noimage.jpg" width="200" height="200"
+                        class="preview">
+                  </div>
+                  <input type="hidden" class="meetingClubNo"
+                     data-no="${clubDto.clubNo}" name="clubNo"
+                     value="${clubDto.clubNo}"> <input type="file"
+                     class="form-control  meetingImage mt-2" name="attach"
+                     id="selector">
+                  <div>
+                     <input type="text" class="form-control meetingName mt-2"
+                        name="meetingName" placeholder="정모 이름">
+                     <div class="invalid-feedback">모임 이름을 추가해주세요</div>
+                  </div>
+                  <div>
+                     <input type="date" class="form-control meetingDate mt-2"
+                        name="meetingDate">
+                     <div class="invalid-feedback">모임 날짜를 지정해주세요</div>
+                  </div>
+                  <div>
+                     <input type="time" class="form-control meetingTime mt-2"
+                        name="meetingTime">
+                     <div class="invalid-feedback">시간을 지정해주세요</div>
+                  </div>
+                  <div>
+                     <input type="text" class="form-control meetingLocation mt-2"
+                        name="meetingLocation" placeholder="위치를 입력하세요">
+                     <div class="invalid-feedback">모임 위치를 지정해주세요</div>
+                  </div>
+                  
+                  <div class="row mt-2 mb-2">
+                     <div class="col-7">
+                        <div class="input-group">
+                           <input type="number" class="form-control meetingPrice"
+                              name="meetingPrice" placeholder="모임비" min="1">
+                           <div class="invalid-feedback">모임비를 지정해주세요(0이상)</div>
+                           <div class="input-group-append">
+                              <span class="input-group-text">원</span>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-5">
+                        <div class="input-group">
+                           <input type="number" class="form-control meetingMaxPeople"
+                              name="meetingNumber" placeholder="모임 정원" min="1">
+                           <div class="invalid-feedback">모임 정원을 설정해주세요(0이상)</div>
+                           <div class="input-group-append">
+                              <span class="input-group-text">명</span>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
 
 
-		<!-- 정모 수정 모달 -->
-	</form>
+                  모임공개여부<input class="form-check-input meetingFix ms-1 "
+                     type="checkBox" name="meetingFix">
+
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary addModalCancel"
+                     data-bs-dismiss="modal">취소</button>
+                  <button type="submit"
+                     class="btn btn-miso bg-miso btn-make-meeting">만들기</button>
+               </div>
+            </div>
+         </div>
+      </div>
 
 
-	<div class="modal fade" id="meetingEditModal" tabindex="-1"
-		aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<div class="row">
-						<div
-							class="col text-start d-flex align-items-center modal-title fs-5">
-							<img
-								src="${pageContext.request.contextPath}/images/logo-door.png"
-								width="5%"> <strong class="ms-2" id="exampleModalLabel">정모
-								수정하기</strong>
-						</div>
-					</div>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<div class="preview-wrapper2">
-						<img class="preview2" width="200" height="200">
-					</div>
-					<input type="hidden" class="form-control mt-2 meetingNoByEdit"
-						name="meetingNo" value="${meetinDto.meetingNo}"> <input
-						type="file" class="form-control mt-2 meetingImageByEdit"
-						name="attach" id="selector2">
-					<div>
-						<input type="text" class="form-control mt-2 meetingNameByEdit"
-							name="meetingName" placeholder="정모 이름"
-							value="${meetingDto.meetingName}">
-						<div class="invalid-feedback">모임 이름을 추가해주세요</div>
-					</div>
-					<div>
-						<input type="date" class="form-control mt-2 meetingDateByEdit"
-							name="meetingDate">
-						<div class="invalid-feedback">모임 날짜를 지정해주세요</div>
-					</div>
-					<div>
-						<input type="time" class="form-control mt-2 meetingTimeByEdit"
-							name="meetingTime">
-						<div class="invalid-feedback">시간을 지정해주세요</div>
-					</div>
-					<div>
-						<input type="text" class="form-control mt-2 meetingLocationByEdit"
-							name="meetingLocation" placeholder="위치를 입력하세요">
-						<div class="invalid-feedback">모임 위치를 지정해주세요</div>
-					</div>
-					<div class="row mt-2 mb-2">
-						<div class="col-7">
-							<div class="input-group">
-								<input type="number" class="form-control meetingPriceByEdit"
-									name="meetingPrice" placeholder="모임비">
-								<div class="invalid-feedback">모임비를 지정해주세요(0이상)</div>
-								<div class="input-group-append">
-									<span class="input-group-text">원</span>
-								</div>
-							</div>
-						</div>
-						<div class="col-5">
-							<div class="input-group">
-								<input type="number" class="form-control meetingMaxPeopleByEdit"
-									name="meetingNumber" placeholder="모임 정원">
-								<div class="invalid-feedback">모임 정원을 설정해주세요(0이상)</div>
-								<div class="input-group-append">
-									<span class="input-group-text">명</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					모임공개여부<input class="form-check-input ms-1 meetingFixByEdit"
-						type="checkBox" name="meetingFixByEdit">
+      <!-- 정모 수정 모달 -->
+   </form>
 
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary"
-						data-bs-dismiss="modal">취소</button>
-					<button type="submit"
-						class="btn btn-success bg-miso btn-edit-commit">수정하기</button>
-				</div>
-			</div>
-		</div>
-	</div>
+
+   <div class="modal fade" id="meetingEditModal" tabindex="-1"
+      aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+         <div class="modal-content">
+            <div class="modal-header">
+               <div class="row">
+                  <div
+                     class="col text-start d-flex align-items-center modal-title fs-5">
+                     <img
+                        src="${pageContext.request.contextPath}/images/logo-door.png"
+                        width="5%"> <strong class="ms-2" id="exampleModalLabel">정모
+                        수정하기</strong>
+                  </div>
+               </div>
+               <button type="button" class="btn-close" data-bs-dismiss="modal"
+                  aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+               <div class="preview-wrapper2">
+                  <img class="preview2" width="200" height="200">
+               </div>
+               <input type="hidden" class="form-control mt-2 meetingNoByEdit"
+                  name="meetingNo" value="${meetinDto.meetingNo}"> <input
+                  type="file" class="form-control mt-2 meetingImageByEdit"
+                  name="attach" id="selector2">
+               <div>
+                  <input type="text" class="form-control mt-2 meetingNameByEdit"
+                     name="meetingName" placeholder="정모 이름"
+                     value="${meetingDto.meetingName}">
+                  <div class="invalid-feedback">모임 이름을 추가해주세요</div>
+               </div>
+               <div>
+                  <input type="date" class="form-control mt-2 meetingDateByEdit"
+                     name="meetingDate">
+                  <div class="invalid-feedback">모임 날짜를 지정해주세요</div>
+               </div>
+               <div>
+                  <input type="time" class="form-control mt-2 meetingTimeByEdit"
+                     name="meetingTime">
+                  <div class="invalid-feedback">시간을 지정해주세요</div>
+               </div>
+               <div>
+                  <input type="text" class="form-control mt-2 meetingLocationByEdit"
+                     name="meetingLocation" placeholder="위치를 입력하세요">
+                  <div class="invalid-feedback">모임 위치를 지정해주세요</div>
+               </div>
+               <div class="row mt-2 mb-2">
+                  <div class="col-7">
+                     <div class="input-group">
+                        <input type="number" class="form-control meetingPriceByEdit"
+                           name="meetingPrice" placeholder="모임비">
+                        <div class="invalid-feedback">모임비를 지정해주세요(0이상)</div>
+                        <div class="input-group-append">
+                           <span class="input-group-text">원</span>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-5">
+                     <div class="input-group">
+                        <input type="number" class="form-control meetingMaxPeopleByEdit"
+                           name="meetingNumber" placeholder="모임 정원">
+                        <div class="invalid-feedback">모임 정원을 설정해주세요(0이상)</div>
+                        <div class="input-group-append">
+                           <span class="input-group-text">명</span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               모임공개여부<input class="form-check-input ms-1 meetingFixByEdit"
+                  type="checkBox" name="meetingFixByEdit">
+
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-secondary"
+                  data-bs-dismiss="modal">취소</button>
+               <button type="submit"
+                  class="btn btn-miso bg-miso btn-edit-commit">수정하기</button>
+            </div>
+         </div>
+      </div>
+   </div>
+
 
 
 

@@ -27,6 +27,7 @@
 			WHERE mi.MINOR_CATEGORY_NO  = #{minorNo}
     </select>
     
+
     <select id="majorCategoryName" resultType="String">
     	
     	select major_category_name from major_category where major_category_no=#{majorCategoryNo}
@@ -37,6 +38,11 @@
     	
     	select minor_category_name from minor_category where minor_category_no=#{minorCategoryNo}
     
+</select>
+
+    <select id="selectOneMajor" resultType="MinorCategoryDto">
+    	select * from minor_category where minor_category_no = #{minorCategoryNo}
+
     </select>
     
     

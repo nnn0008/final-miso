@@ -47,7 +47,7 @@ SELECT
         FROM MEETING_IMAGE mi
         WHERE mi.meeting_no = m.meeting_no
         FETCH FIRST 1 ROWS ONLY
-    ) AS meeting_attach_no,
+    ) AS attach_no,
     (
         SELECT c2.CHAT_CONTENT
         FROM CHAT c2
@@ -250,5 +250,22 @@ WHERE cr.CHAT_ROOM_NO = #{chatRoomNo}
 FROM club_member
 WHERE CLUB_MEMBER_ID = #{memberId} AND CLUB_NO = #{clubNo}
     </select>
+
+<select id="isChatRoomMember" resultType="int" parameterType="map">
+    SELECT COUNT(*) FROM club_member cm
+    JOIN club c ON cm.club_no = c.club_no
+    WHERE cm.club_member_id = #{memberId}
+    AND c.chat_room_no = #{chatRoomNo}
+</select>
+
+<select id="isMeetingRoomMember" resultType="int" parameterType="map">
+SELECT COUNT(*) 
+FROM club_member cm
+JOIN club c ON cm.club_no = c.club_no
+LEFT JOIN meeting m ON c.club_no = m.club_no
+LEFT JOIN meeting_member mm ON m.meeting_no = mm.meeting_no
+WHERE m.chat_room_no = #{chatRoomNo} AND cm.club_member_id = #{memberId}
+AND mm.club_member_no = cm.club_member_no
+</select>
     
 </mapper>

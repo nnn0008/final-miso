@@ -28,11 +28,21 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 
-    
+  <style>
+	.error-feed{
+		display: none;
+	}
+</style>
 <script>
 	window.contextPath = "${pageContext.request.contextPath}";
+	$(function () {
+		const urlParams = new URLSearchParams(window.location.search);
+		const errorParam = urlParams.get('error');
+		if(errorParam){
+			$(".error-feed").css("display", "inline-block");
+		}
+	})
 </script>
-
 
 </head>
 <body>
