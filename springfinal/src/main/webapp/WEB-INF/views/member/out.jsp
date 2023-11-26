@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
   <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%> 
+  <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -41,16 +44,6 @@
 </head>
 <body>
 
-
-<main>
- <header>
-           
-                 
-              
-        </header>
-        <nav>
-        </nav>
-        <section>
 <script>
 	$(function () {
 		$("#delete").click(function () {
@@ -79,17 +72,24 @@
 
 <!-- 아이디를 찾았을 때 띄울 템플렛 -->
 
-<div class="contain-fluid">
 	<div class="row">
 		<div class="col">
 
-				<div class="row position-absolute top-50 start-50 translate-middle">
-					<div class="col">
-						<button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-						 정말로 나가시겠습니까?
+					 <div class="row d-flex align-items-center  mt-5">
+                <div class="col-5 text-center">
+                    <img src="${pageContext.request.contextPath}/images/open-door.png" width="80%">
+                </div>
+                <div class="col  text-center">
+                	<div class="col">
+                    <h5>정말 탈퇴하시겠습니까?</h5>
+                	</div>
+                	<div class="col mt-3">
+                    <button type="button" class="btn btn-miso btn-lg" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+						 탈퇴하기
 						</button>
-					</div>
-				</div>
+                	</div>
+                </div>
+            </div>
 
 				<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 				  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -106,15 +106,12 @@
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-				        <button type="button" class="btn btn-primary" id="delete">탈퇴하기</button>
+				        <button type="button" class="btn btn-danger" id="delete">탈퇴하기</button>
 				      </div>
 				    </div>
 				  </div>
 				</div>
 		</div>
 	</div>
-</div>
 
-</article>
-</section>
-    </main>
+<jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>

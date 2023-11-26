@@ -79,14 +79,10 @@ public class OneDaoImpl implements OneDao {
 		return sqlSession.delete("one.deleteImage",oneNo)>0;
 	}
 
-	@Override
-	public AttachDto findImage(int oneNo) {
-		return sqlSession.selectOne("one.findImage",oneNo);
-		}
-		catch(Exception e) {
-			return null;
-		}
-	}
+@Override
+   public AttachDto findImage(int oneNo) {
+      return sqlSession.selectOne("one.findImage",oneNo);
+      }
 
 	@Override
 	public List<OneDto> selectAdminList() {
@@ -102,14 +98,5 @@ public class OneDaoImpl implements OneDao {
 
 
 	
-
-	
-	
-
-
-
-	
-
-
 
 }
