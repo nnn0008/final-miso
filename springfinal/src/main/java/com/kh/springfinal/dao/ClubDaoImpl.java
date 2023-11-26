@@ -166,7 +166,15 @@ public class ClubDaoImpl implements ClubDao{
 		return sqlSession.selectOne("club.memberMakeClubCount",memberId);
 	}
 	
+	@Override
+	public boolean schedulerClub(String clubOwner) {
+		return sqlSession.update("club.schedulerClub",clubOwner)>0;
+	}
 	
+	@Override
+	public ClubDto clubFindOwner(String clubOwner) {
+		return sqlSession.selectOne("club.clubFindOwner",clubOwner);
+	}
 	
 
 	
