@@ -165,6 +165,12 @@ public class ClubDaoImpl implements ClubDao{
 		
 		return sqlSession.selectOne("club.memberMakeClubCount",memberId);
 	}
+
+	@Override
+	public boolean deleteClub(int clubNo) {
+		
+		return sqlSession.delete("club.deleteClub",clubNo)>0;
+	}
 	
 	
 	

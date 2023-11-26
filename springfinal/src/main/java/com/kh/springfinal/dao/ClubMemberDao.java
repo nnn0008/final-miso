@@ -35,4 +35,10 @@ public interface ClubMemberDao {
 	
 	boolean upgradeRank(int clubMemberNo);
 	
+	boolean deleteClubMember(int clubMemberNo);
+	
+	int memberJoinClubCount(String memberId);
+	
+	
+	
 }

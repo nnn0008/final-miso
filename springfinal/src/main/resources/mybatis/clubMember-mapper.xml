@@ -116,6 +116,20 @@
     	where club_member_no=#{clubMemberNo}
     </update>
     
+    <delete id="clubMemberDelete">
+    
+    delete club_member where club_member_no=#{clubMemberNo}
+    
+    
+    </delete>
+    
+    <select id="memberJoinClubCount" resultType="int">
+    
+    select count(*) from club_member where club_member_id=#{clubMemberId}
+    
+    </select>
+    
+
     
     
     

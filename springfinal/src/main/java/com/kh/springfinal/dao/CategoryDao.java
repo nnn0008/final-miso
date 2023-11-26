@@ -13,4 +13,7 @@ public interface CategoryDao {
 	List<MinorCategoryDto> minorCategoryList(int majorNo);
 	MajorCategoryDto findMajor(int majorCategoryNo);
 	
+	String majorName(int majorCategoryNo);
+	String minorName(int minorCategoryNo);
+	
 }

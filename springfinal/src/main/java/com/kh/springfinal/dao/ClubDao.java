@@ -39,4 +39,8 @@ public interface ClubDao {
 	
 	int memberMakeClubCount(String memberId);
 	
+	boolean deleteClub(int clubNo);
+	
+	
+	
 }
