@@ -125,8 +125,9 @@
 				where cm.club_member_id = #{memberId}
 				order by cm.club_member_rank, cm.join_date desc
 			)TMP
-		)where rn between 1 and 4
+		)where rn between 1 and 12
     </select>
+    
     
     
      

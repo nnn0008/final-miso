@@ -83,4 +83,33 @@ public class OneDaoImpl implements OneDao {
 	public AttachDto findImage(int oneNo) {
 		return sqlSession.selectOne("one.findImage",oneNo);
 		}
+		catch(Exception e) {
+			return null;
+		}
+	}
+
+	@Override
+	public List<OneDto> selectAdminList() {
+		return sqlSession.selectList("one.admin-list");
+	}
+
+	@Override
+	public boolean oneAnswer(OneDto oneDto) {
+		int count = sqlSession.update("one.answer", oneDto);
+		boolean result = count>0;
+		return result;
+	}
+
+
+	
+
+	
+	
+
+
+
+	
+
+
+
 }

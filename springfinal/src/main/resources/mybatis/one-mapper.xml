@@ -45,6 +45,24 @@
 	    order siblings by one_group desc, one_no asc
 		</select>
 		
+		<!-- 어드민용 게시글 목록 -->
+
+		<select id="admin-list" resultType="OneDto">
+			  SELECT *
+				FROM (
+				    SELECT one.*,
+				           (SELECT MAX(CASE WHEN o.one_status = 0 THEN 1 ELSE 0 END)
+				            FROM one o
+				            WHERE o.one_parent = one.one_parent) AS has_status_zero
+				    FROM one
+				    START WITH one_parent IS NULL
+				    CONNECT BY PRIOR one_no = one_parent
+				    ORDER SIBLINGS BY one_group DESC, one_no ASC
+				)
+				WHERE has_status_zero = 1 OR has_status_zero IS NULL
+				ORDER BY one_date asc
+		</select>
+		
 		<!-- 페이지네이션 -->
 		<select id="selectListByPage" resultType="OneDto">
 			<!-- 검색 -->
@@ -52,7 +70,7 @@
 			<when test="search">
 				<![CDATA[
 			    select * from (
-			        select rownum rn, TMP.* from (
+			        select rownum rn, TMP.* from (	
 			        select * from one
 			        where instr(${type},#{keyword})>0
 			        start with one_parent is null
@@ -133,7 +151,10 @@
 		    )
 	 	</select>
 	 	
-	 	
+	 	<!-- 답변 상태 업데이트 -->
+	 	<update id="answer">
+	 		update one set one_status = #{oneStatus} where one_no = #{oneNo}
+	 	</update> 
 	 	
 	 	
     </mapper>

@@ -12,5 +12,5 @@ public interface CategoryDao {
 	List<MajorCategoryDto> majorcategoryList();
 	List<MinorCategoryDto> minorCategoryList(int majorNo);
 	MajorCategoryDto findMajor(int majorCategoryNo);
-	
+	MinorCategoryDto selectOneMajor(int minorCategoryNo);
 }
