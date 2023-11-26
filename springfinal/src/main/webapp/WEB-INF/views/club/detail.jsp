@@ -1402,23 +1402,34 @@ $(document).ready(function () {
 
 <script id="clubMember-template" type="text/template">
 <div class="row mt-3 mb-4">
-        <div class="col memberList">
-            <div class="row d-flex align-items-center">
-                <div class="col-2 position-relative">
-                <a href="/member/mypage?memberId=${clubMember.memberId}" class="href">
-                    <img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${clubMember.memberId}" width="100" height="100" class="rounded-circle profileImage">
-                    </a>
-                    <c:if test="${clubMember.clubMemberRank == '운영진'}">
-                        <i class="fa-solid fa-crown fa-lg pt-3 pb-3 ps-2 pe-2 club-member-badge"></i>
-                    </c:if>
-                </div>
-                <div class="col-9 ms-2">
-                    <div class="col memberName"><strong>${clubMember.memberName}</strong> | ${clubMember.joinDateString} 가입</div>
-                    <div class="col mt-2 joinMessage">${clubMember.joinMessage})</div>
+
+<div class="col memberList">
+    <div class="row d-flex align-items-center">
+        <div class="col-2 position-relative">
+            <a href="/member/mypage?memberId=${clubMember.memberId}" class="href">
+                <img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${clubMember.memberId}" width="100" height="100" class="rounded-circle profileImage">
+            </a>
+            <c:if test="${clubMember.clubMemberRank == '운영진'}">
+                <i class="fa-solid fa-crown fa-lg pt-3 pb-3 ps-2 pe-2 club-member-badge"></i>
+            </c:if>
+        </div>
+        <div class="col-6 ms-2">
+            <div class="row">
+                <div class="col memberName">
+                    <strong>${clubMember.memberName}</strong> | ${clubMember.joinDateString} 가입
                 </div>
             </div>
+            <div class="row mt-2">
+                <div class="col joinMessage">${clubMember.joinMessage}</div>
+            </div>
         </div>
-         <button class="btn btn-secondary w-30 upgradeRank">운영진 지정</button>
+        <div class="col-3">
+            <button class="btn btn-miso w-100 upgradeRank">운영진 지정</button>
+        </div>
+    </div>
+</div>
+
+
     </div>
    
 
@@ -1883,27 +1894,25 @@ $(document).ready(function () {
                      <div class="invalid-feedback">모임 위치를 지정해주세요</div>
                   </div>
                   
-                  <div class="row mt-2 mb-2">
-                     <div class="col-7">
-                        <div class="input-group">
-                           <input type="number" class="form-control meetingPrice"
-                              name="meetingPrice" placeholder="모임비" min="1">
-                           <div class="invalid-feedback">모임비를 지정해주세요(0이상)</div>
-                           <div class="input-group-append">
-                              <span class="input-group-text">원</span>
-                           </div>
-                        </div>
-                     </div>
-                     <div class="col-5">
-                        <div class="input-group">
-                           <input type="number" class="form-control meetingMaxPeople"
-                              name="meetingNumber" placeholder="모임 정원" min="1">
-                           <div class="invalid-feedback">모임 정원을 설정해주세요(0이상)</div>
-                           <div class="input-group-append">
-                              <span class="input-group-text">명</span>
-                           </div>
-                        </div>
-                     </div>
+  <div class="row mt-2 mb-2">
+    <div class="col-12">
+        <div class="input-group">
+            <input type="number" class="form-control meetingPrice" name="meetingPrice" placeholder="모임비" min="1">
+            <div class="input-group-append">
+                <span class="input-group-text">원</span>
+            </div>
+            <div class="invalid-feedback">모임비를 지정해주세요(0이상)</div>
+        </div>
+    </div>
+    <div class="col-12 mt-2">
+        <div class="input-group">
+            <input type="number" class="form-control meetingMaxPeople" name="meetingNumber" placeholder="모임 정원" min="1">
+            <div class="input-group-append">
+                <span class="input-group-text">명</span>
+            </div>
+            <div class="invalid-feedback">모임 정원을 설정해주세요(0이상)</div>
+        </div>
+    </div>
                   </div>
 
 
@@ -1972,28 +1981,30 @@ $(document).ready(function () {
                      name="meetingLocation" placeholder="위치를 입력하세요">
                   <div class="invalid-feedback">모임 위치를 지정해주세요</div>
                </div>
-               <div class="row mt-2 mb-2">
-                  <div class="col-7">
-                     <div class="input-group">
-                        <input type="number" class="form-control meetingPriceByEdit"
+               
+                 <div class="row mt-2 mb-2">
+    <div class="col-12">
+        <div class="input-group">
+            <input type="number" class="form-control meetingPriceByEdit"
                            name="meetingPrice" placeholder="모임비">
-                        <div class="invalid-feedback">모임비를 지정해주세요(0이상)</div>
-                        <div class="input-group-append">
-                           <span class="input-group-text">원</span>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="col-5">
-                     <div class="input-group">
-                        <input type="number" class="form-control meetingMaxPeopleByEdit"
+            <div class="input-group-append">
+                <span class="input-group-text">원</span>
+            </div>
+            <div class="invalid-feedback">모임비를 지정해주세요(0이상)</div>
+        </div>
+    </div>
+    <div class="col-12 mt-2">
+        <div class="input-group">
+            <input type="number" class="form-control meetingMaxPeopleByEdit"
                            name="meetingNumber" placeholder="모임 정원">
-                        <div class="invalid-feedback">모임 정원을 설정해주세요(0이상)</div>
-                        <div class="input-group-append">
-                           <span class="input-group-text">명</span>
-                        </div>
-                     </div>
+            <div class="input-group-append">
+                <span class="input-group-text">명</span>
+            </div>
+            <div class="invalid-feedback">모임 정원을 설정해주세요(0이상)</div>
+        </div>
+    </div>
                   </div>
-               </div>
+
                모임공개여부<input class="form-check-input ms-1 meetingFixByEdit"
                   type="checkBox" name="meetingFixByEdit">
 
