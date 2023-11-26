@@ -386,7 +386,15 @@ function getChatRoomList() {
 
 $(document).ready(function() {
     // 로컬 스토리지에서 체크박스 상태 가져오기
-    var isChecked = localStorage.getItem("notifyCheckbox") === "true";
+    var isChecked = localStorage.getItem("notifyCheckbox");
+
+    // 만약 로컬 스토리지에 값이 없다면 기본적으로 체크된 상태로 설정
+    if (isChecked === null) {
+        isChecked = true;
+    } else {
+        // 문자열 "true" 또는 "false"를 불리언 값으로 변환
+        isChecked = isChecked === "true";
+    }
 
     // 메시지 변경
     if (isChecked) {
@@ -408,7 +416,7 @@ $(document).ready(function() {
         // 로컬 스토리지에 체크박스 상태 저장
         localStorage.setItem("notifyCheckbox", isChecked);
         
-     // 메시지 변경
+        // 메시지 변경
         if (isChecked) {
             $(".form-check-label").text("실시간 알림 끄기");
         } else {
@@ -431,8 +439,6 @@ $(document).ready(function() {
         });
     });
 });
-
-
 
 
 
