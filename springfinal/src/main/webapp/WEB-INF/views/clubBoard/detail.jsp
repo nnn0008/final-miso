@@ -472,7 +472,7 @@ $(function(){
 <div class="col-12 for-reply-edit mt-2">
     <div class="card bg-miso mb-3"">
         <div class="card-header d-flex align-items-center reply-box">
-            <div class="col-2">
+            <div class="co-3 me-2">
                 <h6 class="clubBoardReplyWriter">작성자</h6>
             </div>
             <div class="col">
@@ -622,17 +622,15 @@ $(function(){
 				</div>
 			</c:if>
 			
+
+							
+			</div>
+			
 			<div class="row mt-4 mb-3">
 				<div class="col">
 					<i class="fa-regular fa-heart me-1" style="color: red"></i>좋아요<span class="board-like-count ms-1">	${clubBoardDto.clubBoardLikecount}</span>
 				</div>
 			</div>
-					
-				</div>
-				
-				
-			</div>
-			
 			<hr>
 			
 			<%--댓글이 있는 곳 --%>
