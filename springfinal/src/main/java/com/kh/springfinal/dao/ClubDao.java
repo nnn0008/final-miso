@@ -45,4 +45,6 @@ public interface ClubDao {
 	
 	List<ClubDto> clubListFindOwner(String clubOwner);
 	ClubDto clubSelectOne(int clubNo);
+	boolean deleteClub(int clubNo);
+
 }

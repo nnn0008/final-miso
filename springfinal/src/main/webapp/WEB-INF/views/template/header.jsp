@@ -143,6 +143,38 @@
 
 <script>
 
+	$(function(){
+		
+		
+		$(".search-btn").click(function(e){
+		
+			var keyword = $("[name=keyword]").val();
+			
+			
+			if(keyword.length==0){
+				
+				
+				e.preventDefault();
+				alert("검색어를 입력해주세요")
+				
+				
+			}
+			
+			
+			
+			
+			
+		})
+		
+		
+		
+		
+	})
+
+</script>
+
+<script>
+
 //모달을 열 때 데이터 갱신하는 함수
 function updateDataAndOpenModal(modalId, updateFunction) {
     $(".notifyLayer").not("#" + modalId).removeClass("show");
@@ -612,7 +644,7 @@ function truncateClubDescription() {
     <form action="/club/searchList" class="w-100">
         <div class="title input-group d-flex justify-content-center align-items-center">
             <input type="search" name="keyword" class="form-control rounded-pill " placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-            <button type="submit" class="btn btn-outline-primary rounded-pill"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <button type="submit" class="btn btn-outline-primary rounded-pill search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
     </form>
 </div>

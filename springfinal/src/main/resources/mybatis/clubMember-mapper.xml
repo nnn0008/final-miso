@@ -116,6 +116,22 @@
     	where club_member_no=#{clubMemberNo}
     </update>
     
+
+    <delete id="clubMemberDelete">
+    
+    delete club_member where club_member_no=#{clubMemberNo}
+    
+    
+    </delete>
+    
+    <select id="memberJoinClubCount" resultType="int">
+    
+    select count(*) from club_member where club_member_id=#{clubMemberId}
+    
+    </select>
+    
+
+
     <select id="findListByMemberId" resultType="HomeForClubVO">
 	    select * from(
 			select rownum rn, TMP.* from(
@@ -127,6 +143,7 @@
 			)TMP
 		)where rn between 1 and 12
     </select>
+
     
     
     

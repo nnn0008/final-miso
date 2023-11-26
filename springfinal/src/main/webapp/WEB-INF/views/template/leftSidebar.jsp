@@ -17,6 +17,47 @@ $(function () {
 })
 </script>
     
+    
+    
+    <script>
+    	
+    $(function(){
+    	
+    	$(".club-make-link").click(function(e){
+    		  e.preventDefault();
+    		console.log("링크클릭");
+    		
+    		$.ajax({
+                url: window.contextPath +"/rest/clubMakePossible",
+                method: "get",
+                success: function (response) {
+      				if(response==1){
+      				alert("더이상 동호회를 생성하실 수 없습니다. 일반유저 최대 가입 수 5개")
+      				window.location.href = $(e.target).attr("href");
+      				}
+      				else if(response==2){
+          				alert("더이상 동호회를 생성하실 수 없습니다. 파워유저 최대 가입 수 12개")
+          				}
+      				else{
+      					 window.location.href = $(e.target).attr("href");
+      				}
+                }
+    		
+    		
+    	})
+    	
+    	
+    	
+    	
+    })
+    
+    })
+    
+    
+    
+    </script>
+    
+    
  <!-- 왼쪽 사이드바 -->
             <aside class="left-sidebar">
                    
@@ -89,7 +130,7 @@ $(function () {
 
                     <div class="row p-1 mt-4">
                         <div class="col">
-                            <a href="/club/insert" class="badge rounded-pill bg-miso btn-miso p-3 link">
+                            <a href="/club/insert" class="badge rounded-pill bg-miso btn-miso p-3 club-make-link">
                                 모임 만들기
                             </a>
                         </div>

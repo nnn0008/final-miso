@@ -50,6 +50,7 @@ import com.kh.springfinal.vo.ClubDetailBoardListVO;
 import com.kh.springfinal.vo.ClubImageVO;
 import com.kh.springfinal.vo.ClubListVO;
 import com.kh.springfinal.vo.MemberPreferInfoVO;
+import com.kh.springfinal.vo.PaginationVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -102,20 +103,21 @@ public class ClubController {
 //		model.addAttribute("zipList",zipList);
 		
 		MemberDto memberDto = memberDao.loginId(memberId);
-		int memberMakeClubCount = clubDao.memberMakeClubCount(memberId);
+		int memberClubCount = clubMemberDao.memberJoinClubCount(memberId);
 		
-		log.debug("레벨={}",memberDto.getMemberLevel());
-		log.debug("만든숫자={}",memberMakeClubCount);
+		log.debug("memberMakeClubCount={}",memberClubCount);
 		
 		if(memberDto.getMemberLevel().equals("일반유저")) {
 			
-			if(memberMakeClubCount>=3) {
+			if(memberClubCount>=5) {
 				
 				return "redirect:/pay/product";
 				
 			}
 			
 			else {
+				
+				
 				
 				return "club/insert";
 			}
@@ -404,7 +406,7 @@ public class ClubController {
 		}
 		
 		@RequestMapping("/list2")
-		public String list2(HttpSession session,Model model, int majorCategoryNo) {
+		public String list2(HttpSession session,Model model, @RequestParam int majorCategoryNo) {
 			
 			List<MinorCategoryDto> categoryList = 
 					categoryDao.minorCategoryList(majorCategoryNo);
@@ -413,11 +415,12 @@ public class ClubController {
 			
 			List<ClubListVO> clubList = clubDao.majorClubList(memberId,majorCategoryNo);
 			
-			
+			String majorName = categoryDao.majorName(majorCategoryNo);
 			
 			
 			model.addAttribute("clubList",clubList);
 			model.addAttribute("categoryList",categoryList);
+			model.addAttribute("majorName",majorName);
 			
 			
 			return "club/list2";
@@ -427,7 +430,7 @@ public class ClubController {
 		}
 		
 		@RequestMapping("/list3")
-		public String list3(HttpSession session,Model model, int minorCategoryNo) {
+		public String list3(HttpSession session,Model model, @RequestParam int minorCategoryNo) {
 			
 			List<MinorCategoryDto> categoryList = 
 					categoryDao.minorCategoryList(minorCategoryNo);
@@ -435,12 +438,12 @@ public class ClubController {
 			String memberId = (String) session.getAttribute("name");
 			
 			List<ClubListVO> clubList = clubDao.minorClubList(memberId,minorCategoryNo);
-			
+			String minorName = categoryDao.minorName(minorCategoryNo);
 			
 			
 			model.addAttribute("clubList",clubList);
 			model.addAttribute("categoryList",categoryList);
-			
+			model.addAttribute("minorName",minorName);
 			
 			return "club/list3";
 			
@@ -449,10 +452,46 @@ public class ClubController {
 		}
 		
 		@GetMapping("/searchList")
-		public String searchList(@RequestParam String keyword) {
+		public String searchList(@RequestParam String keyword,HttpSession session,
+				@ModelAttribute(name ="vo") PaginationVO vo,
+				Model model) {
+			
+			String memberId = (String) session.getAttribute("name");
+			vo.setWhereString(memberId);
+			int count=clubDao.searchCount(vo);
+			
+			
+			model.addAttribute("count",count);
 			
 			return "club/clubSearchList";
 		}
+		
+		
+		@GetMapping("/deleteClubMember")
+		public String deleteClubMember(@RequestParam int clubMemberNo,@RequestParam int clubNo) {
+			
+			
+			clubMemberDao.deleteClubMember(clubMemberNo);
+			
+			int count = clubMemberDao.memberCount(clubNo);
+			
+			if(count<=0) {
+				
+				clubDao.deleteClub(clubNo);
+				
+			}
+			
+			
+			
+			return "redirect:/club/list";
+			
+			
+		}
+			
+		
+			
+			
+		
 		
 		
 		

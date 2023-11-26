@@ -27,6 +27,44 @@ width:20px;
     z-index: 3;
 }
 </style>
+
+<script>
+    	
+    $(function(){
+    	
+    	$(".club-make-link").click(function(e){
+    		  e.preventDefault();
+    		console.log("링크클릭");
+    		
+    		$.ajax({
+                url: window.contextPath +"/rest/clubMakePossible",
+                method: "get",
+                success: function (response) {
+      				if(response==1){
+      				alert("더이상 동호회를 생성하실 수 없습니다. 일반유저 최대 가입 수 5개")
+      				window.location.href = $(e.target).attr("href");
+      				}
+      				else if(response==2){
+          				alert("더이상 동호회를 생성하실 수 없습니다. 파워유저 최대 가입 수 12개")
+          				}
+      				else{
+      					 window.location.href = $(e.target).attr("href");
+      				}
+                }
+    		
+    		
+    	})
+    	
+    	
+    	
+    	
+    })
+    
+    })
+    
+    
+    
+    </script>
  
 <script>
 
@@ -306,7 +344,7 @@ width:20px;
     <c:if test="${not empty memberPreferList}">
         <span class="badge bg-miso mt-3">${memberPreferList[0].memberName}</span>님의 주소 
         <span class="badge bg-success">${memberPreferList[0].sido}</span>
-        지역을 중심으로 한 카테고리 동호회<br>
+        지역을 우선으로 한 카테고리 동호회<br>
         <c:forEach var="memberPrefer" items="${memberPreferList}">
             <span class="badge bg-info mt-2">${memberPrefer.majorCategoryName}</span>
         </c:forEach>
@@ -316,9 +354,21 @@ width:20px;
                 <div class="col-3 text-start">
                     <img src="${pageContext.request.contextPath}/images/open-door.png" width="100%">
                 </div>
-                	<div class="col">
-                    <h3>내가 사는 지역을 등록해보세요!</h3>
-                	</div>
+                	 <div class="col">
+                                	<div class="col">
+                                    <h5>해당 카테고리 동호회가 존재하지 않습니다. </h5>
+                                	</div>
+                                	<div class="col">
+                                    <h1>직접 만들어보세요!</h1>
+                                	</div>
+                                </div>
+                                <div class="row p-1 mt-4 text-center">
+                        <div class="col">
+                            <a href="/club/insert" class="badge rounded-pill bg-miso btn-miso p-3 link w-100 club-make-link">
+                                모임 만들기
+                            </a>
+                        </div>
+                    </div>
             </div>
     </c:if>
 </div>
