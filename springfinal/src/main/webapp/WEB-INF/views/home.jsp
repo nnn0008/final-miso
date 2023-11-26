@@ -9,6 +9,7 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 <jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
 
+
 <!-- 해당 JSP 파일에 스크립트 포함 -->
 <script>
 	$(document).ready(function() {
@@ -31,39 +32,13 @@
 	});
 </script>
 <script>
-	//정모 관련 처리
-	$(function() {
-
-		//참석 버튼을 누르면 없던 프로필 버튼이 생기고 meetingDto에 들어가져야 한다
-		$(".meeting-attend").on("click", function() {
-			$(this).hide();
-			$(this).parent().find(".meeting-cancel").show();
-
-			$.ajax({
-
-			});
-
-		});
-
-		$(".meeting-cancel").on("click", function() {
-			$(this).hide();
-			$(this).parent().find(".meeting-attend").show();
-
-			$.ajax({
-
-			});
-
-		});
-
-	});
-</script>
-<script>
 	//스크롤 관련 처리
 	var loading = false;
 	var currentPage = 1;
 	$(function() {
 		loadList();
-		loadMore(currentPage);
+		
+		loadMore(currentPage);	
 	});
 	//최초의 5장을 불러온다
 	function loadList(){
@@ -81,16 +56,34 @@
 					var template = $("#meeting-template").html();
 					var htmlTemplate = $.parseHTML(template);
 					
+					$(htmlTemplate).find(".meeting-card").attr("data-club-no", response[i].clubNo);
 					$(htmlTemplate).find(".meeting-clubName").text(response[i].clubName);
 					$(htmlTemplate).find(".meeting-attend").attr("data-club-no", response[i].clubNo);
 					$(htmlTemplate).find(".meeting-cancel").attr("data-club-no", response[i].clubNo);
 					$(htmlTemplate).find(".meeting-go-club").attr("href", window.contextPath + "/club/detail?clubNo=" + response[i].clubNo);
 					$(htmlTemplate).find(".meeting-location").text(response[i].meetingLocation);
 					$(htmlTemplate).find(".meeting-date").text(response[i].formattedMeetingDate);
+					$(htmlTemplate).find(".meeting-dday").text(response[i].calculateDday);
+					$(htmlTemplate).find(".meeting-name").text(response[i].meetingName);
+					$(htmlTemplate).find(".meeting-image").attr("href", window.contextPath + "/club/detail?clubNo=" + response[i].clubNo);
+					$(htmlTemplate).find(".meeting-attend").attr("data-club-no", response[i].clubNo).attr("data-meeting-no", response[i].meetingNo);
+					$(htmlTemplate).find(".meeting-cancel").attr("data-club-no", response[i].clubNo).attr("data-meeting-no", response[i].meetingNo);
+					if(response[i].attachNo != null){
+						var img = $("<img>").attr("src", window.contextPath + "/download?attachNo=" + response[i].attachNo)
+						.css({
+							"width":"182px",
+							"height":"157.75px"
+						});
+						$(htmlTemplate).find(".meeting-image").html(img);
+					}
 // 					$(htmlTemplate).find(".meeting-profile").text(response[i].)
 					
 					$(".meeting-list").append(htmlTemplate);
+					attendMeeting(htmlTemplate);
+					cancelMeeting(htmlTemplate);
 				}
+				
+				
 			},
 		});
 	}
@@ -126,12 +119,28 @@
 							var template = $("#meeting-template").html();
 							var htmlTemplate = $.parseHTML(template);
 							
+							$(htmlTemplate).find(".meeting-card").attr("data-club-no", response[i].clubNo);
 							$(htmlTemplate).find(".meeting-clubName").text(response[i].clubName);
 							$(htmlTemplate).find(".meeting-attend").attr("data-club-no", response[i].clubNo);
 							$(htmlTemplate).find(".meeting-cancel").attr("data-club-no", response[i].clubNo);
 							$(htmlTemplate).find(".meeting-go-club").attr("href", window.contextPath + "/club/detail?clubNo=" + response[i].clubNo);
 							$(htmlTemplate).find(".meeting-location").text(response[i].meetingLocation);
 							$(htmlTemplate).find(".meeting-date").text(response[i].formattedMeetingDate);
+							$(htmlTemplate).find(".meeting-dday").text(response[i].calculateDday);
+							$(htmlTemplate).find(".meeting-name").text(response[i].meetingName);
+							$(htmlTemplate).find(".meeting-image").attr("href", window.contextPath + "/club/detail?clubNo=" + response[i].clubNo);
+							$(htmlTemplate).find(".meeting-attend").attr("data-club-no", response[i].clubNo).attr("data-meeting-no", response[i].meetingNo);
+							$(htmlTemplate).find(".meeting-cancel").attr("data-club-no", response[i].clubNo).attr("data-meeting-no", response[i].meetingNo);
+							if(response[i].attachNo != null){
+								var img = $("<img>").attr("src", window.contextPath + "/download?attachNo=" + response[i].attachNo)
+								.css({
+									"width":"182px",
+									"height":"157.75px"
+								});
+								//테스트로 넣어본 이미지는 돌아감
+								//var img = $("<img>").attr("src", window.contextPath + "/images/paint-palette.png");
+								$(htmlTemplate).find(".meeting-image").html(img);
+							}
 //		 					$(htmlTemplate).find(".meeting-profile").text(response[i].)
 							
 							$(".meeting-list").append(htmlTemplate);
@@ -143,30 +152,87 @@
 		});
 		
 	}
+	//정모 관련 처리
+	function attendMeeting(htmlTemplate){
+		$(htmlTemplate).find(".meeting-attend").on("click", function() {
+			$(this).hide();
+			$(this).parent().find(".meeting-cancel").show();
+			
+			var clubNo = $(this).data("club-no");
+			var meetingNo = $(this).data("meeting-no");
+			console.log("참석버튼");
+			console.log(clubNo);
+			console.log(meetingNo);
+			
+			$.ajax({
+				url: window.contextPath + "/rest/home/insert",
+				method: "post",
+				data:  {
+					clubNo: clubNo,
+					meetingNo: meetingNo
+				},
+				success: function(response){
+					console.log("성공");
+					window.alert("정모에 참가하셨습니다");
+				},
+			});
+		});	
+	}
+	
+	function cancelMeeting(htmlTemplate){
+		$(htmlTemplate).find(".meeting-cancel").on("click", function() {
+			$(this).hide();
+			$(this).parent().find(".meeting-attend").show();
+			
+			var clubNo = $(this).data("club-no");
+			var meetingNo = $(this).data("meeting-no");
+			console.log("취소버튼");
+			console.log(clubNo);
+			console.log(meetingNo);
+			$.ajax({
+				url: window.contextPath + "/rest/home/remove",
+				method: "post",
+				data:  {
+					clubNo: clubNo,
+					meetingNo: meetingNo
+				},
+				success: function(response){
+					console.log("성공");
+					window.alert("정모 참가를 취소하셨습니다");
+				},
+			});
+		});
+	}
+	
+	function moveEvent(htmlTemplate){
+		$(htmlTemplate).find(".meeting-card").on("click", function(){
+			window.location.href = window.contextPath + "/club/detail?clubNo=" +$(this).data("club-no");
+		});
+	}
 </script>
 <script id="meeting-template" type="text/template">
 <div class="row">
 	<div class="col">
-	
-		<div class="card text-white bg-miso mb-3" style="width: 550px">
-			<div class="card-header d-flex justify-content-between align-items-center meeting-clubName">
-				${homeForMeetingVO.clubName}
-			</div>
-			<div class="card-body meeting-location">${homeForMeetingVO.meetingLocation}</div>
-			
-			<div class="card-header meeting-date">${homeForMeetingVO.meetingDate}</div>
-			
-			<div class="card-body">
-				
-	
-			<div class="card-header text-right">
-				<button type="button" class="btn btn-light rounded-pill ml-auto meeting-attend">참석</button>
-				<button type="button" class="btn btn-danger rounded-pill ml-auto meeting-cancel">취소</button>
-				<a href="${pageContext.request.contextPath}/club/detail?clubNo=${homeForMeetingVO.clubNo}" class="btn btn-info rounded-pill ml-auto meeting-go-club">동호회로</a>
-			</div>
 
-			</div>
-		</div>
+<div class="card mb-3 meeting-card" style="width: 550px;">
+  <div class="row g-0">
+    <div class="col-md-4">
+		<a href="#" class="meeting-image"></a>
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title meeting-name">Card title</h5>
+        <p class="card-text meeting-clubName">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+        <p class="card-text meeting-location">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+        <p class="card-text"><small class="text-body-secondary meeting-date">Last updated 3 mins ago</small></p>
+        <p class="card-text"><small class="text-body-secondary meeting-dday">Last updated 3 mins ago</small></p>
+		<button type="button" class="btn btn-light rounded-pill ml-auto meeting-attend">참석</button>
+		<button type="button" class="btn btn-danger rounded-pill ml-auto meeting-cancel">취소</button>
+		<a href="#" class="btn btn-info rounded-pill ml-auto meeting-go-club">동호회로</a>
+      </div>
+    </div>
+  </div>
+
 	</div>
 </div>
 </script>

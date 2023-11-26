@@ -49,8 +49,6 @@
 			LEFT OUTER JOIN ATTACH a ON mi.ATTACH_NO = a.ATTACH_NO 
 			WHERE m.club_NO IN (SELECT c.CLUB_NO FROM MEMBER m JOIN club_member cm ON m.MEMBER_ID =cm.CLUB_MEMBER_ID 
 			JOIN CLUB c ON cm.CLUB_NO = c.CLUB_NO WHERE m.member_id= #{memberId})
-	</select>
-	
-	
+	</select>	
 	
 </mapper>    

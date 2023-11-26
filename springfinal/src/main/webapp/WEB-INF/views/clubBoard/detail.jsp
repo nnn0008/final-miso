@@ -554,7 +554,17 @@ $(function(){
 					${clubBoardDto.clubBoardTitle}
 				</div>
 				<div class="col">
-					<i class="fa-solid fa-ellipsis-vertical"></i>
+					  <div class="btn-group dropend" role="group">
+					    <button type="button" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
+					      <i class="fa-solid fa-ellipsis-vertical"></i>
+					    </button>
+					    <ul class="dropdown-menu">
+					      <li><a class="dropdown-item" href="#">목록</a></li>
+					      <li><a class="dropdown-item" href="#">수정</a></li>
+					      <li><a class="dropdown-item" href="#">삭제</a></li>
+					      <li><a class="dropdown-item" href="#">신고</a></li>
+					    </ul>
+					  </div>
 					<div class="row">
 						<a href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubBoardDto.clubNo}">목록</a>
 					</div>
@@ -681,6 +691,5 @@ $(function(){
     </div>
   </div>
 </div>
-
 
 <jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>

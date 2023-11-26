@@ -16,6 +16,7 @@ public class PaginationVO {
 	private int clubNo;
 	private String whereString;
 	private String memberId;
+	private boolean isAttended;
 	
 	public boolean isSearch() {
 		return type != null && keyword != null;
@@ -45,6 +46,10 @@ public class PaginationVO {
 	//동호회 게시판은 키워드만 있어도 됨
 	public boolean isCategory() {
 		return keyword != null;
+	}
+	
+	public boolean getAttend() {
+		return isAttended;
 	}
 	
 	public String getPrevQueryString() {

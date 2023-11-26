@@ -1,11 +1,13 @@
 package com.kh.springfinal.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.springfinal.dto.MeetingMemberDto;
 import com.kh.springfinal.vo.HomeForMeetingMemberVO;
 import com.kh.springfinal.vo.HomeForMeetingVO;
 import com.kh.springfinal.vo.PaginationVO;
@@ -31,4 +33,11 @@ public class HomeDaoImpl implements HomeDao{
 		vo.setMemberId(memberId);
 		return sqlSession.selectOne("forHome.meetingCount", vo);
 	}
+	
+	@Override
+	public MeetingMemberDto selectOne(int clubMemberNo, int meetingNo) {
+		Map params = Map.of("clubMemberNo", clubMemberNo, "meetingNo", meetingNo);
+		return sqlSession.selectOne("forHome.checkAttend", params);
+	}
+	
 }

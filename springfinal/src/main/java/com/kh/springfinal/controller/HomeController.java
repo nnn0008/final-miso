@@ -69,6 +69,7 @@ public class HomeController {
 	
 	@RequestMapping("/download")
 	public ResponseEntity<ByteArrayResource> download(@RequestParam int attachNo) throws IOException{
+		log.debug("attachNo={}",attachNo);
 		return fileLoadVO.download(attachNo);
 	}
 	
