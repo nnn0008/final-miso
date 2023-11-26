@@ -36,12 +36,13 @@
     	<insert id="insertDetail">
     		insert into payment_detail (
 			payment_detail_no, payment_detail_origin, payment_detail_product,
-			payment_detail_product_name, payment_detail_product_price, payment_detail_status
+			payment_detail_product_name, payment_detail_product_price, payment_detail_status,
+			payment_detail_club_no
     		)
     		values(
     		payment_detail_seq.nextval, 
 			#{paymentDetailOrigin}, #{paymentDetailProduct}, #{paymentDetailProductName},
-			#{paymentDetailProductPrice}, '완료'
+			#{paymentDetailProductPrice}, '완료', #{paymentDetailClubNo}
     		)
     	
     	</insert>
@@ -146,6 +147,7 @@
     			<result column="payment_detail_product_price" property="paymentDetailProductPrice"/>
     			<result column="payment_detail_product_qty" property="paymentDetailProductQty"/>
     			<result column="payment_detail_status" property="paymentDetailStatus"/>
+    			<result column="payment_detail_club_no" property="paymentDetailClubNo"/>
     			</collection>
     	</resultMap>
     	

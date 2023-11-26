@@ -12,6 +12,10 @@
     	-
     	${confirmVO.productDto.productPrice}원
     </div>
+    <hr>
+    [${confirmVO.clubDto.clubNo}]
+    ${confirmVO.clubDto.clubName}
+    ${confirmVO.clubDto.clubExplain}
     </c:forEach>
     <hr>
     <h2>총${total}원</h2>
