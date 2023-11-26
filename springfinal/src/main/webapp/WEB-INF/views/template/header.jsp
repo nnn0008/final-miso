@@ -445,31 +445,37 @@ function populateChatModal(data) {
     // 예시: 채팅 모달에는 사용자의 채팅방 리스트를 표시
 // roomList 스타일 적용
 if (Array.isArray(data.roomList)) {
-       var sectionHeader =
-           '<div class="row">' +
-           '<div class="col text-start d-flex align-items-center ms-3 mt-3">' +
-           '<img src="' + contextPath + '/images/logo-door.png" width="10%">' +
-           '<strong class="ms-2">모임채팅</strong>' +
-           '</div>' +
-           '</div>';
+    var sectionHeader =
+        '<div class="row">' +
+        '<div class="col text-start d-flex align-items-center ms-3 mt-3">' +
+        '<img src="' + contextPath + '/images/logo-door.png" width="10%">' +
+        '<strong class="ms-2">모임채팅</strong>' +
+        '</div>' +
+        '</div>';
 
-       var sectionHeaderItem = $("<div class='col-12 mb-2'>" + sectionHeader + "</div>");
-       modalContent.append(sectionHeaderItem);   
-       
+    var sectionHeaderItem = $("<div class='col-12 mb-2'>" + sectionHeader + "</div>");
+    modalContent.append(sectionHeaderItem);
+
     data.roomList.forEach(function (chatRoom) {
-
         var message =
             '<div class="row mt-3 ms-2 d-flex align-items-center club-box2" onclick="enterRoom(' + chatRoom.chatRoomNo + ')">' +
             '<div class="col-2">' +
-            '<img src="' + contextPath + '/club/image?clubNo=' + chatRoom.clubNo + '" class="rounded-circle" width="50" height="50">'+
+            '<img src="' + contextPath + '/club/image?clubNo=' + chatRoom.clubNo + '" class="rounded-circle" width="50" height="50">' +
             '</div>' +
             '<div class="col-10">' +
             '<div class="col ms-3">' +
             '<span class="clubname-text2">' + chatRoom.clubName + '</span>' +
             '</div>' +
-            '<div class="col ms-3">' +
-            '<span class="explain-text2 d-inline-block text-truncate" style="max-width: 160px;">' + chatRoom.clubExplain + '</span>' +
-            '</div>' +
+            '<div class="col ms-3">';
+
+        if (chatRoom.chatBlind === 'Y') {
+            message += '<span class="explain-text2 d-inline-block text-truncate" style="max-width: 160px;">삭제된 메시지입니다</span>';
+        } else {
+            var chatContent = chatRoom.chatContent !== null ? chatRoom.chatContent : '';
+            message += '<span class="explain-text2 d-inline-block text-truncate" style="max-width: 160px;">' + chatContent + '</span>';
+        }
+
+        message += '</div>' +
             '</div>' +
             '</div>';
 
@@ -479,6 +485,8 @@ if (Array.isArray(data.roomList)) {
 } else {
     console.error("roomList is not an array:", data.roomList);
 }
+
+
 
 //oneChatRoomList 스타일 적용
 if (Array.isArray(data.oneChatRoomList)) {
@@ -520,7 +528,6 @@ if (Array.isArray(data.oneChatRoomList)) {
 
 // meetingRoomList 스타일 적용
 if (Array.isArray(data.meetingRoomList)) {
-
     var sectionHeader =
         '<div class="row">' +
         '<div class="col text-start d-flex align-items-center ms-3 mt-3">' +
@@ -533,7 +540,6 @@ if (Array.isArray(data.meetingRoomList)) {
     modalContent.append(sectionHeaderItem);
 
     data.meetingRoomList.forEach(function (meetingRoom) {
-
         var message =
             '<div class="row mt-3 ms-2 d-flex align-items-center club-box2" onclick="enterRoom(' + meetingRoom.chatRoomNo + ')">' +
             '<div class="col-2">' +
@@ -543,9 +549,16 @@ if (Array.isArray(data.meetingRoomList)) {
             '<div class="col ms-3">' +
             '<span class="clubname-text2 text-truncate">' + meetingRoom.meetingName + '</span>' +
             '</div>' +
-            '<div class="col ms-3">' +
-            '<span class="explain-text2 d-inline-block text-truncate" style="max-width: 160px;">' + meetingRoom.meetingLocation + '</span>' +
-            '</div>' +
+            '<div class="col ms-3">';
+
+        if (meetingRoom.chatBlind === 'Y') {
+            message += '<span class="explain-text2 d-inline-block text-truncate" style="max-width: 160px;">삭제된 메시지입니다</span>';
+        } else {
+            var chatContent = meetingRoom.chatContent !== null ? meetingRoom.chatContent : '';
+            message += '<span class="explain-text2 d-inline-block text-truncate" style="max-width: 160px;">' + chatContent + '</span>';
+        }
+
+        message += '</div>' +
             '</div>' +
             '</div>';
 

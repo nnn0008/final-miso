@@ -983,30 +983,66 @@ if (data.messageType === "delete") {
 		$(".send-btn").click(function () {
 		    sendMessage();
 		});
+
+
 		
-	 
-		// dm 요청 함수
-		$(".dm-send").on("click", function () {
-		    // 모달에서 상대방 정보 가져오기
-		    var chatReceiver = $("#profileModal .modal-profile-id").text().trim();
+// dm 요청 함수
+$(".dm-send").on("click", function () {
+    // 모달에서 상대방 정보 가져오기
+    var chatReceiver = $("#profileModal .modal-profile-id").text().trim();
+    var memberLevel = "${sessionScope.level}";
 
-		    // "@" 이후의 문자열 추출
-		    var atSymbolIndex = chatReceiver.indexOf("@");
-		    var relativeUserId = atSymbolIndex !== -1 ? chatReceiver.slice(atSymbolIndex + 1) : null;
+    if (memberLevel === '파워유저') {
+        // "@" 이후의 문자열 추출
+        var atSymbolIndex = chatReceiver.indexOf("@");
+        var relativeUserId = atSymbolIndex !== -1 ? chatReceiver.slice(atSymbolIndex + 1) : null;
 
-		    // 채팅 메시지 객체 생성
-		    var dm = {
-		        messageType: "dm",
-		        chatSender: "${sessionScope.name}", // 사용자 이름 또는 아이디 등
-		        chatReceiver: relativeUserId, // "@" 이후의 문자열을 상대방 아이디로 사용
-		    };
+        // 채팅 메시지 객체 생성
+        var dm = {
+            messageType: "dm",
+            chatSender: "${sessionScope.name}", // 사용자 이름 또는 아이디 등
+            chatReceiver: relativeUserId, // "@" 이후의 문자열을 상대방 아이디로 사용
+        };
 
-		    // WebSocket을 통해 서버로 메시지 전송
-		    window.socket.send(JSON.stringify(dm));
+        // WebSocket을 통해 서버로 메시지 전송
+        window.socket.send(JSON.stringify(dm));
 
-		    console.log("DM 메시지 전송 완료");
-		    console.log(dm);
-		});
+        console.log("DM 메시지 전송 완료");
+        console.log(dm);
+    } else {
+        // '파워유저'가 아닌 경우에는 경고창 표시
+    	var alertDiv = $("<div>").addClass("alert alert-dismissible alert-light alert-container")
+	    .css({
+	        textAlign: "center", // 텍스트를 가운데 정렬
+	    })
+	    .append('<button type="button" class="btn-close" data-bs-dismiss="alert"></button>')
+	    .append('<strong>권한이 없습니다. </strong><br>')
+	    .append('<span class="badge bg-success rounded-pill bg-miso">파워유저</span>가 되어보세요! <br>')
+	    .append('<a href="/pay/product" class="alert-link btn btn-success bg-miso w-100 mt-2">구매하기</a>');
+
+
+	// 경고창을 body에 표시
+	$("body").append(alertDiv);
+
+	// 메세지 리스트 위로 띄우기
+	var messageList = $(".message-list");
+	alertDiv.insertBefore(messageList); // 메세지 리스트 앞에 추가
+
+	// 모달창의 z-index 값 확인
+	var modalZIndex = $('#profileModal').css('z-index');
+
+	// 경고창의 z-index 설정
+	alertDiv.css({
+	    position: "absolute",
+	    width: "350px",
+	    top: "340px",
+	    left: "320px",
+	    "z-index": parseInt(modalZIndex) + 1, // 모달창의 z-index보다 큰 값으로 설정
+	});
+
+    }
+});
+
 
 		
 		// 메시지 전송 함수
