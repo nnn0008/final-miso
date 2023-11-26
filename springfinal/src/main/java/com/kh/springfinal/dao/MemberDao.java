@@ -14,6 +14,8 @@ public interface MemberDao {
 	List<MemberDto> selectListOld();
 	List<MemberDto> selectListNew();
 	boolean memberEdit(MemberEditDto memberDto);
+	boolean memberEditSelf(MemberDto memberDto);
+	boolean deleteMember(String memberId);
 	boolean updateLevel(String memberId);//회원등급변경
 	boolean updateDownLevel(String memberId);//회원등급내리기
 	

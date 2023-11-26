@@ -13,6 +13,18 @@
 			select * from member_category where member_id=#{memberId}
     	</select>
     	
+    	<select id="findLikeminor" resultType="MinorCategoryDto">
+    		select * from minor_category where minor_category_no in(
+				select LIKE_CATEGORY from member_category where member_id=#{memberId}
+			)
+    	</select>
+  
+    	<select id="findLikemajor" resultType="MajorCategoryDto">
+    		select * from major_category where major_category_no in(
+				select major_category_no from minor_category where minor_category_no=#{minorCategoryNo}
+			)
+    	</select>
+    	
     	<delete id="deleteLikeCategory">
     		delete member_category where member_id = #{memberId}
     	</delete>

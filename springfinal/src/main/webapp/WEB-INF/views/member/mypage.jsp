@@ -42,7 +42,26 @@ $(function() {
 	        }
 	    });
 	});
-
+	$(".changeSelf").click(function() {
+		$(".self-modal").modal().show();
+	})
+	
+	$(".save-btn").click(function () {
+		var memberSelf = $("#self-content").val();
+		var memberId = "${sessionScope.name}";
+		$.ajax({
+			url:"http://localhost:8080/rest/member/memberEditSelf",
+			method: "post",
+			data: {
+				memberSelf : memberSelf,
+				memberId : memberId
+				},
+				success: function (response) {
+					$(this).modal().hide();
+				}
+		});
+	})
+		
 	});
 </script>
 
@@ -61,7 +80,7 @@ $(function() {
                             <div class="col-3">
                                 <c:choose>
                                     <c:when test="${memberDto==null}">
-                                        <img src="https://dummyimage.com/40x40/000/fff" class="rounded-circle profile">
+										<img src="${pageContext.request.contextPath}/images/avatar50.png" width="35%">
                                     </c:when>
                                     <c:otherwise>
                                         <img src="/rest/member/profileShow?memberId=${memberDto.memberId}" class="rounded-circle profile" style="width:120px; height: 120px;">
@@ -76,21 +95,53 @@ $(function() {
                                 <div class="col mt-2">
                                     <span class="text-gray">지역 | ${memberDto.memberBirth}</span> 
                                 </div>
-                                <div class="col mt-2">
-                                    <span>자기소개 넣어야 함</span> 
+                                <div class="col mt-2 changeSelf">
+                                <c:choose>
+                                	<c:when test="${memberDto.memberSelf==null}">
+                                		<span class="border border-1">자신을 소개하세요</span>
+                                	</c:when>
+                                	<c:otherwise>
+	                                    <span>${memberDto.memberSelf}</span> 
+                                	</c:otherwise>
+                                </c:choose>
+	                                    <button class="changeSelf"  data-bs-toggle="modal" data-bs-target="#self-modal"><i class="fa-solid fa-pen"></i></button>
                                 </div>
                             </div>
                     </div>
+						<!-- Modal -->
+						<div class="modal fade" id="self-modal" tabindex="-1" role="dialog" aria-labelledby="self-modalLabel" aria-hidden="true">
+						  <div class="modal-dialog" role="document">
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <h5 class="modal-title" id="self-modalLabel">자기소개</h5>
+						        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						          <span aria-hidden="true">&times;</span>
+						        </button>
+						      </div>
+						      <div class="modal-body">
+						        <div class="form-group">
+							      <textarea class="form-control" name="memberSelf" id="self-content" rows="5">${memberDto.memberSelf}</textarea>
+							    </div>
+						      </div>
+						      <div class="modal-footer">
+						        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+						        <button type="button" class="btn btn-primary save-btn" data-bs-dismiss="modal">저장</button>
+						      </div>
+						    </div>
+						  </div>
+						</div>
+                    
+                    
+<!--                     관심 카테고리 -->
                     <div class="col mt-2">
-                        <span class="badge bg-info rounded-pill">헬스/크로스핏</span>
-                        <span class="badge bg-info rounded-pill">헬스/크로스핏</span>
+                        <span class="badge bg-info rounded-pill">${like0}</span>
+                        <span class="badge bg-info rounded-pill">${like1}</span>
+                        <span class="badge bg-info rounded-pill">${like2}</span>
                     </div>
-
-                        
                         <div class="row">
                             <div class="col d-flex align-items-center mt-3 me-3">
                                 <div class="col-6">
-                                    <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+                                    <img src="${pageContext.request.contextPath}/images/logo-door.	png" width="5%">
                                     <strong class="ms-2 text-start">찜한 정모</strong>
                                 </div>
                                 <div class="col-6 text-end">
@@ -152,7 +203,32 @@ $(function() {
                     </div>
                 	</c:when>
                 	<c:otherwise>
-                		
+                	
+                	
+                	
+                		 <div class="row">
+                            <div class="col d-flex align-items-center mt-3 me-3">
+                                <div class="col-6">
+                                    <img src="${pageContext.request.contextPath}/images/logo-door.	png" width="5%">
+                                    <strong class="ms-2 text-start">${memberDto.memberName}의 마이페이지</strong>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <strong>전체보기</strong>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-2 mt-2">
+                                <div class="alert alert-dismissible alert-light">
+                                    <a href="#" class="link">찜한 모임</a>
+                                </div>
+                                <span>${clubDto.clubName}</span>
+                            </div>
+                    </div>
+                    
+                    
+                    
                 	</c:otherwise>
                 </c:choose>
                         

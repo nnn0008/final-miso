@@ -2,6 +2,7 @@ package com.kh.springfinal.dao;
 
 import java.util.List;
 
+import com.kh.springfinal.dto.ClubDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.vo.ClubMemberVO;
 import com.kh.springfinal.vo.HomeForClubVO;
@@ -33,6 +34,7 @@ public interface ClubMemberDao {
 	
 	List<MeetingAttendMemberVO> meetingAttendList(int meetingNo);
 	
+	List<ClubDto> mypageClubList(String memberId);
 	boolean upgradeRank(int clubMemberNo);
 	
 	List<HomeForClubVO> selectListByMemberId(String memberId);

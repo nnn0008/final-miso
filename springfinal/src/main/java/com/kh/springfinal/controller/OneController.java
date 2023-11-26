@@ -93,7 +93,7 @@ public class OneController {
 			oneDto.setOneGroup(originDto.getOneGroup());
 			oneDto.setOneParent(originDto.getOneNo());
 			oneDto.setOneDepth(originDto.getOneDepth()+1);
-			oneDto.setOneStatus(originDto.getOneStatus()-1);
+			oneDto.setOneStatus(0);
 		}
 		
 		oneDao.insert(oneDto);//글쓰기

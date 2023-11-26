@@ -27,6 +27,10 @@
 			WHERE mi.MINOR_CATEGORY_NO  = #{minorNo}
     </select>
     
+    <select id="selectOneMajor" resultType="MinorCategoryDto">
+    	select * from minor_category where minor_category_no = #{minorCategoryNo}
+    </select>
+    
     
     
     
