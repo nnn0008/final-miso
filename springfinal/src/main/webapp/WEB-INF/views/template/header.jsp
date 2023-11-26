@@ -166,13 +166,13 @@ $(document).ready(function () {
 
     // 모달창 클릭 시 데이터 갱신
     $("#notifyModal").click(function () {
-    	truncateClubDescription();
+       truncateClubDescription();
         getNotifyList();
     });
 
     // 모달창 클릭 시 데이터 갱신
     $("#chatModal").click(function () {
-    	truncateClubDescription();
+       truncateClubDescription();
         getChatRoomList();
     });
 

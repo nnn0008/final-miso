@@ -214,10 +214,10 @@ public class ClubBoardRestController {
 //		if(list.size() == 0) {
 //			return;
 //		}
-		log.debug("page={}", page);
-		log.debug("keyword={}",keyword);
-		log.debug("vo={}", vo);
-		log.debug("list={}", list.size());
+//		log.debug("page={}", page);
+//		log.debug("keyword={}",keyword);
+//		log.debug("vo={}", vo);
+//		log.debug("list={}", list.size());
 		return list;
 	}
 }

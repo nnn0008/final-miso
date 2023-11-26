@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class WishlistDto {
 	
-	String memberId;
-	int clubNo;
+	private String memberId;
+	private int clubNo;
+	private String jjimDay;
 
 }
