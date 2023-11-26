@@ -14,4 +14,6 @@ public interface MemberDao {
 	List<MemberDto> selectListOld();
 	List<MemberDto> selectListNew();
 	boolean memberEdit(MemberEditDto memberDto);
+	boolean memberEditSelf(MemberDto memberDto);
+	boolean deleteMember(String memberId);
 }

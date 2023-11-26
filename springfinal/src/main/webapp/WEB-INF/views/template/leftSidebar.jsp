@@ -9,6 +9,13 @@
     <link href="${pageContext.request.contextPath}/css/misolayout.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/miso.css" rel="stylesheet">
     
+<script>
+$(function () {
+	
+    
+
+})
+</script>
     
  <!-- 왼쪽 사이드바 -->
             <aside class="left-sidebar">
@@ -21,7 +28,7 @@
 		                                <img src="${pageContext.request.contextPath}/images/avatar50.png" width="35%">
 			                    	</c:when>
 			                    	<c:otherwise>
-				                        <img src="/rest/member/profileShow?memberId=${sessionScope.name}" class="rounded-circle profile" style="width:80px; height: 80px;">
+			                    			<img src="/rest/member/profileShow?memberId=${sessionScope.name}" class="rounded-circle profile" style="width: 80px; height: 80px;">
 			                    	</c:otherwise>
 			                    </c:choose>
                             </div>

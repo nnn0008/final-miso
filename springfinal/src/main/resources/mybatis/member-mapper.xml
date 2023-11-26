@@ -38,4 +38,13 @@
 			update member set member_name=#{memberName}, member_addr=#{memberAddr}, member_email=#{memberEmail}, member_contact=#{memberContact}, member_birth=#{memberBirth, jdbcType=VARCHAR}
 			where member_id = #{memberId}
 		</update>
+
+		<update id="memberEditSelf">
+			update member set member_self = #{memberSelf}
+			where member_id = #{memberId}
+		</update>
+		
+		<delete id="deleteMember">
+			delete member where member_id = #{memberId}
+		</delete>
     </mapper>

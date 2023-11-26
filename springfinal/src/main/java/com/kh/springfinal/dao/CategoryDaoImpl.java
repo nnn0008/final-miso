@@ -33,6 +33,11 @@ public class CategoryDaoImpl implements CategoryDao{
 		return sqlSession.selectOne("category.majorFind",majorCategoryNo);
 	}
 
+	@Override
+	public MinorCategoryDto selectOneMajor(int minorCategoryNo) {
+		return sqlSession.selectOne("category.selectOneMajor", minorCategoryNo);
+	}
+
 	
 	
 	

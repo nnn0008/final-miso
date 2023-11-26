@@ -90,6 +90,18 @@ public class OneDaoImpl implements OneDao {
 		}
 	}
 
+	@Override
+	public List<OneDto> selectAdminList() {
+		return sqlSession.selectList("one.admin-list");
+	}
+
+	@Override
+	public boolean oneAnswer(OneDto oneDto) {
+		int count = sqlSession.update("one.answer", oneDto);
+		boolean result = count>0;
+		return result;
+	}
+
 
 	
 

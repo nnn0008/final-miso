@@ -15,6 +15,7 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -100,10 +101,26 @@ public class MemberRestController {
 	profileShow(@RequestParam String memberId) throws IOException {
 		AttachDto attachDto = profileDao.profileFindOne(memberId);
 
-//		if(attachDto == null) {
-//			//throw new NoTargetException("파일 없음");//내가만든 예외로 통합
-//			return ResponseEntity.notFound().build();//404 반환
-//		}
+		if(attachDto == null) {
+			String home = System.getProperty("user.home");
+	        File dir = new File(home, "upload");
+	        File target = new File(dir, "avatar50.png");
+
+	        // 기본 이미지 데이터 읽어오기
+	        byte[] defaultImageData = FileUtils.readFileToByteArray(target);
+	        ByteArrayResource resource = new ByteArrayResource(defaultImageData);
+
+	        // 기본 이미지 반환
+	        return ResponseEntity.ok()
+	                .header(HttpHeaders.CONTENT_ENCODING, StandardCharsets.UTF_8.name())
+	                .contentLength(defaultImageData.length)
+	                .header(HttpHeaders.CONTENT_TYPE, "image/png") // 기본 이미지 타입으로 설정
+	                .header(HttpHeaders.CONTENT_DISPOSITION, 
+	                        ContentDisposition.attachment()
+	                                .filename("avatar50.png", StandardCharsets.UTF_8)
+	                                .build().toString())
+	                .body(resource);
+		}
 
 		String home = System.getProperty("user.home");
 		File dir = new File(home, "upload");
@@ -128,5 +145,17 @@ public class MemberRestController {
 	@PostMapping("/searchAddr")
 	public ZipCodeDto searchAddr(@RequestParam int memberAddr) {
 		return zipCodeDao.selectOne(memberAddr);
+	}
+	
+	@PostMapping("/memberEditSelf")
+	public boolean memberEditSelf(@ModelAttribute MemberDto memberDto) {
+		return memberDao.memberEditSelf(memberDto);
+	}
+	
+	@PostMapping("/delete")
+	public boolean delete(@RequestParam String memberId, @RequestParam String memberPw) {
+		log.debug("중간체크");
+		memberDao.selectOne(memberId, memberPw);
+		return memberDao.deleteMember(memberId);
 	}
 }

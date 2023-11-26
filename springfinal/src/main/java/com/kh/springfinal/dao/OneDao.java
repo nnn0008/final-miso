@@ -12,6 +12,9 @@ public interface OneDao {
 	List<OneDto>selectList();
 	OneDto selectOne(int oneNo);
 	boolean update(OneDto oneDto);
+//	어드민용
+	List<OneDto>selectAdminList();
+	boolean oneAnswer(OneDto oneDto);
 
 	
 	//페이지네이션
