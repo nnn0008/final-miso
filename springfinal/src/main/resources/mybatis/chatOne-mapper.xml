@@ -67,5 +67,12 @@
 	WHERE CHAT_ONE.CHAT_ROOM_NO = #{chatRoomNo}
 	order by chat_time
 	</select>
+	
+	<select id="isOnechatRoomMember" resultType="int" parameterType="map">
+	SELECT COUNT(*)
+	FROM chat_one co
+	WHERE co.chat_room_no = #{chatRoomNo}
+	AND (co.chat_sender = #{memberId} OR co.chat_receiver = #{memberId})
+	</select>
 
 </mapper>

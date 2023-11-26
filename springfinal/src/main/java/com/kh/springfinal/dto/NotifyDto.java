@@ -17,5 +17,6 @@ public class NotifyDto {
 	private Date notifyDate;
 	private String notifyType;
 	
+	private String isEnabled;
 	
 }

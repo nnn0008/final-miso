@@ -21,4 +21,5 @@ public interface ClubBoardDao {
 	List<ClubDetailBoardListVO> clubDetailBoardList(int clubNo);
 	List<ClubBoardAllDto> selectListByPage(PaginationVO vo, int clubNo);
 	int clubBoardCount(PaginationVO vo, int clubNo);
+
 }

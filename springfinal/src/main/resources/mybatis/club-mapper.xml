@@ -41,8 +41,8 @@
     <insert id="edit">
     
     update club set club_category=#{clubCategory},zip_code_no=#{zipCodeNo},
-    club_name=#{clubName},club_explain=#{clubExplain},club_personnel=#{clubPersonnel},
-    club_premium=#{clubPremium} where club_no=#{clubNo}
+    club_name=#{clubName},club_explain=#{clubExplain},club_personnel=#{clubPersonnel}
+     where club_no=#{clubNo}
     
     </insert>
     
@@ -365,6 +365,13 @@ ORDER BY
 	))
 	THEN 0 ELSE 1 END
     
+    
+    </select>
+    
+    <select id="memberMakeClubCount" resultType="int">
+    
+    SELECT count(*) FROM MEMBER m JOIN 
+    club c ON c.CLUB_OWNER = m.MEMBER_ID WHERE m.MEMBER_ID =#{memberId}
     
     </select>
     

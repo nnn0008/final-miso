@@ -15,6 +15,22 @@
         transition: border-color 0.3s, box-shadow 0.3s; /* 트랜지션 효과 추가 */
     }
 
+.text-image img {
+    width: 50%;
+    height: auto; 
+    max-width: 100%; 
+    max-height: 100%; 
+    object-fit: cover; 
+}
+
+.board-list {
+    max-width: 600px; 
+    margin: 0 auto;
+}
+
+.text-title{
+font-size: 18px;
+}
     .clickable-item:hover {
         border-color: #ccc; /* 마우스 오버 시 테두리 색 변경 */
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 마우스 오버 시 그림자 추가 */
@@ -23,6 +39,13 @@
     .badge:hover{
     	cursor:pointer;
     }
+       .bg-gray{
+   background-color: #BAB9B9;
+   }
+   
+   .text-like-count, .text-reply-count{
+   color: #43adff;
+   }
 </style>
 
 <script>
@@ -85,12 +108,12 @@
 					//프로필 있는지 검토
 					if(clubBoardAllDto.attachNoMp != null){
 						var profile = $("<img>").attr("src", window.contextPath + "/clubBoard/download?attachNo="+clubBoardAllDto.attachNoMp)
- 						.addClass("rounded-circle").attr("width", 80).attr("height", 80).attr("data-board-no", response[i].clubBoardNo);
+ 						.addClass("rounded-circle").attr("width", 50).attr("height", 50).attr("data-board-no", response[i].clubBoardNo);
  						$(htmlTemplate).find(".for-attach").html(profile);
 					}
 					else{
 						var profile = $("<img>").attr("src",  window.contextPath + "/images/basic-profile.png")
-						.addClass("rounded-circle").attr("width", 80).attr("height", 80).attr("data-board-no", response[i].clubBoardNo);
+						.addClass("rounded-circle").attr("width", 50).attr("height", 50).attr("data-board-no", response[i].clubBoardNo);
 						$(htmlTemplate).find(".for-attach").html(profile);
 					}
 					//이름
@@ -272,93 +295,105 @@ function pageReset(){
 </script>
 <script id="list-template" type="text/template">
 	<div class="col-12 clickable-item mt-2">
-			<div class="row">
-				<div class="col-3 for-attach"></div>			
-				<div class="col-3 text-name">아무이름</div>
-				<div class="col-6 text-date">아무날짜</div>
+			<div class="row d-flex align-items-center">
+				<div class="col-1 for-attach"></div>			
+				<div class="col ms-2">
+					<strong class="text-name"></strong>
+					</div>
+				<div class="col text-date text-end">아무날짜</div>
 			</div>
 			<div class="row mt-2">
-				<div class="col text-title">아무제목</div>
+				<div class="col">
+<strong class="text-title"></strong>
+</div>
 			</div>
 			<div class="row mt-2">
-				<div class="col-6 text-content">아무내용</div>
-				<div class="col text-image"></div>
-			</div>
+    <div class="col-12 text-content mb-2">아무내용</div>
+    <div class="col-12 text-image">
+        <!-- 이미지 내용 -->
+    </div>
+</div>
+
 			<div class="row">
 				<div class="col">
 					<hr/>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-3 text-heart">
-					<i class="fa-regular fa-heart" style="color: red"></i><p class="text-like-count">좋아요 수</p>
+				<div class="col text-heart">
+					<i class="fa-regular fa-heart me-1" style="color: red"></i>좋아요<span class="text-like-count ms-1">좋아요 수</span>
+					<i class="fa-regular fa-message ms-3"></i><span class="text-reply-count ms-1">댓글 수</span>
 				</div>
-				<div class="col-3 text-pen">
-					<i class="fa-solid fa-pen-to-square"></i><p class="text-reply-count">댓글 수</p>
-				</div>
-				<div class="col-6 text-category"></div>
+				<div class="col text-end">
+<span class="badge bg-success text-category"></span>
+</div>
 			</div>
 	</div>
 </script>
-<div class="container-fluid" style="max-width:526px; max-height:350px">
-	<div class="row">
-		<div class="col">
-			<h6>
-				<span class="badge bg-secondary">
-					전체
-				</span>
-			</h6>
-		</div>
-		<div class="col">
-			<h6>
-				<span class="badge bg-secondary">
-					공지사항
-				</span>
-			</h6>
-		</div>
-		<div class="col">
-			<h6>
-				<span class="badge bg-secondary">
-					가입인사
-				</span>
-			</h6>
-		</div>
-		<div class="col">
-			<h6>
-				<span class="badge bg-secondary">
-					모임후기
-				</span>
-			</h6>
-		</div>
-		<div class="col">
-			<h6>
-				<span class="badge bg-secondary">
-					관심사
-				</span>
-			</h6>
-		</div>
-		<div class="col">
-			<h6>
-				<span class="badge bg-secondary">
-					자유
-				</span>
-			</h6>
-		</div>
-		<div class="col">
-			<h6>
-				<a href="${pageContext.request.contextPath}/clubBoard/write?clubNo=${clubNo}">글쓰기</a>
-			</h6>
-		</div>
-		
-	</div>
-	
-	<div class="row m-2 mt-4 board-list"></div>
-	<div class="row go-upside">
-		<div class="col">
-			<a href="#" class="btn btn-success w-100">위로</a>
-		</div>
-	</div>
+
+<div class="row">
+    <div class="col-3 pe-0">
+        <a id="homeLink" href="${pageContext.request.contextPath}/club/detail?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100 active">홈</a>
+    </div>
+    <div class="col-3 pe-0">
+        <a id="boardLink" href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100">게시판</a>
+    </div>
+    <div class="col-3 pe-0">
+        <a id="photoLink" href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100">사진첩</a>
+    </div>
+    <div class="col-3">
+        <a id="chatLink" href="/chat/enterRoom/${clubDto.chatRoomNo}" class="btn btn-miso bg-miso w-100">채팅</a>
+    </div>
 </div>
+
+<div class="row mt-3">
+
+    <!-- 좌측 영역 -->
+    <div class="col-9">
+        <label class="badge rounded-pill bg-primary">
+            전체
+        </label>
+
+        <label class="badge rounded-pill bg-gray">
+            공지사항
+        </label>
+
+        <label class="badge rounded-pill bg-gray">
+            가입인사
+        </label>
+
+        <label class="badge rounded-pill bg-gray">
+            모임후기
+        </label>
+
+        <label class="badge rounded-pill bg-gray">
+            관심사
+        </label>
+
+        <label class="badge rounded-pill bg-gray">
+            자유
+        </label>
+    </div>
+    
+    <!-- 우측 영역 -->
+    <div class="col-3">
+        <h6 class="text-right">
+            <a href="${pageContext.request.contextPath}/clubBoard/write?clubNo=${clubNo}" class="btn btn-outline-secondary w-100">글쓰기</a>
+        </h6>
+    </div>
+
+</div>
+
+<!-- 게시판 리스트 -->
+<div class="row mt-4 board-list"></div>
+
+<!-- 위로 가기 버튼 -->
+<div class="row go-upside mt-3">
+    <div class="col">
+        <a href="#" class="btn btn-miso w-100">위로</a>
+    </div>
+</div>
+
 
 
 

@@ -35,4 +35,21 @@
   	delete notify where notify_no=#{notifyNo}
   </delete>
   
+  <update id="notifyEnabledOff">
+  UPDATE notify
+SET is_enabled = '0'
+WHERE notify_receiver = #{notifyReceiver}
+  </update>
+  
+  
+  <update id="notifyEnabledOn">
+  UPDATE notify
+SET is_enabled = '1'
+WHERE notify_receiver = #{notifyReceiver}
+  </update>
+  
+ <select id="isNotificationEnabled" resultType="boolean" parameterType="String">
+        SELECT is_enabled FROM notify WHERE NOTIFY_RECEIVER = #{notifyReceiver}  AND ROWNUM = 1
+    </select>
+  
   </mapper>
