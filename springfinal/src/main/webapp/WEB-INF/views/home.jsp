@@ -438,7 +438,7 @@
 		</c:if>
 
 		<c:forEach var="homeForClubVO" items="${joinList}">
-			<div class="col d-flex flex-column align-items-start">
+			<div class="col d-flex flex-column align-items-start mt-2">
 
 				<div class="alert alert-dismissible alert-light circle">
 					<c:if test="${homeForClubVO.attachNo == null}">
