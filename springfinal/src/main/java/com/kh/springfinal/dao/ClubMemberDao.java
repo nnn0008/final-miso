@@ -42,6 +42,7 @@ public interface ClubMemberDao {
 	
 	int memberJoinClubCount(String memberId);
 	
+	boolean joinedClub(int clubNo,String memberId);
 	
 	
 

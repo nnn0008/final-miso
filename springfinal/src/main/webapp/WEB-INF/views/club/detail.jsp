@@ -1363,7 +1363,17 @@ $(".meetingFix").change(function(){
    	$(document).on('click', '.meetingDelete', function () {
    	    var meetingNo = $(this).data('no');
    	    var number = $(this).data('number');
+		
+   	  var isConfirmed = confirm("모임을 삭제 하시겠습니까?");
 
+      if (!isConfirmed) {
+    	  
+    	  
+        
+      } 
+      
+      else {
+   
 
    	    $.ajax({
    	        url: window.contextPath + "/rest/meeting/delete",
@@ -1396,6 +1406,7 @@ $(".meetingFix").change(function(){
             		
    	        }
    	    });
+      }
    	});
     	
     	//입력값 유효성 검사
