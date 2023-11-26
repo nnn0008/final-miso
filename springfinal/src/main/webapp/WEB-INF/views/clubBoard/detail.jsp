@@ -9,6 +9,10 @@
 .fa-ellipsis-vertical:hover{
 	cursor:pointer;
 }
+
+.text-title{
+font-size: 18px;
+}
 </style>
 <script>
 
@@ -530,28 +534,30 @@ $(function(){
 	<div class="row">
 		<div class="col">
 			
-			<div class="row">
-				<div class="col-3">
+			<div class="row d-flex align-items-center">
+				<div class="col-1">
 					<c:if test="${attachDto.attachNo == null }">
-						<img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="80" height="80">				
+						<img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="60" height="60">				
 					</c:if>
 					<c:if test="${attachDto.attachNo != null}">
-						<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardAllDto.attachNoMp}" class="rounded-circle" width="80" height="80">
+						<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardAllDto.attachNoMp}" class="rounded-circle" width="60" height="60">
 					</c:if>
 				</div>
-				<div class="col-3">
+				<div class="col ms-4">
 					${clubBoardDto.clubBoardName}
 				</div>
-				<div class="col-6 text-end">
-					${clubBoardDto.clubBoardCategory}
+				<div class="col text-end">
+				<span class="badge bg-success">${clubBoardDto.clubBoardCategory}</span>
 					<%-- <fmt:formatDate value="${clubBoardDto.clubBoardDate}" pattern="M월 d일 a h시 m분"/> --%>
 					${clubBoardDto.clubBoardDate}
 				</div>
 			</div>
 			
 			<div class="row mt-4">
-				<div class="col">
+				<div class="col text-title">
+				<strong>
 					${clubBoardDto.clubBoardTitle}
+				</strong>
 				</div>
 				<div class="col">
 					<i class="fa-solid fa-ellipsis-vertical"></i>
