@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -35,6 +33,7 @@ import com.kh.springfinal.dao.ClubBoardDao;
 import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dao.ClubMemberDao;
 import com.kh.springfinal.dao.MeetingDao;
+import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dao.PhotoDao;
 import com.kh.springfinal.dao.ZipCodeDao;
 import com.kh.springfinal.dto.AttachDto;
@@ -43,13 +42,13 @@ import com.kh.springfinal.dto.ClubDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MajorCategoryDto;
 import com.kh.springfinal.dto.MeetingDto;
+import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.dto.MinorCategoryDto;
 import com.kh.springfinal.dto.PhotoDto;
 import com.kh.springfinal.dto.ZipCodeDto;
 import com.kh.springfinal.vo.ClubDetailBoardListVO;
 import com.kh.springfinal.vo.ClubImageVO;
 import com.kh.springfinal.vo.ClubListVO;
-import com.kh.springfinal.vo.ClubMemberVO;
 import com.kh.springfinal.vo.MemberPreferInfoVO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -86,19 +85,47 @@ public class ClubController {
 	@Autowired
 	private PhotoDao photoDao;
 	
+	@Autowired
+	private MemberDao memberDao;
+	
+	
 	
 	
 	@GetMapping("/insert")
-	public String insert(Model model) {
-		
+	public String insert(Model model,HttpSession session) {
+		String memberId = (String) session.getAttribute("name");
 		
 		List<MajorCategoryDto> majorList = categoryDao.majorcategoryList();
 //		List<ZipCodeDto> zipList = zipDao.list();
 		
 		model.addAttribute("majorCategory",majorList);
 //		model.addAttribute("zipList",zipList);
+		
+		MemberDto memberDto = memberDao.loginId(memberId);
+		int memberMakeClubCount = clubDao.memberMakeClubCount(memberId);
+		
+		log.debug("레벨={}",memberDto.getMemberLevel());
+		log.debug("만든숫자={}",memberMakeClubCount);
+		
+		if(memberDto.getMemberLevel().equals("일반유저")) {
+			
+			if(memberMakeClubCount>=3) {
+				
+				return "redirect:/pay/product";
+				
+			}
+			
+			else {
+				
+				return "club/insert";
+			}
+		}
+		else {
+			
+			return "club/insert";
+		}
 		 
-		return "club/insert";
+		
 		
 	}
 	
@@ -106,13 +133,14 @@ public class ClubController {
 	public String insert(@ModelAttribute ClubDto clubDto,
 			HttpSession session) {
 		
+	
+		String memberId = (String) session.getAttribute("name");	
 		
 		
-//		String memberId = (String) session.getAttribute("name");	//session 생긴 후 풀 주석
+		
 		
 		ClubMemberDto clubMemberDto = new ClubMemberDto();
 		ChatRoomDto chatRoomDto = new ChatRoomDto();
-		String memberId = (String) session.getAttribute("name");
 		int clubNo = clubDao.sequence();
 		int chatRoomNo = chatRoomDao.sequence();
 		int clubMemberNo = clubMemberDao.sequence();
@@ -136,7 +164,7 @@ public class ClubController {
 		
 		
 
-		return "redirect:/";
+		return "redirect:/club/detail?clubNo="+clubNo;
 		
 	}
 	@RequestMapping("/detail")
@@ -240,6 +268,7 @@ public class ClubController {
 		
 		int minorNo = clubDto.getClubCategory();
 		MajorCategoryDto majorCategoryDto = categoryDao.findMajor(minorNo);
+		//현재 회원이 고른 majorCategory
 		
 		
 		model.addAttribute("majorList",majorList);

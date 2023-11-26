@@ -37,4 +37,6 @@ public interface ClubDao {
 	boolean updatePremium(String memberId);
 	boolean updateDownPremium(String memberId);
 	
+	int memberMakeClubCount(String memberId);
+	
 }
