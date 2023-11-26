@@ -203,27 +203,30 @@
 
 
 $(function(){
-   
-   
-   var bodyClubMemberNo = $(".bodyClubMemberNo").data("no");
-   var memberRankIsMaster = ${editPossible}; 
 
-   if (memberRankIsMaster === false) {
-       $("[name=makeMeeting]").remove();
-   }
-   
+	
+	
+	var bodyClubMemberNo = $(".bodyClubMemberNo").data("no");
+	var memberRankIsMaster = ${editPossible}; 
+
+	if (memberRankIsMaster === false) {
+	    $("[name=makeMeeting]").remove();
+	}
+	
+	
 
 
-   
-   
-    loadMemberList();
-    
-      
-     $(".upgradeRank").remove();
-     
-     function loadMemberList(){
-        var params = new URLSearchParams(location.search);
-           var clubNo = params.get("clubNo");
+	
+	
+	 loadMemberList();
+	 
+		
+	  $(".upgradeRank").remove();
+	  
+	  function loadMemberList(){
+		  var params = new URLSearchParams(location.search);
+	        var clubNo = params.get("clubNo");
+
               
         
         $.ajax({
@@ -372,13 +375,20 @@ $(".meetingFix").change(function(){
     }); */
 
     $(".commit").click(function(){
-       
-       
+
+    	
+    	
+    	var message = $(".modalJoinMessage").val();
+
         var clubNo = $(".clubNo").data("no");
         var memberId = $(".memberId").data("id");
         var joinMessage = $(".modalJoinMessage").val();
         
-
+        if(message.length==0){
+        	
+        	$(".modalJoinMessage").addClass("is-invalid");
+        }
+        else{
         $.ajax({
             url: "http://localhost:8080/rest/clubMember",
             method: "post",
@@ -394,6 +404,7 @@ $(".meetingFix").change(function(){
                 
             }
         });
+        }
     });
     
     //미팅 만들기 
@@ -728,19 +739,21 @@ $(".meetingFix").change(function(){
                          .attr('width', '230')
                          .attr('height', '130')
                          .css('border-radius', '10px'); 
-                    }
-                                  
-                    $(htmlTemplate).find(".img").append(img);
-                    $(htmlTemplate).find(".ddayInput").text("D-"+meeting.dday);
-                    $(htmlTemplate).find(".meetingNoInput").text(meeting.meetingNo);
-                    $(htmlTemplate).find(".meetingNameInput").text(meeting.meetingName);
-                    $(htmlTemplate).find(".dateStringInput").text(meeting.dateString);
-                    $(htmlTemplate).find(".locationInput").text(meeting.meetingLocation);
-                    $(htmlTemplate).find(".meetingPriceInput").text(meeting.meetingPrice);
-                    $(htmlTemplate).find(".meetingNumberInput").text(meeting.meetingNumber);
-                    $(htmlTemplate).find(".attendCount").text(meeting.attendCount);
-                    
-                    var modifiedDateString = (meeting.date).replace(/-/g, '/');
+
+                 	}
+                 	           	
+                 	$(htmlTemplate).find(".img").append(img);
+                 	$(htmlTemplate).find(".ddayInput").text("D-"+meeting.dday);
+                 	$(htmlTemplate).find(".meetingNoInput").text(meeting.meetingNo);
+                 	$(htmlTemplate).find(".meetingNameInput").text(meeting.meetingName);
+                 	$(htmlTemplate).find(".dateStringInput").text(meeting.dateString);
+                 	$(htmlTemplate).find(".locationInput").text(meeting.meetingLocation);
+                 	$(htmlTemplate).find(".meetingPriceInput").text(meeting.meetingPrice);
+                 	$(htmlTemplate).find(".meetingNumberInput").text(meeting.meetingNumber).data("no",meeting.meetingNumber);
+                 	$(htmlTemplate).find(".attendCount").text(meeting.attendCount).data("no",meeting.attendCount);
+                 	
+                 	var modifiedDateString = (meeting.date).replace(/-/g, '/');
+
                  modifiedDateString = modifiedDateString.slice(0, -1) + '(' + modifiedDateString.slice(-1) + ')';
                     
                     $(htmlTemplate).find(".monthAndDay").text(modifiedDateString);
@@ -751,7 +764,8 @@ $(".meetingFix").change(function(){
                     .addClass("d-flex align-items-center"); // 가로로 정렬
 
                 for (var a = 0; a < attendMemberList.length; a++) {
-                    var aLink = $('<a>').attr('href', "/member/mypage?memberId=" + attendMemberList[a].clubMemberId);
+                    var aLink = $('<a>').attr
+                    ('href', "/member/mypage?memberId=" + attendMemberList[a].clubMemberId);
                     
                     
                     if(attendMemberList[a].attachNo != 0){
@@ -761,7 +775,8 @@ $(".meetingFix").change(function(){
                         .attr('src', "/rest/member/profileShow?memberId=" + attendMemberList[a].clubMemberId)
                         .attr('width', '50')
                         .attr('height', '50');
-                       
+
+
                     }
                     if(attendMemberList[a].attachNo==0){
                        var image = $('<img>')
@@ -769,23 +784,26 @@ $(".meetingFix").change(function(){
                         .attr('src', "/images/basic-profile.png")
                         .attr('width', '50')
                         .attr('height', '50');
-                       
-                       
+
+                    	
                     }
                     
-                        aLink.append(image);
-                    
-                    
 
+                    
+                    	 aLink.append(image);
+                    
+					console.log("참석멤버아이디:"+attendMemberList[a].clubMemberId);
+					console.log("참석멤버랭크:"+attendMemberList[a].clubMemberRank);
+					
                     if (attendMemberList[a].clubMemberRank === '운영진') {
+                    	console.log("해당됨");
                         var crownIcon = $('<i>')
                             .addClass("fa-solid fa-crown p-1 position-absolute translate-middle")
                             .appendTo(aLink);
                     }
 
-                   
+                    $(htmlTemplate).find(".profileList").append(aLink)
 
-                    $(htmlTemplate).find(".profileList").append(aLink);
                 }
 
 
@@ -970,6 +988,7 @@ $(".meetingFix").change(function(){
                         .attr('src', "/images/noimage.jpg")
                         .attr('width', '230')
                         .attr('height', '130');
+
                       
                    }
                    
@@ -982,8 +1001,8 @@ $(".meetingFix").change(function(){
                    $(htmlTemplate).find(".dateStringInput").text(meeting.dateString);
                    $(htmlTemplate).find(".locationInput").text(meeting.meetingLocation);
                    $(htmlTemplate).find(".meetingPriceInput").text(meeting.meetingPrice);
-                   $(htmlTemplate).find(".meetingNumberInput").text(meeting.meetingNumber);
-                   $(htmlTemplate).find(".attendCount").text(meeting.attendCount);
+                  	$(htmlTemplate).find(".meetingNumberInput").text(meeting.meetingNumber).data("no",meeting.meetingNumber);
+                	$(htmlTemplate).find(".attendCount").text(meeting.attendCount).data("no",meeting.attendCount);
                    $(htmlTemplate).find(".monthAndDay").text(meeting.date);
                    
                    var modifiedDateString = (meeting.date).replace(/-/g, '/');
@@ -1009,94 +1028,106 @@ $(".meetingFix").change(function(){
 
                         for (var a = 0; a < attendMemberList.length; a++) {
                             var aLink = $('<a>').attr('href', "/");
+
                             
-                            var image = $('<img>')
+                            if(attendMemberList[a].attachNo != 0){
+                            	
+                            	var image = $('<img>')
                                 .addClass("rounded-circle me-3")
                                 .attr('src', "/rest/member/profileShow?memberId=" + attendMemberList[a].clubMemberId)
                                 .attr('width', '50')
                                 .attr('height', '50');
+                            	
+                            }
+                            if(attendMemberList[a].attachNo==0){
+                            	var image = $('<img>')
+                                .addClass("rounded-circle me-3")
+                                .attr('src', "/images/basic-profile.png")
+                                .attr('width', '50')
+                                .attr('height', '50');
+                            	
+                            	
+                            }
+                            
+                            	 aLink.append(image);
+                            
+                            
 
                             if (attendMemberList[a].clubMemberRank === '운영진') {
                                 var crownIcon = $('<i>')
-                                    .addClass("fa-solid fa-crown p-1 position-absolute translate-middle")
-                                    .appendTo(aLink);
+                                    .addClass
+                                    ("fa-solid fa-crown p-1 position-absolute translate-middle");
+                            aLink.append(crownIcon);
                             }
 
-                            aLink.append(image);
 
                             $(htmlTemplate).find(".profileList").append(aLink);
                         }
 
-                       } 
-                       
-                       aLink.append(image);
-
-                       $(htmlTemplate).find(".profileList").append(aLink);
-
-                   }
-                   
-                   //버튼
-                   $(htmlTemplate).find(".meetingEdit").attr("data-no",meeting.meetingNo).attr("data-number",i);
-                   $(htmlTemplate).find(".meetingDelete").attr("data-no",meeting.meetingNo).attr("data-number",i);
-                   $(htmlTemplate).find(".attend").attr("data-no",meeting.meetingNo).attr("data-number",i);
-                   $(htmlTemplate).find(".attendDelete").attr("data-no",meeting.meetingNo).attr("data-number",i);
-                   
-                   
-                   if(meeting.didAttend){
-                      
-                       $(htmlTemplate).find(".attend").remove();
-        
-                      
-                   }
-                   
-                   if(!meeting.didAttend){
-                      
-                      $(htmlTemplate).find(".attendDelete").remove();
-                      
-                   }
-                   
-                   if(!meeting.manager){
-                      
-                       $(htmlTemplate).find(".meetingEdit").remove();
-                       $(htmlTemplate).find(".meetingDelete").remove();
-                      
-                      
-                      
-                   }
-                   
-                   if (meeting.meetingFix === 'N') {
-                       // 새로운 div 엘리먼트 생성
-                       var divElement = $('<div>').addClass('secret-club');
-                       var badgeElement = $('<span>').addClass('badge bg-danger ms-1 mb-1').text('비공개 정모');
-                       var secretIcon = $('<i>').addClass("fa-solid fa-unlock-keyhole ms-2");
-                       var secretIconBig = $('<i>').addClass("fa-solid fa-lock ms-2").css({
-                           'font-size': '150px',
-                           'height': '250px',
-                           'display': 'flex',
-                           'justify-content': 'center', // 좌우 가운데 정렬
-                           'align-items': 'center' // 상하 가운데 정렬
-                       });
+                	
+                	//버튼
+                	$(htmlTemplate).find(".meetingEdit").attr("data-no",meeting.meetingNo).attr("data-number",i);
+                	$(htmlTemplate).find(".meetingDelete").attr("data-no",meeting.meetingNo).attr("data-number",i);
+                	$(htmlTemplate).find(".attend").attr("data-no",meeting.meetingNo).attr("data-number",i);
+                	$(htmlTemplate).find(".attendDelete").attr("data-no",meeting.meetingNo).attr("data-number",i);
+                	
+                	
+                	if(meeting.didAttend){
+                		
+                    	$(htmlTemplate).find(".attend").remove();
+  		
+                		
+                	}
+                	
+                	if(!meeting.didAttend){
+                		
+                		$(htmlTemplate).find(".attendDelete").remove();
+                		
+                	}
+                	
+                	if(!meeting.manager){
+                		
+                    	$(htmlTemplate).find(".meetingEdit").remove();
+                    	$(htmlTemplate).find(".meetingDelete").remove();
+                		
+                		
+                		
+                	}
+                	
+                	if (meeting.meetingFix === 'N') {
+                	    // 새로운 div 엘리먼트 생성
+                	    var divElement = $('<div>').addClass('secret-club');
+                	    var badgeElement = $('<span>').addClass('badge bg-danger ms-1 mb-1').text('비공개 정모');
+                	    var secretIcon = $('<i>').addClass("fa-solid fa-unlock-keyhole ms-2");
+                	    var secretIconBig = $('<i>').addClass("fa-solid fa-lock ms-2").css({
+                	        'font-size': '150px',
+                	        'height': '250px',
+                	        'display': 'flex',
+                	        'justify-content': 'center', // 좌우 가운데 정렬
+                	        'align-items': 'center' // 상하 가운데 정렬
+                	    });
 
 
-                       if (bodyClubMemberNo == 0) {
-                           // 클럽 멤버가 아닌 경우 효과 적용
-                           secretIcon.removeClass('fa-unlock-keyhole').addClass('fa-lock');
-                           divElement.css('opacity', '0.7');
+                	    if (bodyClubMemberNo == 0) {
+                	        // 클럽 멤버가 아닌 경우 효과 적용
+                	        secretIcon.removeClass('fa-unlock-keyhole').addClass('fa-lock');
+                	        divElement.css('opacity', '0.7');
 
-                           // alert 엘리먼트에 새로운 텍스트 추가
-                           var alertElement = $(htmlTemplate).find(".alert");
-                           alertElement.empty(); // 글자를 없애는 부분
-                             
-                           // 큰 좌물쇠 아이콘 추가
-                           alertElement.append(secretIconBig);
-                       }
+                	        // alert 엘리먼트에 새로운 텍스트 추가
+                	        var alertElement = $(htmlTemplate).find(".alert");
+                	        alertElement.empty(); // 글자를 없애는 부분
+                	          
+                	        // 큰 좌물쇠 아이콘 추가
+                	        alertElement.append(secretIconBig);
+                	    }
 
-                       // 새로 생성한 엘리먼트들을 기존 템플릿에 추가
-                       $(htmlTemplate).prepend(divElement.append(badgeElement.append(secretIcon)));
-                   }
+                	    // 새로 생성한 엘리먼트들을 기존 템플릿에 추가
+                	    $(htmlTemplate).prepend(divElement.append(badgeElement.append(secretIcon)));
+                	}
 
-                   // 최종 결과를 화면에 추가
-                   $(".attach-meeting-list").append(htmlTemplate);
+                	// 최종 결과를 화면에 추가
+                	$(".attach-meeting-list").append(htmlTemplate);
+
                 }
                 
                 
@@ -1127,87 +1158,144 @@ $(".meetingFix").change(function(){
         });
         
     }
-      
-      
-       $(".boardWrite").click(function(e){
-         
 
-         if (bodyClubMemberNo==0) {
-            
-            e.preventDefault();
-            
-          $(".join-modal-title").text("가입이 필요한 활동입니다!").css("color", "red");
-            
-            $(".joinModal").modal("show");
-            
-         } 
-         
-      })
-      
-      $(".joinModal").click(function(){
-      
-         $(".modalJoinMessage").val("");
-         $(".join-modal-title").text("가입인사를 작성해주세요.").css("color","black");
-         
-         
-      })
-      
-      
-      $("[name=makeMeeting]").click(function(e){
-         
-          if (bodyClubMemberNo==0) {
-             $(".join-modal-title").text("가입이 필요한 활동입니다!").css("color", "red");
-               
-               $(".joinModal").modal("show");
-            
-         }  
-          else{
-             
-             $("#exampleModal").modal("show");
-          }
-         
-         
-         
-      })
-      
-      $(".board-detail").click(function(e){
-         
-      
-         
-         if (bodyClubMemberNo==0) {
-         e.preventDefault();
-          
-            alert("동호회 멤버에게만 공개됩니다.");
-         
-      } 
-         
-      })
-      
-      
+   	
+   	
+    	$(".boardWrite").click(function(e){
+   		
+
+   		if (bodyClubMemberNo==0) {
+   			
+   			e.preventDefault();
+   			
+   		 $(".join-modal-title").text("가입이 필요한 활동입니다!").css("color", "red");
+   			
+   			$(".joinModal").modal("show");
+   			
+   		} 
+   		
+   	})
+   	
+   	$(".joinModal").click(function(){
+   	
+   		$(".modalJoinMessage").val("");
+   		$(".join-modal-title").text("가입인사를 작성해주세요.").css("color","black");
+   		
+   		
+   	})
+   	
+   	
+   	$("[name=makeMeeting]").click(function(e){
+   		
+		 	if (bodyClubMemberNo==0) {
+		 		$(".join-modal-title").text("가입이 필요한 활동입니다!").css("color", "red");
+	   			
+	   			$(".joinModal").modal("show");
+   			
+   		}  
+		 	else{
+		 		
+		 		$("#exampleModal").modal("show");
+		 	}
+   		
+   		
+   		
+   	})
+   	
+   	$(".board-detail").click(function(e){
+   		
+   	
+   		
+   		if (bodyClubMemberNo==0) {
+   		e.preventDefault();
+	 		
+   			alert("동호회 멤버에게만 공개됩니다.");
+			
+		} 
+   		
+   	});
+    	
+	$(".joinOpen").click(function(){
+		
+		console.log("조인오픈");
+	   	
+		var clubNo = ${clubDto.clubNo};
+		
+   	    $.ajax({
+            url: window.contextPath + "/rest/joinPossible",
+            method: "get",
+            data:{
+            	clubNo:clubNo
+            },
+            success: function (response) {
+            	
+            	console.log(response)
+   		
+            	if(response==4){
+            		
+   				$(".joinModal").modal('show');
+   				
+            	}
+            	
+            	else if(response==3){
+            		
+            		alert("가입할 수 있는 동호회 수를 넘으셨습니다. 파워유저 최대 12개")
+				            		
+            	}
+            	else if(response==2){
+            		
+            		alert("가입할 수 있는 동호회 수를 넘으셨습니다. 일반유저 최대 5개")
+            		
+            	}
+            	
+            	else{
+            		
+            		alert("동호회 정원이 꽉 찼습니다.")
+            		
+            	}
+   		
+   		
+   		
+   	}
+   	    })
+   	    
+   	});
+
   
       
       
       
    
+
+   	
+   	
+   	$(document).on('click',".attend",function(e){
+   		
+   	  var attendCount = $(this).closest('.meeting-box').find('.attendCount').data("no");
+      var meetingNumber = $(this).closest('.meeting-box').find('.meetingNumberInput').data("no");
+
       
-      
-      $(document).on('click',".attend",function(){
-         
-         
-         
-         
-      if (bodyClubMemberNo==0) {
-            
-            
-          $(".join-modal-title").text("가입이 필요한 활동입니다!").css("color", "red");
-            
-            $(".joinModal").modal("show");
-            
-         } 
-      
-      else{
-      
-        var params = new URLSearchParams(location.search);
+   		
+		if (bodyClubMemberNo==0) {
+   			
+   			
+   		 $(".join-modal-title").text("가입이 필요한 활동입니다!").css("color", "red");
+   			
+   			$(".joinModal").modal("show");
+   			
+   		} 
+		
+		else if(attendCount==meetingNumber){
+			
+			alert("정원이 꽉 찼습니다.");
+		}
+		
+
+		
+		else{
+   	
+   	  var params = new URLSearchParams(location.search);
+
       var clubNo = params.get("clubNo");
       var meetingNo = $(this).data("no");
       var number = $(this).data("number");
@@ -1265,91 +1353,118 @@ $(".meetingFix").change(function(){
                 
             }
         });
-         
-         
-         
-         
-      })
+
+   		
+   		
+   		
+   		
+   	})
+   	
+   	$("[name=clubMemberDelete]").click(function(e){
+   		
+   	  var isConfirmed = confirm("정말 탈퇴하시겠습니까?");
+
+      if (isConfirmed) {
+    	  
+    	  
+        
+      } 
       
-      $(document).on('click', '.meetingDelete', function () {
-          var meetingNo = $(this).data('no');
-          var number = $(this).data('number');
+      else {
+   
+          e.preventDefault();
+      }
+   		
+   		
+   		
+   		
+   	})
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	$(document).on('click', '.meetingDelete', function () {
+   	    var meetingNo = $(this).data('no');
+   	    var number = $(this).data('number');
 
 
-          $.ajax({
-              url: window.contextPath + "/rest/meeting/delete",
-              method: "post",
-              data: { meetingNo: meetingNo },
-              success: function () {
-                 totalCount--;
-                 
-            /*    if($(".cut").is(":hidden")){
-                  
-                  loadCutList();
-               }
-               else{
-               
-               loadList();
-               } */
-               
-               if(($(".cut").is(":visible"))&&(number<3)){
-                  loadList();
-                  
-               }
-               
-               else if(number>3){
-               loadList();
-                  }
-               else{
-                  loadCutList();
-                  
-               }
-                  
-              }
-          });
-      });
-       
-       //입력값 유효성 검사
-       $(".meetingName").on('input',function(){
-          $(this).removeClass("is-invalid");
-       })
-       $(".meetingDate").on('change',function(){
-          $(this).removeClass("is-invalid");
-       })
-       $(".meetingTime").on('change',function(){
-          $(this).removeClass("is-invalid");
-       })
-       $(".meetingLocation").on('input',function(){
-          $(this).removeClass("is-invalid");
-       })
-       $(".meetingPrice").on('input',function(){
-          $(this).removeClass("is-invalid");
-       })
-       $(".meetingMaxPeople").on('input',function(){
-          $(this).removeClass("is-invalid");
-       })
-       
-       $(".meetingNameByEdit").on('input',function(){
-          $(this).removeClass("is-invalid");
-       })
-       $(".meetingDateByEdit").on('change',function(){
-          $(this).removeClass("is-invalid");
-       })
-       $(".meetingTimeByEdit").on('change',function(){
-          $(this).removeClass("is-invalid");
-       })
-       $(".meetingLocationByEdit").on('input',function(){
-          $(this).removeClass("is-invalid");
-       })
-       $(".meetingPriceByEdit").on('input',function(){
-          $(this).removeClass("is-invalid");
-       })
-       $(".meetingMaxPeopleByEdit").on('input',function(){
-          $(this).removeClass("is-invalid");
-       })
+   	    $.ajax({
+   	        url: window.contextPath + "/rest/meeting/delete",
+   	        method: "post",
+   	        data: { meetingNo: meetingNo },
+   	        success: function () {
+   	        	totalCount--;
+   	        	
+				/* 	if($(".cut").is(":hidden")){
+            		
+            		loadCutList();
+            	}
+            	else{
+            	
+            	loadList();
+            	} */
+            	
+            	if(($(".cut").is(":visible"))&&(number<3)){
+            		loadList();
+            		
+            	}
+            	
+            	else if(number>3){
+            	loadList();
+            		}
+            	else{
+            		loadCutList();
+            		
+            	}
+            		
+   	        }
+   	    });
+   	});
+    	
+    	//입력값 유효성 검사
+    	$(".meetingName").on('input',function(){
+    		$(this).removeClass("is-invalid");
+    	})
+    	$(".meetingDate").on('change',function(){
+    		$(this).removeClass("is-invalid");
+    	})
+    	$(".meetingTime").on('change',function(){
+    		$(this).removeClass("is-invalid");
+    	})
+    	$(".meetingLocation").on('input',function(){
+    		$(this).removeClass("is-invalid");
+    	})
+    	$(".meetingPrice").on('input',function(){
+    		$(this).removeClass("is-invalid");
+    	})
+    	$(".meetingMaxPeople").on('input',function(){
+    		$(this).removeClass("is-invalid");
+    	})
+    	
+    	$(".meetingNameByEdit").on('input',function(){
+    		$(this).removeClass("is-invalid");
+    	})
+    	$(".meetingDateByEdit").on('change',function(){
+    		$(this).removeClass("is-invalid");
+    	})
+    	$(".meetingTimeByEdit").on('change',function(){
+    		$(this).removeClass("is-invalid");
+    	})
+    	$(".meetingLocationByEdit").on('input',function(){
+    		$(this).removeClass("is-invalid");
+    	})
+    	$(".meetingPriceByEdit").on('input',function(){
+    		$(this).removeClass("is-invalid");
+    	})
+    	$(".meetingMaxPeopleByEdit").on('input',function(){
+    		$(this).removeClass("is-invalid");
+    	})
 
-      
-       
+   	
+
 });
 
 
@@ -1487,293 +1602,301 @@ $(document).ready(function () {
 
 <body>
 
-   <div class="bodyClubMemberNo" data-no="${clubMemberNo}"></div>
-   <!-- jsp에 있는 data를 스크립트로 보내주기 위한 태그-->
+	<div class="bodyClubMemberNo" data-no="${clubMemberNo}"></div>
+	<!-- jsp에 있는 data를 스크립트로 보내주기 위한 태그-->
 
-   <div class="row">
-      <div class="col-3 pe-0">
-         <a id="homeLink" href="#"
-            class="btn btn-miso bg-miso w-100 active">홈</a>
-      </div>
-      <div class="col-3 pe-0">
-         <a id="boardLink"
-            href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDto.clubNo}"
-            class="btn btn-miso bg-miso w-100">게시판</a>
-      </div>
-      <div class="col-3 pe-0">
-         <a id="photoLink"
-            href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}"
-            class="btn btn-miso bg-miso w-100">사진첩</a>
-      </div>
-      <div class="col-3">
-         <a id="chatLink" href="/chat/enterRoom/${clubDto.chatRoomNo}"
-            class="btn btn-miso bg-miso w-100">채팅</a>
-      </div>
-   </div>
+	<div class="row">
+		<div class="col-3 pe-0">
+			<a id="homeLink" href="#"
+				class="btn btn-success bg-miso w-100 active">홈</a>
+		</div>
+		<div class="col-3 pe-0">
+			<a id="boardLink"
+				href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDto.clubNo}"
+				class="btn btn-success bg-miso w-100">게시판</a>
+		</div>
+		<div class="col-3 pe-0">
+			<a id="photoLink"
+				href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}"
+				class="btn btn-success bg-miso w-100">사진첩</a>
+		</div>
+		<div class="col-3">
+			<a id="chatLink" href="/chat/enterRoom/${clubDto.chatRoomNo}"
+				class="btn btn-success bg-miso w-100">채팅</a>
+		</div>
+	</div>
 
-   <div class="row mt-3">
-      <div class="col club-box-detail">
-         <input type="hidden" class="totalCount" value="${meetingCount}">
-         <c:choose>
-            <c:when test="${clubDto.attachNo!=0}">
-               <img
-                  src="${pageContext.request.contextPath}/club/image?clubNo=${clubDto.clubNo}"
-                  class="club-detail-image" width="550" height="250">
-            </c:when>
-            <c:otherwise>
-               <img src="${pageContext.request.contextPath}/images/noimage.jpg"
-                  class="club-detail-image" width="550" height="250">
-            </c:otherwise>
-         </c:choose>
-      </div>
-   </div>
+	<div class="row mt-3">
+		<div class="col club-box-detail">
+			<input type="hidden" class="totalCount" value="${meetingCount}">
+			<c:choose>
+				<c:when test="${clubDto.attachNo!=0}">
+					<img
+						src="${pageContext.request.contextPath}/club/image?clubNo=${clubDto.clubNo}"
+						class="club-detail-image" width="550" height="250">
+				</c:when>
+				<c:otherwise>
+					<img src="${pageContext.request.contextPath}/images/noimage.jpg"
+						class="club-detail-image" width="550" height="250">
+				</c:otherwise>
+			</c:choose>
+		</div>
+	</div>
 
-   <div class="row mt-3">
-      <div class="col d-flex justify-content-between align-items-center">
-         <div class="d-flex">
-            <input type="hidden" class="clubNo" data-no="${clubDto.clubNo}">
-            <input type="hidden" class="memberId" data-id="${sessionScope.name}">
-            <label class="badge rounded-pill bg-light">${zipDto.sigungu}</label>
-            <label class="badge rounded-pill bg-light">${major.majorCategoryName}</label>
-            <label class="badge rounded-pill bg-light">멤버 ${memberCount}</label>
-         </div>
-         <div>
-            <c:if test="${editPossible==true}">
-               <a href="/club/edit?clubNo=${clubDto.clubNo}"> <i
-                  class="fa-solid fa-eraser ms-auto"></i>
-               </a>
-            </c:if>
-         </div>
-      </div>
-   </div>
+	<div class="row mt-3">
+		<div class="col d-flex justify-content-between align-items-center">
+			<div class="d-flex">
+				<input type="hidden" class="clubNo" data-no="${clubDto.clubNo}">
+				<input type="hidden" class="memberId" data-id="${sessionScope.name}">
+				<label class="badge rounded-pill bg-light">${zipDto.sigungu}</label>
+				<label class="badge rounded-pill bg-light">${major.majorCategoryName}</label>
+				<label class="badge rounded-pill bg-light">멤버 ${memberCount}</label>
+			</div>
+			<div>
+				<c:if test="${editPossible==true}">
+					<a href="/club/edit?clubNo=${clubDto.clubNo}"> <i
+						class="fa-solid fa-eraser ms-auto"></i>
+					</a>
+				</c:if>
+			</div>
+		</div>
+	</div>
 
-   <div class="row mt-3">
+	<div class="row mt-3">
 
-      <div class="col">
-         <div class="col">
-            <strong class="main-text">${clubDto.clubName}</strong>
-         </div>
-         <div class="col mt-2">
-            <span>${clubDto.clubExplain}</span>
-         </div>
-      </div>
-
-
-   </div>
-   <div class="row">
-      <div class="col">
-         <c:if test="${joinButton==true}">
-            <button type="button"
-               class="btn btn-miso bg-miso mt-4 join w-100 joinOpen"
-               data-bs-toggle="modal" data-bs-target=".joinModal">가입하기</button>
-         </c:if>
-
-      </div>
-   </div>
-
-   <hr>
-   <div class="row">
-      <div class="col text-start d-flex align-items-center">
-         <img src="${pageContext.request.contextPath}/images/logo-door.png"
-            width="5%"> <strong class="ms-2 main-text">게시판</strong>
-      </div>
-   </div>
-
-   <c:choose>
-      <c:when test="${clubDetailBoardList[0]==null}">
-         <div class="row d-flex align-items-center mt-3">
-            <div class="col-3 text-start">
-               <img src="${pageContext.request.contextPath}/images/open-door.png"
-                  width="100%">
-            </div>
-            <div class="col">
-               <div class="col">
-                  <h5>아직 게시글이 없어요!</h5>
-               </div>
-               <div class="col">
-                  <h3>모임 활동을 공유해보세요</h3>
-               </div>
-            </div>
-         </div>
-         <div class="row p-1 mt-4 text-center">
-            <div class="col">
-               <a
-                  href="${pageContext.request.contextPath}/clubBoard/write?clubNo=${clubDto.clubNo}">
-                  <button class="btn btn-miso bg-miso w-100 boardWrite">작성하기</button>
-               </a>
-            </div>
-         </div>
-      </c:when>
-
-      <c:otherwise>
-
-         <a
-            href="${pageContext.request.contextPath}/clubBoard/detail?clubBoardNo=${clubDetailBoardList[0].clubBoardNo}"
-            class="link-dark link-underline link-underline-opacity-0 board-detail">
-            <div class="row mt-3">
-               <div class="col-1">
-                  <c:choose>
-                     <c:when test="${clubDetailBoardList[0].attachNo!=0}">
-                        <img
-                           src="/rest/member/profileShow?memberId=${clubDetailBoardList[0].memberId}"
-                           width="50" height="50" class="rounded-circle">
-                     </c:when>
-                     <c:otherwise>
-                        <img src="/images/basic-profile.png" width="50" height="50"
-                           class="rounded-circle">
-
-                     </c:otherwise>
-
-                  </c:choose>
-               </div>
-               <div class="col-10 ms-3">
-                  <div class="col">
-                     <span class="badge bg-primary">${clubDetailBoardList[0].clubBoardCategory}</span>
-                  </div>
-                  <div class="col mt-1">
-                     <strong>${clubDetailBoardList[0].memberName}</strong>
-                  </div>
-                  <div class="col mt-1"">
-                     <span class="club-explain">${clubDetailBoardList[0].clubBoardDate}</span>
-                  </div>
-                  <div class="col mt-1"">
-                     <strong>${clubDetailBoardList[0].clubBoardTitle}</strong>
-                  </div>
-                  <div class="col mt-1"">${clubDetailBoardList[0].clubBoardContent}</div>
-               </div>
-            </div>
-         </a>
+		<div class="col">
+			<div class="col">
+				<strong class="main-text">${clubDto.clubName}</strong>
+			</div>
+			<div class="col mt-2">
+				<span>${clubDto.clubExplain}</span>
+			</div>
+		</div>
 
 
-         <div class="row mt-3">
-            <div class="col">
-               <a
-                  href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDetailBoardList[0].clubNo}">
-                  <button class="btn btn-miso bg-miso w-100">게시글 목록가기</button>
-               </a>
-            </div>
-         </div>
-      </c:otherwise>
-   </c:choose>
+	</div>
+	<div class="row">
+		<div class="col">
+			<c:if test="${joinButton==true}">
+				<button type="button"
+					class="btn btn-success bg-miso mt-4 join w-100 joinOpen"
+					data-bs-toggle="modal">가입하기</button>
+			</c:if>
 
-   <hr>
+		</div>
+	</div>
 
-   <div class="row">
-      <div class="col text-start d-flex align-items-center">
-         <img src="${pageContext.request.contextPath}/images/logo-door.png"
-            width="5%"> <strong class="ms-2 main-text">정기모임</strong>
-      </div>
-   </div>
+	<hr>
+	<div class="row">
+		<div class="col text-start d-flex align-items-center">
+			<img src="${pageContext.request.contextPath}/images/logo-door.png"
+				width="5%"> <strong class="ms-2 main-text">게시판</strong>
+		</div>
+	</div>
 
-   <div class="row mt-3">
-      <div class="col">
-         <button type="button" name="makeMeeting"
-            class="btn btn-miso bg-miso w-100">정모 만들기</button>
-      </div>
-   </div>
+	<c:choose>
+		<c:when test="${clubDetailBoardList[0]==null}">
+			<div class="row d-flex align-items-center mt-3">
+				<div class="col-3 text-start">
+					<img src="${pageContext.request.contextPath}/images/open-door.png"
+						width="100%">
+				</div>
+				<div class="col">
+					<div class="col">
+						<h5>아직 게시글이 없어요!</h5>
+					</div>
+					<div class="col">
+						<h3>모임 활동을 공유해보세요</h3>
+					</div>
+				</div>
+			</div>
+			<div class="row p-1 mt-4 text-center">
+				<div class="col">
+					<a
+						href="${pageContext.request.contextPath}/clubBoard/write?clubNo=${clubDto.clubNo}">
+						<button class="btn btn-success bg-miso w-100 boardWrite">작성하기</button>
+					</a>
+				</div>
+			</div>
+		</c:when>
+
+		<c:otherwise>
+
+			<a
+				href="${pageContext.request.contextPath}/clubBoard/detail?clubBoardNo=${clubDetailBoardList[0].clubBoardNo}"
+				class="link-dark link-underline link-underline-opacity-0 board-detail">
+				<div class="row mt-3">
+					<div class="col-1">
+						<c:choose>
+							<c:when test="${clubDetailBoardList[0].attachNo!=0}">
+								<img
+									src="/rest/member/profileShow?memberId=${clubDetailBoardList[0].memberId}"
+									width="50" height="50" class="rounded-circle">
+							</c:when>
+							<c:otherwise>
+								<img src="/images/basic-profile.png" width="50" height="50"
+									class="rounded-circle">
+
+							</c:otherwise>
+
+						</c:choose>
+					</div>
+					<div class="col-10 ms-3">
+						<div class="col">
+							<span class="badge bg-primary">${clubDetailBoardList[0].clubBoardCategory}</span>
+						</div>
+						<div class="col mt-1">
+							<strong>${clubDetailBoardList[0].memberName}</strong>
+						</div>
+						<div class="col mt-1"">
+							<span class="club-explain">${clubDetailBoardList[0].clubBoardDate}</span>
+						</div>
+						<div class="col mt-1"">
+							<strong>${clubDetailBoardList[0].clubBoardTitle}</strong>
+						</div>
+						<div class="col mt-1"">${clubDetailBoardList[0].clubBoardContent}</div>
+					</div>
+				</div>
+			</a>
 
 
-   <div class="attach-meeting-list mt-3"></div>
+			<div class="row mt-3">
+				<div class="col">
+					<a
+						href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDetailBoardList[0].clubNo}">
+						<button class="btn btn-success bg-miso w-100">게시글 목록가기</button>
+					</a>
+				</div>
+			</div>
+		</c:otherwise>
+	</c:choose>
 
-   <c:if test="${meetingCount==0}">
-      <div class="row d-flex align-items-center mt-3 notMeeting">
-         <div class="col-3 text-start">
-            <img src="${pageContext.request.contextPath}/images/open-door.png"
-               width="100%">
-         </div>
-         <div class="col">
-            <div class="col">
-               <h5>아직 정모가 없어요!</h5>
-               <!-- 정모는 아무나 만들 수 없음 -->
-            </div>
-            <div class="col"></div>
-         </div>
-      </div>
-   </c:if>
+	<hr>
+
+	<div class="row">
+		<div class="col text-start d-flex align-items-center">
+			<img src="${pageContext.request.contextPath}/images/logo-door.png"
+				width="5%"> <strong class="ms-2 main-text">정기모임</strong>
+		</div>
+	</div>
+
+	<div class="row mt-3">
+		<div class="col">
+			<button type="button" name="makeMeeting"
+				class="btn btn-success bg-miso w-100">정모 만들기</button>
+		</div>
+	</div>
 
 
+	<div class="attach-meeting-list mt-3"></div>
 
-   <div class="more-btn mt-3">
-      <button class="btn btn-miso bg-miso w-100 more">전체보기</button>
-      <button class="btn btn-secondary w-100 cut">접기</button>
-   </div>
-   <hr>
+	<c:if test="${meetingCount==0}">
+		<div class="row d-flex align-items-center mt-3 notMeeting">
+			<div class="col-3 text-start">
+				<img src="${pageContext.request.contextPath}/images/open-door.png"
+					width="100%">
+			</div>
+			<div class="col">
+				<div class="col">
+					<h5>아직 정모가 없어요!</h5>
+					<!-- 정모는 아무나 만들 수 없음 -->
+				</div>
+				<div class="col"></div>
+			</div>
+		</div>
+	</c:if>
 
 
 
+	<div class="more-btn mt-3">
+		<button class="btn btn-success bg-miso w-100 more">전체보기</button>
+		<button class="btn btn-secondary w-100 cut">접기</button>
+	</div>
+	<hr>
+
+	
 
 
-   <div class="row">
-      <div class="col text-start d-flex align-items-center">
-         <img src="${pageContext.request.contextPath}/images/logo-door.png"
-            width="5%"> <strong class="ms-2 main-text">사진첩</strong>
-      </div>
-   </div>
 
-   <c:choose>
+	<div class="row">
+		<div class="col text-start d-flex align-items-center">
+			<img src="${pageContext.request.contextPath}/images/logo-door.png"
+				width="5%"> <strong class="ms-2 main-text">사진첩</strong>
+		</div>
+	</div>
 
-      <c:when test="${empty photoList}">
-         <div class="row d-flex align-items-center mt-3">
-            <div class="col-3 text-start">
-               <img src="${pageContext.request.contextPath}/images/open-door.png"
-                  width="100%">
-            </div>
-            <div class="col">
-               <div class="col">
-                  <h5>사진첩이 비어있어요</h5>
-               </div>
-               <div class="col">
-                  <h4>모임의 특색을 사진으로 표현해보세요!</h4>
-               </div>
-            </div>
-         </div>
+	<c:choose>
 
-         <div class="row p-1 mt-4 text-center">
-            <div class="col">
-               <a
-                  href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}">
-                  <button class="btn btn-miso bg-miso w-100">사진첩</button>
-               </a>
-            </div>
-         </div>
-      </c:when>
-      <c:otherwise>
+		<c:when test="${empty photoList}">
+			<div class="row d-flex align-items-center mt-3">
+				<div class="col-3 text-start">
+					<img src="${pageContext.request.contextPath}/images/open-door.png"
+						width="100%">
+				</div>
+				<div class="col">
+					<div class="col">
+						<h5>사진첩이 비어있어요</h5>
+					</div>
+					<div class="col">
+						<h4>모임의 특색을 사진으로 표현해보세요!</h4>
+					</div>
+				</div>
+			</div>
 
-         <a href="/photo/list?clubNo=${clubDto.clubNo}">
-            <div class="container">
-               <div class="row mt-2">
-                  <c:forEach var="photoDto" items="${photoList}" varStatus="loop">
-                     <div class="col-4 p-0 img-box">
-                        <img src="/rest/photo/download/${photoDto.photoNo}"
-                           class="attached-image img-thumbnail">
-                     </div>
-                     <c:if test="${loop.index % 3 == 2}">
-               </div>
-               <div class="row">
-                  </c:if>
-                  </c:forEach>
-               </div>
-            </div>
-         </a>
+			<div class="row p-1 mt-4 text-center">
+				<div class="col">
+					<a
+						href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}">
+						<button class="btn btn-success bg-miso w-100">사진첩</button>
+					</a>
+				</div>
+			</div>
+		</c:when>
+		<c:otherwise>
+
+			<a href="/photo/list?clubNo=${clubDto.clubNo}">
+				<div class="container">
+					<div class="row mt-2">
+						<c:forEach var="photoDto" items="${photoList}" varStatus="loop">
+							<div class="col-4 p-0 img-box">
+								<img src="/rest/photo/download/${photoDto.photoNo}"
+									class="attached-image img-thumbnail">
+							</div>
+							<c:if test="${loop.index % 3 == 2}">
+					</div>
+					<div class="row">
+						</c:if>
+						</c:forEach>
+					</div>
+				</div>
+			</a>
 
 
-      </c:otherwise>
+		</c:otherwise>
 
-   </c:choose>
-   <hr>
-   <div class="row">
-      <div class="col">
-         <div class="row">
-            <div class="col text-start d-flex align-items-center">
-               <img src="${pageContext.request.contextPath}/images/logo-door.png"
-                  width="5%"> <strong class="ms-2 main-text">모임멤버(인원수)</strong>
-            </div>
-         </div>
-      </div>
-   </div>
-   <div class="clubMemberList"></div>
+	</c:choose>
+	<hr>
+	<div class="row">
+		<div class="col">
+			<div class="row">
+				<div class="col text-start d-flex align-items-center">
+					<img src="${pageContext.request.contextPath}/images/logo-door.png"
+						width="5%"> <strong class="ms-2 main-text">모임멤버</strong>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="clubMemberList"></div>
+	<c:if test="${clubMemberNo!=0}">
+	<hr>
+	<form action="/club/deleteClubMember" method="get">
+	<input type="hidden" name="clubMemberNo" value="${clubMemberNo}">
+	<input type="hidden" name="clubNo" value="${clubDto.clubNo}">
+	<button class="btn btn-danger" name="clubMemberDelete">탈퇴하기</button>
+	</form>
+	</c:if>
+	<%-- <c:forEach var="clubMember" items="${clubMemberDto}" varStatus="loop">
 
-   <%-- <c:forEach var="clubMember" items="${clubMemberDto}" varStatus="loop">
     <div class="row mt-3 mb-4">
         <div class="col memberList">
             <div class="row d-flex align-items-center">
@@ -1793,6 +1916,7 @@ $(document).ready(function () {
         </div>
     </div>
 </c:forEach> --%>
+
 
 
 
@@ -2007,6 +2131,7 @@ $(document).ready(function () {
          </div>
       </div>
    </div>
+
 
 
 

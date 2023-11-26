@@ -18,11 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kh.springfinal.dao.CategoryDao;
 import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dao.ClubMemberDao;
+import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dao.WishlistDao;
 import com.kh.springfinal.dao.ZipCodeDao;
+import com.kh.springfinal.dto.ClubDto;
 import com.kh.springfinal.dto.ClubMemberDto;
+import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.dto.MinorCategoryDto;
 import com.kh.springfinal.dto.ZipCodeDto;
+import com.kh.springfinal.vo.ClubImageVO;
 import com.kh.springfinal.vo.ClubListVO;
 import com.kh.springfinal.vo.ClubMemberVO;
 import com.kh.springfinal.vo.PaginationVO;
@@ -52,6 +56,11 @@ public class ClubRestController {
 	
 	@Autowired
 	private WishlistDao wishlistDao;
+	
+	@Autowired
+	private MemberDao memberDao;
+	
+	
 	
 	@GetMapping("/category")
 	public List<MinorCategoryDto> category(@RequestParam int majorCategoryNo) {
@@ -334,6 +343,91 @@ public class ClubRestController {
 		
 		
 	}
+	
+	@GetMapping("/joinPossible")
+	public int joinPossible(HttpSession session,int clubNo){
+		
+		String memberId = (String) session.getAttribute("name");
+		int memberJoinCount = clubMemberDao.memberJoinClubCount(memberId);
+		MemberDto memberDto = memberDao.loginId(memberId);
+		ClubImageVO clubDto = clubDao.clubDetail(clubNo);
+		
+		int clubMemberCount = clubMemberDao.memberCount(clubNo);
+		int clubMaxMember = clubDto.getClubPersonnel();
+		
+		log.debug("memberJoinCount={}",memberJoinCount);
+		
+		if(clubMemberCount>=clubMaxMember) {
+			
+			return 1;
+			
+			
+		}
+		
+		else if(memberDto.getMemberLevel().equals("일반유저")) {
+			
+			if(memberJoinCount>=5) {
+				
+				return 2;
+			}
+			return 4;
+		}
+		
+		else {
+			
+				
+				if(memberJoinCount>=60) {
+					
+					return 3;
+					
+				}
+				
+				return 4;
+			
+		}
+		
+
+	}
+	
+	@GetMapping("/clubMakePossible")
+	public int joinPossible(HttpSession session){
+		
+		String memberId = (String) session.getAttribute("name");
+		int memberJoinCount = clubMemberDao.memberJoinClubCount(memberId);
+		MemberDto memberDto = memberDao.loginId(memberId);
+		
+
+		if(memberDto.getMemberLevel().equals("일반유저")) {
+			
+			if(memberJoinCount>=5) {
+				
+				return 1;
+			}
+		}
+		
+		else {
+			
+				
+				if(memberJoinCount>=50) {
+					
+					return 2;
+					
+				}
+				
+			
+		}
+		
+		return 3;
+		
+
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

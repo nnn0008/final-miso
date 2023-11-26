@@ -31,6 +31,44 @@ width:20px;
 </style>
 
 <script>
+    	
+    $(function(){
+    	
+    	$(".club-make-link").click(function(e){
+    		  e.preventDefault();
+    		console.log("링크클릭");
+    		
+    		$.ajax({
+                url: window.contextPath +"/rest/clubMakePossible",
+                method: "get",
+                success: function (response) {
+      				if(response==1){
+      				alert("더이상 동호회를 생성하실 수 없습니다. 일반유저 최대 가입 수 5개")
+      				window.location.href = $(e.target).attr("href");
+      				}
+      				else if(response==2){
+          				alert("더이상 동호회를 생성하실 수 없습니다. 파워유저 최대 가입 수 12개")
+          				}
+      				else{
+      					 window.location.href = $(e.target).attr("href");
+      				}
+                }
+    		
+    		
+    	})
+    	
+    	
+    	
+    	
+    })
+    
+    })
+    
+    
+    
+    </script>
+
+<script>
 $(function(){
 	 // 300ms 후에 Ajax 요청을 보냄
 	loadList();
@@ -271,8 +309,14 @@ $(function(){
     </c:forEach>
 </div>
 
-<c:choose>
-<c:when test="${empty clubList}">
+<div class="col text-start d-flex align-items-center mb-3">
+            <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+            
+            <span class="badge bg-miso ms-2">${majorName}</span>
+            <strong class="ms-2 main-text">동호회 리스트</strong>
+        </div>
+
+<c:if test="${empty clubList}">
 <div class="row d-flex align-items-center mt-3">
                                 <div class="col-3 text-start">
                                     <img src="${pageContext.request.contextPath}/images/open-door.png" width="100%">
@@ -288,22 +332,12 @@ $(function(){
                             </div>
 				<div class="row p-1 mt-4 text-center">
                         <div class="col">
-                            <a href="/club/insert" class="badge rounded-pill bg-miso btn-miso p-3 link w-100">
+                            <a href="/club/insert" class="badge rounded-pill bg-miso btn-miso p-3 link w-100 club-make-link">
                                 모임 만들기
                             </a>
                         </div>
                     </div>
-</c:when>
-<c:otherwise>
-<div class="col text-start d-flex align-items-center mb-3">
-            <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
-            
-            <span class="badge bg-miso ms-2">${clubList[0].majorCategoryName}</span>
-            <strong class="ms-2 main-text">동호회 리스트</strong>
-        </div>
-</c:otherwise>
-</c:choose>
-
+</c:if>
 
 <script id="club-template" type="text/template">
 <div class="row mt-4 mb-3 d-flex align-items-center club-box">

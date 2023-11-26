@@ -124,6 +124,22 @@ public class ClubMemberDaoImpl implements ClubMemberDao{
 		return sqlSession.update("clubMember.rankUpgrade",clubMemberNo)>0;
 	}
 
+	@Override
+	public boolean deleteClubMember(int clubMemberNo) {
+		
+		int result = sqlSession.delete("clubMember.clubMemberDelete",clubMemberNo);
+				
+		return result>0;
+	}
+
+	@Override
+	public int memberJoinClubCount(String memberId) {
+		
+		int memberJoinClubCount = sqlSession.selectOne("clubMember.memberJoinClubCount",memberId);
+		
+		return memberJoinClubCount;
+	}
+
 //	@Override
 //	public String attendMemberId(int clubMemberNo) {
 //		return sqlSession.selectOne("clubMember.findMemberId",clubMemberNo);

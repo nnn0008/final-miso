@@ -37,5 +37,14 @@ public interface ClubMemberDao {
 	List<ClubDto> mypageClubList(String memberId);
 	boolean upgradeRank(int clubMemberNo);
 	
+
+	boolean deleteClubMember(int clubMemberNo);
+	
+	int memberJoinClubCount(String memberId);
+	
+	
+	
+
 	List<HomeForClubVO> selectListByMemberId(String memberId);
+
 }
