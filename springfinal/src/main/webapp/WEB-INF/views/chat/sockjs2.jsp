@@ -64,17 +64,17 @@
 <c:if test="${not empty clubDto}">
     <div class="row">
         <div class="col-3 pe-0">
-            <a id="homeLink" href="${pageContext.request.contextPath}/club/detail?clubNo=${clubDto.clubNo}" class="btn btn-success bg-miso w-100 active">홈</a>
+            <a id="homeLink" href="${pageContext.request.contextPath}/club/detail?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100 active">홈</a>
         </div>
         <div class="col-3 pe-0">
-            <a id="boardLink" href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDto.clubNo}" class="btn btn-success bg-miso w-100">게시판</a>
+            <a id="boardLink" href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100">게시판</a>
         </div>
         <div class="col-3 pe-0">
-            <a id="photoLink" href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}" class="btn btn-success bg-miso w-100">사진첩</a>
+            <a id="photoLink" href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100">사진첩</a>
         </div>
         <c:if test="${not empty clubDto.chatRoomNo}">
             <div class="col-3">
-                <a id="chatLink" href="${pageContext.request.contextPath}/chat/enterRoom/${clubDto.chatRoomNo}" class="btn btn-success bg-miso w-100">채팅</a>
+                <a id="chatLink" href="${pageContext.request.contextPath}/chat/enterRoom/${clubDto.chatRoomNo}" class="btn btn-miso bg-miso w-100">채팅</a>
             </div>
         </c:if>
     </div>
@@ -247,7 +247,7 @@
 								  
 								<input type="text" class="form-control message-input"
 									placeholder="메세지를 입력하세요">
-								<button type="button" class="btn send-btn btn-success bg-miso send-file-btn">
+								<button type="button" class="btn send-btn btn-miso bg-miso send-file-btn">
 									<i class="fa-regular fa-paper-plane"></i> 보내기
 								</button>
 							</div>
@@ -283,7 +283,7 @@
 								<h4 class="mb-2 modal-profile-name">줄리 L. 아르소노</h4>
 								<p class="text-muted mb-4 modal-profile-id"></p>
 								<div class="mb-4 pb-2">
-									<button type="button" class="btn btn-success bg-miso dm-send">메세지
+									<button type="button" class="btn btn-miso bg-miso dm-send">메세지
 										보내기</button>
 								</div>
 							</div>
@@ -719,7 +719,7 @@ if (data.messageType === "delete") {
 											    .append('<button type="button" class="btn-close" data-bs-dismiss="alert"></button>')
 											    .append('<strong>권한이 없습니다. </strong><br>')
 											    .append('<span class="badge bg-success rounded-pill bg-miso">파워유저</span>가 되어보세요! <br>')
-											    .append('<a href="/pay/product" class="alert-link btn btn-success bg-miso w-100 mt-2">구매하기</a>');
+											    .append('<a href="/pay/product" class="alert-link btn btn-miso bg-miso w-100 mt-2">구매하기</a>');
 
 
 		                                	// 경고창을 body에 표시
@@ -1018,7 +1018,7 @@ $(".dm-send").on("click", function () {
 	    .append('<button type="button" class="btn-close" data-bs-dismiss="alert"></button>')
 	    .append('<strong>권한이 없습니다. </strong><br>')
 	    .append('<span class="badge bg-success rounded-pill bg-miso">파워유저</span>가 되어보세요! <br>')
-	    .append('<a href="/pay/product" class="alert-link btn btn-success bg-miso w-100 mt-2">구매하기</a>');
+	    .append('<a href="/pay/product" class="alert-link btn btn-miso bg-miso w-100 mt-2">구매하기</a>');
 
 
 	// 경고창을 body에 표시

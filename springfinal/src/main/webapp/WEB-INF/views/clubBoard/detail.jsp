@@ -70,8 +70,8 @@ $(function(){
 	});
     
     //대댓글 작성
-    //$(replyHtmlTemplate).find(".btn-success").click(function(e){
-    $(document).on("click", ".btn-successs", function(e){
+    //$(replyHtmlTemplate).find(".btn-miso").click(function(e){
+    $(document).on("click", ".btn-misos", function(e){
 		var params = new URLSearchParams(location.search);
         var clubBoardNo = params.get("clubBoardNo");
         var originReplyNo = $(this).parents(".for-reply-edit").find(".btn-subReply").data("reply-no");
@@ -480,7 +480,7 @@ $(function(){
 				<textarea name="clubBoardReplyContent" class="form-control" rows="3"></textarea>
 			</div>
 			<div class="col">
-				<button type="submit" class="btn btn-success btn-reply-edit">
+				<button type="submit" class="btn btn-miso btn-reply-edit">
 					수정
 				</button>
 				<button type="button" class="btn btn-danger btn-cancel">
@@ -497,7 +497,7 @@ $(function(){
 			<textarea type="text" class="form-control w-100 reply-write" rows="3" placeholder="댓글을 달아주세요"></textarea>
 		</div>
 		<div class="col">
-			<button type="button" class="btn btn-reply-send btn-success btn-successs w-100">전송</button>
+			<button type="button" class="btn btn-reply-send btn-miso btn-misos w-100">전송</button>
 			<button type="button" class="btn btn-reply-cancel btn-reReply-cancel w-100">취소</button>
 		</div>
 	</div>
@@ -510,7 +510,7 @@ $(function(){
 				<input type="text" name="clubBoardReReplyContent" class="form-control"></textarea>
 			</div>
 			<div class="col">
-				<button type="submit" class="btn btn-success btn-reReply-send">
+				<button type="submit" class="btn btn-miso btn-reReply-send">
 					<i class="fa-solid fa-check"></i>
 					작성
 				</button>
@@ -618,7 +618,7 @@ $(function(){
 						<textarea type="text" class="form-control w-100 reply-write" rows="3" placeholder="댓글을 달아주세요"></textarea>
 					</div>
 					<div class="col">
-						<button type="submit" class="btn btn-reply-send btn-success">전송</button>
+						<button type="submit" class="btn btn-reply-send btn-miso">전송</button>
 					</div>
 				</div>
 			</form> 

@@ -306,16 +306,16 @@ function pageReset(){
 
 <div class="row">
     <div class="col-3 pe-0">
-        <a id="homeLink" href="${pageContext.request.contextPath}/club/detail?clubNo=${clubDto.clubNo}" class="btn btn-success bg-miso w-100 active">홈</a>
+        <a id="homeLink" href="${pageContext.request.contextPath}/club/detail?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100 active">홈</a>
     </div>
     <div class="col-3 pe-0">
-        <a id="boardLink" href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDto.clubNo}" class="btn btn-success bg-miso w-100">게시판</a>
+        <a id="boardLink" href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100">게시판</a>
     </div>
     <div class="col-3 pe-0">
-        <a id="photoLink" href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}" class="btn btn-success bg-miso w-100">사진첩</a>
+        <a id="photoLink" href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100">사진첩</a>
     </div>
     <div class="col-3">
-        <a id="chatLink" href="/chat/enterRoom/${clubDto.chatRoomNo}" class="btn btn-success bg-miso w-100">채팅</a>
+        <a id="chatLink" href="/chat/enterRoom/${clubDto.chatRoomNo}" class="btn btn-miso bg-miso w-100">채팅</a>
     </div>
 </div>
 
@@ -355,7 +355,7 @@ function pageReset(){
 	<div class="row m-2 mt-4 board-list"></div>
 	<div class="row go-upside">
 		<div class="col">
-			<a href="#" class="btn btn-success w-100">위로</a>
+			<a href="#" class="btn btn-miso w-100">위로</a>
 		</div>
 	</div>
 

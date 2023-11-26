@@ -405,7 +405,7 @@ function clickHeart(photoNo, clubNo){
 				<textarea name="photoReplyContent" class="form-control" rows="3"></textarea>
 			</div>
 			<div class="col">
-				<button type="submit" class="btn btn-success btn-reply-edit">
+				<button type="submit" class="btn btn-miso btn-reply-edit">
 					<i class="fa-solid fa-check"></i>
 					수정
 				</button>
@@ -427,7 +427,7 @@ function clickHeart(photoNo, clubNo){
 				<input type="text" name="clubBoardReReplyContent" class="form-control"></textarea>
 			</div>
 			<div class="col">
-				<button type="submit" class="btn btn-success btn-reReply-send">
+				<button type="submit" class="btn btn-miso btn-reReply-send">
 					<i class="fa-solid fa-check"></i>
 					작성
 				</button>
@@ -449,16 +449,16 @@ function clickHeart(photoNo, clubNo){
 
 <div class="row">
     <div class="col-3 pe-0">
-        <a id="homeLink" href="${pageContext.request.contextPath}/club/detail?clubNo=${clubDto.clubNo}" class="btn btn-success bg-miso w-100 active">홈</a>
+        <a id="homeLink" href="${pageContext.request.contextPath}/club/detail?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100 active">홈</a>
     </div>
     <div class="col-3 pe-0">
-        <a id="boardLink" href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDto.clubNo}" class="btn btn-success bg-miso w-100">게시판</a>
+        <a id="boardLink" href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100">게시판</a>
     </div>
     <div class="col-3 pe-0">
-        <a id="photoLink" href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}" class="btn btn-success bg-miso w-100">사진첩</a>
+        <a id="photoLink" href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100">사진첩</a>
     </div>
     <div class="col-3">
-        <a id="chatLink" href="/chat/enterRoom/${clubDto.chatRoomNo}" class="btn btn-success bg-miso w-100">채팅</a>
+        <a id="chatLink" href="/chat/enterRoom/${clubDto.chatRoomNo}" class="btn btn-miso bg-miso w-100">채팅</a>
     </div>
 </div>
 
@@ -480,7 +480,7 @@ function clickHeart(photoNo, clubNo){
 <!-- 		<div class="row"> -->
 <!-- 			<div class="col"> -->
 <!-- 				insert Modal -->
-<!-- 				<button type="button" class="btn btn-success bg-miso w-100" -->
+<!-- 				<button type="button" class="btn btn-miso bg-miso w-100" -->
 <!-- 					data-bs-toggle="modal" data-bs-target="#exampleModal"> -->
 <!-- 					사진 등록</button> -->
 <!-- 			</div> -->
@@ -530,7 +530,7 @@ function clickHeart(photoNo, clubNo){
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary"
 					data-bs-dismiss="modal">취소</button>
-				<button type="button" class="btn btn-success bg-miso btn-photo-register"
+				<button type="button" class="btn btn-miso bg-miso btn-photo-register"
 					data-bs-dismiss="modal">등록</button>
 			</div>
 		</div>
@@ -583,7 +583,7 @@ function clickHeart(photoNo, clubNo){
 								<textarea type="text" class="form-control w-100 reply-write" rows="3" placeholder="댓글을 달아주세요"></textarea>
 							</div>
 							<div class="col">
-								<button type="submit" class="btn btn-reply-send btn-success">전송</button>
+								<button type="submit" class="btn btn-reply-send btn-miso">전송</button>
 							</div>
 						</div>
 					</form>

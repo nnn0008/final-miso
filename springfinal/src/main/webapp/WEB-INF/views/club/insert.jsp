@@ -393,7 +393,7 @@
     	
     	<div class="row mt-4 mb-2">
     		<div class="col">
-    	<button class="btn btn-success btn-lg bg-miso w-100" type="submit" name="createClub">
+    	<button class="btn btn-miso btn-lg bg-miso w-100" type="submit" name="createClub">
     	<strong>모임 만들기</strong>
     	</button>
     	</div>
