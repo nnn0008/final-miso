@@ -460,8 +460,9 @@ $(function(){
 	</div>
 	<div class="row">
 	<div class="col">
-		<label class="mt-2">정원</label>
-		<input type="number" name="clubPersonnel" class="form-control" value="${clubDto.clubPersonnel}" min="2">
+		<label class="mt-2">정원 (2~${clubDto.clubMaxPersonnel})</label>
+		<input type="number" name="clubPersonnel" class="form-control" 
+		max="${clubDto.clubMaxPersonnel}" value="${clubDto.clubPersonnel}" min="2">
 	<div class="invalid-feedback">
       		동호회 인원을 선택해주세요
     		</div>

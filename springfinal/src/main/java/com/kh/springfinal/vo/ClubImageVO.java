@@ -21,5 +21,6 @@ public class ClubImageVO {
 	private String clubPremium;
 	private String clubDate;
 	private int attachNo;
+	private int clubMaxPersonnel;
 
 }

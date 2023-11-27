@@ -364,8 +364,8 @@
     	
     	<div class="row">
     		<div class="col">
-    	<label class="mt-2">정원</label>
-    	<input class="form-control" type="number" name="clubPersonnel" min="2">
+    	<label class="mt-2">정원(2~50)</label>
+    	<input class="form-control" type="number" name="clubPersonnel" min="2" max="50">
     	<div class="invalid-feedback">
       		동호회 인원을 선택해주세요
     		</div>
