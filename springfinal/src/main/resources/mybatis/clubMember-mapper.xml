@@ -52,7 +52,8 @@
     	</select>
     	
     	<select id="memberInfo" resultType="clubMemberVO">
-    		
+    		 select * from (
+	select rownum rn, TMP.* from (
     		SELECT m.member_id,
     		m.member_name,
     		cm.club_member_no,
@@ -66,7 +67,9 @@
     		on m.member_id=mp.member_Id
     		left outer join attach a 
     		on mp.attach_no = a.attach_no
-    		WHERE cm.CLUB_NO=#{clubNo}
+    		WHERE cm.CLUB_NO=#{whereNo}) TMP
+			    )
+			    where rn between #{startRow} and #{finishRow}
     	
     	</select>
     	

@@ -119,6 +119,11 @@
 .meeting-box {
    box-shadow: 0 0 10px #EBE8E8;
 }
+
+.clubMemberList {
+    max-height: 350px; /* 적절한 높이로 설정 */
+    overflow: auto; /* 스크롤이 필요한 경우 스크롤 허용 */
+    }
 </style>
 
 
@@ -225,7 +230,6 @@
 
 $(function(){
 	
-	
 	var bodyClubMemberNo = $(".bodyClubMemberNo").data("no");
 	var memberRankIsMaster = ${editPossible}; 
 
@@ -236,25 +240,121 @@ $(function(){
 	
 
 
-	
-	
+	 var scrollTimeout;
+	  var scrollPosition;
+	  var size = 3;
+	  var memberPage=1;
 	 loadMemberList();
+	 
+	
+	 
+	 
+	 
 	 
 		
 	  $(".upgradeRank").remove();
 	  
+	  
+	
+	
+	 
+	 
+	  
+	  
+	  $('.clubMemberList').scroll(function () {
+		  
+		  console.log("스크롤 되는 중");
+	        var clubMemberList = $(this);
+
+	        if (scrollTimeout) {
+	            clearTimeout(scrollTimeout); // 이전 타이머가 있다면 제거
+	        }
+
+	        // 200ms 후에 스크롤 이벤트를 처리
+	        scrollTimeout = setTimeout(function () {
+	            if (clubMemberList.scrollTop() + clubMemberList.innerHeight() >= clubMemberList[0].scrollHeight - 100) {
+	                // 스크롤이 zipList의 하단에 도달하면 새로운 데이터 로드
+	                loadMemberMoreList();
+	            }
+	        }, 200);
+	    });
+	  
+	
+	  
 	  function loadMemberList(){
 		  var params = new URLSearchParams(location.search);
 	        var clubNo = params.get("clubNo");
-              
 		  
 		  $.ajax({
 	            url: "http://localhost:8080/rest/clubMemberList",
 	            method: "get",
-	            data: { clubNo: clubNo},
+	            data: { clubNo: clubNo , page : 1 , size1 : size},
 	            success: function (response) {
 	            	
 	            	$(".clubMemberList").empty();
+              	
+              for(var a=0;a<response.length;a++){
+	            	var clubMember = response[a];
+	            	var template = $("#clubMember-template").html();
+              	var htmlTemplate = $.parseHTML(template);
+              	
+              	$(htmlTemplate).find(".href").attr('href',"/member/mypage?memberId="+clubMember.memberId);
+              	
+              	if(clubMember.attachNo!=0){
+              	$(htmlTemplate).find(".profileImage").attr('src',"/rest/member/profileShow?memberId="+clubMember.memberId);
+              	}
+              		if(clubMember.clubMemberRank == '운영진'){
+              			var i =$('<i>');
+              			
+              			i.addClass("fa-solid fa-crown fa-lg pt-3 pb-3 ps-2 pe-2 club-member-badge");
+              			
+              		   $(htmlTemplate).find(".profileImage").after(i);
+              			
+              		}
+              		
+              	if(clubMember.attachNo==0){
+              		$(htmlTemplate).find(".profileImage").attr('src',"/images/basic-profile2.png");
+              		
+              	}
+              	
+              	$(htmlTemplate).find(".upgradeRank").data('clubMemberNo',clubMember.clubMemberNo);
+              	 if(clubMember.masterRank==false||clubMember.clubMemberRank=='운영진'){
+              		
+              		 $(htmlTemplate).find(".upgradeRank").hide(); 
+
+              		
+              	} 
+              	
+              	
+              	$(htmlTemplate).find(".memberName").html("<strong>" + clubMember.memberName + "</strong> | " + clubMember.joinDateString + " 가입");
+
+              	$(htmlTemplate).find(".joinMessage").text(clubMember.joinMessage);
+	            	
+              	$(".clubMemberList").append(htmlTemplate);
+              	
+              	}
+            
+              $(".clubMemberList").scrollTop(scrollPosition);
+              	
+	            }
+	        })
+		  
+		  
+	    
+		  
+	  }
+	  
+	  function loadMemberMoreList(){
+		  var params = new URLSearchParams(location.search);
+	        var clubNo = params.get("clubNo");
+	        memberPage++;
+		  
+		  $.ajax({
+	            url: "http://localhost:8080/rest/clubMemberList",
+	            method: "get",
+	            data: { clubNo: clubNo , page : memberPage, size1 : 3},
+	            success: function (response) {
+	            	
               	
               for(var a=0;a<response.length;a++){
 	            	var clubMember = response[a];
@@ -301,22 +401,30 @@ $(function(){
 	        })
 		  
 		  
-		  
+	       
 		  
 	  }
+	  
+	 
 	  
 	  
 	  $(document).on('click','.upgradeRank',function(){
 		  
 		  
 		  var clubMemberNo = $(this).data("clubMemberNo");
+		  scrollPosition = $(".clubMemberList").scrollTop();
+		  var tagCount = $(".clubMemberList").children().length;
 		  
 		  $.ajax({
 			  url: "http://localhost:8080/rest/upgradeRank",
 	          method: "get",
 	          data: { clubMemberNo: clubMemberNo},
 	          success: function (response) {
-	        	  loadMemberList();
+	        	  
+						   size=tagCount
+						   
+						   loadMemberList();
+	        		  
 			  
 		  }
 		  }) 
@@ -468,23 +576,22 @@ $(".meetingFix").change(function(){
         e.preventDefault();
         
         
-        var nameOk= $(".meetingName").val().length!=0;
-        console.log("nameOk"+nameOk);
+        var nameOk= ($(".meetingName").val().length!=0)&&($(".meetingName").val().length<=30);
         
         var dateOk = $(".meetingDate").val() !== "" && $(".meetingDate").val() !== null;
-        console.log("dateOk"+dateOk);
         
         var timeOk = $(".meetingTime").val() !== "" && $(".meetingTime").val() !== null;
-        console.log("timeOk"+timeOk);
         
-        var locationOk= $(".meetingLocation").val().length!=0;
-        console.log("locationOk"+locationOk);
+        var location = $(".meetingLocation").val()
+        var locationOk= (location.length!=0)&&(location.length<=15);
         
         var price = $(".meetingPrice").val();
         var priceOk= price.length!=0&&price>0;
         
         var people=$(".meetingMaxPeople").val();
         var peopleOk= people.length!=0&&people>0;
+        
+        
         
         
         var pass = nameOk&&dateOk&&timeOk&&locationOk&&priceOk&&peopleOk;
@@ -526,7 +633,7 @@ $(".meetingFix").change(function(){
         
 
         if(!pass){
-        	if(!nameOk){
+        	if(!nameOk||($(".meetingName").val().length>30)){
         		$(".meetingName").addClass("is-invalid");
            		}
            		if(!dateOk){
@@ -643,7 +750,7 @@ $(".meetingFix").change(function(){
     	
          var meetingNo = $(this).data("no");
          
-         var nameOk= $(".meetingNameByEdit").val().length!=0;
+         var nameOk= ($(".meetingNameByEdit").val().length!=0)&&($(".meetingNameByEdit").val().length<=30);
          console.log("nameOk"+nameOk);
          
          var dateOk = $(".meetingDateByEdit").val() !== "" && $(".meetingDate").val() !== null;
@@ -652,8 +759,8 @@ $(".meetingFix").change(function(){
          var timeOk = $(".meetingTimeByEdit").val() !== "" && $(".meetingTime").val() !== null;
          console.log("timeOk"+timeOk);
          
-         var locationOk= $(".meetingLocationByEdit").val().length!=0;
-         console.log("locationOk"+locationOk);
+         var location = $(".meetingLocationByEdit").val()
+         var locationOk= (location.length!=0)&&(location.length<=15);
          
          var price = $(".meetingPriceByEdit").val();
          var priceOk= price.length!=0&&price>0;
@@ -1452,7 +1559,12 @@ $(".meetingFix").change(function(){
     	
     	//입력값 유효성 검사
     	$(".meetingName").on('input',function(){
+    		
+    		var nameInput = $(this).val();
+    		if(nameInput.length>0&&nameInput.length<=30){
+    			
     		$(this).removeClass("is-invalid");
+    		}
     	})
     	$(".meetingDate").on('change',function(){
     		$(this).removeClass("is-invalid");
@@ -1461,7 +1573,11 @@ $(".meetingFix").change(function(){
     		$(this).removeClass("is-invalid");
     	})
     	$(".meetingLocation").on('input',function(){
+    		var locationInput = $(this).val();
+    		if(locationInput.length>0&&locationInput.length<=15){
+    			
     		$(this).removeClass("is-invalid");
+    		}
     	})
     	$(".meetingPrice").on('input',function(){
     		$(this).removeClass("is-invalid");
@@ -1471,7 +1587,12 @@ $(".meetingFix").change(function(){
     	})
     	
     	$(".meetingNameByEdit").on('input',function(){
-    		$(this).removeClass("is-invalid");
+    		
+    		var nameInput = $(this).val();
+    		if(nameInput.length>0&&nameInput.length<=30){
+    			
+        		$(this).removeClass("is-invalid");
+        		}
     	})
     	$(".meetingDateByEdit").on('change',function(){
     		$(this).removeClass("is-invalid");
@@ -1480,7 +1601,11 @@ $(".meetingFix").change(function(){
     		$(this).removeClass("is-invalid");
     	})
     	$(".meetingLocationByEdit").on('input',function(){
+    		var locationInput = $(this).val();
+    		if(locationInput.length>0&&locationInput.length<=15){
+    			
     		$(this).removeClass("is-invalid");
+    		}
     	})
     	$(".meetingPriceByEdit").on('input',function(){
     		$(this).removeClass("is-invalid");
@@ -2024,7 +2149,7 @@ $(document).ready(function () {
                   <div>
                      <input type="text" class="form-control meetingName mt-2"
                         name="meetingName" placeholder="정모 이름">
-                     <div class="invalid-feedback">모임 이름을 추가해주세요</div>
+                     <div class="invalid-feedback">모임 이름을 1~30자 이내로 추가해주세요</div>
                   </div>
                   <div>
                      <input type="date" class="form-control meetingDate mt-2"
@@ -2039,7 +2164,7 @@ $(document).ready(function () {
                   <div>
                      <input type="text" class="form-control meetingLocation mt-2"
                         name="meetingLocation" placeholder="위치를 입력하세요">
-                     <div class="invalid-feedback">모임 위치를 지정해주세요</div>
+                     <div class="invalid-feedback">1-15자 이내의 모임 위치를 지정해주세요</div>
                   </div>
                   
   <div class="row mt-2 mb-2">
@@ -2114,7 +2239,7 @@ $(document).ready(function () {
 						<input type="text" class="form-control mt-2 meetingNameByEdit"
 							name="meetingName" placeholder="정모 이름"
 							value="${meetingDto.meetingName}">
-						<div class="invalid-feedback">모임 이름을 추가해주세요</div>
+						<div class="invalid-feedback">모임 이름을 1~30자 이내로 추가해주세요</div>
 					</div>
 					<div>
 						<input type="date" class="form-control mt-2 meetingDateByEdit"
@@ -2129,7 +2254,7 @@ $(document).ready(function () {
 					<div>
 						<input type="text" class="form-control mt-2 meetingLocationByEdit"
 							name="meetingLocation" placeholder="위치를 입력하세요">
-						<div class="invalid-feedback">모임 위치를 지정해주세요</div>
+						<div class="invalid-feedback">1-15자 이내의 모임 위치를 지정해주세요</div>
 					</div>
 					<div class="row mt-2 mb-2">
 						<div class="col-7">

@@ -7,6 +7,7 @@ import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.vo.ClubMemberVO;
 import com.kh.springfinal.vo.HomeForClubVO;
 import com.kh.springfinal.vo.MeetingAttendMemberVO;
+import com.kh.springfinal.vo.PaginationVO;
 
 public interface ClubMemberDao {
 	
@@ -20,7 +21,7 @@ public interface ClubMemberDao {
 	
 	List<ClubMemberDto> memberList(int clubNo);
 	
-	List<ClubMemberVO> memberInfo(int clubNo);
+	List<ClubMemberVO> memberInfo(PaginationVO vo);
 	
 	int memberCount(int clubNo);
 	

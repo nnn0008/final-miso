@@ -13,6 +13,7 @@ import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.vo.ClubMemberVO;
 import com.kh.springfinal.vo.HomeForClubVO;
 import com.kh.springfinal.vo.MeetingAttendMemberVO;
+import com.kh.springfinal.vo.PaginationVO;
 
 @Repository
 public class ClubMemberDaoImpl implements ClubMemberDao{
@@ -61,9 +62,9 @@ public class ClubMemberDaoImpl implements ClubMemberDao{
 	}
 
 	@Override
-	public List<ClubMemberVO> memberInfo(int clubNo) {
+	public List<ClubMemberVO> memberInfo(PaginationVO vo) {
 		
-		return sqlSession.selectList("clubMember.memberInfo",clubNo);
+		return sqlSession.selectList("clubMember.memberInfo",vo);
 	}
 
 	@Override
