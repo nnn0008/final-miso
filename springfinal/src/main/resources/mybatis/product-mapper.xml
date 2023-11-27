@@ -10,12 +10,28 @@
     	<select id="singleList" resultType="ProductDto">
     	select * from product
     	where product_type = '단건'
+    	and product_name Like '%파워%'
     	 order by product_no asc
     	</select>
+    	<select id="singleList2" resultType="ProductDto">
+    	select * from product
+    	where product_type = '단건'
+    	and product_name Like '%프리%'
+    	 order by product_no asc
+    	</select>
+    	
     	<!-- 정기상품목록 -->
     	<select id="regularList" resultType="ProductDto">
     	select * from product 
     	where product_type = '정기'
+    	and product_name Like '%파워%'
+    	order by product_no asc
+    	</select>
+    	
+    	<select id="regularList2" resultType="ProductDto">
+    	select * from product 
+    	where product_type = '정기'
+    	and product_name Like '%프리미엄%'
     	order by product_no asc
     	</select>
     	

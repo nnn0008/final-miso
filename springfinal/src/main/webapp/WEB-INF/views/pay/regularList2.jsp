@@ -6,51 +6,66 @@
 
 
 
- <div class="container-fluid mb-5 pb-5">
-    <div class="row">
-        <div class="col-md-10 offset-md-1">
-            <div class="container-fluid mb-5 pb-5">
-                <div class="row">
-                    <div class="col-md-10 offset-md-1">
+  <div class="container-fluid mb-5 pb-5">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+<div class="container-fluid mb-5 pb-5">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
 
-                        <div class="mt-4 p-4 text-light bg-dark rounded">
-                            <h1>정기 상품</h1>
-                        </div>
+<div class="mt-4 p-4 text-light bg-dark rounded">
+   <h1>정기 상품</h1>
+</div>
 
-                        <!-- Club 선택 드롭다운 -->
-                        <div class="form-group">
-                            <label for="clubSelect">동호회 선택:</label>
-                            <select class="form-control" id="clubSelect">
-                                <option disabled selected>동호회를 선택해주세요.</option>
-                                <c:forEach var="club" items="${clubs}">
-                                    <option value="${club.clubNo}">${club.clubName}</option>
-                                </c:forEach>
-                            </select>
-                        </div>
+<!-- Club 선택 드롭다운 -->
+<div class="form-group">
+    <label for="clubSelect">동호회 선택:</label>
+    <select class="form-control" id="clubSelect">
+        <c:forEach var="club" items="${clubs}">
+            <option value="${club.clubNo}">${club.clubName}</option>
+        </c:forEach>
+    </select>
+</div>
 
-                        <!-- 버튼 부분만 남겨두기 -->
-                        <button class="btn btn-success purchase-btn" type="button" data-club-no="${clubNo}" data-product-no="${productDto.productNo}">
-                            <img src="/images/payment.png">
-                        </button>
+<!-- 선택한 Club에 해당하는 Product 목록 -->
+<c:forEach var="productDto" items="${regularList2}">
+<div class="row mt-2 product-item">
+   <div class="col-2 checkbox-wrapper">
+      <input type="checkbox" name="productNo" value="${productDto.productNo}">
+   </div>
+   <div class="col-4">
+      ${productDto.productName}
+   </div>
+   <div class="col-2 text-end price-wrapper">
+      ${productDto.productPrice}원   
+   </div>
+   <div class="col-2">
+      <input class="form-control text-end" type="number" name="qty" value="1" min="1">
+   </div>
+   <div class="col-2 text-end total-wrapper"></div>
+</div>
+</c:forEach>
 
-                        <hr>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
+<hr>
+  <button class="btn btn-success purchase-btn" type="button" data-club-no="${clubNo}" data-product-no="${productDto.productNo}">
+         <img src="/images/payment.png">
+      </button>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 
 <script>
 $(function () {
     // 클럽 선택 드롭다운 변경 시
-  $("#clubSelect").change(function () {
-    var clubNo = $(this).val();
-    console.log(clubNo); // 디버깅을 위한 로그
-    // 선택한 클럽의 clubNo 값을 저장
-    $(this).data("clubNo", clubNo);
-});
-
+    $("#clubSelect").change(function () {
+        var clubNo = $(this).val();
+        // 선택한 클럽의 clubNo 값을 저장
+        $(this).data("clubNo", clubNo);
+    });
 
     $("[name=productNo]").change(function () {
         var checked = $(this).prop("checked");
