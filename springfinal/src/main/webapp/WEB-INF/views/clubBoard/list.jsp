@@ -49,10 +49,10 @@ font-size: 18px;
 </style>
 
 <script>
+	//jQuery를 이용한 스크롤바의 위치를 보기
     //초기페이지는 1
     var currentPage = 1;
 	var loading = false; // 전역으로 선언
-	//jQuery를 이용한 스크롤바의 위치를 보기
 	 $(function() {
         var keyword;
         $(".go-upside").hide();
@@ -68,6 +68,7 @@ font-size: 18px;
 
         $(".badge").click(function(e){
         	console.log("작동중");
+        	$(".go-upside").hide();
         	e.preventDefault();
         	$(".board-list").empty();
         	var keyword = $(this).text().trim();
@@ -165,6 +166,7 @@ font-size: 18px;
             },
         });          
  	}	
+	
  	//날짜를 수정하는 코드
  	function formatDate(dateString) {
 	    const options = {
@@ -237,12 +239,12 @@ font-size: 18px;
 	    					//프로필 있는지 검토
 	    					if(clubBoardAllDto.attachNoMp != null){
 	    						var profile = $("<img>").attr("src", window.contextPath + "/clubBoard/download?attachNo="+clubBoardAllDto.attachNoMp)
-	     						.addClass("rounded-circle").attr("width", 80).attr("height", 80).attr("data-board-no", response[i].clubBoardNo);
+	     						.addClass("rounded-circle").attr("width", 50).attr("height", 50).attr("data-board-no", response[i].clubBoardNo);
 	     						$(htmlTemplate).find(".for-attach").html(profile);
 	    					}
 	    					else{
 	    						var profile = $("<img>").attr("src",  window.contextPath + "/images/basic-profile.png")
-	    						.addClass("rounded-circle").attr("width", 80).attr("height", 80).attr("data-board-no", response[i].clubBoardNo);
+	    						.addClass("rounded-circle").attr("width", 50).attr("height", 50).attr("data-board-no", response[i].clubBoardNo);
 	    						$(htmlTemplate).find(".for-attach").html(profile);
 	    					}
 	    					//이름
@@ -324,7 +326,7 @@ function pageReset(){
 </div>
 			</div>
 			<div class="row mt-2">
-    <div class="col-12 text-content mb-2">아무내용</div>
+    <div class="col-12 text-content mb-2 text-truncate">아무내용</div>
     <div class="col-12 text-image">
         <!-- 이미지 내용 -->
     </div>
