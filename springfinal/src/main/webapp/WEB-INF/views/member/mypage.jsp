@@ -138,6 +138,7 @@ $(function() {
                         <span class="badge bg-info rounded-pill">${like1}</span>
                         <span class="badge bg-info rounded-pill">${like2}</span>
                     </div>
+                    
                         <div class="row">
                             <div class="col d-flex align-items-center mt-3 me-3">
                                 <div class="col-6">
@@ -223,7 +224,7 @@ $(function() {
                                 <div class="alert alert-dismissible alert-light">
                                     <a href="#" class="link">찜한 모임</a>
                                 </div>
-                                <span>${clubDto.clubName}</span>
+                                <span></span>
                             </div>
                     </div>
                     

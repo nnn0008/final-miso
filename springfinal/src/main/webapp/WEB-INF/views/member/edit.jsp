@@ -355,82 +355,139 @@
 			}
 		})
 
-		// [1] 모든 .zip 엘리먼트 숨기기
-
-           // [2] 검색어 입력 처리
-           $(".search-input").on('input', function () {
-               console.log("검색중");
-
-               if (!/^[가-힣]/.test($(this).val())) {
-                   return;
-               }
-
-               var keyword = $(this).val();
-               console.log(keyword);
-
-               if (keyword.length === 0) {
-                   $(".zip").hide();
-                   return;
-               }
-
-               $.ajax({
-                   url: "http://localhost:8080/rest/zip",
-                   method: "get",
-                   data: { keyword: keyword },
-                   success: function (response) {
-                       // 검색 결과를 처리
-                       var zipList = $('.addr-list');
-                       // 이전 검색 결과 지우기
-                       zipList.empty();
-
-                       for (var i = 0; i < response.length; i++) {
-                           var text = (response[i].sido != null ? response[i].sido + ' ' : '') +
-                               (response[i].sigungu != null ? response[i].sigungu + ' ' : '') +
-                               (response[i].eupmyun != null ? response[i].eupmyun + ' ' : '') +
-                               (response[i].hdongName != null ? response[i].hdongName + ' ' : '');
-
-                           console.log(text);
-
-                           zipList.append($("<li>")
-                               .addClass("list-group-item zip")
-                               .val(response[i].zipCodeNo)
-                               .text(text));
-                       }
-          
-                        }
-                       
-               });
-               
-               // [3] 목록을 클릭하면 입력창에 채우고 .zip 엘리먼트 숨기기
-               $(".addr-list").on("click", ".zip", function () {
-                  
-                  var form = $('.add');
-                  
-                   form.append($("<input>")
-                        .addClass("newInput")
-                         .prop("type", "hidden")
-                         .attr("name", "zipCodeNo")
-                         .val($(this).val())
-                     ); 
-
-                   var selectedAddress = $(this).text();
-                   $(".search-input").val(selectedAddress);
-                   $(".zip").hide();
-                   
-                   $(".d-addr-feedback").removeClass("text-danger");
-                    $("#memberAddr").removeClass("is-valid is-invalid");
-                    $(".addr-feed").removeClass("is-valid invalid");
-                    $("#memberAddr").addClass("is-valid");
-                    $(".addr-feed").addClass("is-valid");
-                    $(".addrCheck").prop("checked", true).trigger("change");
-               });
-               
-               
-           });
+		
 
 			
 });
 		
+	</script>
+	
+	  <script>
+    	$(function () {
+    		var searchTimeout;
+
+    		$(".search-input").on('input', function () {
+    		    $(".addr-list").show();
+
+    		    var keyword = $(this).val();
+
+    		    if (searchTimeout) {
+    		        clearTimeout(searchTimeout); // 이전 타이머가 있다면 제거
+    		    }
+
+    		    // 300ms 후에 Ajax 요청을 보냄
+    		    searchTimeout = setTimeout(function () {
+    		        if (keyword.length === 0) {
+    		            $(".zip").hide();
+    		            return;
+    		        }
+
+    		        $.ajax({
+    		            url: "http://localhost:8080/rest/zipPage",
+    		            method: "get",
+    		            data: { keyword: keyword },
+    		            success: function (response) {
+    		                // 검색 결과를 처리
+    		                var zipList = $('.addr-list');
+    		                // 이전 검색 결과 지우기
+    		                zipList.empty();
+
+    		                for (var i = 0; i < response.length; i++) {
+    		                    var text = (response[i].sido != null ? response[i].sido + ' ' : '') +
+    		                        (response[i].sigungu != null ? response[i].sigungu + ' ' : '') +
+    		                        (response[i].eupmyun != null ? response[i].eupmyun + ' ' : '') +
+    		                        (response[i].hdongName != null ? response[i].hdongName: '');
+
+    		                    zipList.append($("<li>")
+    		                        .addClass("list-group-item zip")
+    		                        .val(response[i].zipCodeNo)
+    		                        .text(text)
+    		                        .data("result", text)
+    		                    );
+    		                }
+    		            }
+    		        });
+    		    }, 300); // 300ms 딜레이
+    		});
+
+    	        
+    	        // [3] 목록을 클릭하면 입력창에 채우고 .zip 엘리먼트 숨기기
+        	    $(".addr-list").on("click", ".zip", function () {
+        	    	
+        	    	var form = $('.add');
+        	    	
+        	    	 form.append($("<input>")
+        	    			.addClass("newInput")
+        	    		    .prop("type", "hidden")
+        	    		    .attr("name", "zipCodeNo")
+        	    		    .val($(this).val())
+        	    		); 
+        	    			
+        	    	
+        	    	
+        	        var selectedAddress = $(this).data("result");
+        	        $(".search-input").val(selectedAddress); 
+        	        $(".search-input").data("pass","Y");
+        	        
+        	        $(".addr-list").hide();
+        	        
+        	    });
+    	        
+    	        	    
+    	    var page = 1; // 초기 페이지
+    	    var scrollTimeout; // 스크롤 이벤트를 지연시키기 위한 타이머
+
+    	    // 스크롤 이벤트 핸들러
+    	    $('.addr-list').scroll(function () {
+    	        var zipList = $(this);
+
+    	        if (scrollTimeout) {
+    	            clearTimeout(scrollTimeout); // 이전 타이머가 있다면 제거
+    	        }
+
+    	        // 200ms 후에 스크롤 이벤트를 처리
+    	        scrollTimeout = setTimeout(function () {
+    	            if (zipList.scrollTop() + zipList.innerHeight() >= zipList[0].scrollHeight - 100) {
+    	                // 스크롤이 zipList의 하단에 도달하면 새로운 데이터 로드
+    	                loadMoreData($(".search-input").val());
+    	            }
+    	        }, 200);
+    	    });
+
+    	 // 데이터 로드 함수
+    	 function loadMoreData() {
+    	     page++; // 다음 페이지로 이동
+    	     var keyword = $(".search-input").val();
+
+    	     $.ajax({
+    	         url: "http://localhost:8080/rest/zipPage",
+    	         method: "get",
+    	         data: { keyword: keyword, page: page }, // 페이지 정보를 서버에 전달
+    	         success: function (response) {
+    	             var zipList = $('.addr-list');
+
+    	             for (var i = 0; i < response.length; i++) {
+    	                 var text = (response[i].sido != null ? response[i].sido + ' ' : '') +
+    	                     (response[i].sigungu != null ? response[i].sigungu + ' ' : '') +
+    	                     (response[i].eupmyun != null ? response[i].eupmyun + ' ' : '') +
+    	                     (response[i].hdongName != null ? response[i].hdongName  : '');
+
+
+    	                 zipList.append($("<li>")
+    	                     .addClass("list-group-item zip")
+    	                     .val(response[i].zipCodeNo)
+    	                     .text(text)
+    	                     .data("result", text)
+    	                 );
+    	             }
+    	         }
+    	     });
+    	 }
+
+
+    	});
+
+
 	</script>
 	
 	<div class="contain-fluid">
