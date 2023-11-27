@@ -73,7 +73,7 @@ public class KakaoPayRegularServiceImpl implements KakaoPayRegularService {
 		String path = ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString();
 		body.add("approval_url",path+"/regularSuccess");
 		body.add("cancel_url",path+"/cancelPage");
-		body.add("fail_url",path+"/failPage");
+		body.add("fail_url",path+"/fail");
 		
 		//요청 발송
 		HttpEntity entity = new HttpEntity(body,headers);//요청객체
