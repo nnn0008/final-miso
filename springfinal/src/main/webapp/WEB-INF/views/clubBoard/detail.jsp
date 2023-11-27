@@ -287,7 +287,7 @@ $(function(){
 <script>
 	$(function(){
 		
-		$(".board-like-count").val()
+		$(".board-like-count").val();
 		
 		//좋아요 관련 처리
 		var params = new URLSearchParams(location.search);
@@ -353,7 +353,7 @@ $(function(){
 		        }
 		    });
 		});
-		});
+	});
 
 	
 </script>
@@ -625,10 +625,16 @@ $(function(){
 
 							
 			</div>
-			
+			<%--좋아요 --%>
 			<div class="row mt-4 mb-3">
 				<div class="col">
-					<i class="fa-regular fa-heart me-1" style="color: red"></i>좋아요<span class="board-like-count ms-1">	${clubBoardDto.clubBoardLikecount}</span>
+					<c:if test="${isLiked}">
+						<i class="fa-regular fa-heart me-1 fa-2x" style="color: red"></i>
+					</c:if>
+					<c:if test="${!isLiked}">
+						<i class="fa-solid fa-heart me-1 fa-2x" style="color: red"></i>
+					</c:if>					
+					좋아요<span class="board-like-count ms-1">	${clubBoardDto.clubBoardLikecount}</span>
 				</div>
 			</div>
 			<hr>
