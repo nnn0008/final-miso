@@ -17,6 +17,8 @@
     overflow: auto; /* 스크롤이 필요한 경우 스크롤 허용 */
     margin-top: 5px;
     }
+    
+    
 
 /* 입력창의 상단에 위치하도록 설정 */
 .position-relative {
@@ -202,7 +204,49 @@
     		    searchTimeout = setTimeout(function () {
     		        if (keyword.length === 0) {
     		            $(".zip").hide();
+    		            return;$(".search-input").on('input', function () {
+    		    $(".addr-list").show();
+
+    		    var keyword = $(this).val();
+
+    		    if (searchTimeout) {
+    		        clearTimeout(searchTimeout); // 이전 타이머가 있다면 제거
+    		    }
+
+    		    // 300ms 후에 Ajax 요청을 보냄
+    		    searchTimeout = setTimeout(function () {
+    		        if (keyword.length === 0) {
+    		            $(".zip").hide();
     		            return;
+    		        }
+
+    		        $.ajax({
+    		            url: "http://localhost:8080/rest/zipPage",
+    		            method: "get",
+    		            data: { keyword: keyword },
+    		            success: function (response) {
+    		                // 검색 결과를 처리
+    		                var zipList = $('.addr-list');
+    		                // 이전 검색 결과 지우기
+    		                zipList.empty();
+
+    		                for (var i = 0; i < response.length; i++) {
+    		                    var text = (response[i].sido != null ? response[i].sido + ' ' : '') +
+    		                        (response[i].sigungu != null ? response[i].sigungu + ' ' : '') +
+    		                        (response[i].eupmyun != null ? response[i].eupmyun + ' ' : '') +
+    		                        (response[i].hdongName != null ? response[i].hdongName + ' ' : '');
+
+    		                    zipList.append($("<li>")
+    		                        .addClass("list-group-item zip")
+    		                        .val(response[i].zipCodeNo)
+    		                        .text(text)
+    		                        .data("result", response[i].sigungu)
+    		                    );
+    		                }
+    		            }
+    		        });
+    		    }, 300); // 300ms 딜레이
+    		});
     		        }
 
     		        $.ajax({
@@ -262,6 +306,8 @@
 
     	    // 스크롤 이벤트 핸들러
     	    $('.addr-list').scroll(function () {
+    	    	
+    	    	console.log(page);
     	        var zipList = $(this);
 
     	        if (scrollTimeout) {
