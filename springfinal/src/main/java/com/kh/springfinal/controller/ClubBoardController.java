@@ -34,6 +34,7 @@ import com.kh.springfinal.dto.ClubBoardDto;
 import com.kh.springfinal.dto.ClubBoardImage2Dto;
 import com.kh.springfinal.dto.ClubBoardImage3Dto;
 import com.kh.springfinal.dto.ClubBoardImageDto;
+import com.kh.springfinal.dto.ClubBoardLikeDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.vo.ClubImageVO;
@@ -147,10 +148,16 @@ public class ClubBoardController {
 		ClubBoardImage2Dto clubBoardImage2Dto = clubBoardImage2Dao.selectOne(clubBoardNo);
 		ClubBoardImage3Dto clubBoardImage3Dto = clubBoardImage3Dao.selectOne(clubBoardNo);
 		
+		ClubBoardLikeDto clubBoardLikeDto = new ClubBoardLikeDto();
+		clubBoardLikeDto.setClubBoardNo(clubBoardNo);
+		clubBoardLikeDto.setClubMemberNo(clubBoardDto.getClubMemberNo());
+		boolean isLiked = clubBoardLikeDao.check(clubBoardLikeDto);
+		
 		if(clubBoardImageDto != null) model.addAttribute("clubBoardImageDto", clubBoardImageDto);
 		if(clubBoardImage2Dto != null) model.addAttribute("clubBoardImage2Dto", clubBoardImage2Dto);
 		if(clubBoardImage3Dto != null) model.addAttribute("clubBoardImage3Dto", clubBoardImage3Dto);
 		
+		model.addAttribute("isLiked", isLiked);
 		model.addAttribute("clubMemberDto", clubMemberDto);
 		model.addAttribute("clubBoardDto", clubBoardDto);
 		model.addAttribute("attachDto", attachDto);

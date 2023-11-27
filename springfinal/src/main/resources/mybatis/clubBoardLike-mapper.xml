@@ -32,4 +32,9 @@
 		select count(*) from club_board_like where club_board_no = #{clubBoardNo}
 	</select>
 	
+	<select id="isLike" resultType="ClubBoardLikeDto">
+		select * from club_board_like where club_board_no = #{clubBoardNo}
+		and club_member_no = #{clubMemberNo}
+	</select>
+	
 </mapper>    
