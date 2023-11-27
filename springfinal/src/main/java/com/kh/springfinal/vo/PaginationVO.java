@@ -17,6 +17,7 @@ public class PaginationVO {
 	private String whereString;
 	private String memberId;
 	private boolean isAttended;
+	private int clubBoardNo;
 	
 	public boolean isSearch() {
 		return type != null && keyword != null;
@@ -47,6 +48,10 @@ public class PaginationVO {
 	public boolean isCategory() {
 		return keyword != null;
 	}
+	//게시글 댓글을 위한 글 번호
+	public boolean getclubBoardNo1() {
+		return clubBoardNo != 0;
+	}
 	
 	public boolean getAttend() {
 		return isAttended;
@@ -75,7 +80,9 @@ public class PaginationVO {
 		}
 		else if(getWhereStringFlag()&&getWhereNoFlag()) {
 			return "page=" + (getBegin()-1)+ "&size=" +size+ "&whereString="+whereString+ "&whereNo="+whereNo;
-			
+		}
+		else if(getclubBoardNo1()) {
+			return "page=" + (getBegin()-1) + "&size=" +size + "&clubBoardNo=" + clubBoardNo;
 		}
 		else { //목록이면
 			return "page=" + (getBegin()-1) + "&size=" +size;
@@ -110,7 +117,9 @@ public class PaginationVO {
 		}
 		else if(getWhereStringFlag()&&getWhereNoFlag()) {
 			return "page=" + (getEnd()+1)+ "&size=" +size+ "&whereString="+whereString+ "&whereNo="+whereNo;
-			
+		}
+		else if(getclubBoardNo1()){
+			return "page=" + (getEnd()+1)+ "&size=" +size + "&clubBoardNo=" + clubBoardNo;
 		}
 		else { //목록이면
 			return "page=" + (getEnd()+1)+ "&size=" +size;
