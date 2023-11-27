@@ -86,11 +86,9 @@ public class KakaopayController {
 		model.addAttribute("singleList",singleList);
 		
 		String memberId=(String)session.getAttribute("name");
-		
-//		PurchaseClubListVO purchaseClubList = ClubMemberDao.selectOne(memberId);
-		
-//		model.addAttribute("purchaseClubList", purchaseClubList);
-		return"pay/singleList";
+		List<ClubDto> clubs = clubDao.clubListFindOwner(memberId);
+		model.addAttribute("clubs",clubs);
+		return"pay/singleList2";
 	}
 	//정기 상품화면
 	@RequestMapping("/regularList")
@@ -108,8 +106,13 @@ public class KakaopayController {
 
 	//결제 확인화면
 	@GetMapping("/purchase")
-	public String purchase(@ModelAttribute PurchaseListVO listVO, Model model) {
+	public String purchase(@ModelAttribute PurchaseListVO listVO, int clubNo, Model model,HttpSession session) {
 		List<PurchaseVO> purchaseList = listVO.getProduct();
+		
+		//클럽정보 조회
+		ClubDto clubDto = clubDao.clubSelectOne(clubNo);
+		model.addAttribute("clubDto",clubDto);
+		log.debug("ClubDto={}",clubDto);
 		
 		List<PurchaseConfirmVO> confirmList = new ArrayList<>();//옮겨닮을 리스트
 		int total = 0;
@@ -127,6 +130,10 @@ public class KakaopayController {
 		
 		model.addAttribute("list", confirmList);//선택한번호의상품
 		model.addAttribute("total",total);
+		model.addAttribute("clubDto",clubDto);
+		
+		//클럽 번호를 세션에 저장
+		session.setAttribute("clubNo", clubNo);
 		return"pay/purchase";
 	}
 	
@@ -192,11 +199,15 @@ public class KakaopayController {
 								.paymentDetailProductQty(vo.getQty())//구매수량
 								.build());
 					}
+					//세션에서 클럽 번호를 읽어옴
+					int clubNo = (int) session.getAttribute("clubNo");
+					
 					//회원등급 업데이트
 					String memberId=(String)session.getAttribute("name");
 					memberDao.updateLevel(memberId);
 					
 					//모임 프리미엄 업데이트
+					clubDao.updatePremiumClub(clubNo);
 					clubDao.updatePremium(memberId);
 		return "redirect:successResult";
 	}
@@ -280,7 +291,7 @@ public class KakaopayController {
 		session.removeAttribute("listVO");
 		return "pay/cancelPage";//취소했을때 보여주는 페이지
 	}
-	@RequestMapping("/failPage")
+	@RequestMapping("/fail")
 	public String fail(HttpSession session) {
 		session.removeAttribute("approve");
 		session.removeAttribute("listVO");
@@ -577,4 +588,8 @@ public class KakaopayController {
 			model.addAttribute("list2",paymentRegularDao.selectTotalListByMember(memberId));//나의내역
 			return"pay/list2";
 		}
+		
+		
+		
+		
 		}

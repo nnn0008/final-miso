@@ -319,20 +319,30 @@ ORDER BY
     
 
     <update id="updatePremium">
-    update club set club_premium = 'Y' where club_owner = #{clubOwner}
+    update club
+     set club_premium = 'Y',
+     club_personnel=300
+     where club_owner = #{clubOwner}
     </update>
     
     <update id="updatePremiumClub">
-    update club set club_premium = 'Y' where CLUB_NO = #{clubNo}
+    update club
+     set club_premium = 'Y',
+     club_personnel=300
+     where CLUB_NO = #{clubNo}
     </update>
     
     <update id="updateDownPremium">
-    update club set club_premium = 'N' where club_owner = #{clubOwner}
+    update club 
+    set club_premium = 'N', 
+   club_personnel = 50
+    where club_owner = #{clubOwner}
     </update>
     <!-- 단건 스케쥴러 -->
     <update id="schedulerClub">
     UPDATE club c
-	SET c.club_premium = 'N'
+	SET c.club_premium = 'N',
+	c.club_personnel=50
 	WHERE c.club_owner IN (
     SELECT p.payment_member
     FROM payment p
