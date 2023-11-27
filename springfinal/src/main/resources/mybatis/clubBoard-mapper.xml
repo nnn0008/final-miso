@@ -132,6 +132,9 @@
 	
 	<select id="boardCount" resultType="int">
 		select count(*) from club_board_all where club_no = #{clubNo}
+		<if test="keyword != null">
+			and club_board_category = #{keyword}
+		</if>
 	</select>
 	
 
