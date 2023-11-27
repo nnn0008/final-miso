@@ -22,6 +22,7 @@ public interface ChatRoomDao {
 	List<ChatRoomDto> chatRoomList(String memberId);
 	List<MeetingDto> meetingRoomList(String memberId);
 	List<MeetingVO> meetingRoomList2(String memberId);
+	List<MeetingDto> fineMeetingRoomList(int chatRoomNo);
 	
 	List<Integer> selectRoomNoByMemberId(String memberId);
 	
