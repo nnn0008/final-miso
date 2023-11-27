@@ -141,6 +141,7 @@
 					<c:if test="${not empty oneMembers}">
     <!-- chatSender 정보 -->
     <li class="list-group-item d-flex justify-content-between align-items-center">
+    <span class="offline-icon"  id="clubMemberId_${oneMembers.chatSender}" value="${oneMembers.chatSender}"></span>
         <img src="/rest/member/profileShow?memberId=${oneMembers.chatSender}" class="rounded-circle" width="50" height="50">
         <span>${oneMembers.senderName}</span>
         <c:choose>
@@ -163,6 +164,7 @@
 
     <!-- chatReceiver 정보 -->
     <li class="list-group-item d-flex justify-content-between align-items-center">
+    <span class="offline-icon"  id="clubMemberId_${oneMembers.chatReceiver}" value="${oneMembers.chatReceiver}"></span>
         <img src="/rest/member/profileShow?memberId=${oneMembers.chatReceiver}" class="rounded-circle" width="50" height="50">
         <span>${oneMembers.receiverName}</span>
         <c:choose>
@@ -187,6 +189,7 @@
 <c:if test="${not empty meetingMembers}">
  <c:forEach var="member" items="${meetingMembers}">
     <li class="list-group-item d-flex justify-content-between align-items-center">
+    <span class="offline-icon"  id="clubMemberId_${member.clubMemberId}" value="${member.clubMemberId}"></span>
         <img src="/rest/member/profileShow?memberId=${member.clubMemberId}" class="rounded-circle" width="50" height="50">
         <span>${member.memberName}</span>
         <c:choose>
