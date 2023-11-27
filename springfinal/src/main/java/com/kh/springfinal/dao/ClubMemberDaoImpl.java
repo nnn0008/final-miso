@@ -162,6 +162,13 @@ public class ClubMemberDaoImpl implements ClubMemberDao{
 		return result>=1;
 		
 	}
+
+	@Override
+	public boolean managerExist(int clubNo) {
+		
+		int result = sqlSession.selectOne("clubMember.managerExist",clubNo);
+		return result>0;
+	}
 	
 	
 	

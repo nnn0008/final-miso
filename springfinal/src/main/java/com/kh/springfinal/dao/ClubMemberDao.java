@@ -44,6 +44,8 @@ public interface ClubMemberDao {
 	
 	boolean joinedClub(int clubNo,String memberId);
 	
+	boolean managerExist(int clubNo);
+	
 	
 
 	List<HomeForClubVO> selectListByMemberId(String memberId);

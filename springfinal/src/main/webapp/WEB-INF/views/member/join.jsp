@@ -47,6 +47,20 @@
                     opacity: 0.5;
                     /* 또는 다른 값을 사용하여 투명도 조절 가능 */
                 }
+                
+                .addr-list {
+    position: absolute;
+    z-index: 1000;
+    max-height: 250px; /* 적절한 높이로 설정 */
+    width: 545px;
+    overflow: auto; /* 스크롤이 필요한 경우 스크롤 허용 */
+    margin-top: 5px;
+    }
+
+/* 입력창의 상단에 위치하도록 설정 */
+.position-relative {
+    position: relative;
+}
             </style>
         </head>
 
@@ -703,9 +717,8 @@
 							                       <div class="input-group has-validation">
                                                        <div class="form-floating addr-feed">
                                                             <input type="search" class="form-control search-input" name="StringmemberAddr"
-                                                                id="memberAddr" placeholder="" required>  <label
-                                                                for="memberBirth">지역</label>
-                                                                 <div class="d-addr-feedback">동, 읍, 면을 입력해 주세요</div>
+                                                                id="memberAddr" placeholder="동,읍,면을 입력해주세요" required>  <label
+                                                                for="memberBirth">동,읍,면을 입력해주세요</label>
                                                        	</div>
                                                     	</div>
                                                     </div>
