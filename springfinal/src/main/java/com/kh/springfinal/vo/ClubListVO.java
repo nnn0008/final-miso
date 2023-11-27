@@ -17,5 +17,6 @@ public class ClubListVO {
 	private String minorCategoryName;
 	private int memberCount;
 	private int attachNo;
+	private boolean likeClub;
 
 }

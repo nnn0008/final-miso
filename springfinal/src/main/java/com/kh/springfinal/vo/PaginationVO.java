@@ -14,6 +14,9 @@ public class PaginationVO {
 	private int navigatorSize = 5; //하단 네비게이터 표시 개수(기본:10)
 	private int whereNo;
 	private int clubNo;
+	private String whereString;
+	private String memberId;
+	private boolean isAttended;
 	
 	public boolean isSearch() {
 		return type != null && keyword != null;
@@ -31,12 +34,22 @@ public class PaginationVO {
 	public boolean getWhereNoFlag() {
 	    return whereNo != 0;
 	}
-	public boolean getClubNo() {
+
+	public boolean getClubNoFlag() {
 		return clubNo != 0;
 	}
+
+	public boolean getWhereStringFlag() {
+	    return whereString != null;
+	}
+    
 	//동호회 게시판은 키워드만 있어도 됨
 	public boolean isCategory() {
 		return keyword != null;
+	}
+	
+	public boolean getAttend() {
+		return isAttended;
 	}
 	
 	public String getPrevQueryString() {
@@ -46,8 +59,23 @@ public class PaginationVO {
 		else if(getWhereNoFlag()) {
 			return "page=" + (getBegin()-1)+ "&size=" +size+ "&whereNo="+whereNo;	
 		}
-		else if(getClubNo()) {
+		else if(getClubNoFlag()) {
 			return "page=" + (getBegin()-1) + "&size=" +size + "&clubNo=" + clubNo;
+		}
+		else if(getClubNoFlag() && isCategory()) {
+			return "page=" + (getBegin()-1) + "&size=" +size + "&clubNo=" + clubNo + "&keyword=" + keyword;
+		}
+		else if(getWhereStringFlag()) {
+			return "page=" + (getBegin()-1)+ "&size=" +size+ "&whereString="+whereString+ "&keyword=" + keyword;
+			
+		}
+		else if(getWhereStringFlag()) {
+			return "page=" + (getBegin()-1)+ "&size=" +size+ "&whereString="+whereString;
+			
+		}
+		else if(getWhereStringFlag()&&getWhereNoFlag()) {
+			return "page=" + (getBegin()-1)+ "&size=" +size+ "&whereString="+whereString+ "&whereNo="+whereNo;
+			
 		}
 		else { //목록이면
 			return "page=" + (getBegin()-1) + "&size=" +size;
@@ -67,8 +95,22 @@ public class PaginationVO {
 		else if(getWhereNoFlag()) {
 			return "page=" + (getEnd()+1)+ "&size=" +size+ "&whereNo="+whereNo;	
 		}
-		else if(getClubNo()) {
+		else if(getClubNoFlag()) {
 			return "page=" + (getEnd()+1)+ "&size=" +size + "&clubNo=" + clubNo;
+		}
+		else if(getClubNoFlag() && isCategory()) {
+			return "page=" + (getBegin()-1) + "&size=" +size + "&clubNo=" + clubNo + "&keyword=" + keyword;
+		}
+		else if(getWhereStringFlag()) {
+			return "page=" + (getEnd()+1)+ "&size=" +size+ "&whereString="+whereString+ "&keyword=" + keyword;	
+		}
+		else if(getWhereStringFlag()) {
+			return "page=" + (getEnd()+1)+ "&size=" +size+ "&whereString="+whereString;
+			
+		}
+		else if(getWhereStringFlag()&&getWhereNoFlag()) {
+			return "page=" + (getEnd()+1)+ "&size=" +size+ "&whereString="+whereString+ "&whereNo="+whereNo;
+			
 		}
 		else { //목록이면
 			return "page=" + (getEnd()+1)+ "&size=" +size;
@@ -82,8 +124,22 @@ public class PaginationVO {
 		else if(getWhereNoFlag()) {
 			return "page=" + page+ "&size=" +size+ "&whereNo="+whereNo;
 		}
-		else if(getClubNo()) {
+		else if(getClubNoFlag()) {
 			return "page=" + page+ "&size=" +size+ "&clubNo=" + clubNo;
+		}
+		else if(getWhereStringFlag()) {
+			return "page=" + page+ "&size=" +size+ "&whereString="+whereString+ "&keyword=" + keyword;	
+		}
+		else if(getWhereStringFlag()) {
+			return "page=" + page+ "&size=" +size+ "&whereString="+whereString;
+			
+		}
+		else if(getWhereStringFlag()&&getWhereNoFlag()) {
+			return "page=" + page+ "&size=" +size+ "&whereString="+whereString+ "&whereNo="+whereNo;
+			
+		}
+		else if(getClubNoFlag() && isCategory()) {
+			return "page=" + (getBegin()-1) + "&size=" +size + "&clubNo=" + clubNo + "&keyword=" + keyword;
 		}
 			else { //목록이면
 				return "page=" + page +"&size=" +size;

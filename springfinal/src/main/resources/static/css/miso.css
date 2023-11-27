@@ -30,8 +30,8 @@ a.link:hover {
     background-color: #ACCEFF;
 }
 
-	.alert-success,.btn-success{
-	   color: #2d3436;
+.btn-miso{
+	 color: #2d3436;
    	 background-color: #ACCEFF;
    	 border-color:  #ACCEFF;
 	--bs-btn-color: #fff;
@@ -48,8 +48,8 @@ a.link:hover {
     --bs-btn-disabled-color: #fff;
     --bs-btn-disabled-bg: #ACCEFF;
     --bs-btn-disabled-border-color: #ACCEFF;
-	}
-	
+}
+
 .btn-miso {
     width: 170px;
     font-size: 15px;

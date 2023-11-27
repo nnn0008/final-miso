@@ -16,7 +16,7 @@
     	</insert>
     	
     	<select id="selectList" resultType="ReportDto">
-    		select * from report order by reportDao asc
+    		select * from report order by report_no asc
     	</select>
     	
     	<select id="selectOne" resultType="ReportDto">

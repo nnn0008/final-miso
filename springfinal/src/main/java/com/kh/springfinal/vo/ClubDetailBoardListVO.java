@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Data @AllArgsConstructor @NoArgsConstructor @Builder
 public class ClubDetailBoardListVO {
 	
+	private int attachNo;
 	private int clubBoardNo;
 	private int clubNo;
 	private String clubBoardTitle;

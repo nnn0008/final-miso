@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -35,6 +33,7 @@ import com.kh.springfinal.dao.ClubBoardDao;
 import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dao.ClubMemberDao;
 import com.kh.springfinal.dao.MeetingDao;
+import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dao.PhotoDao;
 import com.kh.springfinal.dao.ZipCodeDao;
 import com.kh.springfinal.dto.AttachDto;
@@ -43,14 +42,15 @@ import com.kh.springfinal.dto.ClubDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MajorCategoryDto;
 import com.kh.springfinal.dto.MeetingDto;
+import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.dto.MinorCategoryDto;
 import com.kh.springfinal.dto.PhotoDto;
 import com.kh.springfinal.dto.ZipCodeDto;
 import com.kh.springfinal.vo.ClubDetailBoardListVO;
 import com.kh.springfinal.vo.ClubImageVO;
 import com.kh.springfinal.vo.ClubListVO;
-import com.kh.springfinal.vo.ClubMemberVO;
 import com.kh.springfinal.vo.MemberPreferInfoVO;
+import com.kh.springfinal.vo.PaginationVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -86,19 +86,48 @@ public class ClubController {
 	@Autowired
 	private PhotoDao photoDao;
 	
+	@Autowired
+	private MemberDao memberDao;
+	
+	
 	
 	
 	@GetMapping("/insert")
-	public String insert(Model model) {
-		
+	public String insert(Model model,HttpSession session) {
+		String memberId = (String) session.getAttribute("name");
 		
 		List<MajorCategoryDto> majorList = categoryDao.majorcategoryList();
 //		List<ZipCodeDto> zipList = zipDao.list();
 		
 		model.addAttribute("majorCategory",majorList);
 //		model.addAttribute("zipList",zipList);
+		
+		MemberDto memberDto = memberDao.loginId(memberId);
+		int memberClubCount = clubMemberDao.memberJoinClubCount(memberId);
+		
+		log.debug("memberMakeClubCount={}",memberClubCount);
+		
+		if(memberDto.getMemberLevel().equals("일반유저")) {
+			
+			if(memberClubCount>=5) {
+				
+				return "redirect:/pay/product";
+				
+			}
+			
+			else {
+				
+				
+				
+				return "club/insert";
+			}
+		}
+		else {
+			
+			return "club/insert";
+		}
 		 
-		return "club/insert";
+		
 		
 	}
 	
@@ -106,13 +135,14 @@ public class ClubController {
 	public String insert(@ModelAttribute ClubDto clubDto,
 			HttpSession session) {
 		
+	
+		String memberId = (String) session.getAttribute("name");	
 		
 		
-//		String memberId = (String) session.getAttribute("name");	//session 생긴 후 풀 주석
+		
 		
 		ClubMemberDto clubMemberDto = new ClubMemberDto();
 		ChatRoomDto chatRoomDto = new ChatRoomDto();
-		String memberId = (String) session.getAttribute("name");
 		int clubNo = clubDao.sequence();
 		int chatRoomNo = chatRoomDao.sequence();
 		int clubMemberNo = clubMemberDao.sequence();
@@ -130,14 +160,13 @@ public class ClubController {
 		clubMemberDto.setClubMemberRank("운영진");
 		clubMemberDto.setJoinMessage("환영합니다.");
 		
-		log.debug("clubDto={}",clubDto);
 		
 		clubDao.insert(clubDto);
 		clubMemberDao.insert(clubMemberDto);
 		
 		
 
-		return "redirect:/";
+		return "redirect:/club/detail?clubNo="+clubNo;
 		
 	}
 	@RequestMapping("/detail")
@@ -149,21 +178,28 @@ public class ClubController {
 		MajorCategoryDto major = categoryDao.findMajor(clubDto.getClubCategory());
 		ZipCodeDto zipDto = zipDao.findZip(clubNo);
 		List<ClubDetailBoardListVO> clubDetailBoardList  = clubBoardDao.clubDetailBoardList(clubNo);
+		
+		log.debug("clubDetailBoardList={}",clubDetailBoardList);
+		
 		List<PhotoDto> photoList = photoDao.selectList(clubNo);
+		
+		int clubMemberNo = clubMemberDao.findClubMemberNo(clubNo, memberId);
+		
+		
 		
 		boolean joinButton = !clubMemberDao.existMember(clubNo, memberId) && (memberId!=null);
 		boolean editPossible = clubMemberDao.editPossible(clubNo, memberId);
 		
-		List<ClubMemberVO> clubMemberList = clubMemberDao.memberInfo(clubNo);
+//		List<ClubMemberVO> clubMemberList = clubMemberDao.memberInfo(clubNo);
 		
 		
-		SimpleDateFormat joinDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		for(ClubMemberVO dto : clubMemberList) {
-			
-		String date = joinDateFormat.format(dto.getJoinDate());
-			
-		dto.setJoinDateString(date);
-		}
+//		SimpleDateFormat joinDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//		for(ClubMemberVO dto : clubMemberList) {
+//			
+//		String date = joinDateFormat.format(dto.getJoinDate());
+//			
+//		dto.setJoinDateString(date);
+//		}
 		
 		int meetingCount = meetingDao.count(clubNo);
 		
@@ -197,7 +233,7 @@ public class ClubController {
 		
 		model.addAttribute("memberCount",memberCount);
 		model.addAttribute("editPossible",editPossible);
-		model.addAttribute("clubMemberDto",clubMemberList);
+//		model.addAttribute("clubMemberDto",clubMemberList);
 		model.addAttribute("clubDto",clubDto);
 		model.addAttribute("major",major);
 		model.addAttribute("zipDto",zipDto);
@@ -205,6 +241,9 @@ public class ClubController {
 		model.addAttribute("meetingList",meetingList);
 		model.addAttribute("photoList",photoList);
 		model.addAttribute("meetingCount",meetingCount);
+		
+		
+		model.addAttribute("clubMemberNo",clubMemberNo);
 		
 		model.addAttribute("clubDetailBoardList",clubDetailBoardList);
 		
@@ -231,6 +270,7 @@ public class ClubController {
 		
 		int minorNo = clubDto.getClubCategory();
 		MajorCategoryDto majorCategoryDto = categoryDao.findMajor(minorNo);
+		//현재 회원이 고른 majorCategory
 		
 		
 		model.addAttribute("majorList",majorList);
@@ -356,21 +396,8 @@ public class ClubController {
 			String memberId = (String) session.getAttribute("name");
 			
 			List<MajorCategoryDto> categoryList = categoryDao.majorcategoryList();
-			List<ClubListVO> clubList = clubDao.clubList(memberId);
 			List<MemberPreferInfoVO> memberPreferList = clubDao.memberPreferInfo(memberId); 
 			
-			
-			for(ClubListVO list : clubList) {
-				
-				int memberCount = clubMemberDao.memberCount(list.getClubNo());
-				list.setMemberCount(memberCount);
-				
-			}
-			
-			log.debug("clubList2={}",clubList);
-			
-			
-			model.addAttribute("clubList",clubList);
 			model.addAttribute("categoryList",categoryList);
 			model.addAttribute("memberPreferList",memberPreferList);
 			
@@ -379,7 +406,7 @@ public class ClubController {
 		}
 		
 		@RequestMapping("/list2")
-		public String list2(HttpSession session,Model model, int majorCategoryNo) {
+		public String list2(HttpSession session,Model model, @RequestParam int majorCategoryNo) {
 			
 			List<MinorCategoryDto> categoryList = 
 					categoryDao.minorCategoryList(majorCategoryNo);
@@ -388,16 +415,12 @@ public class ClubController {
 			
 			List<ClubListVO> clubList = clubDao.majorClubList(memberId,majorCategoryNo);
 			
+			String majorName = categoryDao.majorName(majorCategoryNo);
 			
-			for(ClubListVO list : clubList) {
-				
-				int memberCount = clubMemberDao.memberCount(list.getClubNo());
-				list.setMemberCount(memberCount);
-				
-			}
 			
 			model.addAttribute("clubList",clubList);
 			model.addAttribute("categoryList",categoryList);
+			model.addAttribute("majorName",majorName);
 			
 			
 			return "club/list2";
@@ -407,7 +430,7 @@ public class ClubController {
 		}
 		
 		@RequestMapping("/list3")
-		public String list3(HttpSession session,Model model, int minorCategoryNo) {
+		public String list3(HttpSession session,Model model, @RequestParam int minorCategoryNo) {
 			
 			List<MinorCategoryDto> categoryList = 
 					categoryDao.minorCategoryList(minorCategoryNo);
@@ -415,25 +438,60 @@ public class ClubController {
 			String memberId = (String) session.getAttribute("name");
 			
 			List<ClubListVO> clubList = clubDao.minorClubList(memberId,minorCategoryNo);
+			String minorName = categoryDao.minorName(minorCategoryNo);
 			
-			log.debug("clubList={}",clubList);
-			
-			for(ClubListVO list : clubList) {
-				
-				int memberCount = clubMemberDao.memberCount(list.getClubNo());
-				list.setMemberCount(memberCount);
-				
-			}
 			
 			model.addAttribute("clubList",clubList);
 			model.addAttribute("categoryList",categoryList);
-			
+			model.addAttribute("minorName",minorName);
 			
 			return "club/list3";
 			
 			
 			
 		}
+		
+		@GetMapping("/searchList")
+		public String searchList(@RequestParam String keyword,HttpSession session,
+				@ModelAttribute(name ="vo") PaginationVO vo,
+				Model model) {
+			
+			String memberId = (String) session.getAttribute("name");
+			vo.setWhereString(memberId);
+			int count=clubDao.searchCount(vo);
+			
+			
+			model.addAttribute("count",count);
+			
+			return "club/clubSearchList";
+		}
+		
+		
+		@GetMapping("/deleteClubMember")
+		public String deleteClubMember(@RequestParam int clubMemberNo,@RequestParam int clubNo) {
+			
+			
+			clubMemberDao.deleteClubMember(clubMemberNo);
+			
+			int count = clubMemberDao.memberCount(clubNo);
+			
+			if(count<=0) {
+				
+				clubDao.deleteClub(clubNo);
+				
+			}
+			
+			
+			
+			return "redirect:/club/list";
+			
+			
+		}
+			
+		
+			
+			
+		
 		
 		
 		

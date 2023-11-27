@@ -5,7 +5,8 @@
 //import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 //import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 //
-//import com.kh.springfinal.interceptor.MemberInterceptor;
+//import com.kh.springfinal.interceptor.BoardInterceptor;
+//import com.kh.springfinal.interceptor.HomeInterceptor;
 //
 ///**
 // 	스프링에서 제공하는 설정파일
@@ -22,6 +23,26 @@
 //	@Autowired
 //	private MemberInterceptor memberInterceptor;	
 //	
+//	@Autowired
+//	private ChatRoomIntercepter chatRoomIntercepter;
+//	
+//	@Autowired
+//	private HomeInterceptor homeInterceptor;
+//	
+//	@Autowired
+//	private BoardInterceptor boardInterceptor;
+//	
+//	@Autowired
+//	private ClubJoinInterceptor clubJoinInterceptor;
+//	
+//	@Autowired
+//	private ClubManagerInterceptor clubManagerInterceptor;
+//	
+//	@Autowired
+//	private ClubMemberInterceptor clubMemberInterceptor;
+//	
+//	@Autowired
+//	private ClubCreateInterceptor clubCreateInterceptor;
 //	
 //	//인터셉트를 추가할 수 있는 설정 메소드(registry 저장소에 설정)
 //	//등록 시 주소의 패턴 설정 방법
@@ -30,9 +51,9 @@
 //	@Override
 //	public void addInterceptors(InterceptorRegistry registry) {
 //		//[1] TestInterceptor를 모든 주소 처리과정에 간섭할 수 있도록 설정하겠다
-////		registry.addInterceptor(testInterceptor)
-////		.addPathPatterns("/**"); //몽땅. 전체 다 라는 뜻임
-////		
+//		registry.addInterceptor(testInterceptor)
+//		.addPathPatterns("/**"); //몽땅. 전체 다 라는 뜻임
+//		
 //		//[2] MemberInterceptor를 회원 전용 페이지 처리과정에 간섭할 수 있도록 설정
 //		//- addPathPatterns를 사용하면 추가할 주소를 설정할 수 있다
 //		//- excludePathPatterns를 사용하면 제외할 주소를 설정할 수 있다
@@ -49,25 +70,53 @@
 //				"/**/*.css", 
 //				"/**/*.js",
 //				"/images/**/*.*"
-////				"/board/list",
-////				"/board/detail*",
-////				"/rest/reply/list"
+//				"/board/list",
+//				"/board/detail*",
+//				"/rest/reply/list"
 //				); 
 //		
-////		//[3] 게시글 소유자 외의 접근을 차단하는 인터셉터 등록
-////		registry.addInterceptor(boardOwnerInterceptor)
-////		.addPathPatterns(
-////				"/board/edit",
-////				"/board/delete"
-////				);
-////		
-////		//[4] 게시글 조회수 중복방지 인터셉터 등록 
-////		registry.addInterceptor(boardDefenderInterceptor)
-////		.addPathPatterns("/board/detail");
-////		
-////		//[5] 관리자용 인터셉터 등록
-////		registry.addInterceptor(adminInterceptor)
-////		.addPathPatterns("/admin/**", "/board/deleteByAdmin");
+//		registry.addInterceptor(chatRoomIntercepter)
+//		.addPathPatterns("/chat/enterRoom/**"
+//				);
+//		
+//		registry.addInterceptor(homeInterceptor)
+//		.addPathPatterns("/")
+//		.addPathPatterns("/club/detail");
+//		registry.addInterceptor(boardInterceptor)
+//		.addPathPatterns("/clubBoard/write")
+//		.addPathPatterns("/photo/list")
+//		.addPathPatterns("/clubBoard/list")
+//		.addPathPatterns("/clubBoard/detail");
+//		
+//		//[3] 게시글 소유자 외의 접근을 차단하는 인터셉터 등록
+//		registry.addInterceptor(boardOwnerInterceptor)
+//		.addPathPatterns(
+//				"/board/edit",
+//				"/board/delete"
+//				);
+//		
+//		//[4] 게시글 조회수 중복방지 인터셉터 등록 
+//		registry.addInterceptor(boardDefenderInterceptor)
+//		.addPathPatterns("/board/detail");
+//		
+//		//[5] 관리자용 인터셉터 등록
+//		registry.addInterceptor(adminInterceptor)
+//		.addPathPatterns("/admin/**", "/board/deleteByAdmin");
+//		
+//		registry.addInterceptor(clubJoinInterceptor)
+//		.addPathPatterns("/rest/clubMember");
+//		
+//		registry.addInterceptor(clubManagerInterceptor)
+//		.addPathPatterns("/rest/meeting/insert","/rest/meeting/edit",
+//				"/rest/meeting/delete","/rest/upgradeRank");
+//		
+//		registry.addInterceptor(clubMemberInterceptor)
+//		.addPathPatterns("/rest/meeting/attendDelete","/rest/meeting/attend");
+//		
+//		regisrty.addInterceptor(clubCreateInterceptor)
+//		.addPathPatterns("/club/insert");
+//		
+//		
 //	}
 //}		
 //

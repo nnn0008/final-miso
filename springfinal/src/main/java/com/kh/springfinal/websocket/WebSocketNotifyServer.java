@@ -82,24 +82,28 @@ public class WebSocketNotifyServer extends TextWebSocketHandler{
             WebSocketSession boardWriterMemberClient = clientsMap.get(boardWriterMember); //게시글 작성자 세션
             log.debug("replyWriterMemberClient={}",replyWriterMemberClient);
             log.debug("boardWriterMemberClient={}",boardWriterMemberClient);
-
             
-         // 게시글 작성자 세션이 존재하면 메시지 발송
-            if ("reply".equals(notifyType) && boardWriterMemberClient != null) {
-                TextMessage tm = new TextMessage(replyWriterName + "님이 "
-                        + "<a href='/clubBoard/detail?clubBoardNo=" + clubBoardNo + "' class='link-body-emphasis link-underline link-underline-opacity-0' style='color: black'>"
-                        + boardTitle + " 글에 댓글을 달았습니다!</a>");
+
+         // isEnabled 상태 확인
+            boolean isEnabled = notifyDao.isNotificationEnabled(boardWriterMember);
+            if (isEnabled) {
+                // 게시글 작성자 세션이 존재하면 메시지 발송
+                if ("reply".equals(notifyType) && boardWriterMemberClient != null) {
+                    TextMessage tm = new TextMessage(replyWriterName + "님이 "
+                            + "<a href='/clubBoard/detail?clubBoardNo=" + clubBoardNo + "' class='link-body-emphasis link-underline link-underline-opacity-0' style='color: black'>"
+                            + boardTitle + " 글에 댓글을 달았습니다!</a>");
 
                     boardWriterMemberClient.sendMessage(tm); // 게시글 작성자에게 발송
-            }
-            
-            //좋아요
-            else if("like".equals(notifyType) && boardWriterMemberClient != null){
-            	TextMessage tm = new TextMessage(replyWriterName + "님이 "
-                        + "<a href='/clubBoard/detail?clubBoardNo=" + clubBoardNo + "' class='link-body-emphasis link-underline link-underline-opacity-0' style='color: black'>"
-                        + boardTitle + " 글에 좋아요를 눌렀습니다!</a>");
+                }
+
+                // 좋아요
+                else if("like".equals(notifyType) && boardWriterMemberClient != null){
+                    TextMessage tm = new TextMessage(replyWriterName + "님이 "
+                            + "<a href='/clubBoard/detail?clubBoardNo=" + clubBoardNo + "' class='link-body-emphasis link-underline link-underline-opacity-0' style='color: black'>"
+                            + boardTitle + " 글에 좋아요를 눌렀습니다!</a>");
 
                     boardWriterMemberClient.sendMessage(tm); // 게시글 작성자에게 발송
+                }
             }
 
             // DB에 알림 저장
@@ -110,6 +114,7 @@ public class WebSocketNotifyServer extends TextWebSocketHandler{
                     .notifyClubBoardTitle(boardTitle) // 게시글 제목
                     .notifyType(notifyType) // 알림 종류(reply)
                     .build());
+
 
             }
 

@@ -7,6 +7,7 @@ import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -25,14 +26,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.springfinal.dao.AttachDao;
+import com.kh.springfinal.dao.CategoryDao;
+import com.kh.springfinal.dao.ClubDao;
+import com.kh.springfinal.dao.ClubMemberDao;
 import com.kh.springfinal.dao.MemberCategoryDao;
 import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dao.MemberProfileDao;
 import com.kh.springfinal.dao.ZipCodeDao;
 import com.kh.springfinal.dto.AttachDto;
+import com.kh.springfinal.dto.ClubDto;
+import com.kh.springfinal.dto.MajorCategoryDto;
 import com.kh.springfinal.dto.MemberCategoryDto;
 import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.dto.MemberEditDto;
+import com.kh.springfinal.dto.MinorCategoryDto;
 import com.kh.springfinal.dto.ZipCodeDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -56,10 +63,20 @@ public class MemberController {
 	@Autowired
 	private JavaMailSender sender;
 	
+	@Autowired
+	private CategoryDao categoryDao;
+	
+	@Autowired
+	private ClubDao clubDao;
+	
+	@Autowired
+	private ClubMemberDao clubMemberDao;
+	
 	@GetMapping("/join")
 	public String join() {
 		return "member/join";
 	}
+	
 	@PostMapping("/join")
 	public String join(@ModelAttribute MemberDto memberDto,@RequestParam String StringmemberAddr, @RequestParam List<Integer> likeCategory) {
 		//회원 정보 DB저장
@@ -101,7 +118,7 @@ public class MemberController {
 	         session.setAttribute("memberName", memberDto.getMemberName());
 	       
 	         //메인페이지로 이동
-	         return "redirect:/"; 
+	         return "redirect:/club/list"; 
 	      };
 	
 //	@PostMapping("/login")
@@ -260,7 +277,23 @@ public class MemberController {
 		MemberDto memberDto = memberDao.loginId(memberId);
 		//프로필 정보
 		AttachDto attachDto = memberProfileDao.profileFindOne(memberId);
-		model.addAttribute("attachDto", attachDto);
+		//관심 카테고리
+		List<MemberCategoryDto> likeList= memberCategoryDao.selectListLike(memberId);
+		List<Integer> likeCategoryList = likeList.stream()
+		        .map(MemberCategoryDto::getLikeCategory)
+		        .collect(Collectors.toList());
+		
+		for(int i=0; i < likeList.size(); i++) {
+			MinorCategoryDto minorCategoryDto = categoryDao.selectOneMajor(likeCategoryList.get(i));
+			MajorCategoryDto majorCategoryDto =  memberCategoryDao.findLikemajor((likeCategoryList.get(i)));
+			model.addAttribute("like"+i, majorCategoryDto.getMajorCategoryName()+"/"+minorCategoryDto.getMinorCategoryName());
+		}
+		//가입한 클럽 정보
+		List<ClubDto> clubDto =  clubMemberDao.mypageClubList(memberId);
+		if(clubDto!=null) model.addAttribute("clubDto", clubDto);
+		if(attachDto!=null) {
+			model.addAttribute("attachDto", attachDto);
+		}
 		model.addAttribute("memberDto", memberDto);
 		return "member/mypage";
 	}
@@ -275,9 +308,21 @@ public class MemberController {
 			String addr = (zipCodeDto.getSido() != null ? zipCodeDto.getSido() + ' ' : "") +
 					(zipCodeDto.getSigungu() != null ? zipCodeDto.getSigungu() + ' ' : "") +
 					(zipCodeDto.getEupmyun() != null ? zipCodeDto.getEupmyun() + ' ' : "") +
-					(zipCodeDto.getHdongName() != null ? zipCodeDto.getHdongName() + ' ' : "");
-			log.debug(addr);
-					model.addAttribute("addr", addr);
+					(zipCodeDto.getHdongName() != null ? zipCodeDto.getHdongName() : "");
+			model.addAttribute("addr", addr);
+			
+			List<MemberCategoryDto> likeList= memberCategoryDao.selectListLike(memberId);
+			List<Integer> likeCategoryList = likeList.stream()
+			        .map(MemberCategoryDto::getLikeCategory)
+			        .collect(Collectors.toList());
+			
+			for(int i=0; i < likeList.size(); i++) {
+				MinorCategoryDto minorCategoryDto = categoryDao.selectOneMajor(likeCategoryList.get(i));
+				MajorCategoryDto majorCategoryDto =  memberCategoryDao.findLikemajor((likeCategoryList.get(i)));
+				model.addAttribute("major"+i, majorCategoryDto.getMajorCategoryNo());
+				model.addAttribute("minor"+i, minorCategoryDto.getMinorCategoryNo());
+			}
+			
 		}
 
 		
@@ -323,5 +368,22 @@ public class MemberController {
 				else {
 					return "500";
 				}
+		}
+		@GetMapping("/out")
+		public String out() {
+			return "member/out";
+		}
+		@PostMapping("/out")
+		public String out(@RequestParam String memberId, @RequestParam String memberPw) {
+			MemberDto memberDto  = memberDao.selectOne(memberId, memberPw);
+			if(memberDto!=null) {
+				memberDao.deleteMember(memberId);
+				return "redirect:./login";
+			}
+			return "redirect:./out?error";
+		}
+		@RequestMapping("/outFinish")
+		public String outFinish() {
+			return "member/outFinish";
 		}
 	}

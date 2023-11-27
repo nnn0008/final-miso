@@ -23,4 +23,6 @@ public class MeetingVO {
 	private int chatRoomNo;
 	
 	private int attachNo;
+	private String chatContent;
+	private String chatBlind;
 }

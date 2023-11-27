@@ -36,6 +36,7 @@ import com.kh.springfinal.dto.ClubBoardImage3Dto;
 import com.kh.springfinal.dto.ClubBoardImageDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MemberDto;
+import com.kh.springfinal.vo.ClubImageVO;
 import com.kh.springfinal.vo.FileLoadVO;
 import com.kh.springfinal.vo.PaginationVO;
 
@@ -123,6 +124,11 @@ public class ClubBoardController {
 		List<ClubBoardAllDto> list = clubBoardDao.selectListByPage(vo, clubNo);
 		model.addAttribute("clubNo", clubNo);
 		model.addAttribute("list", list);
+		
+		//상단 바로가기 메뉴
+		ClubImageVO clubDto = clubDao.clubDetail(clubNo);
+		
+		model.addAttribute("clubDto",clubDto);
 		
 		log.debug("list={}", list);
 		log.debug("count={}", count);

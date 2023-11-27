@@ -70,6 +70,7 @@ public class MeetingRestController {
 	@Autowired
 	private ClubMemberDao clubMemberDao;
 	
+	
 	@Autowired
 	private ChatRoomDao chatRoomDao;
 	
@@ -189,7 +190,6 @@ public class MeetingRestController {
 			) throws IllegalStateException, IOException {
 		
 		
-		
 		MeetingDto meetingDto = new MeetingDto();
 		
 		meetingDto.setMeetingDate(meetingTime); //날짜
@@ -200,8 +200,9 @@ public class MeetingRestController {
 		meetingDto.setMeetingFix(meetingFix);
 		meetingDto.setMeetingNo(meetingNo);
 		
+		log.debug("meetingTime={}",meetingTime);
 		meetingDao.update(meetingDto);
-		
+		log.debug("meetingDto={}",meetingDto);
 		if(attach!=null) {//파일이 있으면
 			//파일 삭제 - 기존 파일이 있을 경우에만 처리
 			AttachDto attachDto = meetingDao.findImage(meetingNo);
@@ -350,7 +351,7 @@ public class MeetingRestController {
 			
 			dto.setAttendMemberList(clubMemberDao.meetingAttendList(dto.getMeetingNo()));
 			
-			
+
 			
 			boolean isManager=false;
 			boolean didAttend=false;

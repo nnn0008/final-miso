@@ -53,8 +53,20 @@
     	
     	<select id="memberInfo" resultType="clubMemberVO">
     		
-    		SELECT m.member_id,m.member_name,cm.club_member_rank,cm.join_message,cm.join_date FROM club_member cm JOIN MEMBER m 
-    		ON m.MEMBER_ID=cm.CLUB_MEMBER_ID WHERE cm.CLUB_NO=#{clubNo}
+    		SELECT m.member_id,
+    		m.member_name,
+    		cm.club_member_no,
+    		cm.club_member_rank,
+    		cm.join_message,
+    		cm.join_date,
+    		a.attach_no 
+    		FROM club_member cm JOIN MEMBER m 
+    		ON m.MEMBER_ID=cm.CLUB_MEMBER_ID 
+    		left outer join member_profile mp 
+    		on m.member_id=mp.member_Id
+    		left outer join attach a 
+    		on mp.attach_no = a.attach_no
+    		WHERE cm.CLUB_NO=#{clubNo}
     	
     	</select>
     	
@@ -89,12 +101,56 @@
     
     <select id="meetingAttendMember" resultType="meetingAttendMemberVO">
     
-    SELECT mm.meeting_no,cm.club_member_no,cm.club_member_id,cm.club_member_rank FROM 
+    SELECT a.attach_no,mm.meeting_no,cm.club_member_no,cm.club_member_id,cm.club_member_rank FROM 
     meeting_member mm JOIN 
     club_member cm ON 
     mm.CLUB_MEMBER_NO = cm.CLUB_MEMBER_NO 
+    left outer join member_profile mp on cm.club_member_id = mp.member_id
+    left outer join attach a on mp.attach_no = a.attach_no
     WHERE mm.MEETING_NO = #{meetingNo}
     </select>
+    
+    <update id="rankUpgrade">
+    
+    	update club_member set club_member_rank='운영진' 
+    	where club_member_no=#{clubMemberNo}
+    </update>
+    
+
+    <delete id="clubMemberDelete">
+    
+    delete club_member where club_member_no=#{clubMemberNo}
+    
+    
+    </delete>
+    
+    <select id="memberJoinClubCount" resultType="int">
+    
+    select count(*) from club_member where club_member_id=#{clubMemberId}
+    
+    </select>
+    
+
+
+    <select id="findListByMemberId" resultType="HomeForClubVO">
+	    select * from(
+			select rownum rn, TMP.* from(
+				select cm.club_no, cm.club_member_id, cm.join_date, c.club_name, ci.attach_no, cm.club_member_rank from
+				club_member cm join club c on cm.club_no = c.club_no
+				left outer join club_image ci on cm.club_no = ci.club_no
+				where cm.club_member_id = #{memberId}
+				order by cm.club_member_rank, cm.join_date desc
+			)TMP
+		)where rn between 1 and 12
+    </select>
+    
+    <select id="joinedClub" resultType="int">
+    	
+    	select count(*) club_member where club_no=#{clubNo} and club_member_id=#{clubMemberId}
+    
+    </select>
+
+    
     
     
      

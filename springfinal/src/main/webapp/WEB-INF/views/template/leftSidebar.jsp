@@ -9,6 +9,54 @@
     <link href="${pageContext.request.contextPath}/css/misolayout.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/miso.css" rel="stylesheet">
     
+<script>
+$(function () {
+	
+    
+
+})
+</script>
+    
+    
+    
+    <script>
+    	
+    $(function(){
+    	
+    	$(".club-make-link").click(function(e){
+    		  e.preventDefault();
+    		console.log("링크클릭");
+    		
+    		$.ajax({
+                url: window.contextPath +"/rest/clubMakePossible",
+                method: "get",
+                success: function (response) {
+      				if(response==1){
+      				alert("더이상 동호회를 생성하실 수 없습니다. 일반유저 최대 가입 수 5개")
+      				window.location.href = $(e.target).attr("href");
+      				}
+      				else if(response==2){
+          				alert("더이상 동호회를 생성하실 수 없습니다. 파워유저 최대 가입 수 12개")
+          				}
+      				else{
+      					 window.location.href = $(e.target).attr("href");
+      				}
+                }
+    		
+    		
+    	})
+    	
+    	
+    	
+    	
+    })
+    
+    })
+    
+    
+    
+    </script>
+    
     
  <!-- 왼쪽 사이드바 -->
             <aside class="left-sidebar">
@@ -21,7 +69,7 @@
 		                                <img src="${pageContext.request.contextPath}/images/avatar50.png" width="35%">
 			                    	</c:when>
 			                    	<c:otherwise>
-				                        <img src="/rest/member/profileShow?memberId=${sessionScope.name}" class="rounded-circle profile" style="width:80px; height: 80px;">
+			                    			<img src="/rest/member/profileShow?memberId=${sessionScope.name}" class="rounded-circle profile" style="width: 80px; height: 80px;">
 			                    	</c:otherwise>
 			                    </c:choose>
                             </div>
@@ -77,11 +125,22 @@
                             </a>
                         </div>
                     </div>
+                    
+                   
 
                     <div class="row p-1 mt-4">
                         <div class="col">
-                            <a href="/club/insert" class="badge rounded-pill bg-miso btn-miso p-3 link">
+                            <a href="/club/insert" class="badge rounded-pill bg-miso btn-miso p-3 club-make-link">
                                 모임 만들기
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="row p-2 align-items-center mt-4">
+                        <div class="col">
+                            <a href="/pay/product" class="link d-flex align-items-center">
+                                <img src="${pageContext.request.contextPath}/images/Vector4.png" width="20%">
+                                <strong class="ms-3">회원권</strong>
                             </a>
                         </div>
                     </div>

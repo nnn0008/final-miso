@@ -10,7 +10,7 @@ header {
         min-height: 80px;
     }
     header > .logo {
-        width: 25%;
+        width: 20%;
     }
     header > .title {
         flex-grow: 1;
@@ -33,38 +33,81 @@ header {
         text-align: center;
     }
 
-section {
-    min-height: 500px;
-    display: flex;
-    justify-content: space-between;
-    position: relative; /* section을 relative로 설정 */
-}
+/*section {*/
+/*    min-height: 500px;*/
+/*    display: flex;*/
+/*    justify-content: space-between;*/
+/*    position: relative;  section을 relative로 설정 */
+/*}*/
 
-section > aside {
-    width: 200px;
-    position: absolute; /* absolute로 변경 */
-    top: 0;
-    bottom: 0;
-}
+/*section > aside {*/
+/*    width: 200px;*/
+/*    position: absolute;  absolute로 변경 */
+/*    top: 0;*/
+/*    bottom: 0;*/
+/*}*/
 
-section > aside:first-child {
-    top: 100px; /* 원하는 높이로 조정하세요 */
-    left: auto;
-    right: auto;
-    position: fixed;
-}
+/*section > aside:first-child {*/
+/*    top: 100px;  원하는 높이로 조정하세요 */
+/*    left: auto;*/
+/*    right: auto;*/
+/*    position: fixed;*/
+/*}*/
 
-section > aside:last-child {
-    right: 0;
-    left: auto;
+/*section > aside:last-child {*/
+/*    right: 0;*/
+/*    left: auto;*/
+/*    }*/
+
+/*section > article {*/
+/*    flex-grow: 1;*/
+/*    padding-left: 200px;  왼쪽 aside 너비보다 큰 여백 추가 */
+/*    padding-right: 220px;  오른쪽 aside 너비보다 큰 여백 추가 */
+/*    box-sizing: border-box;  여백을 포함하여 전체 너비 유지 */
+/*}*/
+
+   section {
+      min-height: 500px;
+      display: flex;
+      justify-content: space-between;
+      position: relative;
     }
 
-section > article {
-    flex-grow: 1;
-    padding-left: 200px; /* 왼쪽 aside 너비보다 큰 여백 추가 */
-    padding-right: 220px; /* 오른쪽 aside 너비보다 큰 여백 추가 */
-    box-sizing: border-box; /* 여백을 포함하여 전체 너비 유지 */
+    aside {
+      width: 200px;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+    }
+
+/*    section > aside:first-child {*/
+/*      top: 100px;*/
+/*      left: 0;*/
+/*      position: fixed;*/
+/*    }*/
+
+.left-sidebar{
+	   top: 100px;
+      left: auto;
+      position: fixed;
 }
+.right-sidebar{
+	top: 0;
+   right: 0;
+
+}
+/*    section > aside:last-child {*/
+/*      top: 0;*/
+/*      right: 0;*/
+/*      position: fixed;*/
+/*    }*/
+
+    section > article {
+      flex-grow: 1;
+      padding-left: 200px;
+      padding-right: 220px;
+      box-sizing: border-box;
+    }
 
 
     a.link,

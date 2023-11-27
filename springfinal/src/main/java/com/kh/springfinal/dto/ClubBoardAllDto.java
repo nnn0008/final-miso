@@ -2,6 +2,8 @@ package com.kh.springfinal.dto;
 
 import java.sql.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,9 +19,11 @@ public class ClubBoardAllDto {
 	private String clubBoardTitle;
 	private String clubBoardContent;
 	private String clubBoardCategory;
-	private Date clubBoardDate;
+	@DateTimeFormat(pattern = "yyyyMMddHHmm") String clubBoardDate;
 	private int clubBoardLikecount;
 	private int clubBoardReplyCount;
 	private String clubBoardName;
 	private Integer attachNoCbi;
+	private Integer attachNoCbi2;
+	private Integer attachNoCbi3;
 }

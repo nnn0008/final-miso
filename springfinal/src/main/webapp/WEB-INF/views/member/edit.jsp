@@ -12,12 +12,12 @@
             
         }
     .check, .choice {
-	  display: none;   
+	  display: none;    
     }
     
    
 
-    .btn-join, .email-check {
+   .btn-edit{
         pointer-events: none;
         opacity: 0.5;
         /* 또는 다른 값을 사용하여 투명도 조절 가능 */
@@ -28,6 +28,117 @@
 	$(function () {
 		
 		
+		var major1Value = "${major1}";
+		var major2Value = "${major2}";
+		var major0Value = "${major0}";
+
+	    // .d-major1 클래스에 해당하는 select 요소를 대상으로 처리
+	    var selectElement = $("#mojor1");
+
+	    // 각 옵션에 대해 처리
+	    selectElement.find(".d-major1").each(function() {
+	        var optionValue = $(this).val();
+	        
+	        // 선택된 옵션의 값이 major0Value와 일치하면 selected 속성을 추가
+	        if (optionValue === major0Value) {
+	            $(this).prop("selected", true);
+	        }
+	    });	    
+	    
+	 // .d-major1 클래스에 해당하는 select 요소를 대상으로 처리
+	    var selectElement = $("#mojor2");
+
+	    // 각 옵션에 대해 처리
+	    selectElement.find(".d-major2").each(function() {
+	        var optionValue = $(this).val();
+	        
+	        // 선택된 옵션의 값이 major0Value와 일치하면 selected 속성을 추가
+	        if (optionValue === major1Value) {
+	            $(this).prop("selected", true);
+	        }
+	    });	    
+	    
+	 // .d-major1 클래스에 해당하는 select 요소를 대상으로 처리
+	    var selectElement = $("#mojor3");
+
+	    // 각 옵션에 대해 처리
+	    selectElement.find(".d-major3").each(function() {
+	        var optionValue = $(this).val();
+	        
+	        // 선택된 옵션의 값이 major0Value와 일치하면 selected 속성을 추가
+	        if (optionValue === major2Value) {
+	            $(this).prop("selected", true);
+	        }
+	    });	    
+	    ////////////////////////////////////////////////////
+	    
+	    //소분류 값 띄우기
+	    
+	    var minor0Value = "${minor0}";
+		var minor1Value = "${minor1}";
+		var minor2Value = "${minor2}";
+	    
+		// .d-minor1 클래스에 해당하는 select 요소를 대상으로 처리
+	    var selectElement = $("#monor1");
+
+	    // 각 옵션에 대해 처리
+	    selectElement.find(".choice1").each(function() {
+	        var optionValue = $(this).val();
+	        
+	        // 선택된 옵션의 값이 major0Value와 일치하면 selected 속성을 추가
+	        if (optionValue === minor0Value) {
+	            $(this).prop("selected", true);
+	            $(monor1).prop("disabled", false);
+	        }
+	    });	    
+	    
+	 // .d-minor1 클래스에 해당하는 select 요소를 대상으로 처리
+	    var selectElement = $("#monor2");
+
+	    // 각 옵션에 대해 처리
+	    selectElement.find(".choice2").each(function() {
+	        var optionValue = $(this).val();
+	        
+	        // 선택된 옵션의 값이 major0Value와 일치하면 selected 속성을 추가
+	        if (optionValue === minor1Value) {
+	            $(this).prop("selected", true);
+	            $(monor1).prop("disabled", false);
+	        }
+	    });	    
+	    
+	 // .d-minor1 클래스에 해당하는 select 요소를 대상으로 처리
+	    var selectElement = $("#monor3");
+
+	    // 각 옵션에 대해 처리
+	    selectElement.find(".choice3").each(function() {
+	        var optionValue = $(this).val();
+	        
+	        // 선택된 옵션의 값이 major0Value와 일치하면 selected 속성을 추가
+	        if (optionValue === minor2Value) {
+	            $(this).prop("selected", true);
+	            $(monor1).prop("disabled", false);
+	        }
+	    });	    
+	    
+	    ///////////////////////////////////////////////////////
+	    
+	    if ($(".check").length == $(".check:checked").length) {
+                        $(".btn-edit").css({
+                            "pointer-events": "auto",
+                            "opacity": "1" // 투명도를 1로 설정하여 다시 원래 상태로 만듭니다.
+                        });
+                    } 
+                    else {
+                        $(".btn-edit").css({
+                            "pointer-events": "none",
+                            "opacity": "0.5" // 투명도를 1로 설정하여 다시 원래 상태로 만듭니다.
+                        });
+                    }
+	    
+	    
+	    
+		
+	    //카메라 클릭시 모달 띄우기
 		$(".edit-camare").click(function() {
 			$(".edit-modal").modal("show");	
 		});
@@ -83,18 +194,11 @@
                         "text-danger");
                     $("[name=check4]").prop("checked",
                         false);
-                    $(".email-check").css({
-                        "pointer-events": "none",
-                        "opacity": "0.5" 
-                    });
                 } 
                 else {
                     $(this).addClass("is-valid");
-                    
-                    $(".email-check").css({
-                        "pointer-events": "auto",
-                        "opacity": "1" // 투명도를 1로 설정하여 다시 원래 상태로 만듭니다.
-                    });
+                    $("[name=check4]").prop("checked",
+                            true);
                 }
             });
 
@@ -142,14 +246,13 @@
         //필수 항목 전부 체크시 가입 버튼 활성화
         $(".check").change(function () {
                     if ($(".check").length == $(".check:checked").length) {
-                        $(".btn-join").css({
+                        $(".btn-edit").css({
                             "pointer-events": "auto",
                             "opacity": "1" // 투명도를 1로 설정하여 다시 원래 상태로 만듭니다.
                         });
                     } 
                     else {
-                    	console.log("바뀜");
-                        $(".btn-join").css({
+                        $(".btn-edit").css({
                             "pointer-events": "none",
                             "opacity": "0.5" // 투명도를 1로 설정하여 다시 원래 상태로 만듭니다.
                         });
@@ -340,16 +443,56 @@
                     </div>
                 </div>
 				
+                <div class="row">
+                    <div class="col text-center">
+                        <c:choose>
+                            <c:when test="${attachDto==null}">
+                                <img src="https://dummyimage.com/150x150/000/fff" class="rounded-circle profile">
+                            </c:when>
+                            <c:otherwise>
+                                <img src="/rest/member/profileShow?memberId=${memberDto.memberId}" class="rounded-circle profile" style="width:150px; height: 150px;">
+                            </c:otherwise>
+                        </c:choose>
+                        <div class="position-relative ">
+	                        <button class="btn edit-camare" data-bs-toggle="modal" data-bs-target="#edit-modal"><i class="fa-solid fa-camera fa-2xl"></i></button>
+                        </div>
+                    </div>
+                </div>
                 
+                <!--   프로필 업로드를 위한 모달 -->
+               <form enctype="multipart/form-data" method="post" action="/your-upload-endpoint">
+                <div class="modal" id="edit-modal">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h5 class="modal-title">프로필 설정</h5>
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+				          <span aria-hidden="true"></span>
+				        </button>
+				      </div>
+				      <div class="modal-body">
+				        <div class="mb-3">
+						  <label for="formFile" class="form-label">이미지를 선택해 주세요</label>
+						  <input class="form-control" type="file" name="attach" id="formFile" accept="image/*">
+						</div>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-primary profile-set-btn" data-bs-dismiss="modal">설정</button>
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+				</form>
 					
 				<form action=".	/edit" method="post">
 					<div class="row mt-3">
                        <div class="col">
                            <div class="input-group has-validation">
                                <div class="form-floating name-feed">
-                                   <input type="checkbox" name="check3" class="check">
+                                   <input type="checkbox" name="check3" class="check" checked>
                                    <input type="text" class="form-control" name="memberName"
-                                       id="memberName" placeholder="실명" required> <label
+                                       id="memberName" placeholder="실명" value="${memberDto.memberName}" required> <label
                                        for="memberName">실명*</label>
                                </div>
                                <div class="invalid-feedback">필수항목입니다</div>
@@ -358,68 +501,98 @@
                    </div>                    
                     
                     
-                    <div class="row">
-                    	<div class="col">
-                    		<div class="input-group mt-3 mb-3">
-							  <div class="input-group-prepend">
-							    <span class="input-group-text w-20" id="inputGroup-sizing-default">자기소개(시간남으면 하기)</span>
-							  </div>
-							  <input type="text" class="form-control" name="" aria-label="Default" aria-describedby="inputGroup-sizing-default" value="${memberDto.memberName}">
-							</div>
-                    	</div>
-                    </div>
-			
-					<div class="row">
-                    	<div class="col">
-                    		<div class="input-group mt-3 mb-3">
-							  <div class="input-group-prepend">
-							    <span class="input-group-text w-20" id="inputGroup-sizing-default">지역</span>
-							  </div>
-			                    <div class="col">
-			                       <input type="search" name="memberAddrString" class="form-control search-input"
-			                            placeholder="동,읍,면을 입력해주세요" value="${addr}">
-			                    </div>                    
-			                <div class="row">
-			                    <div class="col">
-			                        <ul class="list-group addr-list">
-			                        </ul>
-			                    </div>
-		                    </div>
-							</div>
-                    	</div>
-                    </div>
-                    <div class="row">
-                    	<div class="col">
-                    		<div class="input-group mt-3 mb-3">
-							  <div class="input-group-prepend">
-							    <span class="input-group-text w-20" id="inputGroup-sizing-default">이메일</span>
-							  </div>
-							  <input type="text" class="form-control" name="memberEmail"  aria-label="Default" aria-describedby="inputGroup-sizing-default" value="${memberDto.memberEmail}">
-							</div>
-                    	</div>
-                    </div>
+					<input type="checkbox" class="check addrCheck" checked>
+											<div class="row mt-4">
+							                    <div class="col">
+							                       <div class="input-group has-validation">
+                                                       <div class="form-floating addr-feed">
+                                                            <input type="search" class="form-control search-input" name="memberAddrString"
+                                                                id="memberAddr" placeholder="" value="${addr}" required>  <label
+                                                                for="memberBirth">지역</label>
+                                                                 <div class="d-addr-feedback">동, 읍, 면을 입력해 주세요</div>
+                                                       	</div>
+                                                    	</div>
+                                                    </div>
+							                    </div>                    
+							                <div class="row">
+							                    <div class="col">
+							                        <ul class="list-group addr-list">
+							                        </ul>
+							                    </div>
+							                </div>
+											<script>
+											$("#memberAddr").change(
+				                                    function () {
+				                                        $(this).removeClass("is-invalid is-valid");
+				                                        $(".d-addr-feedback").removeClass(
+		                                                "text-danger");
+				                                        $(".addr-feed").removeClass("is-invalid is-valid");
+				                                    	if($(this).val()=="") {
+				                                    		$(this).addClass("is-invalid");
+				                                    		$(".addr-feed").addClass("is-invalid");
+				                                    		$(".d-addr-feedback").addClass(
+			                                                "text-danger");
+				                                    		$(".addrCheck").prop("checked", false).trigger("change");
+				                                    	};
+					                                        var inputContent = $(this).val();
+					                                        var regex = /^[가-힣]+\s[가-힣]+\s[가-힣]+$/;
+					                                        var isValid = regex.test(inputContent);
+					                                        if (isValid) {
+					                                            $(this).addClass("is-valid");
+					                                            $(".addr-feed").addClass("is-valid");
+					                                            $(".addrCheck").prop("checked", true).trigger("change");
+					                                        } 
+					                                        else {
+					                                            $(this).addClass("is-invalid");
+					                                            $(".addr-feed").addClass("is-invalid");
+					                                            $(".d-addr-feedback").addClass(
+					                                                "text-danger");
+					                                            $(".addrCheck").prop("checked", false).trigger("change");
+					                                        }
+				                                    });
+											</script>
+                    	
+                   <div class="row mt-3">
+                                                <div class="col">
+                                                    <div class="input-group has-validation">
+                                                        <span class="input-group-text">@</span>
+                                                        <div class="form-floating email-feedback d-felx flex-row">
+                                                            <input type="checkbox" name="check4" class="check" checked>
+                                                            <input type="email" class="form-control" name="memberEmail"
+                                                                id="memberEmail" placeholder="이메일" value="${memberDto.memberEmail}" required> <label
+                                                                for="memberEmail">이메일*</label>
+                                                        </div>
+                                                        <div class="invalid-feedback">이메일 형식의 맞게 적어주세요.</div>
+                                                    </div>
+                                                </div>
+                                            </div>
                     
-                    <div class="row">
-                    	<div class="col">
-                    		<div class="input-group mt-3 mb-3">
-							  <div class="input-group-prepend">
-							    <span class="input-group-text w-20" id="inputGroup-sizing-default">전화번호</span>
-							  </div>
-							  <input type="text" class="form-control" name="memberContact" aria-label="Default" aria-describedby="inputGroup-sizing-default" value="${memberDto.memberContact}">
-							</div>
-                    	</div>
-                    </div>
+                                            <div class="row mt-3">
+                                                <div class="col">
+                                                    <div class="input-group has-validation">
+                                                        <div class="form-floating">
+                                                            <input type="text" class="form-control" name="memberContact"
+                                                                id="memberContact" placeholder="연락처" value="${memberDto.memberContact}" required> <label
+                                                                for="memberContact">연락처</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-content-feedback">'-'을 제외하고 숫자로만 적어주세요</div>
+                                                </div>
+                                            </div>
                     
-                    <div class="row">
-                    	<div class="col">
-                    		<div class="input-group mt-3 mb-3">
-							  <div class="input-group-prepend">
-							    <span class="input-group-text w-20" id="inputGroup-sizing-default">생년월일</span>
-							  </div>
-							  <input type="text" class="form-control" name="memberBirth" aria-label="Default" aria-describedby="inputGroup-sizing-default" value="${memberDto.memberBirth}">
-							</div>
-                    	</div>
-                    </div>
+                     <div class="row mt-3">
+                                                <div class="col">
+                                                    <div class="input-group has-validation">
+                                                        <div class="form-floating">
+                                                            <input type="text" class="form-control" name="memberBirth"
+                                                                id="memberBirth" placeholder="생년월일" value="${memberDto.memberBirth}" required> <label
+                                                                for="memberBirth">생년월일</label>
+                                                            <div class="d-brith-feedback">'-'을 포함하여 
+                                                                적어주세요.ex->1990-01-01</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                     
 	                    <hr>
 	      		          
@@ -432,30 +605,31 @@
 	      		    <div class="row">
 	      		    	<div class="col like-show">
 	      		     <!-- 1. 관심 테이블 대분류 -->
+	      		     <input type="checkbox" class="category-check check" checked>
                                             <div class="form-group"> 
 										      <label for="mojor1" class="form-label mt-4">관심사가 바뀌셨나요?</label>
 										      <br>
 										      <span class="mt-1">관심 1</span>
 										      <select class="form-select" name="mojor-s1" id="mojor1">
 										        <option class="dj1" value=null>선택하지 않음</option>
-										        <option value="40">아웃도어/여행</option>
-										        <option value="41">업종/직무</option>
-										        <option value="42">인문학/책/글</option>
-										        <option value="43">운동/스포츠</option>
-										        <option value="61">외국/언어</option>
-										        <option value="62">문화/공연/축제</option>
-										        <option value="63">음악/악기</option>
-										        <option value="64">공예/만들기</option>
-										        <option value="65">댄스/무용</option>
-										        <option value="66">봉사활동</option>
-										        <option value="67">사교/인맥</option>
-										        <option value="68">차/오토바이</option>
-										        <option value="69">사진/영상</option>
-										        <option value="70">야구관람</option>
-										        <option value="71">게임/오락</option>
-										        <option value="72">요리/제조</option>
-										        <option value="73">반려동물</option>
-										        <option value="74">자유주제</option>
+										        <option class="d-major1" value="40">아웃도어/여행</option>
+										        <option class="d-major1" value="41">업종/직무</option>
+										        <option class="d-major1" value="42">인문학/책/글</option>
+										        <option class="d-major1" value="43">운동/스포츠</option>
+										        <option class="d-major1" value="61">외국/언어</option>
+										        <option class="d-major1" value="62">문화/공연/축제</option>
+										        <option class="d-major1" value="63">음악/악기</option>
+										        <option class="d-major1" value="64">공예/만들기</option>
+										        <option class="d-major1" value="65">댄스/무용</option>
+										        <option class="d-major1" value="66">봉사활동</option>
+										        <option class="d-major1" value="67">사교/인맥</option>
+										        <option class="d-major1" value="68">차/오토바이</option>
+										        <option class="d-major1" value="69">사진/영상</option>
+										        <option class="d-major1" value="70">야구관람</option>
+										        <option class="d-major1" value="71">게임/오락</option>
+										        <option class="d-major1" value="72">요리/제조</option>
+										        <option class="d-major1" value="73">반려동물</option>
+										        <option class="d-major1" value="74">자유주제</option>
 										      </select>
 										    </div>
 										    
@@ -507,25 +681,25 @@
                                             <div class="form-group"> 
 										      <label for="mojor2" class="form-label mt-4">관심 2</label>
 										      <select class="form-select" name="mojor-s2" id="mojor2">
-										        <option class="dj2" value=null>선택하지 않음</option>
-										        <option value="40">아웃도어/여행</option>
-										        <option value="41">업종/직무</option>
-										        <option value="42">인문학/책/글</option>
-										        <option value="43">운동/스포츠</option>
-										        <option value="61">외국/언어</option>
-										        <option value="62">문화/공연/축제</option>
-										        <option value="63">음악/악기</option>
-										        <option value="64">공예/만들기</option>
-										        <option value="65">댄스/무용</option>
-										        <option value="66">봉사활동</option>
-										        <option value="67">사교/인맥</option>
-										        <option value="68">차/오토바이</option>
-										        <option value="69">사진/영상</option>
-										        <option value="70">야구관람</option>
-										        <option value="71">게임/오락</option>
-										        <option value="72">요리/제조</option>
-										        <option value="73">반려동물</option>
-										        <option value="74">자유주제</option>
+										          <option class="dj2" value=null>선택하지 않음</option>
+									              <option class="d-major2" value="40">아웃도어/여행</option>
+									              <option class="d-major2" value="41">업종/직무</option>
+									              <option class="d-major2" value="42">인문학/책/글</option>
+									              <option class="d-major2" value="43">운동/스포츠</option>
+									              <option class="d-major2" value="61">외국/언어</option>
+									              <option class="d-major2" value="62">문화/공연/축제</option>
+									              <option class="d-major2" value="63">음악/악기</option>
+									              <option class="d-major2" value="64">공예/만들기</option>
+									              <option class="d-major2" value="65">댄스/무용</option>
+									              <option class="d-major2" value="66">봉사활동</option>
+									              <option class="d-major2" value="67">사교/인맥</option>
+									              <option class="d-major2" value="68">차/오토바이</option>
+									              <option class="d-major2" value="69">사진/영상</option>
+									              <option class="d-major2" value="70">야구관람</option>
+									              <option class="d-major2" value="71">게임/오락</option>
+									              <option class="d-major2" value="72">요리/제조</option>
+									              <option class="d-major2" value="73">반려동물</option>
+									              <option class="d-major2" value="74">자유주제</option>
 										      </select>
 										    </div>
 										    
@@ -557,25 +731,24 @@
                                             <div class="form-group"> 
 										      <label for="mojor3" class="form-label mt-4">관심 3</label>
 										      <select class="form-select" name="mojor-s3" id="mojor3">
-										        <option class="dj3" value=null>선택하지 않음</option>
-										        <option value="40">아웃도어/여행</option>
-										        <option value="41">업종/직무</option>
-										        <option value="42">인문학/책/글</option>
-										        <option value="43">운동/스포츠</option>
-										        <option value="61">외국/언어</option>
-										        <option value="62">문화/공연/축제</option>
-										        <option value="63">음악/악기</option>
-										        <option value="64">공예/만들기</option>
-										        <option value="65">댄스/무용</option>
-										        <option value="66">봉사활동</option>
-										        <option value="67">사교/인맥</option>
-										        <option value="68">차/오토바이</option>
-										        <option value="69">사진/영상</option>
-										        <option value="70">야구관람</option>
-										        <option value="71">게임/오락</option>
-										        <option value="72">요리/제조</option>
-										        <option value="73">반려동물</option>
-										        <option value="74">자유주제</option>
+										                      <option class="d-major3" value="40">아웃도어/여행</option>
+												              <option class="d-major3" value="41">업종/직무</option>
+												              <option class="d-major3" value="42">인문학/책/글</option>
+												              <option class="d-major3" value="43">운동/스포츠</option>
+												              <option class="d-major3" value="61">외국/언어</option>
+												              <option class="d-major3" value="62">문화/공연/축제</option>
+												              <option class="d-major3" value="63">음악/악기</option>
+												              <option class="d-major3" value="64">공예/만들기</option>
+												              <option class="d-major3" value="65">댄스/무용</option>
+												              <option class="d-major3" value="66">봉사활동</option>
+												              <option class="d-major3" value="67">사교/인맥</option>
+												              <option class="d-major3" value="68">차/오토바이</option>
+												              <option class="d-major3" value="69">사진/영상</option>
+												              <option class="d-major3" value="70">야구관람</option>
+												              <option class="d-major3" value="71">게임/오락</option>
+												              <option class="d-major3" value="72">요리/제조</option>
+												              <option class="d-major3" value="73">반려동물</option>
+												              <option class="d-major3" value="74">자유주제</option>
 										      </select>
 										    </div>
 										    
@@ -609,7 +782,7 @@
 			      		    <a href="./mypage?memberId=${memberDto.memberId}>"><button type="button" class="btn btn-danger rounded-button w-75" style="font-size: 40px;"> 취소</button></a>
 	      		    	</div>
 	      		    	<div class="col text-end">
-			      		    <button type="submit" class="btn btn-primary rounded-button w-75" style="font-size: 40px;">완료</button>
+			      		    <button type="submit" class="btn btn-primary rounded-button w-75 btn-edit" style="font-size: 40px;">완료</button>
 	      		    	</div>
 	      		    </div>
 	            
@@ -617,6 +790,6 @@
 	            
 	            </div>
 	        </div>
-	    </div>
+	        </div>
 	
 	<jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>

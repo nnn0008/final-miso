@@ -75,5 +75,18 @@ public class NotifyRestController {
 	    return result;
 	}
 
+	@GetMapping("/notifyOff")
+	public boolean notifyOff(@RequestParam String notifyReceiver, @RequestParam boolean isEnabled) {
+	    boolean result;
+	    if (isEnabled) {
+	        result = notifyDao.notifyEnabledOff(notifyReceiver);
+	        System.out.println("Notify Off: " + notifyReceiver);
+	    } else {
+	        result = notifyDao.notifyEnabledOn(notifyReceiver);
+	        System.out.println("Notify On: " + notifyReceiver);
+	    }
+	    return result;
+	}
+
 
 }

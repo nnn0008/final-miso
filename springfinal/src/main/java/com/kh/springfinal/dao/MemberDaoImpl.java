@@ -84,12 +84,35 @@ public class MemberDaoImpl implements MemberDao{
 		return result;
 	}
 	@Override
-	public boolean updateLevel(String memberId) {
+	public boolean memberEditSelf(MemberDto memberDto) {
+			int count = sqlSession.update("member.memberEditSelf", memberDto);
+			boolean result = count>0;
+		return result;
+	}
+	@Override
+	public boolean deleteMember(String memberId) {
+		int count = sqlSession.delete("member.deleteMember", memberId);
+		boolean result =  count>0;
+		return result;
+  }
+  
+  @Override
+  public boolean updateLevel(String memberId) {
 		return sqlSession.update("member.updateLevel",memberId)>0;
 	}
 	
 	@Override
 	public boolean updateDownLevel(String memberId) {
 		return sqlSession.update("member.updateDownLevel",memberId)>0;
+	}
+	
+	@Override
+	public boolean schedulerMember(String memberId) {
+		return sqlSession.update("member.schedulerMember",memberId)>0;
+	}
+	
+	@Override
+	public MemberDto memberFindId(String memberId) {
+		return sqlSession.selectOne("member.memberFindId",memberId);
 	}
 }

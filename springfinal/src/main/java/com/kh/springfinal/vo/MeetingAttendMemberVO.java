@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Data @AllArgsConstructor @NoArgsConstructor @Builder
 public class MeetingAttendMemberVO {
 	
+	private int attachNo;
 	private int meetingNo;
 	private int clubMemberNo;
 	private String clubMemberRank;

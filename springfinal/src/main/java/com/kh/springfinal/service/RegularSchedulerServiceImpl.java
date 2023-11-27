@@ -13,6 +13,8 @@ import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dao.PaymentDao;
 import com.kh.springfinal.dao.PaymentRegularDao;
+import com.kh.springfinal.dto.ClubDto;
+import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.dto.PaymentDto;
 import com.kh.springfinal.dto.PaymentRegularDto;
 import com.kh.springfinal.vo.KakaoPayRegularRequestRequestVO;
@@ -46,7 +48,7 @@ public class RegularSchedulerServiceImpl implements RegularSchedulerService {
 	
 	
 //	@Scheduled(cron = "0 0 9 * * *")//매일 9시 마다 데이터확인
-	@Scheduled(cron = "0 10 18 * * *")//매일 9시 마다 데이터확인
+	@Scheduled(cron = "0 18 18 * * *")//매일 9시 마다 데이터확인
 
 	
 
@@ -100,21 +102,44 @@ public class RegularSchedulerServiceImpl implements RegularSchedulerService {
 		}
 	 }
 	
+	@Scheduled(cron = "0 25 1 * * *")//매일 9시 마다 데이터확인
 	@Override
 	public void payment() throws URISyntaxException {
 		log.debug("다운되나?");
 		List<PaymentDto> list = paymentDao.selectList();
+		log.debug("list={}",list);
 		for(PaymentDto paymentDto : list ) {
 			boolean today = isToday.endToday(paymentDto);
 			
-			if(today) {
-				memberDao.updateDownLevel(paymentDto.getPaymentMember());
-				clubDao.updateDownPremium(paymentDto.getPaymentMember());
-				log.debug("단건결제 취소스케줄러완료요");
-			}
-		
-	}
-		
+			if (today) {
+	            String memberId = paymentDto.getPaymentMember();
+	            
+	            log.debug("결제회원 ID 확인: {}", memberId);
+	            
+	            MemberDto memberDto = memberDao.memberFindId(memberId);
+	            log.debug("memberDto={}",memberDto);
+	            if (memberDto != null) {
+	                log.debug("멤버회원 ID 발견: {}", memberDto.getMemberId());
+	                memberDao.schedulerMember(memberDto.getMemberId());//회원등급 내리기
+	                log.debug("등급내려감");
+	            } else {
+	                log.debug("멤버회원 ID를 찾을 수 없습니다.");
+	            }
+
+	            ClubDto clubDto = clubDao.clubFindOwner(memberId);
+	            log.debug("clubDto={}",clubDto);
+	            if (clubDto != null) {
+	                log.debug("클럽 소유자 발견: {}", clubDto.getClubOwner());
+	                clubDao.schedulerClub(clubDto.getClubOwner());//멤버 등급내리기
+	                log.debug("클럽도 내려감");
+	            } 
+	            else {
+	                log.debug("클럽 소유자를 찾을 수 없습니다.");
+	            }
+
+	            log.debug("등급 내려짐");
+	        }
+	    }
 	}
 
 

@@ -33,6 +33,7 @@ import com.kh.springfinal.dao.AttachDao;
 import com.kh.springfinal.dao.ChatDao;
 import com.kh.springfinal.dao.ChatOneDao;
 import com.kh.springfinal.dao.ChatRoomDao;
+import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dao.MemberProfileDao;
 import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.ChatDto;
@@ -74,6 +75,9 @@ public class WebSocketServer extends TextWebSocketHandler{
 	private AttachDao attachDao;
 	
 	@Autowired
+	private ClubDao clubDao;
+	
+	@Autowired
 	private MemberProfileDao profileDao;
 
     // 초기 디렉터리 설정
@@ -98,10 +102,11 @@ public class WebSocketServer extends TextWebSocketHandler{
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		 ClientVO client = new ClientVO(session);
 		clients.add(client);
-		
+
 		log.debug("사용자 접속 {}명", clients.size());
 	}
 	
+
 	// 접속 종료
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
@@ -121,6 +126,21 @@ public class WebSocketServer extends TextWebSocketHandler{
 	        }
 	    }
 	}
+//	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+//	    Iterator<ClientVO> iterator = clients.iterator();
+//	    while (iterator.hasNext()) {
+//	        ClientVO client = iterator.next();
+//	        WebSocketSession existingSession = client.getSession();
+//	        if (existingSession.getId().equals(session.getId())) {
+//	            // 세션을 찾았으므로 제거
+//	            iterator.remove();
+//
+//	            log.debug("사용자 종료! 현재 {}명", clients.size());
+//
+//	            break;
+//	        }
+//	    }
+//	}
 
 
 	// 특정 채팅방 입장 시 이전 메시지 조회 및 전송
@@ -163,6 +183,7 @@ public class WebSocketServer extends TextWebSocketHandler{
         	profileImageUrl = "/getProfileImage?memberId=" + chatDto.getChatSender();
         }
 		
+        
 	    Map<String, Object> map = new HashMap<>();
 	    map.put("memberId", chatDto.getChatSender());
 	    map.put("chatTime", chatTime.toString());
@@ -231,12 +252,11 @@ public class WebSocketServer extends TextWebSocketHandler{
 	    session.sendMessage(tm);
 	}
 
-
+	
 	
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-	    ClientVO client = clientService.createClientVO(session);
-	    
+		ClientVO client = new ClientVO(session);
 	    // 메시지를 JSON으로 파싱
 	    ObjectMapper mapper = new ObjectMapper();
 	    MessageDto messageDto = mapper.readValue(message.getPayload(), MessageDto.class);
@@ -251,6 +271,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	    if (MessageType.join.equals(messageType)) {
 	        // 해당 룸번호를 가져옴 
 	        Integer chatRoomNo = messageDto.getChatRoomNo();
+	        String memberId = client.getMemberId();
 	        
 	        //map에 룸번호, 세션 정보를 담는다
 	        Map<String, Object> map = new HashMap<>();
@@ -267,6 +288,9 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            ChatListVO firstChat = chatList.get(0);
 	            String clubName = firstChat.getClubName();
 	            String clubExplain = firstChat.getClubExplain();
+//	            int clubNo = firstChat.getClubNo();
+//	            
+//	            String clubMemberRank = chatRoomDao.clubMemberRank(memberId, clubNo);
 
 	            // 여기에서 chatRoomNo를 활용하여 처리
 	            // 채팅 내역이 있을 경우에만 채팅 내역을 전송
@@ -286,6 +310,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	                    mapToSend.put("clubExplain", clubExplain);
 	                    mapToSend.put("messageType", MessageType.join);
 	                    mapToSend.put("memberLevel", client.getMemberLevel());
+//	                    mapToSend.put("clubMemberRank", clubMemberRank);
 
 	                    String joinMessageJson = mapper.writeValueAsString(mapToSend);
 	                    TextMessage tm = new TextMessage(joinMessageJson);
@@ -404,7 +429,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	        ChatRoomDto chatRoomDto = new ChatRoomDto(); // ChatRoomDto 생성
 	        chatRoomDto.setChatRoomNo(chatRoomNo); // 생성된 룸 번호를 ChatRoomDto에 설정
 	        chatRoomDao.insert(chatRoomDto); // DB에 넣기        
-	        
+
 	        //새로운 채팅방 번호를 참여한 사용자들에게 전송
 	        Set<ClientVO> roomMembers = roomMembersMap.computeIfAbsent(chatRoomNo, k -> new HashSet<>());
 	        roomMembers.add(client);
