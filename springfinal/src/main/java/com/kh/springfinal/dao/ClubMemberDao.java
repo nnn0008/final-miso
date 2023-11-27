@@ -37,7 +37,7 @@ public interface ClubMemberDao {
 	
 	List<ClubDto> mypageClubList(String memberId);
 	boolean upgradeRank(int clubMemberNo);
-	
+	boolean downgradeRank(int clubMemberNo);
 
 	boolean deleteClubMember(int clubMemberNo);
 	
@@ -46,6 +46,8 @@ public interface ClubMemberDao {
 	boolean joinedClub(int clubNo,String memberId);
 	
 	boolean managerExist(int clubNo);
+	
+	
 	
 	
 

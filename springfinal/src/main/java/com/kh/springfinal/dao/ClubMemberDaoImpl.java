@@ -170,6 +170,11 @@ public class ClubMemberDaoImpl implements ClubMemberDao{
 		int result = sqlSession.selectOne("clubMember.managerExist",clubNo);
 		return result>0;
 	}
+
+	@Override
+	public boolean downgradeRank(int clubMemberNo) {
+		return sqlSession.update("clubMember.rankDowngrade",clubMemberNo)>0;
+	}
 	
 	
 	

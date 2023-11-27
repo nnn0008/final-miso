@@ -119,6 +119,12 @@
     	where club_member_no=#{clubMemberNo}
     </update>
     
+    <update id="rankDowngrade">
+    
+    	update club_member set club_member_rank='일반' 
+    	where club_member_no=#{clubMemberNo}
+    </update>
+    
 
     <delete id="clubMemberDelete">
     

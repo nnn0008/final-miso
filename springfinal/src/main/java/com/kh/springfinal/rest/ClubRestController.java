@@ -347,6 +347,19 @@ public class ClubRestController {
 		
 	}
 	
+	@GetMapping("/downgradeRank")
+	public boolean downgrade(int clubMemberNo) {
+		
+		boolean result = clubMemberDao.downgradeRank(clubMemberNo);
+		
+		return result; 
+		
+		
+		
+	}
+	
+	
+	
 	@GetMapping("/joinPossible")
 	public int joinPossible(HttpSession session,int clubNo){
 		

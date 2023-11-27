@@ -324,6 +324,16 @@ $(function(){
 
               		
               	} 
+              	 
+              	$(htmlTemplate).find(".downgradeRank").data('clubMemberNo',clubMember.clubMemberNo);
+             	 if(clubMember.masterRank==false||
+             			 clubMember.clubMemberRank=='일반'||
+             			 clubMember.clubMemberNo==bodyClubMemberNo){
+             		
+             		 $(htmlTemplate).find(".downgradeRank").hide(); 
+
+             		
+             	} 
               	
               	
               	$(htmlTemplate).find(".memberName").html("<strong>" + clubMember.memberName + "</strong> | " + clubMember.joinDateString + " 가입");
@@ -387,6 +397,15 @@ $(function(){
 
               		
               	} 
+             	$(htmlTemplate).find(".downgradeRank").data('clubMemberNo',clubMember.clubMemberNo);
+            	 if(clubMember.masterRank==false||
+            			 clubMember.clubMemberRank=='일반'||
+            			 clubMember.clubMemberNo==bodyClubMemberNo){
+            		
+            		 $(htmlTemplate).find(".downgradeRank").hide(); 
+
+            		
+            	} 
               	
               	
               	$(htmlTemplate).find(".memberName").html("<strong>" + clubMember.memberName + "</strong> | " + clubMember.joinDateString + " 가입");
@@ -417,6 +436,28 @@ $(function(){
 		  
 		  $.ajax({
 			  url: "http://localhost:8080/rest/upgradeRank",
+	          method: "get",
+	          data: { clubMemberNo: clubMemberNo},
+	          success: function (response) {
+	        	  
+						   size=tagCount
+						   
+						   loadMemberList();
+	        		  
+			  
+		  }
+		  }) 
+	  })
+	  
+	   $(document).on('click','.downgradeRank',function(){
+		  
+		  
+		  var clubMemberNo = $(this).data("clubMemberNo");
+		  scrollPosition = $(".clubMemberList").scrollTop();
+		  var tagCount = $(".clubMemberList").children().length;
+		  
+		  $.ajax({
+			  url: "http://localhost:8080/rest/downgradeRank",
 	          method: "get",
 	          data: { clubMemberNo: clubMemberNo},
 	          success: function (response) {
@@ -1690,7 +1731,8 @@ $(document).ready(function () {
             </div>
         </div>
         <div class="col-3">
-            <button class="btn btn-miso w-100 upgradeRank">운영진 지정</button>
+            <button class="btn btn-miso w-100 upgradeRank">운영진 임명</button>
+			<button class="btn btn-danger w-100 downgradeRank">운영진 해제</button>
         </div>
     </div>
 </div>
