@@ -94,11 +94,12 @@ $(function(){
     //대댓글 작성
     //$(replyHtmlTemplate).find(".btn-miso").click(function(e){
     $(document).on("click", ".btn-misos", function(e){
+// 	    $(".btn-open-reply-edit").hide();
 		var params = new URLSearchParams(location.search);
         var clubBoardNo = params.get("clubBoardNo");
         var originReplyNo = $(this).parents(".for-reply-edit").find(".btn-subReply").data("reply-no");
         e.preventDefault();
-        //console.log(originReplyNo);
+//         console.log(originReplyNo);
         
         var clubBoardReplyContent = $(this).parents(".for-reply-edit").find(".reply-write").val();
         console.log(clubBoardReplyContent);
@@ -117,7 +118,8 @@ $(function(){
             	$(".reply-write").val("");
             	$(this).remove();
                 loadList();
-                $(".div-for-insert-reply").show();
+//                 $(".div-for-insert-reply").show();
+                $(".btn-open-reply-edit").show();
 
               //소켓 전송
                 var notifyType = "reply";
@@ -161,7 +163,7 @@ $(function(){
 				//response를 댓글 목록으로 받아옴
 				success:function(response){
 					$(".reply-list").empty();
-					//console.log(response);
+					console.log(response);
 
 					for(var i = 0; i < response.length; i++){
 						//console.log(response);
@@ -170,7 +172,7 @@ $(function(){
 						
 						$(htmlTemplate).find(".clubBoardReplyWriter").text(response[i].clubBoardReplyWriter);
 						$(htmlTemplate).find(".clubBoardReplyContent").text(response[i].clubBoardReplyContent);
-						$(htmlTemplate).find(".clubBoardReplyDate").text(response[i].clubBoardReplyDate);
+						$(htmlTemplate).find(".clubBoardReplyDate").text(response[i].formattedClubBoardReplyDate);
 						$(htmlTemplate).find(".btn-subReply").attr("data-reply-no", response[i].clubBoardReplyNo);
 						//내가 작성한 댓글인지 확인하여 수정/삭제 버튼을 안보이게
 						if(response[i].match == false){
@@ -203,6 +205,10 @@ $(function(){
 							
 							//기존 댓글 창을 숨기자
 							$(".div-for-insert-reply").hide();
+							//다른 수정 버튼을 안보이게
+							$(".btn-open-reply-edit").hide();
+							//수정 버튼 누르고 답글 달기 버튼 누르면 2개가 동시에 보임
+							$(".btn-subReply").hide();
 							
 							var clubBoardReplyNo = $(this).attr("data-reply-no");
 							var clubBoardReplyContent = $(this).parents(".for-reply-edit").find(".clubBoardReplyContent").text();
@@ -215,6 +221,9 @@ $(function(){
 								$(this).parents(".edit-container").prev(".for-reply-edit").show();
 								$(this).parents(".edit-container").remove();
 								$(".div-for-insert-reply").show();
+								//숨긴 수정 버튼 다시 보여주기
+ 								$(".btn-open-reply-edit").show();
+ 								$(".btn-subReply").show();
 							});
 							
 							//완료(등록)버튼 처리
@@ -227,6 +236,8 @@ $(function(){
 									data: $(e.target).serialize(),
 									success: function(response){
 										loadList();
+										$(".div-for-insert-reply").show();
+										$(".btn-subReply").show();
 									}
 								});
 							});
@@ -237,6 +248,7 @@ $(function(){
 						
 						$(htmlTemplate).find(".btn-subReply").attr("data-reply-no", response[i].clubBoardReplyNo).click(function(e){
 							$(this).hide();
+							$(".btn-open-reply-edit").hide();
 							var parent = $(this).parents(".for-reply-edit");
 							if(!parent.is(replyHtmlTemplate)){
 								$(this).parents(".for-reply-edit").append(replyHtmlTemplate);
@@ -248,6 +260,7 @@ $(function(){
 								$(this).parents(".for-reply-edit").find(".btn-subReply").show();
 								$(replyHtmlTemplate).remove();
 								$(".div-for-insert-reply").show();
+								$(".btn-open-reply-edit").show();
 								//console.log("취소");
 							});
 						});
@@ -279,6 +292,7 @@ $(function(){
 		//좋아요 관련 처리
 		var params = new URLSearchParams(location.search);
 		var clubBoardNo = params.get("clubBoardNo");
+		
 		//좋아요 여부를 체크
 		$.ajax({
 			url: window.contextPath + "/rest/clubBoard/check",
@@ -296,67 +310,49 @@ $(function(){
 				}
 			},
 		});
-		
-		/* $(".fa-heart").click(function(){
-			$.ajax({
-				url: window.contextPath + "/rest/clubBoard/action",
-				method: "post",
-				data: {
-					clubBoardNo: clubBoardNo,
-				},
-				success: function(response){
-					if(response.check){
-						$(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-regular");
-					}
-					else{
-						$(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-solid");
-					}
-					$(".board-like-count").empty().append(response.count);
-				},
-			}); */
 
-			
-			$(".fa-heart").click(function () {
-			    $.ajax({
-			        url: window.contextPath + "/rest/clubBoard/action",
-			        method: "post",
-			        data: {
-			            clubBoardNo: clubBoardNo,
-			        },
-			        success: function (response) {
-			            if (response.vo.check) {
-			                $(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-regular");
-			            } else {
-			                $(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-solid");
+		$(".fa-heart").click(function () {
+			console.log("클릭이벤트발생");			
+		    $.ajax({
+		        url: window.contextPath + "/rest/clubBoard/action",
+		        method: "post",
+		        data: {
+		            clubBoardNo: clubBoardNo,
+		        },
+		        success: function (response) {
+		            if (response.vo.check) {
+		                $(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-regular");
+		            } else {
+		                $(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-solid");
 
-			                // 소켓 전송
-			                var notifyType = "like";
-			                var replyWriterMember = response.replyWriterMember;
-			                var boardWriterMember = response.boardWriterMember;
-			                var clubBoardNo = response.clubBoardNo;
-			                var boardTitle = response.boardTitle;
-			                var replyWriterName = response.replyWriterName;
+		                // 소켓 전송
+		                var notifyType = "like";
+		                var replyWriterMember = response.replyWriterMember;
+		                var boardWriterMember = response.boardWriterMember;
+		                var clubBoardNo = response.clubBoardNo;
+		                var boardTitle = response.boardTitle;
+		                var replyWriterName = response.replyWriterName;
 
-			                if (boardWriterMember != replyWriterMember) {
-			                    let socketMsg = JSON.stringify({
-			                        notifyType: notifyType,
-			                        replyWriterMember: replyWriterMember,
-			                        boardWriterMember: boardWriterMember,
-			                        clubBoardNo: clubBoardNo,
-			                        boardTitle: boardTitle,
-			                        replyWriterName: replyWriterName
-			                    });
+		                if (boardWriterMember != replyWriterMember) {
+		                    let socketMsg = JSON.stringify({
+		                        notifyType: notifyType,
+		                        replyWriterMember: replyWriterMember,
+		                        boardWriterMember: boardWriterMember,
+		                        clubBoardNo: clubBoardNo,
+		                        boardTitle: boardTitle,
+		                        replyWriterName: replyWriterName
+		                    });
 
-			                    notifySocket.send(socketMsg);
-			                }
-			            }
-			            $(".board-like-count").empty().append(response.vo.count);
-			        },
-			        error: function () {
-			            console.error("An error occurred during the like action.");
-			        }
-			    });
-			});
+		                    notifySocket.send(socketMsg);
+		                }
+		            }
+		            $(".board-like-count").empty().append(response.vo.count);
+		        },
+		        error: function () {
+		            console.error("An error occurred during the like action.");
+		        }
+		    });
+		});
 		});
 
 	
@@ -472,11 +468,11 @@ $(function(){
 <div class="col-12 for-reply-edit mt-2">
     <div class="card bg-miso mb-3"">
         <div class="card-header d-flex align-items-center reply-box">
-            <div class="co-3 me-2">
+            <div class="col-5 me-2">
                 <h6 class="clubBoardReplyWriter">작성자</h6>
             </div>
-            <div class="col">
-                <span class="clubBoardReplyDate">MM-dd E HH:mm</span>
+            <div class="col text-end">
+                <small><span class="clubBoardReplyDate">MM-dd E HH:mm</span></small>
             </div>
             <div class="col edit-delete text-end">
                 <i class="fa-solid fa-eraser ms-auto p-2 fa-gray btn-open-reply-edit"></i>
@@ -506,7 +502,7 @@ $(function(){
     <div class="row mt-2">
         <div class="col-12">
             <div class="input-group">
-            <textarea name="clubBoardReplyContent" class="form-control" rows="1"></textarea>
+            <textarea name="clubBoardReplyContent" class="form-control" rows="3"></textarea>
                 <button type="submit" class="btn btn-miso btn-reply-edit">
                     수정
                 </button>
@@ -523,7 +519,7 @@ $(function(){
 <div class="row">
     <div class="col-12">
         <div class="input-group">
-            <textarea type="text" class="form-control reply-write" rows="1" placeholder="댓글을 달아주세요"></textarea>
+            <textarea type="text" class="form-control reply-write" rows="3" placeholder="댓글을 달아주세요"></textarea>
             <button type="button" class="btn btn-reply-send btn-miso btn-misos">전송</button>
             <button type="button" class="btn btn-reply-cancel btn-reReply-cancel">취소</button>
         </div>
@@ -536,7 +532,7 @@ $(function(){
 		<input type="hidden" name="clubBoardReplyNo" value="?">
 		<div class="row flex-container">
 			<div class="col-6">
-				<input type="text" name="clubBoardReReplyContent" class="form-control"></textarea>
+				<textarea name="clubBoardReReplyContent" class="form-control"rows="3"></textarea>
 			</div>
 			<div class="col">
 				<button type="submit" class="btn btn-miso btn-reReply-send">
@@ -570,10 +566,10 @@ $(function(){
 				<div class="col ms-4">
 					${clubBoardDto.clubBoardName}
 				</div>
-				<div class="col text-end">
+				<div class="col-5 text-end">
 				<span class="badge bg-success">${clubBoardDto.clubBoardCategory}</span>
-					<%-- <fmt:formatDate value="${clubBoardDto.clubBoardDate}" pattern="M월 d일 a h시 m분"/> --%>
-					${clubBoardDto.clubBoardDate}
+					<small><fmt:formatDate value="${clubBoardDto.clubBoardDate}" pattern="M월 d일 a h시 m분"/></small>
+<%-- 					${clubBoardDto.clubBoardDate} --%>
 				</div>
 				
     <div class="col-1 text-end">
@@ -647,7 +643,7 @@ $(function(){
         <div class="row mt-3 mb-4">
             <div class="col-12">
                 <div class="input-group">
-                    <textarea type="text" class="form-control reply-write" rows="1" placeholder="댓글을 달아주세요"></textarea>
+                    <textarea class="form-control reply-write" rows="3" placeholder="댓글을 달아주세요"></textarea>
                     <button type="submit" class="btn btn-reply-send btn-miso">전송</button>
                 </div>
             </div>

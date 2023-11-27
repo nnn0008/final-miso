@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class ClubBoardReplyDto {
 	private int clubBoardReplyNo;
 	private String clubBoardReplyContent;
-	private Date clubBoardReplyDate;
+	private String clubBoardReplyDate;
 	private int clubBoardReplyGroup;
 	private Integer clubBoardReplyParent;
 	private int clubBoardReplyDepth;
