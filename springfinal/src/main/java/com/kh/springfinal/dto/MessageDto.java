@@ -1,5 +1,8 @@
 package com.kh.springfinal.dto;
 
+import java.util.List;
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,5 +27,5 @@ public class MessageDto {
 	private String fileName;
 	private long fileSize;
 	private String fileType;
-	
+
 }

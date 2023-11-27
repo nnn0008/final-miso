@@ -130,7 +130,7 @@ $(function () {
 
                     <div class="row p-1 mt-4">
                         <div class="col">
-                            <a href="/club/insert" class="badge rounded-pill bg-miso btn-miso p-3 club-make-link">
+                            <a href="/club/insert" class="badge rounded-pill bg-miso btn-miso p-3 club-make-link link">
                                 모임 만들기
                             </a>
                         </div>
@@ -140,7 +140,7 @@ $(function () {
                         <div class="col">
                             <a href="/pay/product" class="link d-flex align-items-center">
                                 <img src="${pageContext.request.contextPath}/images/Vector4.png" width="20%">
-                                <strong class="ms-3">회원권</strong>
+                                <strong class="ms-3">상품</strong>
                             </a>
                         </div>
                     </div>

@@ -9,6 +9,38 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 <jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
 
+<style>
+.club-image{
+width: 100%; 
+height: 100%;
+object-fit: cover;
+border-radius: 20%;
+}
+
+.alert.alert-dismissible.club-box{
+border-radius: 20%;
+width:120px;
+height: 120px;
+}
+.alert.alert-dismissible.circle-time{
+width: 120px;
+}
+
+.club-name{
+font-size: 14px;
+}
+
+.col.d-flex.flex-column.align-items-start{
+margin-right: 0px;
+}
+.btn.btn-in, .btn.btn-out{
+width: 90px;
+}
+.btn.btn-home{
+width: 110px;
+}
+
+</style>
 
 <!-- 해당 JSP 파일에 스크립트 포함 -->
 <script>
@@ -211,7 +243,7 @@
 	}
 </script>
 <script id="meeting-template" type="text/template">
-<div class="row">
+<div class="row mt-3">
 	<div class="col">
 
 <div class="card mb-3 meeting-card" style="width: 550px;">
@@ -226,9 +258,9 @@
         <p class="card-text meeting-location">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
         <p class="card-text"><small class="text-body-secondary meeting-date">Last updated 3 mins ago</small></p>
         <p class="card-text"><small class="text-body-secondary meeting-dday">Last updated 3 mins ago</small></p>
-		<button type="button" class="btn btn-light rounded-pill ml-auto meeting-attend">참석</button>
-		<button type="button" class="btn btn-danger rounded-pill ml-auto meeting-cancel">취소</button>
-		<a href="#" class="btn btn-info rounded-pill ml-auto meeting-go-club">동호회로</a>
+		<button type="button" class="btn btn-in btn-light rounded-pill ml-auto meeting-attend">참석</button>
+		<button type="button" class="btn btn-out btn-danger rounded-pill ml-auto meeting-cancel">취소</button>
+		<a href="#" class="btn btn-home btn-miso rounded-pill ml-auto meeting-go-club">동호회가기</a>
       </div>
     </div>
   </div>
@@ -238,249 +270,281 @@
 </script>
 <div class="row m-2 ">
 
-	<div id="iconContainer" class="d-flex justify-content-end ">
-		<i class="fa-solid fa-bars fa-xl iconContainer showCategoryButton"></i>
-	</div>
-	<div class="row mb-3">
-		<div class="col d-flex justify-content-end">
-			<div class="alert alert-dismissible alert-light categoryAlert">
-				<div class="row d-flex justify-content-center">
-					<div class="col-4 category text-center p-2 me-3"
-						style="background-color: #FFA5A5;">
-						<a href="#" class="link"> <img
-							src="${pageContext.request.contextPath}/images/sports.png"
-							width="100%">
-						</a>
-					</div>
-					<div class="col-4 category text-center p-2 me-3"
-						style="background-color: #FBEAB7;">
-						<a href="#" class="link"> <img
-							src="${pageContext.request.contextPath}/images/poetry.png"
-							width="100%">
-						</a>
-					</div>
-					<div class="col-4 category text-center p-2"
-						style="background-color: #C3DCFF;">
-						<a href="#" class="link"> <img
-							src="${pageContext.request.contextPath}/images/flight.png"
-							width="100%">
-						</a>
-					</div>
-				</div>
+<!-- 	<div id="iconContainer" class="d-flex justify-content-end "> -->
+<!-- 		<i class="fa-solid fa-bars fa-xl iconContainer showCategoryButton"></i> -->
+<!-- 	</div> -->
+<!-- 	<div class="row mb-3"> -->
+<!-- 		<div class="col d-flex justify-content-end"> -->
+<!-- 			<div class="alert alert-dismissible alert-light categoryAlert"> -->
+<!-- 				<div class="row d-flex justify-content-center"> -->
+<!-- 					<div class="col-4 category text-center p-2 me-3" -->
+<!-- 						style="background-color: #FFA5A5;"> -->
+<!-- 						<a href="#" class="link"> <img -->
+<%-- 							src="${pageContext.request.contextPath}/images/sports.png" --%>
+<!-- 							width="100%"> -->
+<!-- 						</a> -->
+<!-- 					</div> -->
+<!-- 					<div class="col-4 category text-center p-2 me-3" -->
+<!-- 						style="background-color: #FBEAB7;"> -->
+<!-- 						<a href="#" class="link"> <img -->
+<%-- 							src="${pageContext.request.contextPath}/images/poetry.png" --%>
+<!-- 							width="100%"> -->
+<!-- 						</a> -->
+<!-- 					</div> -->
+<!-- 					<div class="col-4 category text-center p-2" -->
+<!-- 						style="background-color: #C3DCFF;"> -->
+<!-- 						<a href="#" class="link"> <img -->
+<%-- 							src="${pageContext.request.contextPath}/images/flight.png" --%>
+<!-- 							width="100%"> -->
+<!-- 						</a> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
 
-				<div class="row d-flex justify-content-center mt-2">
-					<div class="col-4 category text-center p-2 me-3"
-						style="background-color: #FFA5E6;">
-						<a href="#" class="link"> <img
-							src="${pageContext.request.contextPath}/images/ferris-wheel.png"
-							width="100%">
-						</a>
-					</div>
-					<div class="col-4 category text-center p-2 me-3"
-						style="background-color: #E2CBC4;">
-						<a href="#" class="link"> <img
-							src="${pageContext.request.contextPath}/images/handbag.png"
-							width="100%">
-						</a>
-					</div>
-					<div class="col-4 category text-center p-2"
-						style="background-color: #8DACD9;">
-						<a href="#" class="link"> <img
-							src="${pageContext.request.contextPath}/images/earth.png"
-							width="100%">
-						</a>
-					</div>
-				</div>
+<!-- 				<div class="row d-flex justify-content-center mt-2"> -->
+<!-- 					<div class="col-4 category text-center p-2 me-3" -->
+<!-- 						style="background-color: #FFA5E6;"> -->
+<!-- 						<a href="#" class="link"> <img -->
+<%-- 							src="${pageContext.request.contextPath}/images/ferris-wheel.png" --%>
+<!-- 							width="100%"> -->
+<!-- 						</a> -->
+<!-- 					</div> -->
+<!-- 					<div class="col-4 category text-center p-2 me-3" -->
+<!-- 						style="background-color: #E2CBC4;"> -->
+<!-- 						<a href="#" class="link"> <img -->
+<%-- 							src="${pageContext.request.contextPath}/images/handbag.png" --%>
+<!-- 							width="100%"> -->
+<!-- 						</a> -->
+<!-- 					</div> -->
+<!-- 					<div class="col-4 category text-center p-2" -->
+<!-- 						style="background-color: #8DACD9;"> -->
+<!-- 						<a href="#" class="link"> <img -->
+<%-- 							src="${pageContext.request.contextPath}/images/earth.png" --%>
+<!-- 							width="100%"> -->
+<!-- 						</a> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
 
-				<div class="row d-flex justify-content-center mt-2">
-					<div class="col-4 category text-center p-2 me-3"
-						style="background-color: #F5CCFF;">
-						<a href="#" class="link"> <img
-							src="${pageContext.request.contextPath}/images/music-notes.png"
-							width="100%">
-						</a>
-					</div>
-					<div class="col-4 category text-center p-2 me-3"
-						style="background-color: #A5EE99;">
-						<a href="#" class="link"> <img
-							src="${pageContext.request.contextPath}/images/paint-palette.png"
-							width="100%">
-						</a>
-					</div>
-					<div class="col-4 category text-center p-2"
-						style="background-color: #F5F5F5;">
-						<a href="#" class="link"> <img
-							src="${pageContext.request.contextPath}/images/ballet.png"
-							width="100%">
-						</a>
-					</div>
-				</div>
+<!-- 				<div class="row d-flex justify-content-center mt-2"> -->
+<!-- 					<div class="col-4 category text-center p-2 me-3" -->
+<!-- 						style="background-color: #F5CCFF;"> -->
+<!-- 						<a href="#" class="link"> <img -->
+<%-- 							src="${pageContext.request.contextPath}/images/music-notes.png" --%>
+<!-- 							width="100%"> -->
+<!-- 						</a> -->
+<!-- 					</div> -->
+<!-- 					<div class="col-4 category text-center p-2 me-3" -->
+<!-- 						style="background-color: #A5EE99;"> -->
+<!-- 						<a href="#" class="link"> <img -->
+<%-- 							src="${pageContext.request.contextPath}/images/paint-palette.png" --%>
+<!-- 							width="100%"> -->
+<!-- 						</a> -->
+<!-- 					</div> -->
+<!-- 					<div class="col-4 category text-center p-2" -->
+<!-- 						style="background-color: #F5F5F5;"> -->
+<!-- 						<a href="#" class="link"> <img -->
+<%-- 							src="${pageContext.request.contextPath}/images/ballet.png" --%>
+<!-- 							width="100%"> -->
+<!-- 						</a> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
 
-				<div class="row d-flex justify-content-center mt-2">
-					<div class="col-4 category text-center p-2 me-3"
-						style="background-color: #FCCD7F;">
-						<a href="#" class="link"> <img
-							src="${pageContext.request.contextPath}/images/heart.png"
-							width="100%">
-						</a>
-					</div>
-					<div class="col-4 category text-center p-2 me-3"
-						style="background-color: #C7D290;">
-						<a href="#" class="link"> <img
-							src="${pageContext.request.contextPath}/images/cappuccino.png"
-							width="100%">
-						</a>
-					</div>
-					<div class="col-4 category text-center p-2"
-						style="background-color: #7B89C6;">
-						<a href="#" class="link"> <img
-							src="${pageContext.request.contextPath}/images/car.png"
-							width="100%">
-						</a>
-					</div>
-				</div>
+<!-- 				<div class="row d-flex justify-content-center mt-2"> -->
+<!-- 					<div class="col-4 category text-center p-2 me-3" -->
+<!-- 						style="background-color: #FCCD7F;"> -->
+<!-- 						<a href="#" class="link"> <img -->
+<%-- 							src="${pageContext.request.contextPath}/images/heart.png" --%>
+<!-- 							width="100%"> -->
+<!-- 						</a> -->
+<!-- 					</div> -->
+<!-- 					<div class="col-4 category text-center p-2 me-3" -->
+<!-- 						style="background-color: #C7D290;"> -->
+<!-- 						<a href="#" class="link"> <img -->
+<%-- 							src="${pageContext.request.contextPath}/images/cappuccino.png" --%>
+<!-- 							width="100%"> -->
+<!-- 						</a> -->
+<!-- 					</div> -->
+<!-- 					<div class="col-4 category text-center p-2" -->
+<!-- 						style="background-color: #7B89C6;"> -->
+<!-- 						<a href="#" class="link"> <img -->
+<%-- 							src="${pageContext.request.contextPath}/images/car.png" --%>
+<!-- 							width="100%"> -->
+<!-- 						</a> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
 
-				<div class="row d-flex justify-content-center mt-2">
-					<div class="col-4 category text-center p-2 me-3"
-						style="background-color: #FFF8B2;">
-						<a href="#" class="link"> <img
-							src="${pageContext.request.contextPath}/images/camera.png"
-							width="100%">
-						</a>
-					</div>
-					<div class="col-4 category text-center p-2 me-3"
-						style="background-color: #82CCB3;">
-						<a href="#" class="link"> <img
-							src="${pageContext.request.contextPath}/images/baseball-ball.png"
-							width="100%">
-						</a>
-					</div>
-					<div class="col-4 category text-center p-2"
-						style="background-color: #72A8DC;">
-						<a href="#" class="link"> <img
-							src="${pageContext.request.contextPath}/images/gamepad.png"
-							width="100%">
-						</a>
-					</div>
-				</div>
+<!-- 				<div class="row d-flex justify-content-center mt-2"> -->
+<!-- 					<div class="col-4 category text-center p-2 me-3" -->
+<!-- 						style="background-color: #FFF8B2;"> -->
+<!-- 						<a href="#" class="link"> <img -->
+<%-- 							src="${pageContext.request.contextPath}/images/camera.png" --%>
+<!-- 							width="100%"> -->
+<!-- 						</a> -->
+<!-- 					</div> -->
+<!-- 					<div class="col-4 category text-center p-2 me-3" -->
+<!-- 						style="background-color: #82CCB3;"> -->
+<!-- 						<a href="#" class="link"> <img -->
+<%-- 							src="${pageContext.request.contextPath}/images/baseball-ball.png" --%>
+<!-- 							width="100%"> -->
+<!-- 						</a> -->
+<!-- 					</div> -->
+<!-- 					<div class="col-4 category text-center p-2" -->
+<!-- 						style="background-color: #72A8DC;"> -->
+<!-- 						<a href="#" class="link"> <img -->
+<%-- 							src="${pageContext.request.contextPath}/images/gamepad.png" --%>
+<!-- 							width="100%"> -->
+<!-- 						</a> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
 
-				<div class="row d-flex justify-content-center mt-2">
-					<div class="col-4 category text-center p-2 me-3"
-						style="background-color: #F497A9;">
-						<a href="#" class="link"> <img
-							src="${pageContext.request.contextPath}/images/recipes.png"
-							width="100%">
-						</a>
-					</div>
-					<div class="col-4 category text-center p-2 me-3"
-						style="background-color: #B9FFE7;">
-						<a href="#" class="link"> <img
-							src="${pageContext.request.contextPath}/images/dog.png"
-							width="100%">
-						</a>
-					</div>
-					<div class="col-4 category text-center p-2 mb-5"
-						style="background-color: #DBEEFF;">
-						<a href="#" class="link"> <img
-							src="${pageContext.request.contextPath}/images/butterfly.png"
-							width="100%">
-						</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+<!-- 				<div class="row d-flex justify-content-center mt-2"> -->
+<!-- 					<div class="col-4 category text-center p-2 me-3" -->
+<!-- 						style="background-color: #F497A9;"> -->
+<!-- 						<a href="#" class="link"> <img -->
+<%-- 							src="${pageContext.request.contextPath}/images/recipes.png" --%>
+<!-- 							width="100%"> -->
+<!-- 						</a> -->
+<!-- 					</div> -->
+<!-- 					<div class="col-4 category text-center p-2 me-3" -->
+<!-- 						style="background-color: #B9FFE7;"> -->
+<!-- 						<a href="#" class="link"> <img -->
+<%-- 							src="${pageContext.request.contextPath}/images/dog.png" --%>
+<!-- 							width="100%"> -->
+<!-- 						</a> -->
+<!-- 					</div> -->
+<!-- 					<div class="col-4 category text-center p-2 mb-5" -->
+<!-- 						style="background-color: #DBEEFF;"> -->
+<!-- 						<a href="#" class="link"> <img -->
+<%-- 							src="${pageContext.request.contextPath}/images/butterfly.png" --%>
+<!-- 							width="100%"> -->
+<!-- 						</a> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
 
 
-	<div class="row mb-3">
-		<div class="col">
-			<span class="badge rounded-pill bg-miso">찜한 동호회</span>
-		</div>
-	</div>
+  <div class="row">
+        <div class="col text-start d-flex align-items-center">
+            <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+            <strong class="ms-2 main-text">찜한 모임</strong>
+        </div>
+    </div>
 
 	<c:if test="${wishList == null}">
-		<div class="row mb-3">
-			<div class="col">
-				<div class="col">아직 찜을 하지 않으셨군요. 많은 동호회가 있습니다.</div>
-			</div>
-		</div>
+		  <div class="row d-flex align-items-center mt-3">
+                <div class="col-3 text-start">
+                    <img src="${pageContext.request.contextPath}/images/open-door.png" width="100%">
+                </div>
+                	 <div class="col">
+                                	<div class="col">
+                                    <h5>찜한 모임이 없습니다.</h5>
+                                	</div>
+                                	<div class="col">
+                                    <h1>모임을 찜해보세요!</h1>
+                                	</div>
+                                </div>
+                                <div class="row p-1 mt-4 text-center">
+                    </div>
+            </div>
 	</c:if>
+
 
 	<c:forEach var="wishListDto" items="${wishList}">
 
-		<div class="col-4">
+			    <div class="col-3 d-flex flex-column align-items-start mt-3 p-0 m-0">
 
-			<div class="alert alert-dismissible alert-light">
-				<a
-					href="${pageContext.request.contextPath}/club/detail?clubNo=${wishListDto.clubNo}"
-					class="link"> ${wishListDto.clubName} </a>
-			</div>
-
-		</div>
-
-	</c:forEach>
-
-
-
-
-	<div class="row m-2 mt-3">
-
-		<div class="row mb-3">
-			<div class="col">
-				<span class="badge rounded-pill bg-miso">가입한 모임</span>
-			</div>
-		</div>
-
-		<c:if test="${joinList == null}">
-			<div class="row mb-3">
-				<div class="col">아직 가입하신 동호회가 없으시군요. 많은 동호회가 있습니다</div>
-			</div>
-		</c:if>
-
-		<c:forEach var="homeForClubVO" items="${joinList}">
-			<div class="col d-flex flex-column align-items-start mt-2">
-
-				<div class="alert alert-dismissible alert-light circle">
+				<div class="alert alert-dismissible club-box alert-light circle p-0">
 					<c:if test="${homeForClubVO.attachNo == null}">
 						<a
-							href="${pageContext.request.contextPath}/club/detail?clubNo=${homeForClubVO.clubNo}"
-							class="link d-flex justify-content-center align-items-center"
+							href="${pageContext.request.contextPath}/club/detail?clubNo=${wishListDto.clubNo}"
+							class="link"
 							style="height: 100%; padding: 0; box-sizing: border-box;">
-							이미지 없음<i class="fa-solid fa-plus"></i>
+							<img
+							src="${pageContext.request.contextPath}/images/basic-profile2.png" class="club-image">
 						</a>
 					</c:if>
 					<c:if test="${homeForClubVO.attachNo != null}">
 						<a
-							href="${pageContext.request.contextPath}/club/detail?clubNo=${homeForClubVO.clubNo}"
-							class="link d-flex justify-content-center align-items-center"
+							href="${pageContext.request.contextPath}/club/detail?clubNo=${wishListDto.clubNo}"
+							class="link"
 							style="height: 100%; padding: 0; box-sizing: border-box;"> <img
-							src="${pageContext.request.contextPath}/download?attachNo=${homeForClubVO.attachNo}">
+							src="${pageContext.request.contextPath}/club/image?clubNo=${wishListDto.clubNo}"  class="club-image">
 						</a>
 					</c:if>
 				</div>
 
-				<div>
-					<label class="circle-name text-center"></label>
-				</div>
-
-				<div class="alert alert-dismissible alert-light circle circle-time">
-					<a
-						href="${pageContext.request.contextPath}/club/detail?clubNo=${homeForClubVO.clubNo}"
-						class="link"> ${homeForClubVO.clubName} </a>
-				</div>
+			<div class="alert alert-dismissible alert-light circle circle-time p-0 text-center mt-2 d-flex justify-content-center align-items-center">
+			<a href="${pageContext.request.contextPath}/club/detail?clubNo=${wishListDto.clubNo}" class="link">
+			  <strong class="club-name">${wishListDto.clubName} </strong>
+			    </a>
+			</div>
 
 			</div>
 		</c:forEach>
+	
 
-	</div>
 
-	<div class="row m-2 mt-3">
 
-		<div class="row mb-3">
-			<div class="col">
-				<span class="badge rounded-pill bg-miso">내 모임 정모</span>
-			</div>
-		</div>
+  <div class="row mt-4">
+        <div class="col text-start d-flex align-items-center">
+            <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+            <strong class="ms-2 main-text">가입한 모임</strong>
+        </div>
+    </div>
+
+		<c:if test="${joinList == null}">
+		 <div class="row d-flex align-items-center mt-3">
+                <div class="col-3 text-start">
+                    <img src="${pageContext.request.contextPath}/images/open-door.png" width="100%">
+                </div>
+                	 <div class="col">
+                                	<div class="col">
+                                    <h5>아직 가입하신 모임이 없으시군요.</h5>
+                                	</div>
+                                	<div class="col">
+                                    <h1>모임에 가입해보세요!</h1>
+                                	</div>
+                                </div>
+                                <div class="row p-1 mt-4 text-center">
+                    </div>
+            </div>
+		</c:if>
+
+		<c:forEach var="homeForClubVO" items="${joinList}">
+		
+    <div class="col-3 d-flex flex-column align-items-start mt-3 p-0 m-0">
+        
+        <div class="alert alert-dismissible club-box alert-light circle p-0">
+            <c:if test="${homeForClubVO.attachNo == null}">
+                <a href="${pageContext.request.contextPath}/club/detail?clubNo=${homeForClubVO.clubNo}" class="link" style="height: 100%; padding: 0; box-sizing: border-box;">
+                    <img src="${pageContext.request.contextPath}/images/basic-profile2.png" class="club-image">
+                </a>
+            </c:if>
+            <c:if test="${homeForClubVO.attachNo != null}">
+                <a href="${pageContext.request.contextPath}/club/detail?clubNo=${homeForClubVO.clubNo}" class="link" style="height: 100%; padding: 0; box-sizing: border-box;">
+                    <img src="${pageContext.request.contextPath}/club/image?clubNo=${homeForClubVO.clubNo}"  class="club-image">
+                </a>
+            </c:if>
+        </div>
+
+        <div class="alert alert-dismissible alert-light circle circle-time p-0 text-center mt-2 d-flex justify-content-center align-items-center">
+            <a href="${pageContext.request.contextPath}/club/detail?clubNo=${homeForClubVO.clubNo}" class="link">
+                <strong class="club-name">${homeForClubVO.clubName}</strong>
+            </a>
+        </div>
+        
+    </div>
+</c:forEach>
+
+
+
+  <div class="row mt-4">
+        <div class="col text-start d-flex align-items-center">
+            <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+            <strong class="ms-2 main-text">내 모임 정모</strong>
+        </div>
+    </div>
 		
 		<div class="row mb-3 meeting-list"></div>
 
@@ -541,6 +605,6 @@
 <%-- 		</c:forEach> --%>
 
 	</div>
-</div>
+
 
 <jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>

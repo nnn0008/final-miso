@@ -50,10 +50,10 @@ a.link:hover {
     --bs-btn-disabled-border-color: #ACCEFF;
 }
 
-.btn-miso {
-    width: 170px;
-    font-size: 15px;
-}
+/*.btn-miso {*/
+/*    width: 170px;*/
+/*    font-size: 15px;*/
+/*}*/
 
 .category {
     border-radius: 50%;

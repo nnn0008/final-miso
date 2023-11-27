@@ -219,7 +219,7 @@ function connect() {
                     </div>
 
                     <div class="row">
-                        <div class="col p-0 pt-3 ps-1 text-inc">
+                        <div class="col p-0 pt-3 ps-3 text-inc">
                             이용약관 개인정보처리방침 쿠키 정책
  © 2023 miso, Inc.
                         </div>                     

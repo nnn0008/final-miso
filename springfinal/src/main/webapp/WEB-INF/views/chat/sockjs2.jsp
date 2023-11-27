@@ -470,26 +470,73 @@ $(document).ready(function () {
 		var clubMemberRank;
 
 		
-		if (data.messageType === 'join') {
-		    var chatSender = data.chatSender;
+// 		if (data.messageType === 'join') {
+// 		    var chatSender = data.chatSender;
 		    
-		    var onlineMemberElement = document.getElementById("clubMemberId_" + chatSender);
-		    console.log(onlineMemberElement);
+// 		    var onlineMemberElement = document.getElementById("clubMemberId_" + chatSender);
+// 		    console.log(onlineMemberElement);
 
-		    if (onlineMemberElement) {
-		        // 온라인 상태인 경우
-		        if (onlineMemberElement.classList.contains('offline-icon')) {
-		            onlineMemberElement.classList.remove('offline-icon');
-		            onlineMemberElement.classList.add('online-icon');
-		            console.log('온라인 상태입니다.');
-		        } else {
-		            console.log('이미 온라인 상태입니다.');
-		        }
-		    } else {
-		        // 오프라인 상태인 경우
-		        console.log('오프라인 상태입니다.');
-		    }
-		}
+// 		    if (onlineMemberElement) {
+// 		        // 온라인 상태인 경우
+// 		        if (onlineMemberElement.classList.contains('offline-icon')) {
+// 		            onlineMemberElement.classList.remove('offline-icon');
+// 		            onlineMemberElement.classList.add('online-icon');
+// 		            console.log('온라인 상태입니다.');
+// 		        } else {
+// 		            console.log('이미 온라인 상태입니다.');
+// 		        }
+// 		    } else {
+// 		        // 오프라인 상태인 경우
+// 		        console.log('오프라인 상태입니다.');
+// 		    }
+// 		}
+
+
+    if (data.messageType === 'join') {
+        var chatSender = data.chatSender;
+        var memberIds = data.memberIds;
+
+        // 현재 멤버가 온라인 상태인지 확인
+        var onlineMemberElement = document.getElementById("clubMemberId_" + chatSender);
+
+        if (onlineMemberElement) {
+            // 온라인 상태인 경우
+            if (onlineMemberElement.classList.contains('offline-icon')) {
+                onlineMemberElement.classList.remove('offline-icon');
+                onlineMemberElement.classList.add('online-icon');
+                console.log('온라인 상태입니다.');
+            } else {
+                console.log('이미 온라인 상태입니다.');
+            }
+        } else {
+            // 오프라인 상태인 경우
+            console.log('오프라인 상태입니다.');
+        }
+
+        // 다른 온라인 멤버 상태 업데이트
+        if (memberIds && memberIds.length > 0) {
+            for (var i = 0; i < memberIds.length; i++) {
+                var memberId = memberIds[i];
+                var otherOnlineMemberElement = document.getElementById("clubMemberId_" + memberId);
+
+                if (otherOnlineMemberElement) {
+                    // 다른 멤버가 온라인 상태인 경우
+                    if (otherOnlineMemberElement.classList.contains('offline-icon')) {
+                        otherOnlineMemberElement.classList.remove('offline-icon');
+                        otherOnlineMemberElement.classList.add('online-icon');
+                        console.log('다른 멤버 ' + memberId + '도 온라인 상태입니다.');
+                    } else {
+                        console.log('다른 멤버 ' + memberId + '는 이미 온라인 상태입니다.');
+                    }
+                } else {
+                    // 다른 멤버가 오프라인 상태인 경우
+                    console.log('다른 멤버 ' + memberId + '는 오프라인 상태입니다.');
+                }
+            }
+        }
+    }
+
+
 
 
 

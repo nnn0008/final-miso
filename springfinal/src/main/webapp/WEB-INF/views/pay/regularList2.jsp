@@ -44,11 +44,13 @@
 <script>
 $(function () {
     // 클럽 선택 드롭다운 변경 시
-    $("#clubSelect").click(function () {
-        var clubNo = $(this).val();
-        // 선택한 클럽의 clubNo 값을 저장
-        $(this).data("clubNo", clubNo);
-    });
+  $("#clubSelect").change(function () {
+    var clubNo = $(this).val();
+    console.log(clubNo); // 디버깅을 위한 로그
+    // 선택한 클럽의 clubNo 값을 저장
+    $(this).data("clubNo", clubNo);
+});
+
 
     $("[name=productNo]").change(function () {
         var checked = $(this).prop("checked");

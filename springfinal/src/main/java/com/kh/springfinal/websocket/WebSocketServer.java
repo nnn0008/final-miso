@@ -277,8 +277,15 @@ public class WebSocketServer extends TextWebSocketHandler{
 	        Map<String, Object> map = new HashMap<>();
 	        map.put("chatRoomNo", chatRoomNo);        
 	        map.put("session", session);
+	        map.put("memberId", memberId);
 	        sessionList.add(map);
 
+	        List<String> memberIds = new ArrayList<>();
+	        for (Map<String, Object> mapSessionList : sessionList) {
+	            String memberIdToAdd = (String) mapSessionList.get("memberId");
+	            memberIds.add(memberIdToAdd);
+	        }
+	        
 	        System.out.println("Current sessionList: " + sessionList);
 	        
 	        //채팅 목록을 검색
@@ -288,9 +295,6 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            ChatListVO firstChat = chatList.get(0);
 	            String clubName = firstChat.getClubName();
 	            String clubExplain = firstChat.getClubExplain();
-//	            int clubNo = firstChat.getClubNo();
-//	            
-//	            String clubMemberRank = chatRoomDao.clubMemberRank(memberId, clubNo);
 
 	            // 여기에서 chatRoomNo를 활용하여 처리
 	            // 채팅 내역이 있을 경우에만 채팅 내역을 전송
@@ -300,7 +304,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            for (Map<String, Object> mapSessionList : sessionList) {
 	                Integer roomNo = (Integer) mapSessionList.get("chatRoomNo");
 	                WebSocketSession sess = (WebSocketSession) mapSessionList.get("session");
-
+	                
 	                if (roomNo.equals(chatRoomNo)) {
 	                    Map<String, Object> mapToSend = new HashMap<>();
 	                    mapToSend.put("chatRoomNo", roomNo.toString());
@@ -311,12 +315,16 @@ public class WebSocketServer extends TextWebSocketHandler{
 	                    mapToSend.put("messageType", MessageType.join);
 	                    mapToSend.put("memberLevel", client.getMemberLevel());
 //	                    mapToSend.put("clubMemberRank", clubMemberRank);
-
+	                    
+	                 // memberId 리스트 추가
+	                    mapToSend.put("memberIds", memberIds);
+	                    
 	                    String joinMessageJson = mapper.writeValueAsString(mapToSend);
 	                    TextMessage tm = new TextMessage(joinMessageJson);
 
 	                    sess.sendMessage(tm);
 	                }
+
 	            }
 	        } else {
 	            // 채팅 내역이 없을 때의 처리
