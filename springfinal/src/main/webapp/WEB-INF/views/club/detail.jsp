@@ -419,7 +419,23 @@ $(".meetingFix").change(function(){
        		
                 	if(response==4){
                 		
-       				$(".joinModal").modal('show');
+                		  
+                		        $.ajax({
+                		            url: "http://localhost:8080/rest/clubMember",
+                		            method: "post",
+                		            data: { clubNo: clubNo, clubMemberId: memberId, joinMessage: joinMessage },
+                		            success: function (response) {
+                		            
+                		             $(".cancel").click();
+                		             
+                		             alert("가입되었습니다.");
+                		             
+                		             location.reload();
+                		             
+                		                
+                		            }
+                		        });
+                		        
        				
                 	}
                 	
