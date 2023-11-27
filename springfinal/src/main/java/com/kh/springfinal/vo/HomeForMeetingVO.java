@@ -21,6 +21,7 @@ public class HomeForMeetingVO {
 	private String dday;
 	private String clubName;
 	private Integer attachNo;
+	private boolean attended;
 	
 	 public String getFormattedMeetingDate() throws ParseException {
         SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

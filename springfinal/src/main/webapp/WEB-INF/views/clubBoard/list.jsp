@@ -55,6 +55,7 @@ font-size: 18px;
 	//jQuery를 이용한 스크롤바의 위치를 보기
 	 $(function() {
         var keyword;
+        $(".go-upside").hide();
         
         if(keyword == null){
 	        //최초의 페이지네이션
@@ -139,6 +140,13 @@ font-size: 18px;
 						var photo = $("<img>").attr("src", window.contextPath + "/clubBoard/download?attachNo=" + clubBoardAllDto.attachNoCbi3);
 						$(htmlTemplate).find(".text-image").html(photo);
 					}
+					//좋아요 했는지를 표시하여 하트의 클래스를 변경
+					if(response[i].liked == true){
+						$(htmlTemplate).find(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-solid");
+					}
+					else{
+						$(htmlTemplate).find(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-regular");
+					}
 					//좋아요
 					$(htmlTemplate).find(".text-like-count").text(clubBoardAllDto.clubBoardLikecount);
 					//댓글 수
@@ -192,7 +200,7 @@ font-size: 18px;
             var scrollPercentage = (scrollTop / (documentHeight - windowHeight)) * 100;
             
         	//콘솔에 스크롤 위치 출력
-            //console.log('스크롤 위치:', scrollPercentage.toFixed(2) + '%');
+            console.log('스크롤 위치:', scrollPercentage.toFixed(2) + '%');
 
             // 표시할 퍼센트 값을 업데이트
             scrollPercent.text(scrollPercentage.toFixed(2) + '%');
@@ -202,6 +210,7 @@ font-size: 18px;
 	        var clubNo = params.get("clubNo");
 	        if(scrollPercentage.toFixed(2) >= 65 && !loading){
 	        	currentPage ++;
+	        	$(".go-upside").show();
 	        	//console.log('로딩 시작 - 현재 페이지 = ', currentPage);
 	        	loading = true;
 	            
@@ -259,7 +268,14 @@ font-size: 18px;
 	    						var photo = $("<img>").attr("src", window.contextPath + "/clubBoard/download?attachNo=" + clubBoardAllDto.attachNoCbi3);
 	    						$(htmlTemplate).find(".text-image").html(photo);
 	    					}
-	    					//좋아요
+	    					//좋아요 했는지를 표시하여 하트의 클래스를 변경
+	    					if(response[i].liked == true){
+	    						$(htmlTemplate).find(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-solid");
+	    					}
+	    					else{
+	    						$(htmlTemplate).find(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-regular");
+	    					}
+	    					//좋아요 카운트
 	    					$(htmlTemplate).find(".text-like-count").text(clubBoardAllDto.clubBoardLikecount);
 	    					//댓글 수
 	    					$(htmlTemplate).find(".text-reply-count").text(clubBoardAllDto.clubBoardReplyCount);
@@ -321,7 +337,7 @@ function pageReset(){
 			</div>
 			<div class="row">
 				<div class="col text-heart">
-					<i class="fa-regular fa-heart me-1" style="color: red"></i>좋아요<span class="text-like-count ms-1">좋아요 수</span>
+					<i class="fa-regular fa-heart me-1" style="color: red"></i> 좋아요<span class="text-like-count ms-1">좋아요 수</span>
 					<i class="fa-regular fa-message ms-3"></i><span class="text-reply-count ms-1">댓글 수</span>
 				</div>
 				<div class="col text-end">

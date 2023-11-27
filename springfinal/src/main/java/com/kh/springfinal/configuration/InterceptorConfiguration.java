@@ -84,6 +84,7 @@
 //		.addPathPatterns("/club/detail");
 //		registry.addInterceptor(boardInterceptor)
 //		.addPathPatterns("/clubBoard/write")
+//		.addPathPatterns("/clubBoard/edit")
 //		.addPathPatterns("/photo/list")
 //		.addPathPatterns("/clubBoard/list")
 //		.addPathPatterns("/clubBoard/detail");

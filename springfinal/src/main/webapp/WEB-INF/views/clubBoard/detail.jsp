@@ -581,9 +581,13 @@ $(function(){
                 <i class="fas fa-ellipsis-vertical"  id="btnGroupDrop1"  class="btn dropdown-toggle show" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></i>
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" data-popper-placement="bottom-start" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, 41px);">
                     <a class="dropdown-item" href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubBoardDto.clubNo}"">목록</a>
-                    <a class="dropdown-item" href="${pageContext.request.contextPath}/clubBoard/edit?clubBoardNo=${clubBoardDto.clubBoardNo}">수정</a>
-                     <a class="dropdown-item" href="${pageContext.request.contextPath}/clubBoard/delete?clubBoardNo=${clubBoardDto.clubBoardNo}"">삭제</a>
-                      <a class="dropdown-item" href="#exampleModal" data-bs-toggle="modal" data-bs-target="#exampleModal">신고</a>
+                    <c:if test="${sessionScope.name == clubMemberDto.clubMemberId}">
+	                    <a class="dropdown-item" href="${pageContext.request.contextPath}/clubBoard/edit?clubBoardNo=${clubBoardDto.clubBoardNo}">수정</a>
+	                    <a class="dropdown-item" href="${pageContext.request.contextPath}/clubBoard/delete?clubBoardNo=${clubBoardDto.clubBoardNo}"">삭제</a>    
+	                </c:if>                
+                    <c:if test="${sessionScope.name != clubMemberDto.clubMemberId}">
+	                    <a class="dropdown-item" href="#exampleModal" data-bs-toggle="modal" data-bs-target="#exampleModal">신고</a>
+                    </c:if>
                 </div>
         </div>
 </div>

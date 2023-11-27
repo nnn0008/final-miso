@@ -202,22 +202,25 @@ public class ClubBoardRestController {
 	
 	@GetMapping("/page")
 	public List<ClubBoardAllDto> clubBoardList(@ModelAttribute("vo")PaginationVO vo, @RequestParam int clubNo, @RequestParam(required=false) int page, 
-			@RequestParam(required=false) String keyword) {
+			@RequestParam(required=false) String keyword, HttpSession session) {
+		String memberId = (String) session.getAttribute("name");
 		int count = clubBoardDao.clubBoardCount(vo, clubNo);
+		//각각의 게시글에 좋아요를 했나?
 		vo.setPage(page);
 		vo.setCount(count);
 		if(keyword != null) {
 			vo.setKeyword(keyword);
 		}
 		List<ClubBoardAllDto> list = clubBoardDao.selectListByPage(vo, clubNo);
-		//더 불러 올 것이 없다면?
-//		if(list.size() == 0) {
-//			return;
-//		}
-//		log.debug("page={}", page);
-//		log.debug("keyword={}",keyword);
-//		log.debug("vo={}", vo);
-//		log.debug("list={}", list.size());
+		ClubMemberDto clubMemberDto = clubBoardDao.selectOneClubMemberNo(memberId, clubNo);
+		for(ClubBoardAllDto dto : list) {
+//			ClubBoardLikeDto clubBoardLikeDto = 
+			ClubBoardDto clubBoardDto = clubBoardDao.selectOnes(dto.getClubBoardNo()); //리스트에 들어있는 게시글 번호들
+			boolean isLike = clubBoardLikeDao.isLike(clubMemberDto.getClubMemberNo(), dto.getClubBoardNo());
+			
+			dto.setLiked(isLike);
+		}
+
 		return list;
 	}
 }

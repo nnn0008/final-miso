@@ -9,4 +9,5 @@ public interface ClubBoardLikeDao {
 	//ClubBoardLikeDto selectOne(int clubBoardNo);
 	int count(int clubBoardNo);
 	boolean check(ClubBoardLikeDto clubBoardLikeDto);
+	boolean isLike(int clubMemberNo, int clubBoardNo);
 }

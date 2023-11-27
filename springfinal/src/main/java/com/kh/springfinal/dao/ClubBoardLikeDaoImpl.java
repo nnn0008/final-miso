@@ -1,6 +1,7 @@
 package com.kh.springfinal.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,13 @@ public class ClubBoardLikeDaoImpl implements ClubBoardLikeDao{
 	@Override
 	public boolean check(ClubBoardLikeDto clubBoardLikeDto) {
 		List<ClubBoardLikeDto> list = sqlSession.selectList("clubBoardLike.check", clubBoardLikeDto);
+		return list.isEmpty() ? false : true;
+	}
+	
+	@Override
+	public boolean isLike(int clubMemberNo, int clubBoardNo) {
+		Map params = Map.of("clubMemberNo", clubMemberNo, "clubBoardNo", clubBoardNo);
+		List<ClubBoardLikeDto> list = sqlSession.selectList("clubBoardLike.check", params);
 		return list.isEmpty() ? false : true;
 	}
 	
