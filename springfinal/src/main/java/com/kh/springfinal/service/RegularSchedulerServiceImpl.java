@@ -46,7 +46,7 @@ public class RegularSchedulerServiceImpl implements RegularSchedulerService {
 	
 	
 //	@Scheduled(cron = "0 0 9 * * *")//매일 9시 마다 데이터확인
-	@Scheduled(cron = "0 30 16 * * *")//매일 9시 마다 데이터확인
+	@Scheduled(cron = "0 10 18 * * *")//매일 9시 마다 데이터확인
 
 	
 

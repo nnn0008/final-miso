@@ -29,11 +29,11 @@ public boolean regularYear(PaymentRegularDto paymentRegularDto) throws URISyntax
 	return productName.contains("1년");
 }
 
-	public boolean endToday(PaymentDto paymentDto) {//단건결제 end날짜가 오늘
-		LocalDate today = LocalDate.now();
-		LocalDate paymentEnd = ((java.sql.Date) paymentDto.getPaymentEnd()).toLocalDate();
-		return today.isEqual(paymentEnd);
-	}
+public boolean endToday(PaymentDto paymentDto) {
+    LocalDate today = LocalDate.now();
+    LocalDate paymentEnd = ((java.sql.Date) paymentDto.getPaymentEnd()).toLocalDate();
+    return today.isEqual(paymentEnd);
+}
 	
 	
 
