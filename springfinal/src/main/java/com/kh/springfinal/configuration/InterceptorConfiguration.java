@@ -32,6 +32,18 @@
 //	@Autowired
 //	private BoardInterceptor boardInterceptor;
 //	
+//	@Autowired
+//	private ClubJoinInterceptor clubJoinInterceptor;
+//	
+//	@Autowired
+//	private ClubManagerInterceptor clubManagerInterceptor;
+//	
+//	@Autowired
+//	private ClubMemberInterceptor clubMemberInterceptor;
+//	
+//	@Autowired
+//	private ClubCreateInterceptor clubCreateInterceptor;
+//	
 //	//인터셉트를 추가할 수 있는 설정 메소드(registry 저장소에 설정)
 //	//등록 시 주소의 패턴 설정 방법
 //	//- *이 한 개면 동일한 엔드포인트 내에서만 적용
@@ -90,6 +102,21 @@
 //		//[5] 관리자용 인터셉터 등록
 //		registry.addInterceptor(adminInterceptor)
 //		.addPathPatterns("/admin/**", "/board/deleteByAdmin");
+//		
+//		registry.addInterceptor(clubJoinInterceptor)
+//		.addPathPatterns("/rest/clubMember");
+//		
+//		registry.addInterceptor(clubManagerInterceptor)
+//		.addPathPatterns("/rest/meeting/insert","/rest/meeting/edit",
+//				"/rest/meeting/delete","/rest/upgradeRank");
+//		
+//		registry.addInterceptor(clubMemberInterceptor)
+//		.addPathPatterns("/rest/meeting/attendDelete","/rest/meeting/attend");
+//		
+//		regisrty.addInterceptor(clubCreateInterceptor)
+//		.addPathPatterns("/club/insert");
+//		
+//		
 //	}
 //}		
 //

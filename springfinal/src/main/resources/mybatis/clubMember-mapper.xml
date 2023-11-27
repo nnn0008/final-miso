@@ -143,6 +143,12 @@
 			)TMP
 		)where rn between 1 and 12
     </select>
+    
+    <select id="joinedClub" resultType="int">
+    	
+    	select count(*) club_member where club_no=#{clubNo} and club_member_id=#{clubMemberId}
+    
+    </select>
 
     
     

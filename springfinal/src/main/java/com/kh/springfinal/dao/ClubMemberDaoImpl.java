@@ -149,6 +149,19 @@ public class ClubMemberDaoImpl implements ClubMemberDao{
 	public List<HomeForClubVO> selectListByMemberId(String memberId) {
 		return sqlSession.selectList("clubMember.findListByMemberId", memberId);
 	}
+
+	@Override
+	public boolean joinedClub(int clubNo, String memberId) {
+			Map<String,Object> params = new HashMap<>();
+		
+		params.put("clubNo", clubNo);
+		params.put("memberId", memberId);
+		
+		int result = sqlSession.selectOne("clubMember.joinedClub",params);
+		
+		return result>=1;
+		
+	}
 	
 	
 	
