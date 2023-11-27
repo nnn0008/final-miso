@@ -213,6 +213,7 @@ public class ClubRestController {
 		}
 		
 		
+		
 		return clubList;
 		
 		
@@ -246,7 +247,7 @@ public class ClubRestController {
 			list.setLikeClub(likeClub);
 			
 		}
-		
+		log.debug("clubList={}",clubList);
 		
 		return clubList;
 		

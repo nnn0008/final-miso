@@ -406,21 +406,44 @@ $(".meetingFix").change(function(){
         	$(".modalJoinMessage").addClass("is-invalid");
         }
         else{
-        $.ajax({
-            url: "http://localhost:8080/rest/clubMember",
-            method: "post",
-            data: { clubNo: clubNo, clubMemberId: memberId, joinMessage: joinMessage },
-            success: function (response) {
-            
-             $(".cancel").click();
-             
-             alert("가입되었습니다.");
-             
-             location.reload();
-             
-                
-            }
-        });
+    		
+       	    $.ajax({
+                url: window.contextPath + "/rest/joinPossible",
+                method: "get",
+                data:{
+                	clubNo:clubNo
+                },
+                success: function (response) {
+                	
+                	console.log(response)
+       		
+                	if(response==4){
+                		
+       				$(".joinModal").modal('show');
+       				
+                	}
+                	
+                	else if(response==3){
+                		
+                		alert("가입할 수 있는 동호회 수를 넘으셨습니다. 파워유저 최대 12개")
+                		$(".joinModal").modal('hide');
+                	}
+                	else if(response==2){
+                		
+                		alert("가입할 수 있는 동호회 수를 넘으셨습니다. 일반유저 최대 5개")
+                		$(".joinModal").modal('hide');
+                	}
+                	
+                	else{
+                		
+                		alert("동호회 정원이 꽉 찼습니다.")
+                		$(".joinModal").modal('hide');
+                	}
+       		
+       		
+       		
+       	}
+       	    })
         }
     });
     
@@ -1168,7 +1191,7 @@ $(".meetingFix").change(function(){
 		 	if (bodyClubMemberNo==0) {
 		 		$(".join-modal-title").text("가입이 필요한 활동입니다!").css("color", "red");
 	   			
-	   			$(".joinModal").modal("show");
+		 		$(".joinModal").modal("show");
    			
    		}  
 		 	else{
@@ -1193,7 +1216,9 @@ $(".meetingFix").change(function(){
    		
    	});
     	
-	$(".joinOpen").click(function(){
+
+    	
+	  $(".joinOpen").click(function(){
 		
 		console.log("조인오픈");
 	   	
@@ -1237,7 +1262,7 @@ $(".meetingFix").change(function(){
    	}
    	    })
    	    
-   	});
+   	});  
   
    	
    	
@@ -1257,7 +1282,7 @@ $(".meetingFix").change(function(){
    			
    		 $(".join-modal-title").text("가입이 필요한 활동입니다!").css("color", "red");
    			
-   			$(".joinModal").modal("show");
+   		$(".joinModal").modal("show");
    			
    		} 
 		
