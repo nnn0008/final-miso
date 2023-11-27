@@ -99,7 +99,8 @@
     ma.MAJOR_CATEGORY_NAME,
     mi.MINOR_CATEGORY_NAME,
     mi.MINOR_CATEGORY_NO,
-    a.attach_no 
+    a.attach_no,
+    sysdate-c.club_date+1 as plus_day
     FROM Club c 
 	JOIN ZIP_CODE zc ON c.ZIP_CODE_NO =zc.ZIP_CODE_NO 	
 	JOIN Minor_CATEGORY mi ON c.CLUB_CATEGORY = mi.MINOR_CATEGORY_NO 
@@ -201,7 +202,8 @@ ORDER BY
     ma.MAJOR_CATEGORY_NAME,
     mi.MINOR_CATEGORY_NAME,
     mi.MINOR_CATEGORY_NO,
-    a.attach_no 
+    a.attach_no,
+    sysdate-c.club_date+1 as plus_day 
 FROM 
     Club c 
 JOIN 
@@ -284,7 +286,8 @@ ORDER BY
     ma.MAJOR_CATEGORY_NAME,
     mi.MINOR_CATEGORY_NAME,
     mi.MINOR_CATEGORY_NO, 
-    a.attach_no 
+    a.attach_no,
+    sysdate-c.club_date+1 as plus_day 
     FROM Club c
 	JOIN ZIP_CODE zc ON c.ZIP_CODE_NO =zc.ZIP_CODE_NO 
 	JOIN Minor_CATEGORY mi ON c.CLUB_CATEGORY = mi.MINOR_CATEGORY_NO 
@@ -358,7 +361,8 @@ ORDER BY
     ma.MAJOR_CATEGORY_NAME,
     mi.MINOR_CATEGORY_NAME,
     mi.MINOR_CATEGORY_NO, 
-    a.attach_no 
+    a.attach_no,
+    sysdate-c.club_date+1 as plus_day 
     FROM Club c
 	JOIN ZIP_CODE zc ON c.ZIP_CODE_NO =zc.ZIP_CODE_NO 
 	JOIN Minor_CATEGORY mi ON c.CLUB_CATEGORY = mi.MINOR_CATEGORY_NO 

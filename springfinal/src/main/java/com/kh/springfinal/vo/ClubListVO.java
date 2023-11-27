@@ -18,5 +18,6 @@ public class ClubListVO {
 	private int memberCount;
 	private int attachNo;
 	private boolean likeClub;
+	private int plusDay;
 
 }

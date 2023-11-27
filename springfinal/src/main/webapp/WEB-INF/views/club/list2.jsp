@@ -147,6 +147,15 @@ $(function(){
 
                	}
                	
+               	console.log(clubDto.plusDay);
+               	if(clubDto.plusDay<=7){
+            		
+            		
+            		
+                	$(htmlTemplate).find("[name=new]").attr('class',"badge rounded-pill bg-danger badge-new ms-2").text("NEW");
+                		
+                	}
+               	
                	$(htmlTemplate).find(".club-name").text(clubDto.clubName).data("no", clubDto.clubNo);
                	$(htmlTemplate).find(".club-explain").text(clubDto.clubExplain);
                	$(htmlTemplate).find(".club-sidos").text((clubDto.sido)+" "+(clubDto.sigungu));
@@ -212,6 +221,14 @@ $(function(){
                		$(htmlTemplate).find(".club-image-list").attr('src',"/images/basic-profile2.png");
 
                	}
+               	
+               	if(clubDto.plusDay<=7){
+            		
+            		
+            		
+                	$(htmlTemplate).find("[name=new]").attr('class',"badge rounded-pill bg-danger badge-new ms-2").text("NEW");
+                		
+                	}
                	
                	$(htmlTemplate).find(".club-name").text(clubDto.clubName).data("no", clubDto.clubNo);
                	$(htmlTemplate).find(".club-explain").text(clubDto.clubExplain);
@@ -344,7 +361,7 @@ $(function(){
     <div class="col-2">
         <div class="d-flex align-items-center">
                     <img width="80" height="80" class="club-image-list">
-            <span class="badge rounded-pill bg-danger badge-new ms-2">NEW</span>
+            <span name="new"></span>
         </div>
     </div>
     <div class="col-10">
