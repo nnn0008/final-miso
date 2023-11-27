@@ -44,13 +44,13 @@
    </div>
    <div class="col-2 text-end total-wrapper"></div>
 </div>
+  <button class="btn btn-success purchase-btn" type="button" data-club-no="${clubNo}" data-product-no="${productDto.productNo}">
+         <img src="/images/payment.png">
+      </button>
 </c:forEach>
 
 
 <hr>
-  <button class="btn btn-success purchase-btn" type="button" data-club-no="${clubNo}" data-product-no="${productDto.productNo}">
-         <img src="/images/payment.png">
-      </button>
 </div>
 </div>
 </div>
