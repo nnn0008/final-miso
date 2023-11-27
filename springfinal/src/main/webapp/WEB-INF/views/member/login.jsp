@@ -31,7 +31,11 @@
     <style>
 	.error-feed{
 		display: none;
-	}
+		}
+		.btn-miso{
+	font-size: 20px;	
+		}
+	
 </style>
 <script>
 	window.contextPath = "${pageContext.request.contextPath}";
@@ -112,7 +116,9 @@
                         </div>
                         <div class="row mt-3">
                             <div class="col-sm-6 offset-sm-3  col-lg-10 offset-lg-1">
-                                <button class="btn btn-success bg-miso btn-lg w-100">로그인</button>
+                                <button class="btn btn-miso bg-miso btn-lg w-100">
+                                <strong>로그인</strong>
+                                </button>
                             </div>
                         </div>
                     </form>
