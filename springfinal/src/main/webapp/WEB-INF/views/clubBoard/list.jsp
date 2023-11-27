@@ -200,7 +200,7 @@ font-size: 18px;
             var scrollPercentage = (scrollTop / (documentHeight - windowHeight)) * 100;
             
         	//콘솔에 스크롤 위치 출력
-            //console.log('스크롤 위치:', scrollPercentage.toFixed(2) + '%');
+            console.log('스크롤 위치:', scrollPercentage.toFixed(2) + '%');
 
             // 표시할 퍼센트 값을 업데이트
             scrollPercent.text(scrollPercentage.toFixed(2) + '%');

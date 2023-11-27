@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.springfinal.dao.ClubBoardDao;
+import com.kh.springfinal.dao.ClubMemberDao;
 import com.kh.springfinal.dao.HomeDao;
 import com.kh.springfinal.dao.MeetingMemberDao;
 import com.kh.springfinal.dto.ClubMemberDto;
@@ -39,14 +40,22 @@ public class HomeRestController {
 	@Autowired
 	private ClubBoardDao clubBoardDao;
 	
-	@GetMapping("page")
+	@GetMapping("/page")
 	public List<HomeForMeetingVO> page(@ModelAttribute("vo")PaginationVO vo, @RequestParam(required=false) int page, HttpSession session){
 		String memberId = (String)session.getAttribute("name");
 		int count = homeDao.meetingCount(vo, memberId);
 		vo.setPage(page);
 		vo.setCount(count);
 		List<HomeForMeetingVO> list = homeDao.selectList(vo, memberId);
-		
+		for(HomeForMeetingVO hVO : list) {
+			//목록에 있는 미팅에 참가했는지를 보여줘야한다(클럽멤버번호, 미팅번호)
+			int joinedClubNo = hVO.getClubNo();
+			ClubMemberDto clubMemberDto = clubBoardDao.selectOneClubMemberNo(memberId, joinedClubNo);
+			MeetingMemberDto meetingMemberDto = homeDao.selectOne(clubMemberDto.getClubNo(), hVO.getMeetingNo());
+			boolean isAttended = meetingMemberDto != null;
+					
+			hVO.setAttended(isAttended);
+		}
 		log.debug("page = {}", page);
 		log.debug("vo = {}", vo);
 		log.debug("list = {}", list);
