@@ -102,6 +102,8 @@ public class ClubController {
 		model.addAttribute("majorCategory",majorList);
 //		model.addAttribute("zipList",zipList);
 		
+		
+		
 		MemberDto memberDto = memberDao.loginId(memberId);
 		int memberClubCount = clubMemberDao.memberJoinClubCount(memberId);
 		
