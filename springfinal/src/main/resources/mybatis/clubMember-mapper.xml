@@ -149,6 +149,12 @@
     	select count(*) club_member where club_no=#{clubNo} and club_member_id=#{clubMemberId}
     
     </select>
+    
+    <select id="managerExist" resultType="int">
+    
+	    SELECT count(*) FROM club_member WHERE CLUB_NO =#{clubNo} AND CLUB_MEMBER_RANK ='운영진'
+    
+    </select>
 
     
     

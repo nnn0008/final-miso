@@ -472,6 +472,7 @@ public class ClubController {
 		@GetMapping("/deleteClubMember")
 		public String deleteClubMember(@RequestParam int clubMemberNo,@RequestParam int clubNo) {
 			
+			boolean deleteMemberLevel = clubMemberDao.isManeger(clubMemberNo);
 			
 			clubMemberDao.deleteClubMember(clubMemberNo);
 			
@@ -481,6 +482,21 @@ public class ClubController {
 				
 				clubDao.deleteClub(clubNo);
 				
+			}
+			else {
+				
+				if(deleteMemberLevel) {
+					
+			boolean managerExist = clubMemberDao.managerExist(clubNo);	
+				if(!managerExist) {
+					
+					List<ClubMemberDto> list = clubMemberDao.memberList(clubNo);
+					
+					clubMemberDao.upgradeRank(list.get(0).getClubMemberNo());
+					
+					
+				}
+				}
 			}
 			
 			

@@ -93,14 +93,14 @@
    		}
    		
    		
-   		if($("[name=clubName]").val().length==0){
+   		if(($("[name=clubName]").val().length==0)||$("[name=clubName]").val().length>15){
    			
    			e.preventDefault();
    			$("[name=clubName]").addClass("is-invalid");
    			
    		}
    		
-		if($("[name=clubExplain]").val().length==0){
+		if(($("[name=clubExplain]").val().length==0)||$("[name=clubExplain]").val().length>1300){
    			
    			e.preventDefault();
    			$("[name=clubExplain]").addClass("is-invalid");
@@ -348,16 +348,16 @@
     	<label class="mt-2">모임 이름</label>
     	<input class="form-control" type="text" name="clubName">
     	<div class="invalid-feedback">
-      동호회 이름을 추가해주세요
+      동호회 이름을 1-15자 이내로 설정해주세요
     		</div>
     	</div>
     	</div>
     	<div class="row">
     		<div class="col">
     	<label class="mt-2">모임 설명</label>
-    	<input class="form-control" type="text" name="clubExplain">
+    	<textarea class="form-control" name="clubExplain" rows="4"></textarea>
     	<div class="invalid-feedback">
-      동호회 설명을 추가해주세요
+      동호회 설명을 1-1300자 이내로 설정해주세요
     		</div>
     	</div>
     	</div>

@@ -140,14 +140,14 @@ border-radius: 1%;
    		}
    		
    		
-   		if($("[name=clubName]").val().length==0){
+		if(($("[name=clubName]").val().length==0)||$("[name=clubName]").val().length>15){
    			
    			e.preventDefault();
    			$("[name=clubName]").addClass("is-invalid");
    			
    		}
    		
-		if($("[name=clubExplain]").val().length==0){
+		if(($("[name=clubExplain]").val().length==0)||$("[name=clubExplain]").val().length>1300){
    			
    			e.preventDefault();
    			$("[name=clubExplain]").addClass("is-invalid");
@@ -446,15 +446,15 @@ $(function(){
 	<div class="col-10	">
 	<input class="form-control name" value="${clubDto.clubName}" name="clubName">
 	<div class="invalid-feedback">
-      동호회 이름을 추가해주세요
+      동호회 이름을 1-15자 이내로 설정해주세요
     		</div>
 	</div>
 	</div>
 	<div class="row mt-2">
 	<div class="col">
-	<textarea class="form-control" name="clubExplain" rows="3">${clubDto.clubExplain}</textarea>
+	<textarea class="form-control" name="clubExplain" rows="4">${clubDto.clubExplain}</textarea>
 	<div class="invalid-feedback">
-      동호회 설명을 추가해주세요
+      동호회 설명을 1-1300자 이내로 설정해주세요
     		</div>
 	</div>
 	</div>
