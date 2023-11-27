@@ -34,11 +34,13 @@ import com.kh.springfinal.dao.ChatDao;
 import com.kh.springfinal.dao.ChatOneDao;
 import com.kh.springfinal.dao.ChatRoomDao;
 import com.kh.springfinal.dao.ClubDao;
+import com.kh.springfinal.dao.MeetingDao;
 import com.kh.springfinal.dao.MemberProfileDao;
 import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.ChatDto;
 import com.kh.springfinal.dto.ChatOneDto;
 import com.kh.springfinal.dto.ChatRoomDto;
+import com.kh.springfinal.dto.MeetingDto;
 import com.kh.springfinal.dto.MessageDto;
 import com.kh.springfinal.dto.MessageDto.MessageType;
 import com.kh.springfinal.service.ClientService;
@@ -79,6 +81,9 @@ public class WebSocketServer extends TextWebSocketHandler{
 	
 	@Autowired
 	private MemberProfileDao profileDao;
+	
+	@Autowired
+	private MeetingDao meetingDao;
 
     // 초기 디렉터리 설정
     @Autowired
@@ -290,6 +295,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	        
 	        //채팅 목록을 검색
 	        List<ChatListVO> chatList = chatRoomDao.chatRoomList(chatRoomNo);
+//	        List<MeetingDto> meetingList = chatRoomDao.fineMeetingRoomList(chatRoomNo);
 
 	        if (!chatList.isEmpty()) {
 	            ChatListVO firstChat = chatList.get(0);

@@ -53,6 +53,12 @@ public class ChatRoomDaoImpl implements ChatRoomDao{
 	}
 	
 	@Override
+	public List<MeetingDto> fineMeetingRoomList(int chatRoomNo){
+		List<MeetingDto> meetingRoomList = sqlSession.selectList("chatRoom.fineMeetingRoomList", chatRoomNo);
+	return meetingRoomList;
+	}
+	
+	@Override
 	public List<MeetingVO> meetingRoomList2(String memberId) {
 		List<MeetingVO> meetingRooms = sqlSession.selectList("chatRoom.findMeetingAttach", memberId);
 		return meetingRooms;

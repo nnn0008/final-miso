@@ -310,6 +310,20 @@ font-size: 18px;
 function pageReset(){
 	currentPage = 1;
 }
+
+$(function () {
+    $('.toggle-badge[data-toggle="all"]').addClass('bg-primary');
+
+    // 배지 클릭 이벤트 핸들러
+    $('.toggle-badge').on('click', function () {
+        // 기존에 선택된 배지 초기화
+        $('.toggle-badge').removeClass('bg-primary');
+
+        // 선택된 배지에만 bg-primary 클래스 추가
+        $(this).addClass('bg-primary');
+    });
+});
+
 </script>
 <script id="list-template" type="text/template">
 	<div class="col-12 clickable-item mt-2">
@@ -367,31 +381,32 @@ function pageReset(){
 <div class="row mt-3">
 
     <!-- 좌측 영역 -->
-    <div class="col-9">
-        <label class="badge rounded-pill bg-primary">
-            전체
-        </label>
+<div class="col-9">
+    <label class="badge rounded-pill bg-gray toggle-badge" data-toggle="all">
+        전체
+    </label>
 
-        <label class="badge rounded-pill bg-gray">
-            공지사항
-        </label>
+    <label class="badge rounded-pill bg-gray toggle-badge" data-toggle="notice">
+        공지사항
+    </label>
 
-        <label class="badge rounded-pill bg-gray">
-            가입인사
-        </label>
+    <label class="badge rounded-pill bg-gray toggle-badge" data-toggle="greeting">
+        가입인사
+    </label>
 
-        <label class="badge rounded-pill bg-gray">
-            모임후기
-        </label>
+    <label class="badge rounded-pill bg-gray toggle-badge" data-toggle="review">
+        모임후기
+    </label>
 
-        <label class="badge rounded-pill bg-gray">
-            관심사
-        </label>
+    <label class="badge rounded-pill bg-gray toggle-badge" data-toggle="interest">
+        관심사
+    </label>
 
-        <label class="badge rounded-pill bg-gray">
-            자유
-        </label>
-    </div>
+    <label class="badge rounded-pill bg-gray toggle-badge" data-toggle="free">
+        자유
+    </label>
+</div>
+
     
     <!-- 우측 영역 -->
     <div class="col-3">
