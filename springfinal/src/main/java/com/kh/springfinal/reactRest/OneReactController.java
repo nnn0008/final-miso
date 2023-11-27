@@ -46,7 +46,7 @@ public class OneReactController {
 			oneDto.setOneParent(targetChange.getOneNo());
 			oneDto.setOneDepth(targetChange.getOneDepth()+1);
 			oneDto.setOneStatus(1);
-		oneDao.oneAnswer(oneDto);
+			oneDao.oneAnswer(targetChange);
 		oneDao.insert(oneDto);//글쓰기
 	}
 }

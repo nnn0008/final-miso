@@ -65,11 +65,11 @@ $(function () {
                         <div class="col">
                             <div class="col d-flex justify-content-center">
                                 <c:choose>
-			                    	<c:when test="${sessionScope.name==null}">
-		                                <img src="${pageContext.request.contextPath}/images/avatar50.png" width="35%">
+			                    	<c:when test="${sessionScope.name!=null}">
+			                    			<img src="/rest/member/profileShow?memberId=${sessionScope.name}" class="rounded-circle profile" style="width: 80px; height: 80px;">
 			                    	</c:when>
 			                    	<c:otherwise>
-			                    			<img src="/rest/member/profileShow?memberId=${sessionScope.name}" class="rounded-circle profile" style="width: 80px; height: 80px;">
+		                                <img src="${pageContext.request.contextPath}/images/avatar50.png" width="35%">
 			                    	</c:otherwise>
 			                    </c:choose>
                             </div>

@@ -271,7 +271,7 @@ ORDER BY
     
     <select id="findClubBymemberId" resultType="clubDto">
     	select * from club where club_no in(
-			select club_no from club_member where club_member_id = ${memberId}
+			select club_no from club_member where club_member_id = '${memberId}'
 		)
     </select>
     <select id="minorClubListPage" resultType="ClubListVO">
