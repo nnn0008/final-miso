@@ -11,6 +11,7 @@ import com.kh.springfinal.dto.ClubBoardDto;
 import com.kh.springfinal.dto.ClubBoardReplyDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.vo.ClubBoardReplyMemberVO;
+import com.kh.springfinal.vo.PaginationVO;
 
 @Repository
 public class ClubBoardReplyDaoImpl implements ClubBoardReplyDao{
@@ -53,8 +54,12 @@ public class ClubBoardReplyDaoImpl implements ClubBoardReplyDao{
 	}
 	
 	@Override
-	public List<ClubBoardReplyDto> selectListByReply(int clubBoardNo) {
-		return sqlSession.selectList("clubBoardReply.findByReply", clubBoardNo);
+	public List<ClubBoardReplyDto> selectListByReply(PaginationVO vo) {
+		return sqlSession.selectList("clubBoardReply.findByReply", vo);
+	}
+	@Override
+	public int count(PaginationVO vo) {
+		return sqlSession.selectOne("clubBoardReply.replyCount", vo);
 	}
 	
 	//알림 사용

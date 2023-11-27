@@ -28,6 +28,7 @@ import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.dto.PhotoReplyDto;
 import com.kh.springfinal.vo.ClubBoardReplyMemberVO;
 import com.kh.springfinal.vo.ClubBoardReplyVO;
+import com.kh.springfinal.vo.PaginationVO;
 import com.kh.springfinal.vo.PhotoReplyVO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -121,32 +122,29 @@ public class ReplyRestController {
 	}
 
 	@PostMapping("/list")
-	public List<ClubBoardReplyVO> list(@RequestParam int clubBoardNo, HttpSession session){
+	public List<ClubBoardReplyDto> list(@ModelAttribute("vo") PaginationVO vo, @RequestParam int clubBoardNo, HttpSession session
+			,@RequestParam(required = false) int page){
+		log.debug("응답왔음");
+		log.debug("page = {}", page);
 		String memberId = (String)session.getAttribute("name");
 		ClubBoardDto clubBoardDto = clubBoardDao.selectOnes(clubBoardNo);
 		int clubNo = clubBoardDto.getClubNo();
 		Integer clubMemberNo = clubMemberDao.findClubMemberNo(clubNo, memberId); 
-		List<ClubBoardReplyDto> dtoList = clubBoardReplyDao.selectListByReply(clubBoardNo);
-		List<ClubBoardReplyVO> voList = new ArrayList<>();
+		
+		vo.setClubBoardNo(clubBoardNo);
+		int count = clubBoardReplyDao.count(vo);
+		log.debug("count={}", count);
+		vo.setSize(10);
+		
+		List<ClubBoardReplyDto> dtoList = clubBoardReplyDao.selectListByReply(vo);
 		for(ClubBoardReplyDto dto : dtoList) { // 오른쪽에 반복할 리스트, 왼쪽에 아무거나 이름
-			ClubBoardReplyVO vo = new ClubBoardReplyVO();
-			vo.setClubBoardNo(dto.getClubBoardNo());
-			vo.setClubBoardReplyContent(dto.getClubBoardReplyContent());
-			vo.setClubBoardReplyDate(dto.getClubBoardReplyDate());
-			vo.setClubBoardReplyDepth(dto.getClubBoardReplyDepth());
-			vo.setClubBoardReplyGroup(dto.getClubBoardReplyGroup());
-			vo.setClubBoardReplyNo(dto.getClubBoardReplyNo());
-			vo.setClubBoardReplyParent(dto.getClubBoardReplyParent());
-			vo.setClubBoardReplyWriter(dto.getClubBoardReplyWriter());
-			vo.setClubMemberNo(dto.getClubMemberNo());
 			//댓글을 작성한 자와 로그인 한 자가 동일한지 비교해라
 			boolean isMatch = clubMemberNo == dto.getClubMemberNo(); 
-			vo.setMatch(isMatch);
-			
-			voList.add(vo);
+
+			dto.setMatch(isMatch);
 		}
-		
-		return voList;
+		log.debug("dtoList = {}",dtoList);
+		return dtoList;
 	}
 	
 //	@PostMapping("/list")
