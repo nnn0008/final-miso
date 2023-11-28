@@ -358,6 +358,15 @@ public class ClubRestController {
 		
 	}
 	
+	@GetMapping("/removeMember")
+	public boolean removeMember(int clubMemberNo) {
+		
+		boolean result = clubMemberDao.removeMember(clubMemberNo);
+		
+		return result;
+		
+	}
+	
 	
 	
 	@GetMapping("/joinPossible")
@@ -382,7 +391,7 @@ public class ClubRestController {
 		
 		else if(memberDto.getMemberLevel().equals("일반유저")) {
 			
-			if(memberJoinCount>=5) {
+			if(memberJoinCount>=50) {
 				
 				return 2;
 			}
@@ -437,6 +446,8 @@ public class ClubRestController {
 		
 
 	}
+	
+	
 	
 	
 	

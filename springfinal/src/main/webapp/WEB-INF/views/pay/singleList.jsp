@@ -6,14 +6,11 @@
 
 
 
-  <div class="container-fluid mb-5 pb-5">
-        <div class="row">
-            <div class="col-md-10 offset-md-1">
 <div class="container-fluid mb-5 pb-5">
         <div class="row">
             <div class="col-md-10 offset-md-1">
 
-<div class="mt-4 p-4 text-light bg-dark rounded">
+<div class="mt-4 p-4 text-light  rounded">
    <h1>단기상품</h1>
 </div>
 

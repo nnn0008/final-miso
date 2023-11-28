@@ -7,6 +7,7 @@
 //
 //import com.kh.springfinal.interceptor.BoardInterceptor;
 //import com.kh.springfinal.interceptor.HomeInterceptor;
+//import com.kh.springfinal.interceptor.MemberInterceptor;
 //
 ///**
 // 	스프링에서 제공하는 설정파일
@@ -65,14 +66,17 @@
 //				"/member/join*",
 //				"/member/login*",
 //				"/member/logout*",
-//				"/member/find*",
+//				"/member/search*",
 //				"/member/exitFinish",
 //				"/**/*.css", 
 //				"/**/*.js",
-//				"/images/**/*.*"
+//				"/images/**/*.*",
 //				"/board/list",
 //				"/board/detail*",
-//				"/rest/reply/list"
+//				"/rest/reply/list",
+//				"/rest/member/checkId",
+//				"/rest/member/searchAddr",
+//				"/rest/member/minorList"
 //				); 
 //		
 //		registry.addInterceptor(chatRoomIntercepter)

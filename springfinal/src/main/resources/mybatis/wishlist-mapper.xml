@@ -36,4 +36,16 @@
 		) where rn between 1 and 4
     </select>
     
+    <select id="findAllByMypage" resultType="WishlistVO">
+    	select * from (
+    		select rownum rn, TMP.* from(    		
+		    	select distinct w.club_no, w.member_id, c.club_owner, c.club_premium, c.club_name, w.jjim_day from 
+				wishlist w join club c on w.club_no = c.club_no and w.member_id != c.club_owner
+				join club_member cm on w.club_no = cm.club_no and w.member_id != cm.CLUB_MEMBER_ID 
+				where w.member_id = #{memberId}
+				order by w.jjim_day desc
+    		)TMP
+		) where rn between 1 and #{endRow}
+    </select>
+    
     </mapper>

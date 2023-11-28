@@ -43,7 +43,7 @@ font-size: 15px;
 <div class="row mt-4">
      <div class="col text-start d-flex align-items-center ms-3 mt-3">
          <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
-         <strong class="ms-2">miso 프리미엄 회원권</strong>
+         <strong class="ms-2">miso 프리미엄 이용권</strong>
      </div>
  </div>
  
@@ -57,8 +57,8 @@ font-size: 15px;
   </h5>
   
   <div class="card-body-regular">
-  <strong class="card-title">1달or1년</strong>
-    <h6 class="card-subtitle text-muted mt-1">17,000원</h6>
+  <strong class="card-title">한달 / 1년</strong>
+    <h6 class="card-subtitle text-muted mt-1">2,900원 / 23,000원</h6>
     <h6 class="card-text">(부가세 포함)</h6>
   </div>
   <ul class="list-group list-group-flush">
@@ -84,8 +84,8 @@ font-size: 15px;
   </h5>
   
   <div class="card-body-regular ">
-     <strong class="card-title">1달or1년</strong>
-    <h6 class="card-subtitle text-muted mt-1">170,000원</h6>
+     <strong class="card-title">한달 / 1년</strong>
+    <h6 class="card-subtitle text-muted mt-1">2,900원 / 23,000원</h6>
     <h6 class="card-text">(부가세 포함)</h6>
   </div>
   <ul class="list-group list-group-flush">
@@ -98,7 +98,7 @@ font-size: 15px;
   </div>
   <div class="card-footer text-muted">
     <span class="text-footer">
-   프리미엄 이용권은 구독결제의 특성상 환불이 불가합니다. 
+   프리미엄 정기 이용권은 구독기간 중간에 구독취소나 환불이 불가합니다.
  </span>
   </div>
 </div>
@@ -126,8 +126,8 @@ font-size: 15px;
   </h5>
   
   <div class="card-body-single">
-     <strong class="card-title">1달or1년</strong>
-    <h6 class="card-subtitle text-muted mt-1">17,000원</h6>
+     <strong class="card-title">한달 / 1년</strong>
+    <h6 class="card-subtitle text-muted mt-1">3,900원 / 31,000원</h6>
     <h6 class="card-text">(부가세 포함)</h6>
   </div>
   <ul class="list-group list-group-flush">
@@ -158,8 +158,8 @@ font-size: 15px;
   </h5>
   
   <div class="card-body-single">
-    <strong class="card-title">1달or1년</strong>
-    <h6 class="card-subtitle text-muted mt-1">170,000원</h6>
+    <strong class="card-title">한달 / 1년</strong>
+    <h6 class="card-subtitle text-muted mt-1">3,900원 / 31,000원</h6>
     <h6 class="card-text">(부가세 포함)</h6>
   </div>
   <ul class="list-group list-group-flush">
@@ -177,7 +177,7 @@ font-size: 15px;
   </div>
   <div class="card-footer text-muted">
     <span class="text-footer">
-  파워 유저권은 구독결제의 특성상 환불이 불가합니다. 
+ 파워유저 정기 이용권은 구독기간 중간에 구독취소나 환불이 불가합니다.
   </span>
   </div>
 </div>

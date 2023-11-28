@@ -53,4 +53,6 @@ public interface ClubMemberDao {
 
 	List<HomeForClubVO> selectListByMemberId(String memberId);
 
+	boolean removeMember(int clubMemberNo);
+
 }

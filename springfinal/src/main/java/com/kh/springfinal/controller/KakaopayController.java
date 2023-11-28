@@ -127,36 +127,43 @@ public class KakaopayController {
 
 	//결제 확인화면
 	@GetMapping("/purchase")
-	public String purchase(@ModelAttribute PurchaseListVO listVO, int clubNo, Model model,HttpSession session) {
-		List<PurchaseVO> purchaseList = listVO.getProduct();
-		
-		//클럽정보 조회
-		ClubDto clubDto = clubDao.clubSelectOne(clubNo);
-		model.addAttribute("clubDto",clubDto);
-		log.debug("ClubDto={}",clubDto);
-		
-		List<PurchaseConfirmVO> confirmList = new ArrayList<>();//옮겨닮을 리스트
-		int total = 0;
-		for(PurchaseVO vo : purchaseList) {//사용자가 선택한 번호를 반복하며
-			ProductDto productDto =  productDao.selectOne(vo.getProductNo());//상품정보
-			
-			 if ("단건".equals(productDto.getProductType())) {
-			PurchaseConfirmVO confirmVO = PurchaseConfirmVO.builder()
-					.purchaseVO(vo).productDto(productDto)
-					.build();
-		confirmList.add(confirmVO);//화면에 출력할 데이터 추가
-		total += confirmVO.getTotal();//총 구매금액 합산
-			 }
+	public String purchase(@ModelAttribute PurchaseListVO listVO, @RequestParam(required = false) Integer clubNo, Model model, HttpSession session) {
+	    List<PurchaseVO> purchaseList = listVO.getProduct();
+
+	    // 클럽 정보 조회
+	    ClubDto clubDto = (clubNo != null) ? clubDao.clubSelectOne(clubNo) : null;
+
+	    if (clubDto != null) {
+	        model.addAttribute("clubDto", clubDto);
+	        log.debug("ClubDto={}", clubDto);
+	    }
+
+	    List<PurchaseConfirmVO> confirmList = new ArrayList<>(); // 옮겨닮을 리스트
+	    int total = 0;
+
+	    for (PurchaseVO vo : purchaseList) {
+	        ProductDto productDto = productDao.selectOne(vo.getProductNo());
+
+	        if ("단건".equals(productDto.getProductType())) {
+	            PurchaseConfirmVO confirmVO = PurchaseConfirmVO.builder()
+	                    .purchaseVO(vo).productDto(productDto)
+	                    .build();
+	            confirmList.add(confirmVO);
+	            total += confirmVO.getTotal();
+	        }
+	    }
+
+	    model.addAttribute("list", confirmList);
+	    model.addAttribute("total", total);
+
+	    // 클럽 번호가 존재하면 세션에 저장
+	    if (clubNo != null) {
+	        session.setAttribute("clubNo", clubNo);
+	    }
+
+	    return "pay/purchase";
 	}
-		
-		model.addAttribute("list", confirmList);//선택한번호의상품
-		model.addAttribute("total",total);
-		model.addAttribute("clubDto",clubDto);
-		
-		//클럽 번호를 세션에 저장
-		session.setAttribute("clubNo", clubNo);
-		return"pay/purchase";
-	}
+
 	
 	@PostMapping("/purchase")
 	public String purchase(HttpSession session,@ModelAttribute PurchaseListVO listVO) throws URISyntaxException {

@@ -29,4 +29,8 @@
     		delete member_category where member_id = #{memberId}
     	</delete>
     	
+    	<select id="minorCategoryList" resultType="MinorCategoryDto">
+    		select * from minor_category order by minor_category_no asc
+    	</select>
+    	
     </mapper>

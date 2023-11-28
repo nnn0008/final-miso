@@ -12,5 +12,6 @@ public interface MemberCategoryDao {
 	boolean deleteLikeCategory(String memberId);
 	MinorCategoryDto findLikeminor(String memberId);
 	MajorCategoryDto findLikemajor(int minorCategoryNo);
+	List<MinorCategoryDto> minorList();
 	
 }
