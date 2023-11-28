@@ -69,17 +69,17 @@ font-size: 18px;
         	$(".go-upside").hide();
 //         	e.preventDefault();
         	$(".board-list").empty();
-//         	keyword = $(this).text().trim();
+        	keyword = $(this).text().trim();
         	if(keyword == "전체") keyword="";
         	// 페이지 초기화
-//         	console.log("작동중1");
+        	console.log("작동중1");
         	loadList(keyword);
         	////////////////////
         	loading = false;
         	currentPage = 1;
         	
         	$(window).off("scroll").scroll(function() {
-//         		console.log("작동중2");
+        		console.log("작동중2");
                 var scrollTop = $(this).scrollTop();
                 var windowHeight = $(window).height();
                 var documentHeight = $(document).height();
@@ -93,20 +93,20 @@ font-size: 18px;
                 // 표시할 퍼센트 값을 업데이트
 //                 scrollPercent.text(scrollPercentage.toFixed(2) + '%');
 //    	        	console.log("keyword", keyword);
-//     			console.log("currentPage2 = " + currentPage);
+    			console.log("currentPage2 = " + currentPage);
 //             	var currentPage = parseInt($("#currentPage").val()) + 1;
     	        var params = new URLSearchParams(location.search);
     	        var clubNo = params.get("clubNo");
 //     	        currentPage = 1;
-// 				console.log("currentPage2 = " + currentPage);
-// 				console.log("loading중인가? " + loading);
+				console.log("currentPage3 = " + currentPage);
+				console.log("loading중인가? " + loading);
     	        if(scrollPercentage.toFixed(2) >= 65 && !loading){
 //         	       	currentPage = 1;
     	        	currentPage ++;
-//     	        	console.log("작동중3");
+    	        	console.log("작동중3");
 //     	        	console.log("currentPage3 = " + currentPage);
     	        	$(".go-upside").show();
-//     	        	console.log('로딩 시작 - 현재 페이지 = ', currentPage);
+    	        	console.log('로딩 시작 - 현재 페이지 = ', currentPage);
     	        	loading = true;
     	        	
     	            
@@ -116,14 +116,14 @@ font-size: 18px;
     	                data: {
     	                    clubNo: clubNo,
     	                    page: currentPage,
-    	                    keyword: keyword 
+    	                    keyword: keyword ? keyword : undefined
     	                },
     	                success: function (response) {
 //     	                    currentPage = response.currentPage;
 //     	                    console.log('로딩 성공', response);
     						if(response.length == 0){
     							$(window).off("scroll");
-//     							console.log('여기서 스크롤 종료', response);
+    							console.log('여기서 스크롤 종료', response);
     						}
     						else{
     	                    // 받아온 데이터를 현재 목록에 추가하는 로직
