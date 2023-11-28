@@ -88,6 +88,7 @@ width: 110px;
 					$(".my-meeting-list").hide();
 				}
 				
+
 				else{
 					for(var i = 0; i < response.length; i++){
 						console.log(response[i]);
@@ -128,6 +129,7 @@ width: 110px;
 						$(".meeting-list").append(htmlTemplate);
 						attendMeeting(htmlTemplate);
 						cancelMeeting(htmlTemplate);
+
 					}
 				}
 			},

@@ -22,5 +22,6 @@ public class ClubImageVO {
 	private String clubDate;
 	private int attachNo;
 	private int clubMaxPersonnel;
+	private int plusDay;
 
 }

@@ -586,8 +586,10 @@ function loadList(){
 					<c:if test="${memberProfileDto.attachNo == null }">
 						<img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="60" height="60">				
 					</c:if>
+
 					<c:if test="${memberProfileDto.attachNo != null}">
 						<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${memberProfileDto.attachNo}" class="rounded-circle" width="60" height="60">
+
 					</c:if>
 				</div>
 				<div class="col ms-4">

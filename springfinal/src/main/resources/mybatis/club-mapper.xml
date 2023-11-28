@@ -32,7 +32,8 @@
     
     <select id="clubDetail" resultType="ClubImageVO">
        
-       select c.*,ci.attach_no from club c LEFT outer join club_image ci 
+       select c.*,ci.attach_no,sysdate-c.club_date+1 as plus_day 
+       from club c LEFT outer join club_image ci 
        on c.club_no = ci.club_no LEFT OUTER join attach a
        on ci.attach_no=a.attach_no where c.club_no=#{clubNo}  
     
