@@ -305,7 +305,8 @@ function loadList(){
 				
 				//내가 작성한 댓글인지 확인하여 수정/삭제 버튼을 안보이게
 				if(response[i].match == false){
-					$(htmlTemplate).find(".edit-delete").empty();
+					$(htmlTemplate).find(".btn-open-reply-edit").remove();
+					$(htmlTemplate).find(".btn-reply-delete").remove();
 				}
 				
 				//대댓글 이라면
