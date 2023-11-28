@@ -136,7 +136,7 @@ font-size: 18px;
     	    					
     	    					//프로필 있는지 검토
     	    					if(clubBoardAllDto.attachNoMp != null){
-    	    						var profile = $("<img>").attr("src", window.contextPath + "/clubBoard/download?attachNo="+clubBoardAllDto.attachNoMp)
+    	    						var profile = $("<img>").attr("src", window.contextPath + "/rest/member/profileShow?memberId="+clubBoardAllDto.memberId)
     	     						.addClass("rounded-circle").attr("width", 50).attr("height", 50).attr("data-board-no", response[i].clubBoardNo);
     	     						$(htmlTemplate).find(".for-attach").html(profile);
     	    					}
@@ -241,7 +241,7 @@ font-size: 18px;
 					
 					//프로필 있는지 검토
 					if(clubBoardAllDto.attachNoMp != null){
-						var profile = $("<img>").attr("src", window.contextPath + "/clubBoard/download?attachNo="+clubBoardAllDto.attachNoMp)
+						var profile = $("<img>").attr("src", window.contextPath + "/rest/member/profileShow?memberId="+clubBoardAllDto.memberId)
  						.addClass("rounded-circle").attr("width", 50).attr("height", 50).attr("data-board-no", response[i].clubBoardNo);
  						$(htmlTemplate).find(".for-attach").html(profile);
 					}
@@ -376,7 +376,7 @@ font-size: 18px;
 	    					
 	    					//프로필 있는지 검토
 	    					if(clubBoardAllDto.attachNoMp != null){
-	    						var profile = $("<img>").attr("src", window.contextPath + "/clubBoard/download?attachNo="+clubBoardAllDto.attachNoMp)
+	    						var profile = $("<img>").attr("src", window.contextPath + "/rest/member/profileShow?memberId="+clubBoardAllDto.memberId)
 	     						.addClass("rounded-circle").attr("width", 50).attr("height", 50).attr("data-board-no", response[i].clubBoardNo);
 	     						$(htmlTemplate).find(".for-attach").html(profile);
 	    					}

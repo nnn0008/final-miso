@@ -187,7 +187,7 @@ public class ClubBoardRestController {
 
 	    List<ClubBoardAllDto> list = clubBoardDao.selectListByPage(vo, clubNo);
 	    ClubMemberDto clubMemberDto = clubBoardDao.selectOneClubMemberNo(memberId, clubNo);
-
+	    
 	    for(ClubBoardAllDto dto : list) {
 //	        ClubBoardDto clubBoardDto = clubBoardDao.selectOnes(dto.getClubBoardNo());
 	        boolean isLike = clubBoardLikeDao.isLike(clubMemberDto.getClubMemberNo(), dto.getClubBoardNo());

@@ -8,7 +8,6 @@
 --%>
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 <jsp:include page="/WEB-INF/views/template/leftSidebar.jsp"></jsp:include>
-
 <style>
 .club-image{
 width: 100%; 
@@ -16,7 +15,6 @@ height: 100%;
 object-fit: cover;
 border-radius: 20%;
 }
-
 .alert.alert-dismissible.club-box{
 border-radius: 20%;
 width:120px;
@@ -114,9 +112,10 @@ width: 110px;
 							$(htmlTemplate).find(".meeting-attend").hide();
 						}
 						if(response[i].attachNo != null){
-							var img = $("<img>").attr("src", window.contextPath + "/download?attachNo=" + response[i].attachNo).addClass("w-100")
+							var img = $("<img>").attr("src", window.contextPath + "/rest/meeting/attchImage?attachNo=" + response[i].attachNo).addClass("w-100").addClass("img-thumbnail")
 							.css({
-								"max-height":"182.9px"
+								"max-height":"159.25px",
+								"height":"159.25px"
 							});
 							$(htmlTemplate).find(".meeting-image").html(img);
 						}
@@ -191,7 +190,11 @@ width: 110px;
 									$(htmlTemplate).find(".meeting-attend").hide();
 								}
 								if(response[i].attachNo != null){
-									var img = $("<img>").attr("src", window.contextPath + "/download?attachNo=" + response[i].attachNo).addClass("w-100");
+									var img = $("<img>").attr("src", window.contextPath + "/rest/meeting/attchImage?attachNo=" + response[i].attachNo).addClass("w-100")
+									.css({
+										"max-height":"159.25px",
+										"height":"159.25px"
+									});
 									//테스트로 넣어본 이미지는 돌아감
 									//var img = $("<img>").attr("src", window.contextPath + "/images/paint-palette.png");
 									$(htmlTemplate).find(".meeting-image").html(img);
@@ -238,6 +241,7 @@ width: 110px;
 					window.alert("정모에 참가하셨습니다");
 				},
 			});
+			
 		});	
 	}
 	
@@ -251,6 +255,7 @@ width: 110px;
 			console.log("취소버튼");
 			console.log(clubNo);
 			console.log(meetingNo);
+			
 			$.ajax({
 				url: window.contextPath + "/rest/home/remove",
 				method: "post",
@@ -263,6 +268,7 @@ width: 110px;
 					window.alert("정모 참가를 취소하셨습니다");
 				},
 			});
+			
 		});
 	}
 	
@@ -278,19 +284,19 @@ width: 110px;
 
 <div class="card mb-3 meeting-card" style="width: 550px;">
   <div class="row g-0">
-    <div class="col-md-4">
+    <div class="col-4">
 		<a href="#" class="meeting-image"></a>
     </div>
-    <div class="col-md-8">
+    <div class="col-8">
       <div class="card-body">
         <h5 class="card-title meeting-name text-truncate">Card title</h5>
         <p class="card-text meeting-clubName">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
         <p class="card-text meeting-location text-truncate">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-        <p class="card-text"><small class="text-body-secondary meeting-date">Last updated 3 mins ago</small></p>
-        <p class="card-text"><small class="text-body-secondary meeting-dday">Last updated 3 mins ago</small></p>
-		<button type="button" class="btn btn-in btn-light rounded-pill ml-auto meeting-attend">참석</button>
-		<button type="button" class="btn btn-out btn-danger rounded-pill ml-auto meeting-cancel">취소</button>
-		<a href="#" class="btn btn-home btn-miso rounded-pill ml-auto meeting-go-club">동호회가기</a>
+        <p class="card-text"><small class="text-body-secondary meeting-date text-end">Last updated 3 mins ago</small></p>
+        <p class="card-text"><small class="text-body-secondary meeting-dday text-end">Last updated 3 mins ago</small></p>
+		<button type="button" class="btn btn-in btn-light rounded-pill ml-auto meeting-attend float-end">참석</button>
+		<button type="button" class="btn btn-out btn-danger rounded-pill ml-auto meeting-cancel float-end">취소</button>
+		<a href="#" class="btn btn-home btn-miso rounded-pill ml-auto meeting-go-club float-end me-1">동호회가기</a>
       </div>
     </div>
   </div>
@@ -401,7 +407,7 @@ width: 110px;
             </div>
 		</c:if>
 
-		<c:forEach var="homeForClubVO" items="${joinList}">
+<c:forEach var="homeForClubVO" items="${joinList}">
 		
     <div class="col-3 d-flex flex-column align-items-start mt-3 p-0 m-0">
         
@@ -429,71 +435,16 @@ width: 110px;
 
 
 
-  <div class="row mt-4 my-meeting-list">
-        <div class="col text-start d-flex align-items-center">
-            <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
-            <strong class="ms-2 main-text">내 모임 정모</strong>
-        </div>
+<div class="row mt-4 my-meeting-list">
+     <div class="col text-start d-flex align-items-center">
+         <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+        <strong class="ms-2 main-text">내 모임 정모</strong>
     </div>
+</div>
 		
-		<div class="row mb-3 meeting-list"></div>
+<div class="row mb-3 meeting-list"></div>
 
-<%-- 		<c:if test="${meetingList == null}"> --%>
-<!-- 			<div class="row mb-3"> -->
-<!-- 				<div class="col">가입한 동호회에서 등록된 정모가 없군요</div> -->
-<!-- 			</div> -->
-<%-- 		</c:if> --%>
-
-<%-- 		<c:forEach var="homeForMeetingVO" items="${meetingList}"> --%>
-<!-- 			<div class="row"> -->
-<!-- 				<div class="col"> -->
-
-<!-- 					<div class="card text-white bg-miso mb-3" style="width: 550px"> -->
-<!-- 						<div -->
-<!-- 							class="card-header d-flex justify-content-between align-items-center"> -->
-<%-- 							${homeForMeetingVO.clubName} --%>
-<!-- 							<button type="button" -->
-<!-- 								class="btn btn-light rounded-pill ml-auto meeting-attend" -->
-<%-- 								data-club-no="${homeForMeetingVO.clubNo}">참석</button> --%>
-<!-- 							<button type="button" -->
-<!-- 								class="btn btn-danger rounded-pill ml-auto meeting-cancel" -->
-<%-- 								data-club-no="${homeForMeetingVO.clubNo}">취소</button> --%>
-<!-- 							<a -->
-<%-- 								href="${pageContext.request.contextPath}/club/detail?clubNo=${homeForMeetingVO.clubNo}" --%>
-<!-- 								class="btn btn-info rounded-pill ml-auto">동호회로</a> -->
-<!-- 						</div> -->
-<%-- 						<div class="card-body">${homeForMeetingVO.meetingLocation}</div> --%>
-<%-- 						<div class="card-header">${homeForMeetingVO.meetingDate}</div> --%>
-<!-- 						<div class="card-body"> -->
-<%-- 							<c:forEach var="homeForMeetingMemberVO" items="${memberList}"> --%>
-<%-- 								<c:if --%>
-<%-- 									test="${homeForMeetingVO.meetingNo == homeForMeetingMemberVO.meetingNo}"> --%>
-<%-- 									<c:if test="${homeForMeetingMemberVO.attachNo != null}"> --%>
-<!-- 										<a -->
-<%-- 											href="${pageContext.request.contextPath}/member/mypage?memberId=${homeForMeetingMemberVO.clubMemberId}"> --%>
-<!-- 											<img -->
-<%-- 											src="${pageContext.request.contextPath}/download?attachNo=${homeForMeetingMemberVO.attachNo}" --%>
-<!-- 											width="10%" class="pe-1" -->
-<%-- 											data-profile-no="${homeForMeetingMemberVO.clubMemberId}"> --%>
-<!-- 										</a> -->
-<%-- 									</c:if> --%>
-<%-- 									<c:if test="${homeForMeetingMemberVO.attachNo == null }"> --%>
-<!-- 										<a -->
-<%-- 											href="${pageContext.request.contextPath}/member/mypage?memberId=${homeForMeetingMemberVO.clubMemberId}"> --%>
-<!-- 											<img -->
-<%-- 											src="${pageContext.request.contextPath}/images/basic-profile.png" --%>
-<!-- 											width="10%" class="pe-1" -->
-<%-- 											data-profile-no="${homeForMeetingMemberVO.clubMemberId}"> --%>
-<!-- 										</a> -->
-<%-- 									</c:if> --%>
-<%-- 								</c:if> --%>
-<%-- 							</c:forEach> --%>
-<!-- 						</div> -->
-<!-- 					</div> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-<%-- 		</c:forEach> --%>
-		<!-- 위로 가기 버튼 -->
+<!-- 위로 가기 버튼 -->
 <div class="row go-upside mt-3">
     <div class="col">
         <a href="#" class="btn btn-miso w-100">위로</a>
