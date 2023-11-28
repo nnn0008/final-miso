@@ -47,7 +47,8 @@
         payment_regular_no, payment_regular_member,
         payment_regular_tid, payment_regular_sid,
         payment_regular_name, payment_regular_price,
-        payment_regular_remain, payment_regular_end
+        payment_regular_remain, payment_regular_end,
+        payment_regular_club_no
    		 )
     	values (
         #{paymentRegularNo}, #{paymentRegularMember},
@@ -59,7 +60,8 @@
             THEN ADD_MONTHS(SYSDATE, 1)
             WHEN #{paymentRegularName} IN ('파워 유저 정기 이용권(1년)', '프리미엄 모임 정기 이용권(1년)')
             THEN ADD_MONTHS(SYSDATE, 12)
-        END
+        END,
+        #{paymentRegularClubNo}
    		 )
 		</insert>
     	
@@ -140,6 +142,7 @@
     			<result column="payment_regular_time" property="paymentRegularTime"/>
     			<result column="payment_regular_begin" property="paymentRegularBegin"/>
     			<result column="payment_regular_end" property="paymentRegularEnd"/>
+    			<result column="payment_regular_club_no" property="paymentRegularClubNo"/>
     		</association>
     		
     		<collection property="regularDetailList" select="regularListDetail" column="payment_regular_no"

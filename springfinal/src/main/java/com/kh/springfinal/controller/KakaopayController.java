@@ -21,6 +21,7 @@ import com.kh.springfinal.dao.PaymentDao;
 import com.kh.springfinal.dao.PaymentRegularDao;
 import com.kh.springfinal.dao.ProductDao;
 import com.kh.springfinal.dto.ClubDto;
+import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.dto.PaymentDetailDto;
 import com.kh.springfinal.dto.PaymentDto;
 import com.kh.springfinal.dto.PaymentRegularDto;
@@ -74,11 +75,17 @@ public class KakaopayController {
 	
 	
 	
-	//상품 메인화면 띄울예정
-	@RequestMapping("/product")
-	public String product(Model model) {
-		return "pay/product";
-	}
+   //상품 메인화면 띄울예정
+   @RequestMapping("/product")
+   public String product(Model model,HttpSession session) {
+      String memberId=(String)session.getAttribute("name");
+      MemberDto memberDto = memberDao.memberFindId(memberId);
+      String memberLevel = memberDto.getMemberLevel();
+      session.setAttribute("memberLevel", memberLevel);
+      
+      return "pay/product";
+   }
+
 	//단건 상품화면
 	@RequestMapping("/singleList")
 	public String singleList(Model model,HttpSession session) {
@@ -445,6 +452,9 @@ public class KakaopayController {
 						//[1] 결제번호 생성
 						int paymentRegularNo = Integer.parseInt(response.getPartnerOrderId());
 					
+						// 세션에서 클럽 번호를 읽어옴
+						int clubNo = (int) session.getAttribute("clubNo");
+						
 						//[2] 결제번호 등록
 						paymentRegularDao.insert(PaymentRegularDto.builder()
 								.paymentRegularNo(paymentRegularNo)//결제고유번호
@@ -454,6 +464,7 @@ public class KakaopayController {
 								.paymentRegularName(response.getItemName())//PG사 결제상품명
 								.paymentRegularPrice(response.getAmount().getTotal())//총 결제액
 								.paymentRegularRemain(response.getAmount().getTotal())//총 취소가능액
+								.paymentRegularClubNo(clubNo) //클럽번호
 								.build());
 						
 						//[3] 상품 개수 만큼 결제 상세정보를 등록
@@ -469,14 +480,11 @@ public class KakaopayController {
 										.build());
 							}
 							
-							// 세션에서 클럽 번호를 읽어옴
-						    int clubNo = (int) session.getAttribute("clubNo");
-						    
-							//회원등급 취소
+							//회원등급 업데이트
 							String memberId=(String)session.getAttribute("name");
 							memberDao.updateLevel(memberId);
 							
-							//모임 프리미엄 취소
+							//모임 프리미엄 업데이트
 							 clubDao.updatePremiumClub(clubNo);
 						    
 //							clubDao.updatePremium(memberId);
@@ -599,7 +607,7 @@ public class KakaopayController {
 				String memberId=(String)session.getAttribute("name");
 				memberDao.updateDownLevel(memberId);
 				
-				//모임 프리미엄 취소
+				//모임 프리미엄 업데이트
 				clubDao.updateDownPremium(memberId);
 				
 	         
