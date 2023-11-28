@@ -85,20 +85,43 @@
 
 				<!-- 메세지 헤더 -->
 				<div class="row card-header msg_head me-2">
-				<div class="d-flex bd-highlight justify-content-between">
-                            <div class="img_cont">
-                               <img src="${pageContext.request.contextPath}/club/image?clubNo=${clubInfo.clubNo}" class="rounded-circle" width="60" height="60">
-                            </div>
-                            <div class="user_info">
-                                <span class="circle-name">
-                                   ${circleName}
-                                </span>
-                            </div>
-                            <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
-                                <i class="fa-solid fa-users"></i>
-                            </button>
-                        </div>
-                        </div>
+<div class="d-flex bd-highlight justify-content-between">
+<div class="img_cont">
+    <c:choose>
+        <c:when test="${empty clubInfo.clubNo}">
+            <c:choose>
+                <c:when test="${sessionScope.name eq oneMembers.chatSender}">
+                    <img src="/rest/member/profileShow?memberId=${oneMembers.chatReceiver}" class="rounded-circle" width="60" height="60">
+                </c:when>
+               <c:when test="${sessionScope.name eq oneMembers.chatReceiver}">
+                    <img src="/rest/member/profileShow?memberId=${oneMembers.chatSender}" class="rounded-circle" width="60" height="60">
+                </c:when>
+                <c:otherwise>
+                    <!-- 이 부분은 meetingMembers가 리스트이므로 첫 번째 값만 사용합니다. -->
+                    <c:if test="${not empty meetingMembers}">
+                        <img src="${pageContext.request.contextPath}/rest/meeting/attchImage?attachNo=${meetingMembers[0].attachNo}" class="rounded-circle" width="60" height="60">
+                    </c:if>
+                </c:otherwise>
+            </c:choose>
+        </c:when>
+        <c:otherwise>
+            <img src="${pageContext.request.contextPath}/club/image?clubNo=${clubInfo.clubNo}" class="rounded-circle" width="60" height="60">
+        </c:otherwise>
+    </c:choose>
+</div>
+
+    <div class="user_info">
+        <span class="circle-name">
+            ${circleName}
+        </span>
+    </div>
+    <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
+        aria-controls="offcanvasExample">
+        <i class="fa-solid fa-users"></i>
+    </button>
+</div>
+</div>
+
 
 					<div class="col">
 						<div class="offcanvas offcanvas-end" tabindex="-1"
@@ -187,13 +210,13 @@
 </c:if>
 
 <c:if test="${not empty meetingMembers}">
- <c:forEach var="member" items="${meetingMembers}">
+ <c:forEach var="meetingMember" items="${meetingMembers}">
     <li class="list-group-item d-flex justify-content-between align-items-center">
-    <span class="offline-icon"  id="clubMemberId_${member.clubMemberId}" value="${member.clubMemberId}"></span>
-        <img src="/rest/member/profileShow?memberId=${member.clubMemberId}" class="rounded-circle" width="50" height="50">
-        <span>${member.memberName}</span>
+    <span class="offline-icon"  id="clubMemberId_${meetingMember.clubMemberId}" value="${meetingMember.clubMemberId}"></span>
+        <img src="/rest/member/profileShow?memberId=${meetingMember.clubMemberId}" class="rounded-circle" width="50" height="50">
+        <span>${meetingMember.memberName}</span>
         <c:choose>
-            <c:when test="${member.clubMemberRank eq '운영진'}">
+            <c:when test="${meetingMember.clubMemberRank eq '운영진'}">
                 <span class="badge bg-primary rounded-pill">운영진</span>
             </c:when>
             <c:otherwise>
@@ -201,7 +224,7 @@
             </c:otherwise>
         </c:choose>
         <c:choose>
-            <c:when test="${member.clubMemberId eq sessionScope.name}">
+            <c:when test="${meetingMember.clubMemberId eq sessionScope.name}">
                 <span class="badge rounded-pill bg-warning">나</span>
             </c:when>
             <c:otherwise>
@@ -352,6 +375,7 @@ $(document).ready(function () {
 	var memberName;
 	//console.log(memberName);
 	var oneChatMemberName;
+	var meetingMemberName;
 	var prevMessageDate;
 
 // 	var mapToSend = ${mapToSend}
@@ -644,6 +668,7 @@ if (data.messageType === "delete") {
 
 		    var memberName = data.memberName;
 		    var oneChatMemberName = data.oneChatMemberName;
+		    var meetingMemberName = data.meetingMemberName;
 // 			console.log("oneChatMemberName",oneChatMemberName);
 		   // console.log(memberName);
 		    
@@ -888,8 +913,16 @@ if (data.messageType === "delete") {
 				
 				   var contentDiv = $("<div>").addClass("d-flex flex-column");
 
-				   var nicknameDiv = $("<div>").addClass("msg_nickname")
-				       .text(data.memberId === data.memberName ? oneChatMemberName : memberName);
+				   var nicknameDiv = $("<div>").addClass("msg_nickname");
+
+				   if (data.meetingMemberName) {
+				       nicknameDiv.text(data.meetingMemberName);
+				   } else if (data.oneChatMemberName) {
+				       nicknameDiv.text(data.oneChatMemberName);
+				   } else {
+				       nicknameDiv.text(memberName);
+				   }
+
 
 				   var messageContainer = $("<div>").addClass("msg_cotainer").attr("data-chatNo", data.chatNo);
 				   console.log(messageContainer);

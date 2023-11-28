@@ -171,7 +171,7 @@
         </c:if>
         
         <c:forEach var="meetingRoom" items="${meetingRoomList}">
-       <div class="row mt-3 ms-2 d-flex align-items-center club-box" onclick="enterRoom(${meetingRoom.chatRoomNo})">
+       <div class="row mt-3 ms-2 d-flex align-items-center club-box mb-4" onclick="enterRoom(${meetingRoom.chatRoomNo})">
     <div class="col-2">
     <c:choose>
                  <c:when test="${meetingRoom.attachNo > 0}">
