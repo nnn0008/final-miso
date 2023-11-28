@@ -37,6 +37,7 @@ import com.kh.springfinal.dto.ClubBoardImageDto;
 import com.kh.springfinal.dto.ClubBoardLikeDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MemberDto;
+import com.kh.springfinal.dto.MemberProfileDto;
 import com.kh.springfinal.vo.ClubImageVO;
 import com.kh.springfinal.vo.FileLoadVO;
 import com.kh.springfinal.vo.PaginationVO;
@@ -100,10 +101,10 @@ public class ClubBoardController {
 		
 		int clubBoardNo = clubBoardDao.sequence();
 		clubMemberDto = clubBoardDao.selectOneClubMemberNo(memberId, clubNo);
-		log.debug("clubNo ={}" , clubNo);
-		log.debug("memberId ={}" , memberId);
-		
-		log.debug("clubMemberDto ={}" , clubMemberDto);
+//		log.debug("clubNo ={}" , clubNo);
+//		log.debug("memberId ={}" , memberId);
+//		
+//		log.debug("clubMemberDto ={}" , clubMemberDto);
 		int clubMemberNo = clubMemberDto.getClubMemberNo();
 		
 		clubBoardDto.setClubBoardName(memberDto.getMemberName());
@@ -159,12 +160,16 @@ public class ClubBoardController {
 		if(clubBoardImage2Dto != null) model.addAttribute("clubBoardImage2Dto", clubBoardImage2Dto);
 		if(clubBoardImage3Dto != null) model.addAttribute("clubBoardImage3Dto", clubBoardImage3Dto);
 		
+		MemberProfileDto memberProfileDto = memberProfileDao.selectOne(clubMemberDto.getClubMemberId());
+		
 		model.addAttribute("likeCount", likeCount);
 		model.addAttribute("isLiked", isLiked);
 		model.addAttribute("clubMemberDto", clubMemberDto);
 		model.addAttribute("clubBoardDto", clubBoardDto);
-		model.addAttribute("attachDto", attachDto);
+		//model.addAttribute("attachDto", attachDto);
+		model.addAttribute("memberProfileDto", memberProfileDto);
 		//model.addAttribute("likeDto", clubBoardLikeDto);
+		log.debug("memberProfileDto={}", memberProfileDto);
 		return "clubBoard/detail";
 	}
 	

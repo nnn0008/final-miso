@@ -81,46 +81,54 @@ width: 110px;
 				page: currentPage,
 			},
 			success: function(response){
+				console.log(response);
+				if(response.length == 0){
+// 					var clubTemplate = $.parseHTML(("#club-template").html());
+// 					$(clubTemplate).find().
+					$(".my-meeting-list").hide();
+				}
 				
-				for(var i = 0; i < response.length; i++){
-					console.log(response[i]);
-					
-					var template = $("#meeting-template").html();
-					var htmlTemplate = $.parseHTML(template);
-					
-					$(htmlTemplate).find(".meeting-card").attr("data-club-no", response[i].clubNo);
-					$(htmlTemplate).find(".meeting-clubName").text(response[i].clubName);
-					$(htmlTemplate).find(".meeting-attend").attr("data-club-no", response[i].clubNo);
-					$(htmlTemplate).find(".meeting-cancel").attr("data-club-no", response[i].clubNo);
-					$(htmlTemplate).find(".meeting-go-club").attr("href", window.contextPath + "/club/detail?clubNo=" + response[i].clubNo);
-					$(htmlTemplate).find(".meeting-location").text(response[i].meetingLocation);
-					$(htmlTemplate).find(".meeting-date").text(response[i].formattedMeetingDate);
-					$(htmlTemplate).find(".meeting-dday").text(response[i].calculateDday);
-					$(htmlTemplate).find(".meeting-name").text(response[i].meetingName);
-					$(htmlTemplate).find(".meeting-image").attr("href", window.contextPath + "/club/detail?clubNo=" + response[i].clubNo);
-					$(htmlTemplate).find(".meeting-attend").attr("data-club-no", response[i].clubNo).attr("data-meeting-no", response[i].meetingNo);
-					$(htmlTemplate).find(".meeting-cancel").attr("data-club-no", response[i].clubNo).attr("data-meeting-no", response[i].meetingNo);
-					if(response[i].attended){ //참가한 미팅이라면
-						$(htmlTemplate).find(".meeting-attend").hide();
+				else{
+					for(var i = 0; i < response.length; i++){
+						console.log(response[i]);
+						
+						var template = $("#meeting-template").html();
+						var htmlTemplate = $.parseHTML(template);
+						
+						$(htmlTemplate).find(".meeting-card").attr("data-club-no", response[i].clubNo);
+						$(htmlTemplate).find(".meeting-clubName").text(response[i].clubName);
+						$(htmlTemplate).find(".meeting-attend").attr("data-club-no", response[i].clubNo);
+						$(htmlTemplate).find(".meeting-cancel").attr("data-club-no", response[i].clubNo);
+						$(htmlTemplate).find(".meeting-go-club").attr("href", window.contextPath + "/club/detail?clubNo=" + response[i].clubNo);
+						$(htmlTemplate).find(".meeting-location").text(response[i].meetingLocation);
+						$(htmlTemplate).find(".meeting-date").text(response[i].formattedMeetingDate);
+						$(htmlTemplate).find(".meeting-dday").text(response[i].calculateDday);
+						$(htmlTemplate).find(".meeting-name").text(response[i].meetingName);
+						$(htmlTemplate).find(".meeting-image").attr("href", window.contextPath + "/club/detail?clubNo=" + response[i].clubNo);
+						$(htmlTemplate).find(".meeting-attend").attr("data-club-no", response[i].clubNo).attr("data-meeting-no", response[i].meetingNo);
+						$(htmlTemplate).find(".meeting-cancel").attr("data-club-no", response[i].clubNo).attr("data-meeting-no", response[i].meetingNo);
+						if(response[i].attended){ //참가한 미팅이라면
+							$(htmlTemplate).find(".meeting-attend").hide();
+						}
+						else{//참가하지 않은 미팅이라면
+							$(htmlTemplate).find(".meeting-attend").hide();
+						}
+						if(response[i].attachNo != null){
+							var img = $("<img>").attr("src", window.contextPath + "/download?attachNo=" + response[i].attachNo).addClass("w-100")
+							.css({
+								"max-height":"182.9px"
+							});
+							$(htmlTemplate).find(".meeting-image").html(img);
+						}
+						else{
+							var img = $("<img>").attr("src", window.contextPath + "/images/logo-door.png").addClass("w-100");
+							$(htmlTemplate).find(".meeting-image").html(img);
+						}
+						
+						$(".meeting-list").append(htmlTemplate);
+						attendMeeting(htmlTemplate);
+						cancelMeeting(htmlTemplate);
 					}
-					else{//참가하지 않은 미팅이라면
-						$(htmlTemplate).find(".meeting-attend").hide();
-					}
-					if(response[i].attachNo != null){
-						var img = $("<img>").attr("src", window.contextPath + "/download?attachNo=" + response[i].attachNo).addClass("w-100")
-						.css({
-							"max-height":"182.9px"
-						});
-						$(htmlTemplate).find(".meeting-image").html(img);
-					}
-					else{
-						var img = $("<img>").attr("src", window.contextPath + "/images/logo-door.png").addClass("w-100");
-						$(htmlTemplate).find(".meeting-image").html(img);
-					}
-					
-					$(".meeting-list").append(htmlTemplate);
-					attendMeeting(htmlTemplate);
-					cancelMeeting(htmlTemplate);
 				}
 			},
 		});
@@ -141,9 +149,11 @@ width: 110px;
 			//console.log("스크롤 퍼센트: " + scrollPercent.toFixed(2) + "%");
 			
 			if(!loading && scrollPercent >= 65){
-				$(".go-upside").show();
 				loading = true;
 				currentPage++;
+				if(currentPage == 3){
+					$(".go-upside").show();
+				}
 				console.log(currentPage);
 				$.ajax({
 					url: window.contextPath + "/rest/home/page",
@@ -288,161 +298,21 @@ width: 110px;
 	</div>
 </div>
 </script>
+<script id="club-template" type="text/template">
+<div class="col-3 text-start">
+	<img src="${pageContext.request.contextPath}/images/open-door.png" width="100%">
+</div>
+<div class="col">
+                                	<div class="col">
+                                    <h5>아직 </h5>
+                                	</div>
+                                	<div class="col">
+                                    <h1>모임을 찜해보세요!</h1>
+                                	</div>
+                                </div>
+                                <div class="row p-1 mt-4 text-center">
+</script>
 <div class="row m-2 ">
-
-<!-- 	<div id="iconContainer" class="d-flex justify-content-end "> -->
-<!-- 		<i class="fa-solid fa-bars fa-xl iconContainer showCategoryButton"></i> -->
-<!-- 	</div> -->
-<!-- 	<div class="row mb-3"> -->
-<!-- 		<div class="col d-flex justify-content-end"> -->
-<!-- 			<div class="alert alert-dismissible alert-light categoryAlert"> -->
-<!-- 				<div class="row d-flex justify-content-center"> -->
-<!-- 					<div class="col-4 category text-center p-2 me-3" -->
-<!-- 						style="background-color: #FFA5A5;"> -->
-<!-- 						<a href="#" class="link"> <img -->
-<%-- 							src="${pageContext.request.contextPath}/images/sports.png" --%>
-<!-- 							width="100%"> -->
-<!-- 						</a> -->
-<!-- 					</div> -->
-<!-- 					<div class="col-4 category text-center p-2 me-3" -->
-<!-- 						style="background-color: #FBEAB7;"> -->
-<!-- 						<a href="#" class="link"> <img -->
-<%-- 							src="${pageContext.request.contextPath}/images/poetry.png" --%>
-<!-- 							width="100%"> -->
-<!-- 						</a> -->
-<!-- 					</div> -->
-<!-- 					<div class="col-4 category text-center p-2" -->
-<!-- 						style="background-color: #C3DCFF;"> -->
-<!-- 						<a href="#" class="link"> <img -->
-<%-- 							src="${pageContext.request.contextPath}/images/flight.png" --%>
-<!-- 							width="100%"> -->
-<!-- 						</a> -->
-<!-- 					</div> -->
-<!-- 				</div> -->
-
-<!-- 				<div class="row d-flex justify-content-center mt-2"> -->
-<!-- 					<div class="col-4 category text-center p-2 me-3" -->
-<!-- 						style="background-color: #FFA5E6;"> -->
-<!-- 						<a href="#" class="link"> <img -->
-<%-- 							src="${pageContext.request.contextPath}/images/ferris-wheel.png" --%>
-<!-- 							width="100%"> -->
-<!-- 						</a> -->
-<!-- 					</div> -->
-<!-- 					<div class="col-4 category text-center p-2 me-3" -->
-<!-- 						style="background-color: #E2CBC4;"> -->
-<!-- 						<a href="#" class="link"> <img -->
-<%-- 							src="${pageContext.request.contextPath}/images/handbag.png" --%>
-<!-- 							width="100%"> -->
-<!-- 						</a> -->
-<!-- 					</div> -->
-<!-- 					<div class="col-4 category text-center p-2" -->
-<!-- 						style="background-color: #8DACD9;"> -->
-<!-- 						<a href="#" class="link"> <img -->
-<%-- 							src="${pageContext.request.contextPath}/images/earth.png" --%>
-<!-- 							width="100%"> -->
-<!-- 						</a> -->
-<!-- 					</div> -->
-<!-- 				</div> -->
-
-<!-- 				<div class="row d-flex justify-content-center mt-2"> -->
-<!-- 					<div class="col-4 category text-center p-2 me-3" -->
-<!-- 						style="background-color: #F5CCFF;"> -->
-<!-- 						<a href="#" class="link"> <img -->
-<%-- 							src="${pageContext.request.contextPath}/images/music-notes.png" --%>
-<!-- 							width="100%"> -->
-<!-- 						</a> -->
-<!-- 					</div> -->
-<!-- 					<div class="col-4 category text-center p-2 me-3" -->
-<!-- 						style="background-color: #A5EE99;"> -->
-<!-- 						<a href="#" class="link"> <img -->
-<%-- 							src="${pageContext.request.contextPath}/images/paint-palette.png" --%>
-<!-- 							width="100%"> -->
-<!-- 						</a> -->
-<!-- 					</div> -->
-<!-- 					<div class="col-4 category text-center p-2" -->
-<!-- 						style="background-color: #F5F5F5;"> -->
-<!-- 						<a href="#" class="link"> <img -->
-<%-- 							src="${pageContext.request.contextPath}/images/ballet.png" --%>
-<!-- 							width="100%"> -->
-<!-- 						</a> -->
-<!-- 					</div> -->
-<!-- 				</div> -->
-
-<!-- 				<div class="row d-flex justify-content-center mt-2"> -->
-<!-- 					<div class="col-4 category text-center p-2 me-3" -->
-<!-- 						style="background-color: #FCCD7F;"> -->
-<!-- 						<a href="#" class="link"> <img -->
-<%-- 							src="${pageContext.request.contextPath}/images/heart.png" --%>
-<!-- 							width="100%"> -->
-<!-- 						</a> -->
-<!-- 					</div> -->
-<!-- 					<div class="col-4 category text-center p-2 me-3" -->
-<!-- 						style="background-color: #C7D290;"> -->
-<!-- 						<a href="#" class="link"> <img -->
-<%-- 							src="${pageContext.request.contextPath}/images/cappuccino.png" --%>
-<!-- 							width="100%"> -->
-<!-- 						</a> -->
-<!-- 					</div> -->
-<!-- 					<div class="col-4 category text-center p-2" -->
-<!-- 						style="background-color: #7B89C6;"> -->
-<!-- 						<a href="#" class="link"> <img -->
-<%-- 							src="${pageContext.request.contextPath}/images/car.png" --%>
-<!-- 							width="100%"> -->
-<!-- 						</a> -->
-<!-- 					</div> -->
-<!-- 				</div> -->
-
-<!-- 				<div class="row d-flex justify-content-center mt-2"> -->
-<!-- 					<div class="col-4 category text-center p-2 me-3" -->
-<!-- 						style="background-color: #FFF8B2;"> -->
-<!-- 						<a href="#" class="link"> <img -->
-<%-- 							src="${pageContext.request.contextPath}/images/camera.png" --%>
-<!-- 							width="100%"> -->
-<!-- 						</a> -->
-<!-- 					</div> -->
-<!-- 					<div class="col-4 category text-center p-2 me-3" -->
-<!-- 						style="background-color: #82CCB3;"> -->
-<!-- 						<a href="#" class="link"> <img -->
-<%-- 							src="${pageContext.request.contextPath}/images/baseball-ball.png" --%>
-<!-- 							width="100%"> -->
-<!-- 						</a> -->
-<!-- 					</div> -->
-<!-- 					<div class="col-4 category text-center p-2" -->
-<!-- 						style="background-color: #72A8DC;"> -->
-<!-- 						<a href="#" class="link"> <img -->
-<%-- 							src="${pageContext.request.contextPath}/images/gamepad.png" --%>
-<!-- 							width="100%"> -->
-<!-- 						</a> -->
-<!-- 					</div> -->
-<!-- 				</div> -->
-
-<!-- 				<div class="row d-flex justify-content-center mt-2"> -->
-<!-- 					<div class="col-4 category text-center p-2 me-3" -->
-<!-- 						style="background-color: #F497A9;"> -->
-<!-- 						<a href="#" class="link"> <img -->
-<%-- 							src="${pageContext.request.contextPath}/images/recipes.png" --%>
-<!-- 							width="100%"> -->
-<!-- 						</a> -->
-<!-- 					</div> -->
-<!-- 					<div class="col-4 category text-center p-2 me-3" -->
-<!-- 						style="background-color: #B9FFE7;"> -->
-<!-- 						<a href="#" class="link"> <img -->
-<%-- 							src="${pageContext.request.contextPath}/images/dog.png" --%>
-<!-- 							width="100%"> -->
-<!-- 						</a> -->
-<!-- 					</div> -->
-<!-- 					<div class="col-4 category text-center p-2 mb-5" -->
-<!-- 						style="background-color: #DBEEFF;"> -->
-<!-- 						<a href="#" class="link"> <img -->
-<%-- 							src="${pageContext.request.contextPath}/images/butterfly.png" --%>
-<!-- 							width="100%"> -->
-<!-- 						</a> -->
-<!-- 					</div> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
-<!-- 	</div> -->
-
 
   <div class="row">
         <div class="col text-start d-flex align-items-center">
@@ -451,7 +321,7 @@ width: 110px;
         </div>
     </div>
 
-	<c:if test="${wishList == null}">
+	<c:if test="${wishList.size() == 0}">
 		  <div class="row d-flex align-items-center mt-3">
                 <div class="col-3 text-start">
                     <img src="${pageContext.request.contextPath}/images/open-door.png" width="100%">
@@ -513,7 +383,7 @@ width: 110px;
         </div>
     </div>
 
-		<c:if test="${joinList == null}">
+		<c:if test="${joinList.size() == 0}">
 		 <div class="row d-flex align-items-center mt-3">
                 <div class="col-3 text-start">
                     <img src="${pageContext.request.contextPath}/images/open-door.png" width="100%">
@@ -559,7 +429,7 @@ width: 110px;
 
 
 
-  <div class="row mt-4">
+  <div class="row mt-4 my-meeting-list">
         <div class="col text-start d-flex align-items-center">
             <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
             <strong class="ms-2 main-text">내 모임 정모</strong>

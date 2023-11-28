@@ -196,7 +196,7 @@ public class ClubBoardRestController {
 			dto.setClubBoardLikecount(likeCount);
 	        dto.setLiked(isLike);
 	    }
-	    log.debug("list = {}", list.size());
+	    log.debug("list = {}", list);
 	    return list;
 	}
 }
