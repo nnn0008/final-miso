@@ -334,6 +334,16 @@ $(function(){
 
              		
              	} 
+             	 
+             	$(htmlTemplate).find(".removeMember").data('clubMemberNo',clubMember.clubMemberNo);
+             	$(htmlTemplate).find(".removeMember").data('clubMemberName',clubMember.memberName);
+            	 if(clubMember.masterRank==false||
+            			 clubMember.clubMemberRank=='운영진'){
+            		
+            		 $(htmlTemplate).find(".removeMember").hide(); 
+
+            		
+            	}
               	
               	
               	$(htmlTemplate).find(".memberName").html("<strong>" + clubMember.memberName + "</strong> | " + clubMember.joinDateString + " 가입");
@@ -406,6 +416,16 @@ $(function(){
 
             		
             	} 
+            	 
+            	 $(htmlTemplate).find(".removeMember").data('clubMemberNo',clubMember.clubMemberNo);
+            	 $(htmlTemplate).find(".removeMember").data('clubMemberName',clubMember.memberName);
+            	 if(clubMember.masterRank==false||
+            			 clubMember.clubMemberRank=='운영진'){
+            		
+            		 $(htmlTemplate).find(".removeMember").hide(); 
+
+            		
+            	}
               	
               	
               	$(htmlTemplate).find(".memberName").html("<strong>" + clubMember.memberName + "</strong> | " + clubMember.joinDateString + " 가입");
@@ -469,6 +489,42 @@ $(function(){
 			  
 		  }
 		  }) 
+	  })
+	  
+	   $(document).on('click','.removeMember',function(){
+		  
+		   var name = $(this).data("clubMemberName");
+		   
+		   var isConfirmed = confirm(name+" 회원을 강퇴하시겠습니까?");
+
+		      if (isConfirmed) {
+		    	  var clubMemberNo = $(this).data("clubMemberNo");
+				  scrollPosition = $(".clubMemberList").scrollTop();
+				  var tagCount = $(".clubMemberList").children().length;
+				  
+				  $.ajax({
+					  url: "http://localhost:8080/rest/removeMember",
+			          method: "get",
+			          data: { clubMemberNo: clubMemberNo},
+			          success: function (response) {
+			        	  
+								   size=tagCount
+								   
+								   loadMemberList();
+			        		  
+					  
+				  }
+				  }) 
+		    	  
+		        
+		      } 
+		      
+		      else {
+		   
+		         
+		      }
+		  
+		
 	  })
 	
 	
@@ -1733,6 +1789,7 @@ $(document).ready(function () {
         <div class="col-3">
             <button class="btn btn-miso w-100 upgradeRank">운영진 임명</button>
 			<button class="btn btn-danger w-100 downgradeRank">운영진 해제</button>
+			<button class="btn btn-danger w-100 mt-1 removeMember">강퇴</button>
         </div>
     </div>
 </div>
