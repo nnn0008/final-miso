@@ -23,7 +23,8 @@ width: 600px;
                 </div>
 
 			<div class="col mt-3">
-				<a href="${pageContext.request.contextPath}/pay/list2" class="btn btn-miso btn-lg w-100">마이페이지 가기</a>
+				<a href="${pageContext.request.contextPath}/member/mypage?memberId=${sessionScope.name}" class="btn btn-miso btn-lg w-100">마이페이지 가기</a>
+			</div>
 			</div>
 
 <jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>

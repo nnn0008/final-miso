@@ -20,6 +20,8 @@ color: gray;
     top: 100px;
     left: 110px;
   }
+
+
 </style>
 <script>
 $(function() {
@@ -70,9 +72,10 @@ $(function() {
             <div class="col-12	">
                 <c:choose>
                 	<c:when test="${sessionScope.name==memberDto.memberId}">
-                		<div class="row">
-                            <div class="col mb-3">
-                                <strong class="profile-text">프로필</strong> 
+                			 <div class="row">
+                            <div class="col text-start d-flex align-items-center">
+                                <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+                                <strong class="ms-2 main-text">프로필</strong>
                             </div>
                         </div>
 
@@ -259,8 +262,54 @@ $(function() {
                 	</c:choose>
                         
 		
+<div class="row mt-4">
+     <div class="col text-start d-flex align-items-center">
+         <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+        <strong class="ms-2 main-text">나의 구독내역</strong>
+    </div>
+</div>
+
+<c:forEach var="paymentRegularListVO" items="${list2}">
+
+	<!-- 대표 정보 -->
+
+<div class="row mt-3">	
+<div class="col text-start d-flex align-items-center btn btn-miso">
+    <a href="${pageContext.request.contextPath}/club/detail?clubNo=${paymentRegularListVO.paymentRegularDto.paymentRegularClubNo}"
+        class="link"
+        style="height: 100%; padding: 0; box-sizing: border-box; text-decoration: none; color: inherit;">
+        모임명 : <strong class="ms-2 main-text">${paymentRegularListVO.clubDto.clubName}</strong>
+    </a></div>
+
+<!-- 		<div class="col text-end"> -->
+<%-- 	<c:if test="${paymentRegularListVO.paymentRegularDto.paymentRegularRemain > 0 }"> --%>
+<%-- 	<a href="regularCancelAll?paymentRegularNo=${paymentRegularListVO.paymentRegularDto.paymentRegularNo}" class="btn btn-danger"> --%>
+<!-- 	구독 취소</a> -->
+<%-- 	</c:if>		 --%>
+<!-- </div> -->
+	</div>
+	
+		 <div class="row mt-2">
+		<div class="col-6">
+	${paymentRegularListVO.paymentRegularDto.paymentRegularName}		
+		</div>
+		<div class="col">
+		<i class="fa-solid fa-hourglass-start"></i>
+	${paymentRegularListVO.paymentRegularDto.paymentRegularTime}
+		</div>
+		<div class="col">
+		<i class="fa-solid fa-hourglass-end"></i>
+	${paymentRegularListVO.paymentRegularDto.paymentRegularEnd}
 		</div>
 	</div>
-</div>
+
+	
+	<hr>
+</c:forEach>
+                        
+                        
+		</div>
+	</div>
+
 
 <jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>
