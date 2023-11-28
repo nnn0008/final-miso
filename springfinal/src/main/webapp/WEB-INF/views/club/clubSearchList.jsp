@@ -356,7 +356,7 @@ width:20px;
                                 </div>
                                 <div class="col">
                                 	<div class="col">
-                                    <h5>해당 카테고리 동호회가 존재하지 않습니다. </h5>
+                                    <h5>검색한 동호회가 존재하지 않습니다. </h5>
                                 	</div>
                                 	<div class="col">
                                     <h1>직접 만들어보세요!</h1>

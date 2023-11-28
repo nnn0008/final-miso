@@ -158,7 +158,7 @@ public class ClubRestController {
 		int count = clubDao.searchCount(vo);
 		
 		vo.setWhereString(memberId);
-		vo.setSize(6);
+		vo.setSize(8);
 		vo.setCount(count);
 		
 		List<ClubListVO> clubList= clubDao.clubSearchPageList(vo);
