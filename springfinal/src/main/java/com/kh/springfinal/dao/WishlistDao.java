@@ -10,4 +10,5 @@ public interface WishlistDao {
 	boolean delete(String memberId,int clubNo);
 	boolean doLike(String memberId,int clubNo);
 	List<WishlistVO> selectListForHome(String memberId);
+	List<WishlistVO> selectListForMypage(String memberId, int endRow);
 }
