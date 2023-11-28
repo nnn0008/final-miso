@@ -2,8 +2,6 @@ package com.kh.springfinal.dto;
 
 import java.sql.Date;
 
-import org.springframework.stereotype.Component;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,4 +19,6 @@ public class PaymentRegularDto {
 	private Date paymentRegularTime;//결제시간
 	private Date paymentRegularBegin;//시작일
 	private Date paymentRegularEnd;//만료일
+	
+	 private int paymentRegularClubNo;  //프리미엄 clubNo 
 }

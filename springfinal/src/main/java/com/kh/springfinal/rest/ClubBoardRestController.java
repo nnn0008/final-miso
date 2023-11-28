@@ -189,11 +189,14 @@ public class ClubBoardRestController {
 	    ClubMemberDto clubMemberDto = clubBoardDao.selectOneClubMemberNo(memberId, clubNo);
 
 	    for(ClubBoardAllDto dto : list) {
-	        ClubBoardDto clubBoardDto = clubBoardDao.selectOnes(dto.getClubBoardNo());
+//	        ClubBoardDto clubBoardDto = clubBoardDao.selectOnes(dto.getClubBoardNo());
 	        boolean isLike = clubBoardLikeDao.isLike(clubMemberDto.getClubMemberNo(), dto.getClubBoardNo());
+	      //좋아요 숫자 업데이트 해라
+			int likeCount = clubBoardLikeDao.count(dto.getClubBoardNo());
+			dto.setClubBoardLikecount(likeCount);
 	        dto.setLiked(isLike);
 	    }
-
+	    log.debug("list = {}", list);
 	    return list;
 	}
 }

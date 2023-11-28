@@ -33,6 +33,9 @@ public class MemberProfileDaoImpl implements MemberProfileDao{
 		boolean result = count>0;
 		return result;
 	}
-	
+	@Override
+	public MemberProfileDto selectOne(String memberId) {
+		return sqlSession.selectOne("memberProfile.profileFind", memberId);
+	}
 
 }

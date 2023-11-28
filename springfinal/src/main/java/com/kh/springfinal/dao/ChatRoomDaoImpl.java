@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.kh.springfinal.dto.ChatDto;
 import com.kh.springfinal.dto.ChatRoomDto;
 import com.kh.springfinal.dto.ClubDto;
+import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MeetingDto;
 import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.vo.ChatListVO;
@@ -173,6 +174,14 @@ public String clubMemberRank(String memberId, int clubNo) {
     parameters.put("memberId", memberId);
     parameters.put("clubNo", clubNo);   
     return sqlSession.selectOne("chatRoom.clubMemberRank", parameters);
+}
+
+@Override
+public String meetingclubMemberRank(String memberId, int clubNo){
+	Map<String, Object> params = new HashMap<>();
+	params.put("memberId", memberId);
+	params.put("clubNo", clubNo);
+	return sqlSession.selectOne("chatRoom.meetingclubMemberRank", params);
 }
 
 @Override

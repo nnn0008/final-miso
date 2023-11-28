@@ -123,11 +123,65 @@
 .clubMemberList {
     max-height: 350px; /* 적절한 높이로 설정 */
     overflow: auto; /* 스크롤이 필요한 경우 스크롤 허용 */
+    overflow-x: hidden; /* 가로 스크롤 방지 */
+    scroll-padding-top: 10px; /* 적절한 여백 값으로 설정 */
+    border-radius: 10px; /* 원하는 둥근 정도로 조절 */
+    border: 1px solid #EBE8E8; /* 원하는 테두리 색상과 두께로 조절 */
+    padding: 10px; /* 내용과 테두리 사이의 간격을 조절 */
+    margin-top: 20px; /* 상단 여백의 크기를 조절 */
+    
+    
     }
+    
+    /* 스크롤바 전체 스타일링 */
+.clubMemberList::-webkit-scrollbar {
+    width: 8px; /* 스크롤바 너비 */
+}
+
+/* 스크롤바 트랙 (배경) 스타일링 */
+.clubMemberList::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* 스크롤바 트랙 배경색 */
+}
+
+/* 스크롤바 핸들 (바 부분) 스타일링 */
+.clubMemberList::-webkit-scrollbar-thumb {
+    background-color: #ACCEFF; /* 스크롤바 핸들 색상 */
+    border-radius: 4px; /* 스크롤바 핸들 모서리 둥글게 */
+}
+
+/* 스크롤바 커서 (클릭 등 상호작용 시 나타나는 부분) 스타일링 */
+.clubMemberList::-webkit-scrollbar-button {
+    display: none; /* 스크롤바 커서 감추기 */
+}
+    
+    
 </style>
 
 
+<script>
 
+$(function(){
+	truncateClubDescription();
+	
+	   function truncateClubDescription() {
+	       var clubDescriptions = document.querySelectorAll('.clubExplain');
+	       
+
+	       clubDescriptions.forEach(function (description) {
+	           const maxLength = 90; // 최대 길이 설정
+	           var text = description.textContent;
+
+	           if (text.length > maxLength) {
+	        	   description.innerHTML = text.substring(0, maxLength) + '<span style="font-weight: bold;">...<strong>더보기</strong></span>';
+	           }
+	           
+	       });
+	   }
+	
+	
+})
+
+</script>
 <script>
 	
 	
@@ -334,6 +388,16 @@ $(function(){
 
              		
              	} 
+             	 
+             	$(htmlTemplate).find(".removeMember").data('clubMemberNo',clubMember.clubMemberNo);
+             	$(htmlTemplate).find(".removeMember").data('clubMemberName',clubMember.memberName);
+            	 if(clubMember.masterRank==false||
+            			 clubMember.clubMemberRank=='운영진'){
+            		
+            		 $(htmlTemplate).find(".removeMember").hide(); 
+
+            		
+            	}
               	
               	
               	$(htmlTemplate).find(".memberName").html("<strong>" + clubMember.memberName + "</strong> | " + clubMember.joinDateString + " 가입");
@@ -406,6 +470,16 @@ $(function(){
 
             		
             	} 
+            	 
+            	 $(htmlTemplate).find(".removeMember").data('clubMemberNo',clubMember.clubMemberNo);
+            	 $(htmlTemplate).find(".removeMember").data('clubMemberName',clubMember.memberName);
+            	 if(clubMember.masterRank==false||
+            			 clubMember.clubMemberRank=='운영진'){
+            		
+            		 $(htmlTemplate).find(".removeMember").hide(); 
+
+            		
+            	}
               	
               	
               	$(htmlTemplate).find(".memberName").html("<strong>" + clubMember.memberName + "</strong> | " + clubMember.joinDateString + " 가입");
@@ -469,6 +543,42 @@ $(function(){
 			  
 		  }
 		  }) 
+	  })
+	  
+	   $(document).on('click','.removeMember',function(){
+		  
+		   var name = $(this).data("clubMemberName");
+		   
+		   var isConfirmed = confirm(name+" 회원을 강퇴하시겠습니까?");
+
+		      if (isConfirmed) {
+		    	  var clubMemberNo = $(this).data("clubMemberNo");
+				  scrollPosition = $(".clubMemberList").scrollTop();
+				  var tagCount = $(".clubMemberList").children().length;
+				  
+				  $.ajax({
+					  url: "http://localhost:8080/rest/removeMember",
+			          method: "get",
+			          data: { clubMemberNo: clubMemberNo},
+			          success: function (response) {
+			        	  
+								   size=tagCount
+								   
+								   loadMemberList();
+			        		  
+					  
+				  }
+				  }) 
+		    	  
+		        
+		      } 
+		      
+		      else {
+		   
+		         
+		      }
+		  
+		
 	  })
 	
 	
@@ -1733,6 +1843,7 @@ $(document).ready(function () {
         <div class="col-3">
             <button class="btn btn-miso w-100 upgradeRank">운영진 임명</button>
 			<button class="btn btn-danger w-100 downgradeRank">운영진 해제</button>
+			<button class="btn btn-danger w-100 mt-1 removeMember">강퇴</button>
         </div>
     </div>
 </div>
@@ -1951,13 +2062,13 @@ $(document).ready(function () {
 						<div class="col mt-1">
 							<strong>${clubDetailBoardList[0].memberName}</strong>
 						</div>
-						<div class="col mt-1"">
+						<div class="col mt-1">
 							<span class="club-explain">${clubDetailBoardList[0].clubBoardDate}</span>
 						</div>
-						<div class="col mt-1"">
+						<div class="col mt-1">
 							<strong>${clubDetailBoardList[0].clubBoardTitle}</strong>
 						</div>
-						<div class="col mt-1"">${clubDetailBoardList[0].clubBoardContent}</div>
+						<div class="col mt-1 clubExplain">${clubDetailBoardList[0].clubBoardContent}</div>
 					</div>
 				</div>
 			</a>

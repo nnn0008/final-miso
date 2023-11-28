@@ -5,6 +5,7 @@ import java.util.List;
 import com.kh.springfinal.dto.ChatDto;
 import com.kh.springfinal.dto.ChatRoomDto;
 import com.kh.springfinal.dto.ClubDto;
+import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MeetingDto;
 import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.vo.ChatListVO;
@@ -49,6 +50,7 @@ public interface ChatRoomDao {
 	ChatOneMemberListVO oneMembers(int chatRoomNo);
 	
 	String clubMemberRank(String memberId, int clubNo);
+	String meetingclubMemberRank(String memberId, int clubNo);
 	
 	int isChatRoomMember( String memberId, int chatRoomNo);
 	int isMeetingRoomMember(String memberId, int chatRoomNo);

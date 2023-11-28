@@ -50,10 +50,20 @@ $(function () {
     	
     	
     })
+    var memberId = "${sessionScope.name}";
+    $.ajax({
+    	url:"http://localhost:8080/rest/member/profile",
+    	method:"post",
+    	data: {memberId:memberId},
+    success: function (response) {
+    	var attachDto = response.data;
+    }
+    	
+    
     
     })
     
-    
+    });
     
     </script>
     
@@ -65,7 +75,7 @@ $(function () {
                         <div class="col">
                             <div class="col d-flex justify-content-center">
                                 <c:choose>
-			                    	<c:when test="${sessionScope.name!=null}">
+			                    	<c:when test="${attachDto!=null}">
 			                    			<img src="/rest/member/profileShow?memberId=${sessionScope.name}" class="rounded-circle profile" style="width: 80px; height: 80px;">
 			                    	</c:when>
 			                    	<c:otherwise>

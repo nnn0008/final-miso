@@ -21,6 +21,7 @@ import com.kh.springfinal.dao.PaymentDao;
 import com.kh.springfinal.dao.PaymentRegularDao;
 import com.kh.springfinal.dao.ProductDao;
 import com.kh.springfinal.dto.ClubDto;
+import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.dto.PaymentDetailDto;
 import com.kh.springfinal.dto.PaymentDto;
 import com.kh.springfinal.dto.PaymentRegularDto;
@@ -74,11 +75,17 @@ public class KakaopayController {
 	
 	
 	
-	//상품 메인화면 띄울예정
-	@RequestMapping("/product")
-	public String product(Model model) {
-		return "pay/product";
-	}
+   //상품 메인화면 띄울예정
+   @RequestMapping("/product")
+   public String product(Model model,HttpSession session) {
+      String memberId=(String)session.getAttribute("name");
+      MemberDto memberDto = memberDao.memberFindId(memberId);
+      String memberLevel = memberDto.getMemberLevel();
+      session.setAttribute("memberLevel", memberLevel);
+      
+      return "pay/product";
+   }
+
 	//단건 상품화면
 	@RequestMapping("/singleList")
 	public String singleList(Model model,HttpSession session) {
@@ -127,36 +134,43 @@ public class KakaopayController {
 
 	//결제 확인화면
 	@GetMapping("/purchase")
-	public String purchase(@ModelAttribute PurchaseListVO listVO, int clubNo, Model model,HttpSession session) {
-		List<PurchaseVO> purchaseList = listVO.getProduct();
-		
-		//클럽정보 조회
-		ClubDto clubDto = clubDao.clubSelectOne(clubNo);
-		model.addAttribute("clubDto",clubDto);
-		log.debug("ClubDto={}",clubDto);
-		
-		List<PurchaseConfirmVO> confirmList = new ArrayList<>();//옮겨닮을 리스트
-		int total = 0;
-		for(PurchaseVO vo : purchaseList) {//사용자가 선택한 번호를 반복하며
-			ProductDto productDto =  productDao.selectOne(vo.getProductNo());//상품정보
-			
-			 if ("단건".equals(productDto.getProductType())) {
-			PurchaseConfirmVO confirmVO = PurchaseConfirmVO.builder()
-					.purchaseVO(vo).productDto(productDto)
-					.build();
-		confirmList.add(confirmVO);//화면에 출력할 데이터 추가
-		total += confirmVO.getTotal();//총 구매금액 합산
-			 }
+	public String purchase(@ModelAttribute PurchaseListVO listVO, @RequestParam(required = false) Integer clubNo, Model model, HttpSession session) {
+	    List<PurchaseVO> purchaseList = listVO.getProduct();
+
+	    // 클럽 정보 조회
+	    ClubDto clubDto = (clubNo != null) ? clubDao.clubSelectOne(clubNo) : null;
+
+	    if (clubDto != null) {
+	        model.addAttribute("clubDto", clubDto);
+	        log.debug("ClubDto={}", clubDto);
+	    }
+
+	    List<PurchaseConfirmVO> confirmList = new ArrayList<>(); // 옮겨닮을 리스트
+	    int total = 0;
+
+	    for (PurchaseVO vo : purchaseList) {
+	        ProductDto productDto = productDao.selectOne(vo.getProductNo());
+
+	        if ("단건".equals(productDto.getProductType())) {
+	            PurchaseConfirmVO confirmVO = PurchaseConfirmVO.builder()
+	                    .purchaseVO(vo).productDto(productDto)
+	                    .build();
+	            confirmList.add(confirmVO);
+	            total += confirmVO.getTotal();
+	        }
+	    }
+
+	    model.addAttribute("list", confirmList);
+	    model.addAttribute("total", total);
+
+	    // 클럽 번호가 존재하면 세션에 저장
+	    if (clubNo != null) {
+	        session.setAttribute("clubNo", clubNo);
+	    }
+
+	    return "pay/purchase";
 	}
-		
-		model.addAttribute("list", confirmList);//선택한번호의상품
-		model.addAttribute("total",total);
-		model.addAttribute("clubDto",clubDto);
-		
-		//클럽 번호를 세션에 저장
-		session.setAttribute("clubNo", clubNo);
-		return"pay/purchase";
-	}
+
 	
 	@PostMapping("/purchase")
 	public String purchase(HttpSession session,@ModelAttribute PurchaseListVO listVO) throws URISyntaxException {
@@ -198,6 +212,9 @@ public class KakaopayController {
 				//[1] 결제번호 생성
 				int paymentNo = Integer.parseInt(response.getPartnerOrderId());
 				
+				//세션에서 클럽 번호를 읽어옴
+				int clubNo = (int) session.getAttribute("clubNo");
+				
 				//[2] 결제번호 등록
 				paymentDao.insert(PaymentDto.builder()
 						.paymentNo(paymentNo)//결제고유번호
@@ -206,6 +223,7 @@ public class KakaopayController {
 						.paymentName(response.getItemName())//PG사 결제상품명
 						.paymentPrice(response.getAmount().getTotal())//총 결제액
 						.paymentRemain(response.getAmount().getTotal())//총 취소가능액
+						.paymentclubNo(clubNo)//등록번호
 						.build());
 				
 				//[3] 상품 개수 만큼 결제 상세정보를 등록
@@ -438,6 +456,9 @@ public class KakaopayController {
 						//[1] 결제번호 생성
 						int paymentRegularNo = Integer.parseInt(response.getPartnerOrderId());
 					
+						// 세션에서 클럽 번호를 읽어옴
+						int clubNo = (int) session.getAttribute("clubNo");
+						
 						//[2] 결제번호 등록
 						paymentRegularDao.insert(PaymentRegularDto.builder()
 								.paymentRegularNo(paymentRegularNo)//결제고유번호
@@ -447,6 +468,7 @@ public class KakaopayController {
 								.paymentRegularName(response.getItemName())//PG사 결제상품명
 								.paymentRegularPrice(response.getAmount().getTotal())//총 결제액
 								.paymentRegularRemain(response.getAmount().getTotal())//총 취소가능액
+								.paymentRegularClubNo(clubNo) //클럽번호
 								.build());
 						
 						//[3] 상품 개수 만큼 결제 상세정보를 등록
@@ -462,14 +484,11 @@ public class KakaopayController {
 										.build());
 							}
 							
-							// 세션에서 클럽 번호를 읽어옴
-						    int clubNo = (int) session.getAttribute("clubNo");
-						    
-							//회원등급 취소
+							//회원등급 업데이트
 							String memberId=(String)session.getAttribute("name");
 							memberDao.updateLevel(memberId);
 							
-							//모임 프리미엄 취소
+							//모임 프리미엄 업데이트
 							 clubDao.updatePremiumClub(clubNo);
 						    
 //							clubDao.updatePremium(memberId);
@@ -530,7 +549,8 @@ public class KakaopayController {
 //				return "redirect:regularSuccessResult";
 //			}
 			@RequestMapping("/regularPurchase/regularSuccessResult")
-			public String regularSuccessResult() {
+			public String regularSuccessResult(HttpSession session) {
+				String memberId = (String) session.getAttribute("name");
 				return"pay/regularSuccessResult";
 			}
 			
@@ -591,7 +611,7 @@ public class KakaopayController {
 				String memberId=(String)session.getAttribute("name");
 				memberDao.updateDownLevel(memberId);
 				
-				//모임 프리미엄 취소
+				//모임 프리미엄 업데이트
 				clubDao.updateDownPremium(memberId);
 				
 	         

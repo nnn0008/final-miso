@@ -9,11 +9,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.logging.log4j.message.SimpleMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -25,13 +22,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.kh.springfinal.dao.AttachDao;
 import com.kh.springfinal.dao.CategoryDao;
 import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dao.ClubMemberDao;
+import com.kh.springfinal.dao.HomeDao;
 import com.kh.springfinal.dao.MemberCategoryDao;
 import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dao.MemberProfileDao;
+import com.kh.springfinal.dao.PaymentDao;
+import com.kh.springfinal.dao.PaymentRegularDao;
+import com.kh.springfinal.dao.WishlistDao;
 import com.kh.springfinal.dao.ZipCodeDao;
 import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.ClubDto;
@@ -41,6 +41,11 @@ import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.dto.MemberEditDto;
 import com.kh.springfinal.dto.MinorCategoryDto;
 import com.kh.springfinal.dto.ZipCodeDto;
+import com.kh.springfinal.vo.HomeForClubVO;
+import com.kh.springfinal.vo.HomeForMeetingMemberVO;
+import com.kh.springfinal.vo.PaymentListVO;
+import com.kh.springfinal.vo.PaymentRegularListVO;
+import com.kh.springfinal.vo.WishlistVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -72,6 +77,17 @@ public class MemberController {
 	@Autowired
 	private ClubMemberDao clubMemberDao;
 	
+	@Autowired
+	private WishlistDao wishlistDao;
+	
+	@Autowired
+	private PaymentRegularDao paymentRegularDao;
+	
+	@Autowired
+	private PaymentDao paymentDao;
+	
+	@Autowired
+	private HomeDao homeDao;
 	@GetMapping("/join")
 	public String join() {
 		return "member/join";
@@ -125,7 +141,7 @@ public class MemberController {
 //	public String login(HttpServletResponse httpServletResponse,
 //						@RequestParam String memberId, @RequestParam String memberPw,
 //						@RequestParam(required = false) String saveId,
-//								HttpSession session) {
+//								HttpSession session, Model model) {
 ////		db 유저 정보
 //		MemberDto userDto = memberDao.selectOne(memberId, memberPw);
 ////		 id 틀리면 되돌림
@@ -174,15 +190,9 @@ public class MemberController {
 //			return "redirect:login?error";
 //		}
 ////		로그인 완료창으로 보내기
-//		return "redirect:../";	
+//		return "redirect:/club/list";	
 //	}
 	
-			//ChatRoomDto chatRoomDto = chatRoomDao.selectOne(userDto.getMemberId());
-			//log.debug("chatRoomDto: {}", chatRoomDto);
-			//
-			//if(chatRoomDto != null ) { //채팅방 번호가 있다면
-			//	session.setAttribute("chatRoomNo", chatRoomDto.getChatRoomNo()); //채팅방 번호를 넣어라
-			//}		
 			
   	@RequestMapping("/logout")
 	public String logout(HttpSession session){
@@ -289,11 +299,57 @@ public class MemberController {
 			model.addAttribute("like"+i, majorCategoryDto.getMajorCategoryName()+"/"+minorCategoryDto.getMinorCategoryName());
 		}
 		//가입한 클럽 정보
-		List<ClubDto> clubDto =  clubMemberDao.mypageClubList(memberId);
-		if(clubDto!=null) model.addAttribute("clubDto", clubDto);
-		if(attachDto!=null) {
-			model.addAttribute("attachDto", attachDto);
+		List<ClubDto> clubList =  clubMemberDao.mypageClubList(memberId);
+		if(clubList!=null) {
+			model.addAttribute("clubList", clubList);
 		}
+		if(attachDto!=null) {
+			model.addAttribute("attachDto", attachDto); 
+		}
+		List<WishlistVO> wishList = wishlistDao.selectListForMypage(memberId, 10);
+		List<HomeForClubVO> joinList = clubMemberDao.selectListByMemberId(memberId);
+		List<HomeForMeetingMemberVO> memberList = homeDao.selectList();
+
+		// 구독내역 조회
+		List<PaymentRegularListVO> paymentRegularList = paymentRegularDao.selectTotalListByMember(memberId);
+
+		// 클럽 정보 조회 및 로그 출력
+		for (PaymentRegularListVO paymentRegularListVO : paymentRegularList) {
+		    int clubNo = paymentRegularListVO.getPaymentRegularDto().getPaymentRegularClubNo();
+		    ClubDto clubDto = clubDao.clubSelectOne(clubNo);
+
+		    // ClubDto가 null이 아닌지, 그리고 clubName이 있는지 로그에 출력
+		    log.info("ClubDto: {}", clubDto);
+
+		    // ClubDto를 PaymentRegularListVO에 세팅
+		    paymentRegularListVO.setClubDto(clubDto);
+		}
+
+		// 모델에 추가
+		model.addAttribute("list2", paymentRegularList);
+		
+		//구독내역 조회
+		List<PaymentListVO> paymentList = paymentDao.selectTotalListByMember(memberId);
+		
+		// 클럽 정보 조회 및 로그 출력
+		for (PaymentListVO paymentListVO : paymentList) {
+		    int clubNo = paymentListVO.getPaymentDto().getPaymentclubNo();
+		    ClubDto clubDto = clubDao.clubSelectOne(clubNo);
+
+		    // ClubDto가 null이 아닌지, 그리고 clubName이 있는지 로그에 출력
+		    log.info("ClubDto: {}", clubDto);
+
+		    // ClubDto를 PaymentRegularListVO에 세팅
+		    paymentListVO.setClubDto(clubDto);
+		}
+
+		// 모델에 추가
+		model.addAttribute("list", paymentList);
+
+		model.addAttribute("wishList", wishList);
+		model.addAttribute("joinList", joinList);
+		model.addAttribute("memberList", memberList);
+		
 		model.addAttribute("memberDto", memberDto);
 		return "member/mypage";
 	}
