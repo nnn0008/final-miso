@@ -1,5 +1,7 @@
 package com.kh.springfinal.dto;
 
+import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +14,7 @@ public class ClubBoardDto {
 	private String clubBoardTitle;
 	private String clubBoardContent;
 	private String clubBoardCategory;
-	private String clubBoardDate;
+	private Date clubBoardDate;
 	private String clubBoardLikecount;
 	private int clubBoardReplyCount;
 	private int clubMemberNo;

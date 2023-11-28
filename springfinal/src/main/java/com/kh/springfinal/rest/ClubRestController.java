@@ -311,15 +311,17 @@ public class ClubRestController {
 	}
 	
 	@GetMapping("clubMemberList")
-	public List<ClubMemberVO> clubMemberList(int clubNo,HttpSession session){
+	public List<ClubMemberVO> clubMemberList(@ModelAttribute(name ="vo") PaginationVO vo,
+			int clubNo,HttpSession session,int size1){
 		
+		vo.setWhereNo(clubNo);
+		vo.setSize(size1);
 		String memberId= (String) session.getAttribute("name");
 		
 		boolean master = clubMemberDao.editPossible(clubNo, memberId);
 		
-		log.debug("isMaster={}",master);
 		
-		List<ClubMemberVO> clubMemberList = clubMemberDao.memberInfo(clubNo);
+		List<ClubMemberVO> clubMemberList = clubMemberDao.memberInfo(vo);
 		SimpleDateFormat joinDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		for(ClubMemberVO dto : clubMemberList) {
 			
@@ -345,6 +347,28 @@ public class ClubRestController {
 		
 	}
 	
+	@GetMapping("/downgradeRank")
+	public boolean downgrade(int clubMemberNo) {
+		
+		boolean result = clubMemberDao.downgradeRank(clubMemberNo);
+		
+		return result; 
+		
+		
+		
+	}
+	
+	@GetMapping("/removeMember")
+	public boolean removeMember(int clubMemberNo) {
+		
+		boolean result = clubMemberDao.removeMember(clubMemberNo);
+		
+		return result;
+		
+	}
+	
+	
+	
 	@GetMapping("/joinPossible")
 	public int joinPossible(HttpSession session,int clubNo){
 		
@@ -367,7 +391,7 @@ public class ClubRestController {
 		
 		else if(memberDto.getMemberLevel().equals("일반유저")) {
 			
-			if(memberJoinCount>=5) {
+			if(memberJoinCount>=50) {
 				
 				return 2;
 			}
@@ -377,7 +401,7 @@ public class ClubRestController {
 		else {
 			
 				
-				if(memberJoinCount>=12) {
+				if(memberJoinCount>=50) {
 					
 					return 3;
 					
@@ -422,6 +446,8 @@ public class ClubRestController {
 		
 
 	}
+	
+	
 	
 	
 	

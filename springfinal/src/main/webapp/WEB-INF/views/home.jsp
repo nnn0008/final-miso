@@ -68,8 +68,8 @@ width: 110px;
 	var loading = false;
 	var currentPage = 1;
 	$(function() {
+		$(".go-upside").hide();
 		loadList();
-		
 		loadMore(currentPage);	
 	});
 	//최초의 5장을 불러온다
@@ -100,25 +100,32 @@ width: 110px;
 					$(htmlTemplate).find(".meeting-image").attr("href", window.contextPath + "/club/detail?clubNo=" + response[i].clubNo);
 					$(htmlTemplate).find(".meeting-attend").attr("data-club-no", response[i].clubNo).attr("data-meeting-no", response[i].meetingNo);
 					$(htmlTemplate).find(".meeting-cancel").attr("data-club-no", response[i].clubNo).attr("data-meeting-no", response[i].meetingNo);
+					if(response[i].attended){ //참가한 미팅이라면
+						$(htmlTemplate).find(".meeting-attend").hide();
+					}
+					else{//참가하지 않은 미팅이라면
+						$(htmlTemplate).find(".meeting-attend").hide();
+					}
 					if(response[i].attachNo != null){
-						var img = $("<img>").attr("src", window.contextPath + "/download?attachNo=" + response[i].attachNo)
+						var img = $("<img>").attr("src", window.contextPath + "/download?attachNo=" + response[i].attachNo).addClass("w-100")
 						.css({
-							"width":"182px",
-							"height":"157.75px"
+							"max-height":"182.9px"
 						});
 						$(htmlTemplate).find(".meeting-image").html(img);
 					}
-// 					$(htmlTemplate).find(".meeting-profile").text(response[i].)
+					else{
+						var img = $("<img>").attr("src", window.contextPath + "/images/logo-door.png").addClass("w-100");
+						$(htmlTemplate).find(".meeting-image").html(img);
+					}
 					
 					$(".meeting-list").append(htmlTemplate);
 					attendMeeting(htmlTemplate);
 					cancelMeeting(htmlTemplate);
 				}
-				
-				
 			},
 		});
 	}
+	
 	//스크롤바가 65%를 넘을 시에 다음 페이지를 로드하도록
 	function loadMore(currentPage){
 		$(window).scroll(function() {
@@ -131,9 +138,10 @@ width: 110px;
 			// 스크롤의 위치를 퍼센트로 계산
 			var scrollPercent = (scrollTop / (docHeight - windowHeight)) * 100;
 			// 퍼센트를 콘솔에 출력
-			console.log("스크롤 퍼센트: " + scrollPercent.toFixed(2) + "%");
+			//console.log("스크롤 퍼센트: " + scrollPercent.toFixed(2) + "%");
 			
 			if(!loading && scrollPercent >= 65){
+				$(".go-upside").show();
 				loading = true;
 				currentPage++;
 				console.log(currentPage);
@@ -144,46 +152,58 @@ width: 110px;
 						page: currentPage,
 					},
 					success: function(response){
-						
-						for(var i = 0; i < response.length; i++){
-							console.log(response[i]);
-							
-							var template = $("#meeting-template").html();
-							var htmlTemplate = $.parseHTML(template);
-							
-							$(htmlTemplate).find(".meeting-card").attr("data-club-no", response[i].clubNo);
-							$(htmlTemplate).find(".meeting-clubName").text(response[i].clubName);
-							$(htmlTemplate).find(".meeting-attend").attr("data-club-no", response[i].clubNo);
-							$(htmlTemplate).find(".meeting-cancel").attr("data-club-no", response[i].clubNo);
-							$(htmlTemplate).find(".meeting-go-club").attr("href", window.contextPath + "/club/detail?clubNo=" + response[i].clubNo);
-							$(htmlTemplate).find(".meeting-location").text(response[i].meetingLocation);
-							$(htmlTemplate).find(".meeting-date").text(response[i].formattedMeetingDate);
-							$(htmlTemplate).find(".meeting-dday").text(response[i].calculateDday);
-							$(htmlTemplate).find(".meeting-name").text(response[i].meetingName);
-							$(htmlTemplate).find(".meeting-image").attr("href", window.contextPath + "/club/detail?clubNo=" + response[i].clubNo);
-							$(htmlTemplate).find(".meeting-attend").attr("data-club-no", response[i].clubNo).attr("data-meeting-no", response[i].meetingNo);
-							$(htmlTemplate).find(".meeting-cancel").attr("data-club-no", response[i].clubNo).attr("data-meeting-no", response[i].meetingNo);
-							if(response[i].attachNo != null){
-								var img = $("<img>").attr("src", window.contextPath + "/download?attachNo=" + response[i].attachNo)
-								.css({
-									"width":"182px",
-									"height":"157.75px"
-								});
-								//테스트로 넣어본 이미지는 돌아감
-								//var img = $("<img>").attr("src", window.contextPath + "/images/paint-palette.png");
-								$(htmlTemplate).find(".meeting-image").html(img);
-							}
-//		 					$(htmlTemplate).find(".meeting-profile").text(response[i].)
-							
-							$(".meeting-list").append(htmlTemplate);
+						if(response.length == 0){
+							console.log("스크롤 종료");
 						}
-						loading = false;
+						else{
+							for(var i = 0; i < response.length; i++){
+								console.log(response[i]);
+								
+								var template = $("#meeting-template").html();
+								var htmlTemplate = $.parseHTML(template);
+								
+								$(htmlTemplate).find(".meeting-card").attr("data-club-no", response[i].clubNo);
+								$(htmlTemplate).find(".meeting-clubName").text(response[i].clubName);
+								$(htmlTemplate).find(".meeting-attend").attr("data-club-no", response[i].clubNo);
+								$(htmlTemplate).find(".meeting-cancel").attr("data-club-no", response[i].clubNo);
+								$(htmlTemplate).find(".meeting-go-club").attr("href", window.contextPath + "/club/detail?clubNo=" + response[i].clubNo);
+								$(htmlTemplate).find(".meeting-location").text(response[i].meetingLocation);
+								$(htmlTemplate).find(".meeting-date").text(response[i].formattedMeetingDate);
+								$(htmlTemplate).find(".meeting-dday").text(response[i].calculateDday);
+								$(htmlTemplate).find(".meeting-name").text(response[i].meetingName);
+								$(htmlTemplate).find(".meeting-image").attr("href", window.contextPath + "/club/detail?clubNo=" + response[i].clubNo);
+								$(htmlTemplate).find(".meeting-attend").attr("data-club-no", response[i].clubNo).attr("data-meeting-no", response[i].meetingNo);
+								$(htmlTemplate).find(".meeting-cancel").attr("data-club-no", response[i].clubNo).attr("data-meeting-no", response[i].meetingNo);
+								if(response[i].attended){ //참가한 미팅이라면
+									$(htmlTemplate).find(".meeting-attend").hide();
+								}
+								else{//참가하지 않은 미팅이라면
+									$(htmlTemplate).find(".meeting-attend").hide();
+								}
+								if(response[i].attachNo != null){
+									var img = $("<img>").attr("src", window.contextPath + "/download?attachNo=" + response[i].attachNo).addClass("w-100");
+									//테스트로 넣어본 이미지는 돌아감
+									//var img = $("<img>").attr("src", window.contextPath + "/images/paint-palette.png");
+									$(htmlTemplate).find(".meeting-image").html(img);
+								}
+								else{
+									var img = $("<img>").attr("src", window.contextPath + "/images/logo-door.png").addClass("w-100");
+									$(htmlTemplate).find(".meeting-image").html(img);
+								}
+	//		 					$(htmlTemplate).find(".meeting-profile").text(response[i].)
+								
+								$(".meeting-list").append(htmlTemplate);
+								attendMeeting(htmlTemplate);
+								cancelMeeting(htmlTemplate);
+							}
+							loading = false;		
+						}
 					},
 				});
 			}
 		});
-		
 	}
+	
 	//정모 관련 처리
 	function attendMeeting(htmlTemplate){
 		$(htmlTemplate).find(".meeting-attend").on("click", function() {
@@ -253,9 +273,9 @@ width: 110px;
     </div>
     <div class="col-md-8">
       <div class="card-body">
-        <h5 class="card-title meeting-name">Card title</h5>
+        <h5 class="card-title meeting-name text-truncate">Card title</h5>
         <p class="card-text meeting-clubName">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-        <p class="card-text meeting-location">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+        <p class="card-text meeting-location text-truncate">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
         <p class="card-text"><small class="text-body-secondary meeting-date">Last updated 3 mins ago</small></p>
         <p class="card-text"><small class="text-body-secondary meeting-dday">Last updated 3 mins ago</small></p>
 		<button type="button" class="btn btn-in btn-light rounded-pill ml-auto meeting-attend">참석</button>
@@ -603,7 +623,12 @@ width: 110px;
 <!-- 				</div> -->
 <!-- 			</div> -->
 <%-- 		</c:forEach> --%>
-
+		<!-- 위로 가기 버튼 -->
+<div class="row go-upside mt-3">
+    <div class="col">
+        <a href="#" class="btn btn-miso w-100">위로</a>
+    </div>
+</div>
 	</div>
 
 

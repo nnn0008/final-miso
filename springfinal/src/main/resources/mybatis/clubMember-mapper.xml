@@ -52,7 +52,8 @@
     	</select>
     	
     	<select id="memberInfo" resultType="clubMemberVO">
-    		
+    		 select * from (
+	select rownum rn, TMP.* from (
     		SELECT m.member_id,
     		m.member_name,
     		cm.club_member_no,
@@ -66,7 +67,9 @@
     		on m.member_id=mp.member_Id
     		left outer join attach a 
     		on mp.attach_no = a.attach_no
-    		WHERE cm.CLUB_NO=#{clubNo}
+    		WHERE cm.CLUB_NO=#{whereNo}) TMP
+			    )
+			    where rn between #{startRow} and #{finishRow}
     	
     	</select>
     	
@@ -116,6 +119,12 @@
     	where club_member_no=#{clubMemberNo}
     </update>
     
+    <update id="rankDowngrade">
+    
+    	update club_member set club_member_rank='일반' 
+    	where club_member_no=#{clubMemberNo}
+    </update>
+    
 
     <delete id="clubMemberDelete">
     
@@ -147,6 +156,12 @@
     <select id="joinedClub" resultType="int">
     	
     	select count(*) club_member where club_no=#{clubNo} and club_member_id=#{clubMemberId}
+    
+    </select>
+    
+    <select id="managerExist" resultType="int">
+    
+	    SELECT count(*) FROM club_member WHERE CLUB_NO =#{clubNo} AND CLUB_MEMBER_RANK ='운영진'
     
     </select>
 

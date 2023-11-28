@@ -85,37 +85,6 @@ public class ClubBoardRestController {
 		return vo;
 	}
 	
-//	@RequestMapping("/action")
-//	public ClubBoardLikeVO action(HttpSession session, @RequestParam int clubBoardNo) {
-//		String memberId = (String) session.getAttribute("name");
-//		ClubBoardAllDto clubBoardAllDto = clubBoardDao.selectOne(clubBoardNo);
-//		ClubMemberDto clubMemberDto = clubBoardDao.selectOneClubMemberNo(memberId, clubBoardAllDto.getClubNo()); 
-//		int clubMemberNo = clubMemberDto.getClubMemberNo();
-//		
-//		ClubBoardLikeDto clubBoardLikeDto = new ClubBoardLikeDto();
-//		clubBoardLikeDto.setClubMemberNo(clubMemberNo);
-//		clubBoardLikeDto.setClubBoardNo(clubBoardNo);
-//		
-//		boolean isCheck = clubBoardLikeDao.check(clubBoardLikeDto);
-//		log.debug("clubMemberNo = {}", clubMemberNo);
-//		if(isCheck) { //이미 좋아요를 눌렀다면
-//			clubBoardLikeDao.deleteByClubMemberNo(clubMemberNo);
-//			clubBoardDao.updateLikeCount(clubBoardNo);
-//		}
-//		else {//좋아요를 누르지 않았따면
-//			clubBoardLikeDao.insert(clubBoardLikeDto);
-//			clubBoardDao.updateLikeCount(clubBoardNo);
-//		}
-//		
-//		int count = clubBoardLikeDao.count(clubBoardNo);
-//		
-//		ClubBoardLikeVO vo = new ClubBoardLikeVO();
-//		vo.setCheck(isCheck);
-//		vo.setCount(count);
-//		
-//		return vo;
-//	}
-	
 	@RequestMapping("/action")
 	public Map<String, Object> action(HttpSession session, @RequestParam int clubBoardNo) {
 	    Map<String, Object> responseMap = new HashMap<>();
@@ -140,7 +109,7 @@ public class ClubBoardRestController {
 	        clubBoardLikeDto.setClubBoardNo(clubBoardNo);
 
 	        boolean isCheck = clubBoardLikeDao.check(clubBoardLikeDto);
-
+	        log.debug("isCheck = {}", isCheck);
 	        if (isCheck) { //이미 좋아요를 눌렀다면
 	            clubBoardLikeDao.deleteByClubMemberNo(clubMemberNo);
 	            clubBoardDao.updateLikeCount(clubBoardNo);
@@ -204,23 +173,27 @@ public class ClubBoardRestController {
 	public List<ClubBoardAllDto> clubBoardList(@ModelAttribute("vo")PaginationVO vo, @RequestParam int clubNo, @RequestParam(required=false) int page, 
 			@RequestParam(required=false) String keyword, HttpSession session) {
 		String memberId = (String) session.getAttribute("name");
-		int count = clubBoardDao.clubBoardCount(vo, clubNo);
-		//각각의 게시글에 좋아요를 했나?
-		vo.setPage(page);
-		vo.setCount(count);
-		if(keyword != null) {
-			vo.setKeyword(keyword);
-		}
-		List<ClubBoardAllDto> list = clubBoardDao.selectListByPage(vo, clubNo);
-		ClubMemberDto clubMemberDto = clubBoardDao.selectOneClubMemberNo(memberId, clubNo);
-		for(ClubBoardAllDto dto : list) {
-//			ClubBoardLikeDto clubBoardLikeDto = 
-			ClubBoardDto clubBoardDto = clubBoardDao.selectOnes(dto.getClubBoardNo()); //리스트에 들어있는 게시글 번호들
-			boolean isLike = clubBoardLikeDao.isLike(clubMemberDto.getClubMemberNo(), dto.getClubBoardNo());
-			
-			dto.setLiked(isLike);
-		}
+		log.debug("keyword = {}", keyword);
+		log.debug("page ={}", page);
+	    // 새로운 키워드가 들어온 경우에만 세션을 클리어하도록 수정
+		
+	    if(keyword != null) {
+	    	vo.setKeyword(keyword);
+	    }
+	    int count = clubBoardDao.clubBoardCount(vo, clubNo);
+	    log.debug("count = {}", count);
+	    vo.setPage(page);
+	    vo.setCount(count);
 
-		return list;
+	    List<ClubBoardAllDto> list = clubBoardDao.selectListByPage(vo, clubNo);
+	    ClubMemberDto clubMemberDto = clubBoardDao.selectOneClubMemberNo(memberId, clubNo);
+
+	    for(ClubBoardAllDto dto : list) {
+	        ClubBoardDto clubBoardDto = clubBoardDao.selectOnes(dto.getClubBoardNo());
+	        boolean isLike = clubBoardLikeDao.isLike(clubMemberDto.getClubMemberNo(), dto.getClubBoardNo());
+	        dto.setLiked(isLike);
+	    }
+
+	    return list;
 	}
 }

@@ -13,6 +13,7 @@ import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.vo.ClubMemberVO;
 import com.kh.springfinal.vo.HomeForClubVO;
 import com.kh.springfinal.vo.MeetingAttendMemberVO;
+import com.kh.springfinal.vo.PaginationVO;
 
 @Repository
 public class ClubMemberDaoImpl implements ClubMemberDao{
@@ -61,9 +62,9 @@ public class ClubMemberDaoImpl implements ClubMemberDao{
 	}
 
 	@Override
-	public List<ClubMemberVO> memberInfo(int clubNo) {
+	public List<ClubMemberVO> memberInfo(PaginationVO vo) {
 		
-		return sqlSession.selectList("clubMember.memberInfo",clubNo);
+		return sqlSession.selectList("clubMember.memberInfo",vo);
 	}
 
 	@Override
@@ -161,6 +162,25 @@ public class ClubMemberDaoImpl implements ClubMemberDao{
 		
 		return result>=1;
 		
+	}
+
+	@Override
+	public boolean managerExist(int clubNo) {
+		
+		int result = sqlSession.selectOne("clubMember.managerExist",clubNo);
+		return result>0;
+	}
+
+	@Override
+	public boolean downgradeRank(int clubMemberNo) {
+		return sqlSession.update("clubMember.rankDowngrade",clubMemberNo)>0;
+	}
+
+	@Override
+	public boolean removeMember(int clubMemberNo) {
+		
+		
+		return sqlSession.delete("clubMember.clubMemberDelete",clubMemberNo)>0;
 	}
 	
 	

@@ -33,7 +33,7 @@
 				where w.member_id = #{memberId}
 				order by w.jjim_day desc
     		)TMP
-		) where rn between 1 and 3
+		) where rn between 1 and 4
     </select>
     
     <select id="findAllByMypage" resultType="WishlistVO">

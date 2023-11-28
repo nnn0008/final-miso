@@ -94,15 +94,16 @@ public class ClubBoardController {
 			@ModelAttribute ClubBoardImage3Dto clubBoardImage3Dto, @RequestParam MultipartFile attach,
 			@RequestParam MultipartFile attachSecond, @RequestParam MultipartFile attachThird) throws Exception, IOException{
 
-		String memberId = (String)session.getAttribute("name"); //여기서 회원 이름을 얻어야함
+		String memberId = (String)session.getAttribute("name"); //회원 아이디
 		memberDto = memberDao.loginId(memberId);
 		memberDto.setMemberId(memberId);
 		
-		String clubMemberId = memberDto.getMemberId();
-		
 		int clubBoardNo = clubBoardDao.sequence();
-		clubMemberDto = clubBoardDao.selectOneClubMemberNo(clubMemberId, clubNo);
+		clubMemberDto = clubBoardDao.selectOneClubMemberNo(memberId, clubNo);
+		log.debug("clubNo ={}" , clubNo);
+		log.debug("memberId ={}" , memberId);
 		
+		log.debug("clubMemberDto ={}" , clubMemberDto);
 		int clubMemberNo = clubMemberDto.getClubMemberNo();
 		
 		clubBoardDto.setClubBoardName(memberDto.getMemberName());

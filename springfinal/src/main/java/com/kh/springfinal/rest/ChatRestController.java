@@ -3,13 +3,10 @@ package com.kh.springfinal.rest;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.http.HttpRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +16,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,8 +26,7 @@ import com.kh.springfinal.dao.ChatDao;
 import com.kh.springfinal.dao.ChatRoomDao;
 import com.kh.springfinal.dao.MemberProfileDao;
 import com.kh.springfinal.dto.AttachDto;
-import com.kh.springfinal.vo.ChatMemberListVO;
-import com.kh.springfinal.vo.ChatOneMemberListVO;
+import com.kh.springfinal.dto.ClubDto;
 import com.kh.springfinal.vo.MemberVO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -147,12 +141,22 @@ public class ChatRestController {
 	             .body(resource);
 	 }
 	 
-	 //멤버 프로필 사진
+	 //멤버 레벨 확인
 	 @GetMapping("/getClubMemberRank")
-	 public String getClubMemberRank(@RequestParam String  memberId, @RequestParam int chatRoomNo) {
-		 int clubNo = chatRoomDao.clubInfo(chatRoomNo).getClubNo();
-	        return chatRoomDao.clubMemberRank(memberId, clubNo);
-	    }
+	 public String getClubMemberRank(@RequestParam String memberId, @RequestParam int chatRoomNo) {
+	     ClubDto clubDto = chatRoomDao.clubInfo(chatRoomNo);
+
+	     if (clubDto != null) {
+	         int clubNo = clubDto.getClubNo();
+	         return chatRoomDao.clubMemberRank(memberId, clubNo);
+	     } else {
+	         // 클럽 정보가 없는 경우에 대한 처리
+	         String meetingClubMemberRank = chatRoomDao.meetingclubMemberRank(memberId, chatRoomNo);
+	         return meetingClubMemberRank != null ? meetingClubMemberRank : "개인채팅";
+	     }
+	 }
+
+
 
 	 
 //	 @GetMapping("/getMemberList")

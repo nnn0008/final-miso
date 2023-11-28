@@ -43,16 +43,22 @@
 	
 	<select id="selectListByPage" resultType="zipCodeDto">
 		
-		   select * from (
-			        select rownum rn, TMP.* from (
-			        select * from zip_code
-			        WHERE instr(sido, #{keyword})>0 
-        			OR instr(sigungu, #{keyword})>0 
-        			OR instr(eupmyun, #{keyword})>0 
-        			OR instr(hdong_name, #{keyword})>0
-			        ) TMP
-			    )
-			    where rn between #{startRow} and #{finishRow}
+		
+			    
+			    SELECT * FROM (
+    SELECT ROWNUM rn, TMP.*
+    FROM (
+        SELECT *
+        FROM zip_code
+        WHERE INSTR(sido, #{keyword}) > 0 
+            OR INSTR(sigungu, #{keyword}) > 0 
+            OR INSTR(eupmyun, #{keyword}) > 0 
+            OR INSTR(hdong_name, #{keyword}) > 0
+        ORDER BY CASE WHEN sido = '서울특별시' THEN 0 ELSE 1 END
+    ) TMP
+)
+WHERE rn BETWEEN #{startRow} AND #{finishRow}
+			    
 	
 	
 	</select>

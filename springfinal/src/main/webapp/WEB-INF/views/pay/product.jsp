@@ -53,11 +53,11 @@ font-size: 15px;
     <div class="col-md-6">
       <div class="card mt-3 mb-3 text-center">
      <h5 class="card-header ">
-  <strong>한달이용권</strong>
+  <strong>단건이용권</strong>
   </h5>
   
   <div class="card-body-regular">
-  <strong class="card-title">한달</strong>
+  <strong class="card-title">1달or1년</strong>
     <h6 class="card-subtitle text-muted mt-1">17,000원</h6>
     <h6 class="card-text">(부가세 포함)</h6>
   </div>
@@ -67,7 +67,7 @@ font-size: 15px;
     </li>
   </ul>
   <div class="card-body pe-3">
-    <a href="regularList" class="card-link btn bg-miso w-100">구매하기</a>
+    <a href="singleList2" class="card-link btn bg-miso w-100">구매하기</a>
   </div>
   <div class="card-footer text-muted">
  <span class="text-footer">
@@ -80,11 +80,11 @@ font-size: 15px;
 <div class="col-md-6">
       <div class="card mt-3 mb-3 text-center">
    <h5 class="card-header ">
-  <strong>1년이용권</strong>
+  <strong>정기이용권</strong>
   </h5>
   
   <div class="card-body-regular ">
-     <strong class="card-title">1년</strong>
+     <strong class="card-title">1달or1년</strong>
     <h6 class="card-subtitle text-muted mt-1">170,000원</h6>
     <h6 class="card-text">(부가세 포함)</h6>
   </div>
@@ -94,7 +94,7 @@ font-size: 15px;
     </li>
   </ul>
   <div class="card-body pe-3">
-    <a href="regularList" class="card-link btn bg-miso w-100">구매하기</a>
+    <a href="regularList2" class="card-link btn bg-miso w-100">구매하기</a>
   </div>
   <div class="card-footer text-muted">
     <span class="text-footer">
@@ -105,61 +105,7 @@ font-size: 15px;
 </div>
 </div>
 
-<div class="row">
-    <div class="col-md-6">
-      <div class="card mt-3 mb-3 text-center">
-     <h5 class="card-header ">
-  <strong>정기이용권</strong>
-  </h5>
-  
-  <div class="card-body-regular">
-  <strong class="card-title">매월</strong>
-    <h6 class="card-subtitle text-muted mt-1">15,000원</h6>
-    <h6 class="card-text">(부가세 포함)</h6>
-  </div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item p-2"><i class="fa-solid fa-users-line"></i>
-    <span class="ms-1">모임 정원 범위 확대</span>
-    </li>
-  </ul>
-  <div class="card-body pe-3">
-    <a href="regularList" class="card-link btn bg-miso w-100">구매하기</a>
-  </div>
-  <div class="card-footer text-muted">
- <span class="text-footer">
-    프리미엄 회원권(매월)을 구매하시면 매월 자동결제됩니다. 정기구독의 특성상 최초 1회의 결제금액은 과금되며 환불이 불가합니다.
- </span>
-  </div>
-</div>
-</div>
 
-<div class="col-md-6">
-      <div class="card mt-3 mb-3 text-center">
-   <h5 class="card-header ">
-  <strong>정기이용권</strong>
-  </h5>
-  
-  <div class="card-body-regular ">
-     <strong class="card-title">매년</strong>
-    <h6 class="card-subtitle text-muted mt-1">150,000원</h6>
-    <h6 class="card-text">(부가세 포함)</h6>
-  </div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item p-2"><i class="fa-solid fa-users-line"></i>
-    <span class="ms-1">모임 정원 범위 확대</span>
-    </li>
-  </ul>
-  <div class="card-body pe-3">
-    <a href="regularList" class="card-link btn bg-miso w-100">구매하기</a>
-  </div>
-  <div class="card-footer text-muted">
-    <span class="text-footer">
-  프리미엄 회원권(매년)을 구매하시면 매월 자동결제됩니다. 정기구독의 특성상 최초 1회의 결제금액은 과금되며 환불이 불가합니다.
- </span>
-  </div>
-</div>
-</div>
-</div>
 
 </div>
 
@@ -176,11 +122,11 @@ font-size: 15px;
     <div class="col-md-6">
       <div class="card mt-3 mb-3 text-center">
     <h5 class="card-header ">
-  <strong>한달이용권</strong>
+  <strong>단건이용권</strong>
   </h5>
   
   <div class="card-body-single">
-     <strong class="card-title">한달</strong>
+     <strong class="card-title">1달or1년</strong>
     <h6 class="card-subtitle text-muted mt-1">17,000원</h6>
     <h6 class="card-text">(부가세 포함)</h6>
   </div>
@@ -208,11 +154,11 @@ font-size: 15px;
 <div class="col-md-6">
       <div class="card mt-3 mb-3 text-center">
   <h5 class="card-header ">
-  <strong>1년이용권</strong>
+  <strong>정기이용권</strong>
   </h5>
   
   <div class="card-body-single">
-    <strong class="card-title">1년</strong>
+    <strong class="card-title">1달or1년</strong>
     <h6 class="card-subtitle text-muted mt-1">170,000원</h6>
     <h6 class="card-text">(부가세 포함)</h6>
   </div>
@@ -238,71 +184,7 @@ font-size: 15px;
 </div>
 </div>
 
-<div class="row">
-    <div class="col-md-6">
-      <div class="card mt-3 mb-3 text-center">
-    <h5 class="card-header ">
-  <strong>정기이용권</strong>
-  </h5>
-  
-  <div class="card-body-single">
-     <strong class="card-title">매월</strong>
-    <h6 class="card-subtitle text-muted mt-1">15,000원</h6>
-    <h6 class="card-text">(부가세 포함)</h6>
-  </div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item p-2"><i class="fa-solid fa-star"></i>
-     <span class="ms-1">가입모입 개수 증가(최대 10개)</span></li>
-    <li class="list-group-item p-2"><i class="fa-solid fa-lock"></i>
-    <span class="ms-1">가입한 모임 비공개</span></li>
-    <li class="list-group-item p-2"><i class="fa-solid fa-comments fa-comments2"></i>
-    <span class="ms-1">1대1 채팅 기능</span></li>
-    <li class="list-group-item p-2"><i class="fa-solid fa-message"></i>
-    <span class="ms-1">본인 메시지 삭제 기능</span></li>
-  </ul>
-  <div class="card-body pe-3">
-    <a href="singleList" class="card-link btn bg-miso w-100">구매하기</a>
-  </div>
-  <div class="card-footer text-muted">
-  <span class="text-footer">
-  파워 유저권(매월)을 구매하시면 매월 자동결제됩니다. 정기구독의 특성상 최초 1회의 결제금액은 과금되며 환불이 불가합니다.
-  </span>
-  </div>
-</div>
-</div>
 
-<div class="col-md-6">
-      <div class="card mt-3 mb-3 text-center">
-  <h5 class="card-header ">
-  <strong>정기이용권</strong>
-  </h5>
-  
-  <div class="card-body-single">
-    <strong class="card-title">매년</strong>
-    <h6 class="card-subtitle text-muted mt-1">150,000원</h6>
-    <h6 class="card-text">(부가세 포함)</h6>
-  </div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item p-2"><i class="fa-solid fa-star"></i>
-     <span class="ms-1">가입모입 개수 증가(최대 10개)</span></li>
-    <li class="list-group-item p-2"><i class="fa-solid fa-lock"></i>
-    <span class="ms-1">가입한 모임 비공개</span></li>
-    <li class="list-group-item p-2"><i class="fa-solid fa-comments fa-comments2"></i>
-    <span class="ms-1">1대1 채팅 기능</span></li>
-    <li class="list-group-item p-2"><i class="fa-solid fa-message"></i>
-    <span class="ms-1">본인 메시지 삭제 기능</span></li>
-  </ul>
-  <div class="card-body pe-3">
-    <a href="singleList" class="card-link btn bg-miso w-100 ">구매하기</a>
-  </div>
-  <div class="card-footer text-muted">
-    <span class="text-footer">
-  파워 유저권(매년)을 구매하시면 매년 자동결제됩니다. 정기구독의 특성상 최초 1회의 결제금액은 과금되며 환불이 불가합니다.
-  </span>
-  </div>
-</div>
-</div>
-</div>
 
 </div>
   

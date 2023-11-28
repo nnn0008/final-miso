@@ -33,6 +33,16 @@
 	WHERE cm.club_member_id = #{memberId}
 	</select>
 	
+	<select id="fineMeetingRoomList" resultType="MeetingDto">
+	SELECT m.chat_room_no, m.MEETING_NAME, m.MEETING_LOCATION, m.MEETING_DATE, m.meeting_no, c.CLUB_NO 
+	FROM meeting m
+	JOIN meeting_member mm ON m.meeting_no = mm.meeting_no
+	JOIN CLUB c ON c.CLUB_NO = m.CLUB_NO 
+	JOIN club_member cm ON mm.club_member_no = cm.club_member_no
+	JOIN CHAT_ROOM cr ON cr.CHAT_ROOM_NO = m.chat_room_no
+	WHERE cr.CHAT_ROOM_NO = #{chatRoomNo}
+	</select>
+	
 	<!-- 정모 채팅방 조회(회원별) +attach_no -->
 	<select id="findMeetingAttach" resultType="MeetingVO">
 SELECT 
@@ -249,6 +259,17 @@ WHERE cr.CHAT_ROOM_NO = #{chatRoomNo}
     SELECT CLUB_MEMBER_RANK
 FROM club_member
 WHERE CLUB_MEMBER_ID = #{memberId} AND CLUB_NO = #{clubNo}
+    </select>
+    
+    <select id="meetingclubMemberRank" resultType="String">
+SELECT 
+    cm.CLUB_MEMBER_RANK
+FROM meeting m
+JOIN meeting_member mm ON m.meeting_no = mm.meeting_no
+JOIN CLUB c ON c.CLUB_NO = m.CLUB_NO 
+JOIN club_member cm ON mm.club_member_no = cm.club_member_no
+JOIN CHAT_ROOM cr ON cr.CHAT_ROOM_NO = m.chat_room_no
+WHERE cm.CLUB_MEMBER_ID = #{memberId} AND cr.CHAT_ROOM_NO = #{chatRoomNo}
     </select>
 
 <select id="isChatRoomMember" resultType="int" parameterType="map">

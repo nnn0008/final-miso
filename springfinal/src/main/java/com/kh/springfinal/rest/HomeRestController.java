@@ -74,9 +74,9 @@ public class HomeRestController {
 		ClubMemberDto clubMemberDto = clubBoardDao.selectOneClubMemberNo(memberId, clubNo);
 		MeetingMemberDto existDto = homeDao.selectOne(clubNo, meetingNo);
 		
-		log.debug("existDto = ", existDto);
-		log.debug("meetingNo = ", meetingNo);
-		log.debug("clubMemberNo = ", clubMemberDto.getClubMemberNo());
+		log.debug("existDto = {}", existDto);
+		log.debug("meetingNo = {}", meetingNo);
+		log.debug("clubMemberNo = {}", clubMemberDto.getClubMemberNo());
 		if(existDto != null) {
 			return "이미 참석했습니다";
 		}
@@ -94,9 +94,9 @@ public class HomeRestController {
 	public void remove(@RequestParam int clubNo, @RequestParam int meetingNo, HttpSession session) {
 		String memberId = (String)session.getAttribute("name");
 		ClubMemberDto clubMemberDto = clubBoardDao.selectOneClubMemberNo(memberId, clubNo);
-		log.debug("clubMemberNo = ", clubMemberDto.getClubMemberNo());
-		log.debug("meetingNo = ", meetingNo);
-		log.debug("clubNo = ", clubNo);
+		log.debug("clubMemberNo = {}", clubMemberDto.getClubMemberNo());
+		log.debug("meetingNo = {}", meetingNo);
+		log.debug("clubNo = {}", clubNo);
 		meetingMemberDao.deleteAttend(meetingNo, clubMemberDto.getClubMemberNo());
 	}
 	
