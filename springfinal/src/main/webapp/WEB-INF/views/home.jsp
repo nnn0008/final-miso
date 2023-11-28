@@ -107,7 +107,7 @@ width: 110px;
 						$(htmlTemplate).find(".meeting-attend").hide();
 					}
 					if(response[i].attachNo != null){
-						var img = $("<img>").attr("src", window.contextPath + "/download?attachNo=" + response[i].attachNo).addClass("w-100")
+						var img = $("<img>").attr("src", window.contextPath + "/rest/meeting/attchImage?attachNo=" + response[i].attachNo).addClass("w-100")
 						.css({
 							"max-height":"182.9px"
 						});

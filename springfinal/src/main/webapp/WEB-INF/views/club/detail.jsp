@@ -17,6 +17,18 @@
    cursor: pointer;
 }
 
+
+
+  .text-black[readonly] {
+    color: black; /* 검은색으로 변경 */
+    border: none;
+    outline: none;
+    resize: none; /* 크기 조정 비활성화 */
+  }
+
+
+
+
 .attached-image {
    width: 100% !important;
    height: 100%; ! important;
@@ -120,18 +132,19 @@
    box-shadow: 0 0 10px #EBE8E8;
 }
 
-.clubMemberList {
-    max-height: 350px; /* 적절한 높이로 설정 */
-    overflow: auto; /* 스크롤이 필요한 경우 스크롤 허용 */
-    overflow-x: hidden; /* 가로 스크롤 방지 */
-    scroll-padding-top: 10px; /* 적절한 여백 값으로 설정 */
-    border-radius: 10px; /* 원하는 둥근 정도로 조절 */
-    border: 1px solid #EBE8E8; /* 원하는 테두리 색상과 두께로 조절 */
-    padding: 10px; /* 내용과 테두리 사이의 간격을 조절 */
-    margin-top: 20px; /* 상단 여백의 크기를 조절 */
+.clubMemberList{
+    max-height: 350px;
+    overflow: auto;
+    overflow-x: hidden;
+    scroll-padding-top: 10px;
+    border-radius: 10px;
+    border: 1px solid #EBE8E8;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+
     
-    
-    }
     
     /* 스크롤바 전체 스타일링 */
 .clubMemberList::-webkit-scrollbar {
@@ -151,6 +164,28 @@
 
 /* 스크롤바 커서 (클릭 등 상호작용 시 나타나는 부분) 스타일링 */
 .clubMemberList::-webkit-scrollbar-button {
+    display: none; /* 스크롤바 커서 감추기 */
+}
+
+
+    /* 스크롤바 전체 스타일링 */
+.text-black::-webkit-scrollbar {
+    width: 8px; /* 스크롤바 너비 */
+}
+
+/* 스크롤바 트랙 (배경) 스타일링 */
+.text-black::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* 스크롤바 트랙 배경색 */
+}
+
+/* 스크롤바 핸들 (바 부분) 스타일링 */
+.text-black::-webkit-scrollbar-thumb {
+    background-color: #ACCEFF; /* 스크롤바 핸들 색상 */
+    border-radius: 4px; /* 스크롤바 핸들 모서리 둥글게 */
+}
+
+/* 스크롤바 커서 (클릭 등 상호작용 시 나타나는 부분) 스타일링 */
+.text-black::-webkit-scrollbar-button {
     display: none; /* 스크롤바 커서 감추기 */
 }
     
@@ -1962,9 +1997,15 @@ $(document).ready(function () {
 			<div class="d-flex">
 				<input type="hidden" class="clubNo" data-no="${clubDto.clubNo}">
 				<input type="hidden" class="memberId" data-id="${sessionScope.name}">
+				<c:if test="${clubDto.plusDay<=7}">
+				<label class="badge rounded-pill bg-danger">NEW</label>
+				</c:if>
 				<label class="badge rounded-pill bg-light">${zipDto.sigungu}</label>
 				<label class="badge rounded-pill bg-light">${major.majorCategoryName}</label>
 				<label class="badge rounded-pill bg-light">멤버 ${memberCount}</label>
+				<c:if test="${clubDto.clubPremium=='Y'}">
+				<label class="badge rounded-pill bg-primary">프리미엄</label>
+				</c:if>
 			</div>
 			<div>
 				<c:if test="${editPossible==true}">
@@ -1976,14 +2017,15 @@ $(document).ready(function () {
 		</div>
 	</div>
 
-	<div class="row mt-3">
+	<div class="row mt-1">
 
 		<div class="col">
-			<div class="col">
+			<div class="col mt-2">
 				<strong class="main-text">${clubDto.clubName}</strong>
 			</div>
-			<div class="col mt-2">
-				<span>${clubDto.clubExplain}</span>
+			<div class="col mt-4 text-scroll">
+				<textarea cols="75" rows="6" class="text-black" 
+				readonly="readonly"><c:out value="${clubDto.clubExplain}"></c:out></textarea>
 			</div>
 		</div>
 

@@ -628,7 +628,7 @@ function hideOldComments() {
 						<img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="60" height="60">				
 					</c:if>
 					<c:if test="${attachDto.attachNo != null}">
-						<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardAllDto.attachNoMp}" class="rounded-circle" width="60" height="60">
+						<img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${sessionScope.name}" class="rounded-circle" width="60" height="60">
 					</c:if>
 				</div>
 				<div class="col ms-4">
