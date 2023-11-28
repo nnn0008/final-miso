@@ -43,7 +43,7 @@
 	</select>
 	
 	<!-- 계층형 게시판 댓글 -->
-	<select id="findByReply" resultType="ClubBoardReplyDto">
+	<select id="findByReplyForVO" resultType="ClubBoardReplyDto">
 		select * from(
 			select rownum rn, TMP.* from(
 			
@@ -55,6 +55,21 @@
 			
 			)TMP
 		)where rn between #{startRow} and #{finishRow}
+	</select>
+	
+	<select id="replyCountForVO" resultType="int">
+		SELECT count(*) FROM club_board_reply where club_board_no = #{clubBoardNo}
+	</select>
+	
+	<!-- 계층형 게시판 댓글 -->
+	<select id="findByReply" resultType="ClubBoardReplyDto">
+
+			SELECT * FROM club_board_reply
+			where club_board_no = #{clubBoardNo}
+			START WITH club_board_reply_parent IS NULL
+			CONNECT BY PRIOR club_board_reply_no = club_board_reply_parent
+			ORDER SIBLINGS by club_board_reply_group, club_board_reply_date
+
 	</select>
 	
 	<select id="replyCount" resultType="int">
