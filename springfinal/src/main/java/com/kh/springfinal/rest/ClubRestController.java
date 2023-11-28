@@ -433,7 +433,7 @@ public class ClubRestController {
 		else {
 			
 				
-				if(memberJoinCount>=50) {
+				if(memberJoinCount>=12) {
 					
 					return 2;
 					

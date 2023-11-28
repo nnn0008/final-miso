@@ -18,6 +18,7 @@ public class PaymentDto {
 	private Date paymentTime;//결제시간
 	private Date paymentBegin;
 	private Date paymentEnd;
+	private int paymentclubNo;
 }
 	
 

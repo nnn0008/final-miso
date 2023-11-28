@@ -54,12 +54,22 @@ public class ClubBoardReplyDaoImpl implements ClubBoardReplyDao{
 	}
 	
 	@Override
-	public List<ClubBoardReplyDto> selectListByReply(PaginationVO vo) {
-		return sqlSession.selectList("clubBoardReply.findByReply", vo);
+	public List<ClubBoardReplyDto> selectListByReplyForVO(PaginationVO vo) {
+		return sqlSession.selectList("clubBoardReply.findByReplyForVO", vo);
 	}
 	@Override
-	public int count(PaginationVO vo) {
-		return sqlSession.selectOne("clubBoardReply.replyCount", vo);
+	public int countForVO(PaginationVO vo) {
+		return sqlSession.selectOne("clubBoardReply.replyCountForVO", vo);
+	}
+	
+	
+	@Override
+	public List<ClubBoardReplyDto> selectListByReply(int clubBoardNo) {
+		return sqlSession.selectList("clubBoardReply.findByReply" ,clubBoardNo);
+	}
+	@Override
+	public int count(int clubBoardNo) {
+		return sqlSession.selectOne("clubBoardReply.replyCount", clubBoardNo);
 	}
 	
 	//알림 사용
