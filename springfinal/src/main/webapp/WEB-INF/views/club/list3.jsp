@@ -357,6 +357,12 @@ width:20px;
     
 </style>
 
+<div class="container text-center">
+    <c:forEach var="category" items="${categoryList}">
+        <a href="list3?minorCategoryNo=${category.minorCategoryNo}&majorCategoryNo=${category.majorCategoryNo}"><span class="badge rounded-pill bg-gray mb-3">${category.minorCategoryName}</span></a>
+    </c:forEach>
+</div>
+
 	<div class="col text-start d-flex align-items-center mb-3 mt-3">
             <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
             

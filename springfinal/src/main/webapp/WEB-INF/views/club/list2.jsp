@@ -353,7 +353,7 @@ $(function(){
     
    <div class="container text-center">
     <c:forEach var="category" items="${categoryList}">
-        <a href="list3?minorCategoryNo=${category.minorCategoryNo}"><span class="badge rounded-pill bg-gray mb-3">${category.minorCategoryName}</span></a>
+        <a href="list3?minorCategoryNo=${category.minorCategoryNo}&majorCategoryNo=${category.majorCategoryNo}"><span class="badge rounded-pill bg-gray mb-3">${category.minorCategoryName}</span></a>
     </c:forEach>
 </div>
 
