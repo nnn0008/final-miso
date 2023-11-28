@@ -35,12 +35,14 @@ import com.kh.springfinal.dao.ChatOneDao;
 import com.kh.springfinal.dao.ChatRoomDao;
 import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dao.MeetingDao;
+import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dao.MemberProfileDao;
 import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.ChatDto;
 import com.kh.springfinal.dto.ChatOneDto;
 import com.kh.springfinal.dto.ChatRoomDto;
 import com.kh.springfinal.dto.MeetingDto;
+import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.dto.MessageDto;
 import com.kh.springfinal.dto.MessageDto.MessageType;
 import com.kh.springfinal.service.ClientService;
@@ -84,6 +86,9 @@ public class WebSocketServer extends TextWebSocketHandler{
 	
 	@Autowired
 	private MeetingDao meetingDao;
+	
+	@Autowired
+	private MemberDao memberDao;
 
     // 초기 디렉터리 설정
     @Autowired
@@ -210,8 +215,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            map.put("content", chatDto.getChatContent());
 	        }
 	    }
-
-	    // 기존 채팅방 멤버의 닉네임 가져오기
+	 // 기존 채팅방 멤버의 닉네임 가져오기
 	    List<ChatVO> roomMembers = chatRoomDao.chatRoomMemberName(chatRoomNo);
 
 	    // chatVO의 clubMemberId와 chatDto의 memberId 비교
@@ -219,9 +223,11 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            .filter(member -> member.getClubMemberId().equals(chatDto.getChatSender()))
 	            .findFirst()
 	            .map(ChatVO::getMemberName)
-	            .orElse(chatDto.getChatSender()); // 닉네임이 없을 경우 memberId 사용
+	            .orElse(null); // 닉네임이 없을 경우 null 사용
 
-	    map.put("memberName", chatSenderNickname); // 기존 채팅방 닉네임 추가
+	    if (chatSenderNickname != null) {
+	        map.put("memberName", chatSenderNickname); // 기존 채팅방 닉네임 추가
+	    }
 
 	    // 1:1 채팅의 닉네임 및 레벨 가져오기
 	    List<ChatOneVO> oneChatMembers = chatOneDao.chatOneMemberName(chatRoomNo);
@@ -231,32 +237,37 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            .filter(member -> Objects.equals(member.getMemberId(), chatDto.getChatSender()))
 	            .findFirst()
 	            .map(ChatOneVO::getMemberName)
-	            .orElse(chatDto.getChatSender()); // 닉네임이 없을 경우 chatSender 사용
+	            .orElse(null); // 닉네임이 없을 경우 null 사용
 
 	    String memberLevel = oneChatMembers.stream()
 	            .filter(member -> Objects.equals(member.getMemberId(), chatDto.getChatSender()))
 	            .findFirst()
 	            .map(ChatOneVO::getMemberLevel)
-	            .orElse(chatDto.getChatSender()); // 닉네임이 없을 경우 chatSender 사용
+	            .orElse(null); // 닉네임이 없을 경우 null 사용
 
-	    map.put("oneChatMemberName", chatOneSenderNickname); // 1:1 채팅 닉네임 추가
-	    map.put("memberLevel", memberLevel); // 1:1 채팅 레벨 추가
-	    
-	    //동호회 채팅의 닉네임 가져오기
+	    if (chatOneSenderNickname != null) {
+	        map.put("oneChatMemberName", chatOneSenderNickname); // 1:1 채팅 닉네임 추가
+	    }
+	    if (memberLevel != null) {
+	        map.put("memberLevel", memberLevel); // 1:1 채팅 레벨 추가
+	    }
+
+	    // 동호회 채팅의 닉네임 가져오기
 	    List<ChatVO> meetingRoomMembers = chatRoomDao.meetingRoomMemberName(chatRoomNo);
 	    String meetingSenderName = meetingRoomMembers.stream()
 	            .filter(member -> member.getClubMemberId().equals(chatDto.getChatSender()))
 	            .findFirst()
 	            .map(ChatVO::getMemberName)
-	            .orElse(chatDto.getChatSender()); // 닉네임이 없을 경우 memberId 사용
-	    
-	    map.put("meetingMemberName", meetingSenderName); //닉네임 추가
-//	    log.debug("meetingSenderName ={}",meetingSenderName);
+	            .orElse(null); // 닉네임이 없을 경우 null 사용
+
+	    if (meetingSenderName != null) {
+	        map.put("meetingMemberName", meetingSenderName); // 닉네임 추가
+	    }
+
 	    String messageJson = mapper.writeValueAsString(map);
 	    TextMessage tm = new TextMessage(messageJson);
 	    session.sendMessage(tm);
 	}
-
 	
 	
 	@Override
@@ -335,6 +346,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            MeetingDto firstMeeting = meetingList.get(0);
 	            String meetingName = firstMeeting.getMeetingName();
 	            // 기타 모임 정보 필요한 경우에도 추가
+	            MemberDto memberDto = memberDao.loginId(memberId);
 
 	            // 여기에서 필요한 모임 채팅 정보를 전송하는 로직을 추가
 	            sendChatHistory(chatRoomNo, session);
@@ -343,8 +355,9 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            Map<String, Object> meetingChatMessage = new HashMap<>();
 	            meetingChatMessage.put("messageType", MessageType.join);
 	            meetingChatMessage.put("meetingName", meetingName);
-	            meetingChatMessage.put("chatSender", memberId);
+	            meetingChatMessage.put("memberId", memberId);
 	            meetingChatMessage.put("memberIds", memberIds);
+	            meetingChatMessage.put("memberName", memberDto.getMemberName());
 
 	            String meetingChatJson = mapper.writeValueAsString(meetingChatMessage);
 	            TextMessage meetingChatMessages = new TextMessage(meetingChatJson);
