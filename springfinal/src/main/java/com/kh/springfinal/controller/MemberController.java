@@ -29,6 +29,7 @@ import com.kh.springfinal.dao.HomeDao;
 import com.kh.springfinal.dao.MemberCategoryDao;
 import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dao.MemberProfileDao;
+import com.kh.springfinal.dao.PaymentDao;
 import com.kh.springfinal.dao.PaymentRegularDao;
 import com.kh.springfinal.dao.WishlistDao;
 import com.kh.springfinal.dao.ZipCodeDao;
@@ -42,6 +43,7 @@ import com.kh.springfinal.dto.MinorCategoryDto;
 import com.kh.springfinal.dto.ZipCodeDto;
 import com.kh.springfinal.vo.HomeForClubVO;
 import com.kh.springfinal.vo.HomeForMeetingMemberVO;
+import com.kh.springfinal.vo.PaymentListVO;
 import com.kh.springfinal.vo.PaymentRegularListVO;
 import com.kh.springfinal.vo.WishlistVO;
 
@@ -80,6 +82,9 @@ public class MemberController {
 	
 	@Autowired
 	private PaymentRegularDao paymentRegularDao;
+	
+	@Autowired
+	private PaymentDao paymentDao;
 	
 	@Autowired
 	private HomeDao homeDao;
@@ -322,6 +327,24 @@ public class MemberController {
 
 		// 모델에 추가
 		model.addAttribute("list2", paymentRegularList);
+		
+		//구독내역 조회
+		List<PaymentListVO> paymentList = paymentDao.selectTotalListByMember(memberId);
+		
+		// 클럽 정보 조회 및 로그 출력
+		for (PaymentListVO paymentListVO : paymentList) {
+		    int clubNo = paymentListVO.getPaymentDto().getPaymentclubNo();
+		    ClubDto clubDto = clubDao.clubSelectOne(clubNo);
+
+		    // ClubDto가 null이 아닌지, 그리고 clubName이 있는지 로그에 출력
+		    log.info("ClubDto: {}", clubDto);
+
+		    // ClubDto를 PaymentRegularListVO에 세팅
+		    paymentListVO.setClubDto(clubDto);
+		}
+
+		// 모델에 추가
+		model.addAttribute("list", paymentList);
 
 		model.addAttribute("wishList", wishList);
 		model.addAttribute("joinList", joinList);
