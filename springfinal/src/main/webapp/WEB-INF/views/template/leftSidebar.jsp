@@ -11,10 +11,26 @@
     
 <script>
 $(function () {
-	
-    
+	var memberId = "${sessionScope.name}";
+    $.ajax({
+    	url:"http://localhost:8080/rest/member/profile",
+    	method:"post",
+    	data: {memberId:memberId},
+    success: function (response) {
+    	var attachDto = response;
+    	console.log(attachDto);
+    	if(attachDto===""){
+    		$(".profile").attr("src", "");
+    		$(".profile").attr("src", "${pageContext.request.contextPath}/images/avatar50.png");
+    	}
+    	else{
+    		$(".profile").attr("src", "");
+    		$(".profile").attr("src", "http://localhost:8080/rest/member/profileShow?memberId="+memberId);
+    	}
+    }
+    });
 
-})
+});
 </script>
     
     
@@ -50,18 +66,11 @@ $(function () {
     	
     	
     })
-    var memberId = "${sessionScope.name}";
-    $.ajax({
-    	url:"http://localhost:8080/rest/member/profile",
-    	method:"post",
-    	data: {memberId:memberId},
-    success: function (response) {
-    	var attachDto = response.data;
-    }
+    
     	
     
     
-    })
+    
     
     });
     
@@ -75,11 +84,11 @@ $(function () {
                         <div class="col">
                             <div class="col d-flex justify-content-center">
                                 <c:choose>
-			                    	<c:when test="${attachDto!=null}">
+			                    	<c:when test="${sessionScope.name!=null}">
 			                    			<img src="/rest/member/profileShow?memberId=${sessionScope.name}" class="rounded-circle profile" style="width: 80px; height: 80px;">
 			                    	</c:when>
 			                    	<c:otherwise>
-		                                <img src="${pageContext.request.contextPath}/images/avatar50.png" width="35%">
+		                                <img src="${pageContext.request.contextPath}/images/avatar50.png" class="profile" style="width: 80px; height: 80px;">
 			                    	</c:otherwise>
 			                    </c:choose>
                             </div>
