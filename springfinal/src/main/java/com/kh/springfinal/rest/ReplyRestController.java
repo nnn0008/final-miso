@@ -27,7 +27,6 @@ import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.dto.PhotoReplyDto;
 import com.kh.springfinal.vo.ClubBoardReplyMemberVO;
-import com.kh.springfinal.vo.ClubBoardReplyVO;
 import com.kh.springfinal.vo.PaginationVO;
 import com.kh.springfinal.vo.PhotoReplyVO;
 
@@ -123,15 +122,15 @@ public class ReplyRestController {
 
 	@PostMapping("/list")
 	public List<ClubBoardReplyDto> list(@ModelAttribute("vo") PaginationVO vo, @RequestParam int clubBoardNo, HttpSession session
-			,@RequestParam(required = false) int page){
+			,@RequestParam(required = false) int page, @RequestParam(required = false) int size){
 		log.debug("응답왔음");
 		log.debug("page = {}", page);
 		String memberId = (String)session.getAttribute("name");
 		ClubBoardDto clubBoardDto = clubBoardDao.selectOnes(clubBoardNo);
 		int clubNo = clubBoardDto.getClubNo();
 		Integer clubMemberNo = clubMemberDao.findClubMemberNo(clubNo, memberId); 
-		
 		vo.setClubBoardNo(clubBoardNo);
+		vo.setSize(size);
 		int count = clubBoardReplyDao.count(vo);
 		log.debug("count={}", count);
 		vo.setSize(10);
@@ -140,7 +139,7 @@ public class ReplyRestController {
 		for(ClubBoardReplyDto dto : dtoList) { // 오른쪽에 반복할 리스트, 왼쪽에 아무거나 이름
 			//댓글을 작성한 자와 로그인 한 자가 동일한지 비교해라
 			boolean isMatch = clubMemberNo == dto.getClubMemberNo(); 
-
+				
 			dto.setMatch(isMatch);
 		}
 		log.debug("dtoList = {}",dtoList);
