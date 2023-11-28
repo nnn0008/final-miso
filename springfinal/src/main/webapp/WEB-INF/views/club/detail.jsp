@@ -174,6 +174,7 @@ $(function(){
 	           if (text.length > maxLength) {
 	        	   description.innerHTML = text.substring(0, maxLength) + '<span style="font-weight: bold;">...<strong>더보기</strong></span>';
 	           }
+	           
 	       });
 	   }
 	
