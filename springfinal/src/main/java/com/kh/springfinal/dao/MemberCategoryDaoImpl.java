@@ -42,8 +42,12 @@ public class MemberCategoryDaoImpl implements MemberCategoryDao{
 
 	@Override
 	public MajorCategoryDto findLikemajor(int minorCategoryNo) {
-		log.info("minorCategoryNo: {}", minorCategoryNo);
 		return sqlSession.selectOne("memberCategory.findLikemajor", minorCategoryNo);
+	}
+
+	@Override
+	public List<MinorCategoryDto> minorList() {
+		return sqlSession.selectList("memberCategory.minorCategoryList");
 	}
 
 }

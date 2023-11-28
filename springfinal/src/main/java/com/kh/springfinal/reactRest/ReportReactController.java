@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,5 +76,13 @@ public class ReportReactController {
 	public ResponseEntity<ByteArrayResource> down(@PathVariable int attachNo) throws IOException{
 		return fileLoadVO.download(attachNo);
 	}
+	
+	@DeleteMapping("/{clubBoardNo}")
+	public boolean delete(@PathVariable int clubBoardNo) {
+		return reportDao.delete(clubBoardNo);
+	}
+	
+	
+	
 	
 }

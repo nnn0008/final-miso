@@ -61,4 +61,13 @@ public class WishDaoImpl implements WishlistDao{
 		List<WishlistVO> list = sqlSession.selectList("wish.findAllByMemberId",memberId);
 		return list;
 	}
+	@Override
+	public List<WishlistVO> selectListForMypage(String memberId, int endRow) {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("memberId", memberId);
+        paramMap.put("endRow", endRow);
+        
+        List<WishlistVO> list = sqlSession.selectList("wish.findAllByMypage", paramMap);
+        return list;
+    }
 }

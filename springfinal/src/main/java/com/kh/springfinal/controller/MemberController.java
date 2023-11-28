@@ -29,9 +29,11 @@ import com.kh.springfinal.dao.AttachDao;
 import com.kh.springfinal.dao.CategoryDao;
 import com.kh.springfinal.dao.ClubDao;
 import com.kh.springfinal.dao.ClubMemberDao;
+import com.kh.springfinal.dao.HomeDao;
 import com.kh.springfinal.dao.MemberCategoryDao;
 import com.kh.springfinal.dao.MemberDao;
 import com.kh.springfinal.dao.MemberProfileDao;
+import com.kh.springfinal.dao.WishlistDao;
 import com.kh.springfinal.dao.ZipCodeDao;
 import com.kh.springfinal.dto.AttachDto;
 import com.kh.springfinal.dto.ClubDto;
@@ -41,6 +43,9 @@ import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.dto.MemberEditDto;
 import com.kh.springfinal.dto.MinorCategoryDto;
 import com.kh.springfinal.dto.ZipCodeDto;
+import com.kh.springfinal.vo.HomeForClubVO;
+import com.kh.springfinal.vo.HomeForMeetingMemberVO;
+import com.kh.springfinal.vo.WishlistVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -72,6 +77,11 @@ public class MemberController {
 	@Autowired
 	private ClubMemberDao clubMemberDao;
 	
+	@Autowired
+	private WishlistDao wishlistDao;
+	
+	@Autowired
+	private HomeDao homeDao;
 	@GetMapping("/join")
 	public String join() {
 		return "member/join";
@@ -109,80 +119,74 @@ public class MemberController {
 		return "member/login";
 	}
 	//임시 로그인(아이디 새로 만든거 쓰실분은 아래 코드 주석풀어서 이용해주세요)
-	  @PostMapping("/login")
-	   public String login(@RequestParam String memberId, @RequestParam String memberPw, HttpSession session) {
-		  	MemberDto memberDto = memberDao.loginId(memberId);
-	         //세션에 아이디 저장+등급 저장
-	         session.setAttribute("name", memberId);
-	         session.setAttribute("level", memberDto.getMemberLevel());
-	         session.setAttribute("memberName", memberDto.getMemberName());
-	       
-	         //메인페이지로 이동
-	         return "redirect:/club/list"; 
-	      };
+//	  @PostMapping("/login")
+//	   public String login(@RequestParam String memberId, @RequestParam String memberPw, HttpSession session) {
+//		  	MemberDto memberDto = memberDao.loginId(memberId);
+//	         //세션에 아이디 저장+등급 저장
+//	         session.setAttribute("name", memberId);
+//	         session.setAttribute("level", memberDto.getMemberLevel());
+//	         session.setAttribute("memberName", memberDto.getMemberName());
+//	       
+//	         //메인페이지로 이동
+//	         return "redirect:/club/list"; 
+//	      };
 	
-//	@PostMapping("/login")
-//	public String login(HttpServletResponse httpServletResponse,
-//						@RequestParam String memberId, @RequestParam String memberPw,
-//						@RequestParam(required = false) String saveId,
-//								HttpSession session) {
-////		db 유저 정보
-//		MemberDto userDto = memberDao.selectOne(memberId, memberPw);
-////		 id 틀리면 되돌림
-//		if(userDto==null) {
-//			if(saveId != null) {
-//				Cookie cookie = new Cookie("saveId", memberId);
-//				cookie.setMaxAge(4*7*24*60*60);//4주
-//				httpServletResponse.addCookie(cookie);
-//			}
-//			else {
-//				Cookie cookie = new Cookie("saveId", memberId);
-//				cookie.setMaxAge(0);
-//				httpServletResponse.addCookie(cookie);
-//			}
-//			return "redirect:login?error";
-//		}
-////		db Pw
-//		String userPw = userDto.getMemberPw();
-////		db Pw 와 입력값Pw 검사 후 session입력
-//		if(userPw.equals(memberPw)) {
-//			session.setAttribute("name", userDto.getMemberId());
-//			session.setAttribute("level", userDto.getMemberLevel());
-//      session.setAttribute("memberName", userDto.getMemberName());	
-//			if(saveId != null) {
-//				Cookie cookie = new Cookie("saveId", memberId);
-//				cookie.setMaxAge(4*7*24*60*60);//4주
-//				httpServletResponse.addCookie(cookie);
-//			}
-//			else {
-//				Cookie cookie = new Cookie("saveId", memberId);
-//				cookie.setMaxAge(0);//4주
-//				httpServletResponse.addCookie(cookie);
-//			}
-//		}
-//		else {
-//			if(saveId != null) {
-//				Cookie cookie = new Cookie("saveId", memberId);
-//				cookie.setMaxAge(4*7*24*60*60);//4주
-//				httpServletResponse.addCookie(cookie);
-//			}
-//			else {
-//				Cookie cookie = new Cookie("saveId", memberId);
-//				cookie.setMaxAge(0);
-//				httpServletResponse.addCookie(cookie);
-//			}
-//			return "redirect:login?error";
-//		}
-////		로그인 완료창으로 보내기
-//		return "redirect:../";	
-//	}
+	@PostMapping("/login")
+	public String login(HttpServletResponse httpServletResponse,
+						@RequestParam String memberId, @RequestParam String memberPw,
+						@RequestParam(required = false) String saveId,
+								HttpSession session, Model model) {
+//		db 유저 정보
+		MemberDto userDto = memberDao.selectOne(memberId, memberPw);
+//		 id 틀리면 되돌림
+		if(userDto==null) {
+			if(saveId != null) {
+				Cookie cookie = new Cookie("saveId", memberId);
+				cookie.setMaxAge(4*7*24*60*60);//4주
+				httpServletResponse.addCookie(cookie);
+			}
+			else {
+				Cookie cookie = new Cookie("saveId", memberId);
+				cookie.setMaxAge(0);
+				httpServletResponse.addCookie(cookie);
+			}
+			return "redirect:login?error";
+		}
+//		db Pw
+		String userPw = userDto.getMemberPw();
+//		db Pw 와 입력값Pw 검사 후 session입력
+		if(userPw.equals(memberPw)) {
+			session.setAttribute("name", userDto.getMemberId());
+			session.setAttribute("level", userDto.getMemberLevel());
+      session.setAttribute("memberName", userDto.getMemberName());	
+			if(saveId != null) {
+				Cookie cookie = new Cookie("saveId", memberId);
+				cookie.setMaxAge(4*7*24*60*60);//4주
+				httpServletResponse.addCookie(cookie);
+			}
+			else {
+				Cookie cookie = new Cookie("saveId", memberId);
+				cookie.setMaxAge(0);//4주
+				httpServletResponse.addCookie(cookie);
+			}
+		}
+		else {
+			if(saveId != null) {
+				Cookie cookie = new Cookie("saveId", memberId);
+				cookie.setMaxAge(4*7*24*60*60);//4주
+				httpServletResponse.addCookie(cookie);
+			}
+			else {
+				Cookie cookie = new Cookie("saveId", memberId);
+				cookie.setMaxAge(0);
+				httpServletResponse.addCookie(cookie);
+			}
+			return "redirect:login?error";
+		}
+//		로그인 완료창으로 보내기
+		return "redirect:/club/list";	
+	}
 	
-			//ChatRoomDto chatRoomDto = chatRoomDao.selectOne(userDto.getMemberId());
-			//log.debug("chatRoomDto: {}", chatRoomDto);
-			//
-			//if(chatRoomDto != null ) { //채팅방 번호가 있다면
-			//	session.setAttribute("chatRoomNo", chatRoomDto.getChatRoomNo()); //채팅방 번호를 넣어라
-			//}		
 			
   	@RequestMapping("/logout")
 	public String logout(HttpSession session){
@@ -289,11 +293,21 @@ public class MemberController {
 			model.addAttribute("like"+i, majorCategoryDto.getMajorCategoryName()+"/"+minorCategoryDto.getMinorCategoryName());
 		}
 		//가입한 클럽 정보
-		List<ClubDto> clubDto =  clubMemberDao.mypageClubList(memberId);
-		if(clubDto!=null) model.addAttribute("clubDto", clubDto);
-		if(attachDto!=null) {
-			model.addAttribute("attachDto", attachDto);
+		List<ClubDto> clubList =  clubMemberDao.mypageClubList(memberId);
+		if(clubList!=null) {
+			model.addAttribute("clubList", clubList);
 		}
+		if(attachDto!=null) {
+			model.addAttribute("attachDto", attachDto); 
+		}
+		List<WishlistVO> wishList = wishlistDao.selectListForMypage(memberId, 10);
+		List<HomeForClubVO> joinList = clubMemberDao.selectListByMemberId(memberId);
+		List<HomeForMeetingMemberVO> memberList = homeDao.selectList();
+		
+		model.addAttribute("wishList", wishList);
+		model.addAttribute("joinList", joinList);
+		model.addAttribute("memberList", memberList);
+		
 		model.addAttribute("memberDto", memberDto);
 		return "member/mypage";
 	}

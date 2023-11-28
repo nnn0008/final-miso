@@ -28,15 +28,15 @@
 	$(function () {
 		
 		
+		var major0Value = "${major0}";
 		var major1Value = "${major1}";
 		var major2Value = "${major2}";
-		var major0Value = "${major0}";
-
+		console.log(major0Value);
 	    // .d-major1 클래스에 해당하는 select 요소를 대상으로 처리
 	    var selectElement = $("#mojor1");
-
+	    console.log(selectElement);
 	    // 각 옵션에 대해 처리
-	    selectElement.find(".d-major1").each(function() {
+	    selectElement.find(".check-major").each(function() {
 	        var optionValue = $(this).val();
 	        
 	        // 선택된 옵션의 값이 major0Value와 일치하면 selected 속성을 추가
@@ -77,6 +77,7 @@
 	    var minor0Value = "${minor0}";
 		var minor1Value = "${minor1}";
 		var minor2Value = "${minor2}";
+		
 	    
 		// .d-minor1 클래스에 해당하는 select 요소를 대상으로 처리
 	    var selectElement = $("#monor1");
@@ -260,86 +261,90 @@
                 })
         
         
-		//관심 카테고리 동작 코드 1
-		$("[name=mojor-s1]").change(function () {
-			$(".ds1").hide();
-			$(".choice1").css("display", "none");
-		    var mojor = $(this).val();
-		    if (mojor != "") {
-		        $("#monor1").prop("disabled", false);
-		        if ($(".choice1").hasClass(mojor)) {
-		            $(".choice1." + mojor).css("display", "inline-block");
-		        } else {
-		            // 해당 클래스가 없는 경우의 동작을 추가할 수 있습니다.
-		           $(".ds1").prop("selected", true).trigger("change");
-		    	 $(".choice1").css("display", "none");
-		    	$("#monor1").prop("disabled", true).trigger("change"); // 예시로 display를 none으로 설정
-		    	 $(".category-check")
-                 .prop("checked", false).trigger("change");
-		        }
-		    }
-		    else{
-		    	$(".ds1").prop("selected", true);
-		    	 $(".choice1").css("display", "none");
-		    	$("#monor1").prop("disabled", true);
-		    	 $(".category-check")
-                 .prop("checked", false).trigger("change");
-		    }
-		});
-		
-		//관심 카테고리 동작 코드 2
-		$("[name=mojor-s2]").change(function () {
-			$(".ds2").hide();
-			$(".choice2").css("display", "none");
-		    var mojor = $(this).val();
-		    if (mojor != "") {
-		        $("#monor2").prop("disabled", false);
-		        if ($(".choice2").hasClass(mojor)) {
-		            $(".choice2." + mojor).css("display", "inline-block");
-		        } else {
-		            // 해당 클래스가 없는 경우의 동작을 추가할 수 있습니다.
-		           $(".ds2").prop("selected", true);
-		    	 $(".choice2").css("display", "none");
-		    	$("#monor2").prop("disabled", true); // 예시로 display를 none으로 설정
-		    	 $(".category-check")
-                 .prop("checked", false).trigger("change");
-		        }
-		    }
-		    else{
-		    	$(".ds2").prop("selected", true);
-		    	 $(".choice2").css("display", "none");
-		    	$("#monor2").prop("disabled", true);
-		    	 $(".category-check")
-                 .prop("checked", false).trigger("change");
-		    }
-		});
-		
-		//관심 카테고리 동작 코드 3
-		$("[name=mojor-s3]").change(function () {
-			$(".ds3").hide();
-			$(".choice3").css("display", "none");
-		    var mojor = $(this).val();
-		    if (mojor != "") {
-		        $("#monor3").prop("disabled", false);
-		        if ($(".choice3").hasClass(mojor)) {
-		            $(".choice3." + mojor).css("display", "inline-block");
-		        } else {
-		            // 해당 클래스가 없는 경우의 동작을 추가할 수 있습니다.
-		           $(".ds3").prop("selected", true);
-		    	 $(".choice3").css("display", "none");
-		    	$("#monor3").prop("disabled", true); // 예시로 display를 none으로 설정
-		    	 $(".category-check")
-                 .prop("checked", false).trigger("change");
-		        }
-		    }
-		    else{
-		    	$(".ds3").prop("selected", true);
-		    	 $(".choice3").css("display", "none");
-		    	$("#monor3").prop("disabled", true);
-		    	 $(".category-check")
-                 .prop("checked", false).trigger("change");
-		    }
-		});
+			//관심 카테고리 동작 코드 1
+								$("[name=mojor-s1]").change(function () {
+									$(".ds1").prop("selected", true);
+									$(".ds1").hide();
+									$(".choice1").css("display", "none");
+								    var mojor = $(this).val();
+								    if (mojor != "") {
+								        $("#monor1").prop("disabled", false);
+								        if ($(".choice1").hasClass(mojor)) {
+								            $(".choice1." + mojor).css("display", "inline-block");
+								        } else {
+								            // 해당 클래스가 없는 경우의 동작을 추가할 수 있습니다.
+								           $(".ds1").prop("selected", true).trigger("change");
+								    	 $(".choice1").css("display", "none");
+								    	$("#monor1").prop("disabled", true).trigger("change"); // 예시로 display를 none으로 설정
+								    	 $(".category-check")
+                                         .prop("checked", false).trigger("change");
+								        }
+								    }
+								    else{
+								    	$(".ds1").prop("selected", true);
+								    	 $(".choice1").css("display", "none");
+								    	$("#monor1").prop("disabled", true);
+								    	 $(".category-check")
+                                         .prop("checked", false).trigger("change");
+								    }
+								});
+								
+								
+								//관심 카테고리 동작 코드 2
+								$("[name=mojor-s2]").change(function () {
+									$(".ds2").prop("selected", true);
+									$(".ds2").hide();
+									$(".choice2").css("display", "none");
+								    var mojor = $(this).val();
+								    if (mojor != "") {
+								        $("#monor2").prop("disabled", false);
+								        if ($(".choice2").hasClass(mojor)) {
+								            $(".choice2." + mojor).css("display", "inline-block");
+								        } else {
+								            // 해당 클래스가 없는 경우의 동작을 추가할 수 있습니다.
+								           $(".ds2").prop("selected", true);
+								    	 $(".choice2").css("display", "none");
+								    	$("#monor2").prop("disabled", true); // 예시로 display를 none으로 설정
+								    	 $(".category-check")
+                                         .prop("checked", false).trigger("change");
+								        }
+								    }
+								    else{
+								    	$(".ds2").prop("selected", true);
+								    	 $(".choice2").css("display", "none");
+								    	$("#monor2").prop("disabled", true);
+								    	 $(".category-check")
+                                         .prop("checked", false).trigger("change");
+								    }
+								});
+								
+								//관심 카테고리 동작 코드 3
+								$("[name=mojor-s3]").change(function () {
+									$(".ds3").prop("selected", true);
+									$(".ds3").hide();
+									$(".choice3").css("display", "none");
+								    var mojor = $(this).val();
+								    if (mojor != "") {
+								        $("#monor3").prop("disabled", false);
+								        if ($(".choice3").hasClass(mojor)) {
+								            $(".choice3." + mojor).css("display", "inline-block");
+								        } else {
+								            // 해당 클래스가 없는 경우의 동작을 추가할 수 있습니다.
+								           $(".ds3").prop("selected", true);
+								    	 $(".choice3").css("display", "none");
+								    	$("#monor3").prop("disabled", true); // 예시로 display를 none으로 설정
+								    	 $(".category-check")
+                                         .prop("checked", false).trigger("change");
+								        }
+								    }
+								    else{
+								    	$(".ds3").prop("selected", true);
+								    	 $(".choice3").css("display", "none");
+								    	$("#monor3").prop("disabled", true);
+								    	 $(".category-check")
+                                         .prop("checked", false).trigger("change");
+								    }
+								});
 		
 		
 
@@ -362,7 +367,7 @@
 		
 	</script>
 	
-	  <script>
+	                        <script>
     	$(function () {
     		var searchTimeout;
 
@@ -414,20 +419,11 @@
     	        // [3] 목록을 클릭하면 입력창에 채우고 .zip 엘리먼트 숨기기
         	    $(".addr-list").on("click", ".zip", function () {
         	    	
-        	    	var form = $('.add');
-        	    	
-        	    	 form.append($("<input>")
-        	    			.addClass("newInput")
-        	    		    .prop("type", "hidden")
-        	    		    .attr("name", "zipCodeNo")
-        	    		    .val($(this).val())
-        	    		); 
         	    			
         	    	
         	    	
         	        var selectedAddress = $(this).data("result");
-        	        $(".search-input").val(selectedAddress); 
-        	        $(".search-input").data("pass","Y");
+        	        $(".search-input").val(selectedAddress).trigger("change"); 
         	        
         	        $(".addr-list").hide();
         	        
@@ -485,11 +481,44 @@
     	 }
 
 
+			$("#memberAddr").change(
+                    function () {
+                    	console.log(this);
+                        $(this).removeClass("is-invalid is-valid");
+                        $(".d-addr-feedback").removeClass(
+                        "text-danger");
+                        $(".addr-feed").removeClass("is-invalid is-valid");
+                    	if($(this).val()=="") {
+                    		$(this).addClass("is-invalid");
+                    		$(".addr-feed").addClass("is-invalid");
+                    		$(".d-addr-feedback").addClass(
+                            "text-danger");
+                    		$(".addrCheck").prop("checked", false).trigger("change");
+                    		return;
+                    	};
+                            var inputContent = $(this).val();
+                            var regex = /^[가-힣]+\s[가-힣]+\s[가-힣]+$/;
+                            var isValid = regex.test(inputContent);
+                            if (isValid) {
+                                $(this).addClass("is-valid");
+                                $(".addr-feed").addClass("is-valid");
+                                $(".addrCheck").prop("checked", true).trigger("change");
+                            } 
+                            else {
+                                $(this).addClass("is-invalid");
+                                $(".addr-feed").addClass("is-invalid");
+                                $(".d-addr-feedback").addClass(
+                                    "text-danger");
+                                $(".addrCheck").prop("checked", false).trigger("change");
+                            }
+                    });
+    	
+    	
     	});
 
 
 	</script>
-	
+
 	<div class="contain-fluid">
 	        <div class="row">
 	            <div class="col">
@@ -577,37 +606,7 @@
 							                        </ul>
 							                    </div>
 							                </div>
-											<script>
-											$("#memberAddr").change(
-				                                    function () {
-				                                        $(this).removeClass("is-invalid is-valid");
-				                                        $(".d-addr-feedback").removeClass(
-		                                                "text-danger");
-				                                        $(".addr-feed").removeClass("is-invalid is-valid");
-				                                    	if($(this).val()=="") {
-				                                    		$(this).addClass("is-invalid");
-				                                    		$(".addr-feed").addClass("is-invalid");
-				                                    		$(".d-addr-feedback").addClass(
-			                                                "text-danger");
-				                                    		$(".addrCheck").prop("checked", false).trigger("change");
-				                                    	};
-					                                        var inputContent = $(this).val();
-					                                        var regex = /^[가-힣]+\s[가-힣]+\s[가-힣]+$/;
-					                                        var isValid = regex.test(inputContent);
-					                                        if (isValid) {
-					                                            $(this).addClass("is-valid");
-					                                            $(".addr-feed").addClass("is-valid");
-					                                            $(".addrCheck").prop("checked", true).trigger("change");
-					                                        } 
-					                                        else {
-					                                            $(this).addClass("is-invalid");
-					                                            $(".addr-feed").addClass("is-invalid");
-					                                            $(".d-addr-feedback").addClass(
-					                                                "text-danger");
-					                                            $(".addrCheck").prop("checked", false).trigger("change");
-					                                        }
-				                                    });
-											</script>
+											
                     	
                    <div class="row mt-3">
                                                 <div class="col">
@@ -661,32 +660,31 @@
 	      		    
 	      		    <div class="row">
 	      		    	<div class="col like-show">
-	      		     <!-- 1. 관심 테이블 대분류 -->
-	      		     <input type="checkbox" class="category-check check" checked>
+	      		                                                 <input type="checkbox" class="category-check check">
                                             <div class="form-group"> 
-										      <label for="mojor1" class="form-label mt-4">관심사가 바뀌셨나요?</label>
+										      <label for="mojor1" class="form-label mt-4">무엇에 관심이 있으신가요?</label>
 										      <br>
 										      <span class="mt-1">관심 1</span>
-										      <select class="form-select" name="mojor-s1" id="mojor1">
+										      <select class="form-select" name="mojor-s1" id="mojor1" >
 										        <option class="dj1" value=null>선택하지 않음</option>
-										        <option class="d-major1" value="40">아웃도어/여행</option>
-										        <option class="d-major1" value="41">업종/직무</option>
-										        <option class="d-major1" value="42">인문학/책/글</option>
-										        <option class="d-major1" value="43">운동/스포츠</option>
-										        <option class="d-major1" value="61">외국/언어</option>
-										        <option class="d-major1" value="62">문화/공연/축제</option>
-										        <option class="d-major1" value="63">음악/악기</option>
-										        <option class="d-major1" value="64">공예/만들기</option>
-										        <option class="d-major1" value="65">댄스/무용</option>
-										        <option class="d-major1" value="66">봉사활동</option>
-										        <option class="d-major1" value="67">사교/인맥</option>
-										        <option class="d-major1" value="68">차/오토바이</option>
-										        <option class="d-major1" value="69">사진/영상</option>
-										        <option class="d-major1" value="70">야구관람</option>
-										        <option class="d-major1" value="71">게임/오락</option>
-										        <option class="d-major1" value="72">요리/제조</option>
-										        <option class="d-major1" value="73">반려동물</option>
-										        <option class="d-major1" value="74">자유주제</option>
+										        <option value="40">아웃도어/여행</option>
+										        <option value="41">업종/직무</option>
+										        <option value="42">인문학/책/글</option>
+										        <option value="43">운동/스포츠</option>
+										        <option value="61">외국/언어</option>
+										        <option value="62">문화/공연/축제</option>
+										        <option value="63">음악/악기</option>
+										        <option value="64">공예/만들기</option>
+										        <option value="65">댄스/무용</option>
+										        <option value="66">봉사활동</option>
+										        <option value="67">사교/인맥</option>
+										        <option value="68">차/오토바이</option>
+										        <option value="69">사진/영상</option>
+										        <option value="70">야구관람</option>
+										        <option value="71">게임/오락</option>
+										        <option value="72">요리/제조</option>
+										        <option value="73">반려동물</option>
+										        <option value="74">자유주제</option>
 										      </select>
 										    </div>
 										    
@@ -714,23 +712,76 @@
 <!-- 										관심 카테고리 소분류 -->
 										    <div class="form-group"> 
 										      <select class="form-select mojor-check" name="likeCategory" id="monor1" disabled>
-								                <option class="ds1" value=" "></option>
-								                <option class="choice1 40" value="7">등산</option>
-								                <option class="choice1 40" value="8">산책/트래킹</option>
-								                <option class="choice1 40" value="9">캠핑/백패킹</option>
-								                <option class="choice1 40" value="10">국내여행</option>
-								                <option class="choice1 42" value="11">책/독서</option>
-								                <option class="choice1 42" value="12">인문학</option>
-								                <option class="choice1 42" value="13">심리학</option>
-								                <option class="choice1 42" value="14">철학</option>
-								                <option class="choice1 41" value="15">금융업</option>
-								                <option class="choice1 41" value="16">교육업</option>
-								                <option class="choice1 41" value="17">디자인업계</option>
-								                <option class="choice1 41" value="18">컨설팅</option>
-								                <option class="choice1 43" value="19">자전거</option>
-								                <option class="choice1 43" value="20">배드민턴</option>
-								                <option class="choice1 43" value="21">볼링</option>
-								                <option class="choice1 43" value="22">골프</option>
+								                <option class="ds1" value=""></option>
+<option class="choice1 40" value="7">등산</option>
+<option class="choice1 40" value="8">산책/트래킹</option>
+<option class="choice1 40" value="9">캠핑/백패킹</option>
+<option class="choice1 40" value="10">국내여행</option>
+<option class="choice1 42" value="11">책/독서</option>
+<option class="choice1 42" value="12">인문학</option>
+<option class="choice1 42" value="13">심리학</option>
+<option class="choice1 42" value="14">철학</option>
+<option class="choice1 41" value="15">금융업</option>
+<option class="choice1 41" value="16">교육업</option>
+<option class="choice1 41" value="17">디자인업계</option>
+<option class="choice1 41" value="18">컨설팅</option>
+<option class="choice1 43" value="19">자전거</option>
+<option class="choice1 43" value="20">배드민턴</option>
+<option class="choice1 43" value="21">볼링</option>
+<option class="choice1 43" value="22">골프</option>
+<option class="choice1 71" value="24">보드게임</option>
+<option class="choice1 71" value="25">두뇌심리게임</option>
+<option class="choice1 71" value="26">온라인게임</option>
+<option class="choice1 71" value="27">콘솔게임</option>
+<option class="choice1 61" value="41">영어</option>
+<option class="choice1 61" value="42">일본어</option>
+<option class="choice1 61" value="43">중국어</option>
+<option class="choice1 61" value="47">독일어</option>
+<option class="choice1 63" value="48">노래/보컬</option>
+<option class="choice1 63" value="49">기타/베이스</option>
+<option class="choice1 63" value="50">우쿨렐레</option>
+<option class="choice1 63" value="51">드럼</option>
+<option class="choice1 63" value="52">피아노</option>
+<option class="choice1 64" value="57">미술/그림</option>
+<option class="choice1 64" value="58">켈리그라피</option>
+<option class="choice1 64" value="59">플라워아트</option>
+<option class="choice1 64" value="60">캔들/디퓨저/석고</option>
+<option class="choice1 65" value="61">라틴댄스</option>
+<option class="choice1 65" value="62">사교댄스</option>
+<option class="choice1 65" value="63">방송/힙합</option>
+<option class="choice1 65" value="64">스트릿댄스</option>
+<option class="choice1 66" value="69">양로원</option>
+<option class="choice1 66" value="70">보육원</option>
+<option class="choice1 66" value="71">환경봉사</option>
+<option class="choice1 66" value="72">사회봉사</option>
+<option class="choice1 67" value="73">지역</option>
+<option class="choice1 67" value="74">나이</option>
+<option class="choice1 67" value="75">파티</option>
+<option class="choice1 67" value="76">결혼</option>
+<option class="choice1 68" value="77">현대</option>
+<option class="choice1 68" value="78">기아</option>
+<option class="choice1 68" value="79">르노</option>
+<option class="choice1 68" value="81">쌍용</option>
+<option class="choice1 69" value="82">필름카메라</option>
+<option class="choice1 69" value="83">영상제작</option>
+<option class="choice1 69" value="84">디지털카메라</option>
+<option class="choice1 70" value="85">디에스엠알</option>
+<option class="choice1 70" value="87">삼성라이온즈</option>
+<option class="choice1 70" value="88">기아타이거즈</option>
+<option class="choice1 70" value="89">롯데자이언츠</option>
+<option class="choice1 70" value="90">두산베어스</option>
+<option class="choice1 72" value="121">한식</option>
+<option class="choice1 72" value="92">일식</option>
+<option class="choice1 72" value="93">중식</option>
+<option class="choice1 72" value="94">양식</option>
+<option class="choice1 73" value="96">강아지</option>
+<option class="choice1 73" value="97">고양이</option>
+<option class="choice1 73" value="98">물고기</option>
+<option class="choice1 73" value="99">파충류</option>
+<option class="choice1 74" value="100">금융보험</option>
+<option class="choice1 74" value="101">취업스터디</option>
+<option class="choice1 74" value="102">시험/자격증</option>
+<option class="choice1 74" value="103">스피치/발성</option>
 										      </select>
 										    </div>
 										    
@@ -738,25 +789,25 @@
                                             <div class="form-group"> 
 										      <label for="mojor2" class="form-label mt-4">관심 2</label>
 										      <select class="form-select" name="mojor-s2" id="mojor2">
-										          <option class="dj2" value=null>선택하지 않음</option>
-									              <option class="d-major2" value="40">아웃도어/여행</option>
-									              <option class="d-major2" value="41">업종/직무</option>
-									              <option class="d-major2" value="42">인문학/책/글</option>
-									              <option class="d-major2" value="43">운동/스포츠</option>
-									              <option class="d-major2" value="61">외국/언어</option>
-									              <option class="d-major2" value="62">문화/공연/축제</option>
-									              <option class="d-major2" value="63">음악/악기</option>
-									              <option class="d-major2" value="64">공예/만들기</option>
-									              <option class="d-major2" value="65">댄스/무용</option>
-									              <option class="d-major2" value="66">봉사활동</option>
-									              <option class="d-major2" value="67">사교/인맥</option>
-									              <option class="d-major2" value="68">차/오토바이</option>
-									              <option class="d-major2" value="69">사진/영상</option>
-									              <option class="d-major2" value="70">야구관람</option>
-									              <option class="d-major2" value="71">게임/오락</option>
-									              <option class="d-major2" value="72">요리/제조</option>
-									              <option class="d-major2" value="73">반려동물</option>
-									              <option class="d-major2" value="74">자유주제</option>
+										        <option class="dj2" value=null>선택하지 않음</option>
+										        <option value="40">아웃도어/여행</option>
+										        <option value="41">업종/직무</option>
+										        <option value="42">인문학/책/글</option>
+										        <option value="43">운동/스포츠</option>
+										        <option value="61">외국/언어</option>
+										        <option value="62">문화/공연/축제</option>
+										        <option value="63">음악/악기</option>
+										        <option value="64">공예/만들기</option>
+										        <option value="65">댄스/무용</option>
+										        <option value="66">봉사활동</option>
+										        <option value="67">사교/인맥</option>
+										        <option value="68">차/오토바이</option>
+										        <option value="69">사진/영상</option>
+										        <option value="70">야구관람</option>
+										        <option value="71">게임/오락</option>
+										        <option value="72">요리/제조</option>
+										        <option value="73">반려동물</option>
+										        <option value="74">자유주제</option>
 										      </select>
 										    </div>
 										    
@@ -764,23 +815,76 @@
 <!-- 										관심 카테고리 소분류 -->
 										    <div class="form-group"> 
 										      <select class="form-select mojor-check" name="likeCategory" id="monor2" disabled>
-								                <option class="ds2" value=" "></option>
-								                <option class="choice2 40" value="7">등산</option>
-								                <option class="choice2 40" value="8">산책/트래킹</option>
-								                <option class="choice2 40" value="9">캠핑/백패킹</option>
-								                <option class="choice2 40" value="10">국내여행</option>
-								                <option class="choice2 42" value="11">책/독서</option>
-								                <option class="choice2 42" value="12">인문학</option>
-								                <option class="choice2 42" value="13">심리학</option>
-								                <option class="choice2 42" value="14">철학</option>
-								                <option class="choice2 41" value="15">금융업</option>
-								                <option class="choice2 41" value="16">교육업</option>
-								                <option class="choice2 41" value="17">디자인업계</option>
-								                <option class="choice2 41" value="18">컨설팅</option>
-								                <option class="choice2 43" value="19">자전거</option>
-								                <option class="choice2 43" value="20">배드민턴</option>
-								                <option class="choice2 43" value="21">볼링</option>
-								                <option class="choice2 43" value="22">골프</option>
+								                <option class="ds2" value=""></option>
+<option class="choice2 40" value="7">등산</option>
+<option class="choice2 40" value="8">산책/트래킹</option>
+<option class="choice2 40" value="9">캠핑/백패킹</option>
+<option class="choice2 40" value="10">국내여행</option>
+<option class="choice2 42" value="11">책/독서</option>
+<option class="choice2 42" value="12">인문학</option>
+<option class="choice2 42" value="13">심리학</option>
+<option class="choice2 42" value="14">철학</option>
+<option class="choice2 41" value="15">금융업</option>
+<option class="choice2 41" value="16">교육업</option>
+<option class="choice2 41" value="17">디자인업계</option>
+<option class="choice2 41" value="18">컨설팅</option>
+<option class="choice2 43" value="19">자전거</option>
+<option class="choice2 43" value="20">배드민턴</option>
+<option class="choice2 43" value="21">볼링</option>
+<option class="choice2 43" value="22">골프</option>
+<option class="choice2 71" value="24">보드게임</option>
+<option class="choice2 71" value="25">두뇌심리게임</option>
+<option class="choice2 71" value="26">온라인게임</option>
+<option class="choice2 71" value="27">콘솔게임</option>
+<option class="choice2 61" value="41">영어</option>
+<option class="choice2 61" value="42">일본어</option>
+<option class="choice2 61" value="43">중국어</option>
+<option class="choice2 61" value="47">독일어</option>
+<option class="choice2 63" value="48">노래/보컬</option>
+<option class="choice2 63" value="49">기타/베이스</option>
+<option class="choice2 63" value="50">우쿨렐레</option>
+<option class="choice2 63" value="51">드럼</option>
+<option class="choice2 63" value="52">피아노</option>
+<option class="choice2 64" value="57">미술/그림</option>
+<option class="choice2 64" value="58">켈리그라피</option>
+<option class="choice2 64" value="59">플라워아트</option>
+<option class="choice2 64" value="60">캔들/디퓨저/석고</option>
+<option class="choice2 65" value="61">라틴댄스</option>
+<option class="choice2 65" value="62">사교댄스</option>
+<option class="choice2 65" value="63">방송/힙합</option>
+<option class="choice2 65" value="64">스트릿댄스</option>
+<option class="choice2 66" value="69">양로원</option>
+<option class="choice2 66" value="70">보육원</option>
+<option class="choice2 66" value="71">환경봉사</option>
+<option class="choice2 66" value="72">사회봉사</option>
+<option class="choice2 67" value="73">지역</option>
+<option class="choice2 67" value="74">나이</option>
+<option class="choice2 67" value="75">파티</option>
+<option class="choice2 67" value="76">결혼</option>
+<option class="choice2 68" value="77">현대</option>
+<option class="choice2 68" value="78">기아</option>
+<option class="choice2 68" value="79">르노</option>
+<option class="choice2 68" value="81">쌍용</option>
+<option class="choice2 69" value="82">필름카메라</option>
+<option class="choice2 69" value="83">영상제작</option>
+<option class="choice2 69" value="84">디지털카메라</option>
+<option class="choice2 70" value="85">디에스엠알</option>
+<option class="choice2 70" value="87">삼성라이온즈</option>
+<option class="choice2 70" value="88">기아타이거즈</option>
+<option class="choice2 70" value="89">롯데자이언츠</option>
+<option class="choice2 70" value="90">두산베어스</option>
+<option class="choice2 72" value="121">한식</option>
+<option class="choice2 72" value="92">일식</option>
+<option class="choice2 72" value="93">중식</option>
+<option class="choice2 72" value="94">양식</option>
+<option class="choice2 73" value="96">강아지</option>
+<option class="choice2 73" value="97">고양이</option>
+<option class="choice2 73" value="98">물고기</option>
+<option class="choice2 73" value="99">파충류</option>
+<option class="choice2 74" value="100">금융보험</option>
+<option class="choice2 74" value="101">취업스터디</option>
+<option class="choice2 74" value="102">시험/자격증</option>
+<option class="choice2 74" value="103">스피치/발성</option>
 										      </select>
 										    </div>
 										    
@@ -788,50 +892,104 @@
                                             <div class="form-group"> 
 										      <label for="mojor3" class="form-label mt-4">관심 3</label>
 										      <select class="form-select" name="mojor-s3" id="mojor3">
-										                      <option class="d-major3" value="40">아웃도어/여행</option>
-												              <option class="d-major3" value="41">업종/직무</option>
-												              <option class="d-major3" value="42">인문학/책/글</option>
-												              <option class="d-major3" value="43">운동/스포츠</option>
-												              <option class="d-major3" value="61">외국/언어</option>
-												              <option class="d-major3" value="62">문화/공연/축제</option>
-												              <option class="d-major3" value="63">음악/악기</option>
-												              <option class="d-major3" value="64">공예/만들기</option>
-												              <option class="d-major3" value="65">댄스/무용</option>
-												              <option class="d-major3" value="66">봉사활동</option>
-												              <option class="d-major3" value="67">사교/인맥</option>
-												              <option class="d-major3" value="68">차/오토바이</option>
-												              <option class="d-major3" value="69">사진/영상</option>
-												              <option class="d-major3" value="70">야구관람</option>
-												              <option class="d-major3" value="71">게임/오락</option>
-												              <option class="d-major3" value="72">요리/제조</option>
-												              <option class="d-major3" value="73">반려동물</option>
-												              <option class="d-major3" value="74">자유주제</option>
+										        <option class="dj3" value=null>선택하지 않음</option>
+										        <option value="40">아웃도어/여행</option>
+										        <option value="41">업종/직무</option>
+										        <option value="42">인문학/책/글</option>
+										        <option value="43">운동/스포츠</option>
+										        <option value="61">외국/언어</option>
+										        <option value="62">문화/공연/축제</option>
+										        <option value="63">음악/악기</option>
+										        <option value="64">공예/만들기</option>
+										        <option value="65">댄스/무용</option>
+										        <option value="66">봉사활동</option>
+										        <option value="67">사교/인맥</option>
+										        <option value="68">차/오토바이</option>
+										        <option value="69">사진/영상</option>
+										        <option value="70">야구관람</option>
+										        <option value="71">게임/오락</option>
+										        <option value="72">요리/제조</option>
+										        <option value="73">반려동물</option>
+										        <option value="74">자유주제</option>
 										      </select>
 										    </div>
 										    
+										    
+<!-- 										관심 카테고리 소분류 -->
 										    <div class="form-group"> 
-										      <select class="form-select mojor-check" name="likeCategory" id="monor3" disabled>
-								                <option class="ds3" value=" "></option>
-								                <option class="choice3 40" value="7">등산</option>
-								                <option class="choice3 40" value="8">산책/트래킹</option>
-								                <option class="choice3 40" value="9">캠핑/백패킹</option>
-								                <option class="choice3 40" value="10">국내여행</option>
-								                <option class="choice3 42" value="11">책/독서</option>
-								                <option class="choice3 42" value="12">인문학</option>
-								                <option class="choice3 42" value="13">심리학</option>
-								                <option class="choice3 42" value="14">철학</option>
-								                <option class="choice3 41" value="15">금융업</option>
-								                <option class="choice3 41" value="16">교육업</option>
-								                <option class="choice3 41" value="17">디자인업계</option>
-								                <option class="choice3 41" value="18">컨설팅</option>
-								                <option class="choice3 43" value="19">자전거</option>
-								                <option class="choice3 43" value="20">배드민턴</option>
-								                <option class="choice3 43" value="21">볼링</option>
-								                <option class="choice3 43" value="22">골프</option>
+										      <select class="form-select mojor-check" name="	" id="monor3" disabled>
+								                <option class="ds3" value=""></option>
+<option class="choice3 40" value="7">등산</option>
+<option class="choice3 40" value="8">산책/트래킹</option>
+<option class="choice3 40" value="9">캠핑/백패킹</option>
+<option class="choice3 40" value="10">국내여행</option>
+<option class="choice3 42" value="11">책/독서</option>
+<option class="choice3 42" value="12">인문학</option>
+<option class="choice3 42" value="13">심리학</option>
+<option class="choice3 42" value="14">철학</option>
+<option class="choice3 41" value="15">금융업</option>
+<option class="choice3 41" value="16">교육업</option>
+<option class="choice3 41" value="17">디자인업계</option>
+<option class="choice3 41" value="18">컨설팅</option>
+<option class="choice3 43" value="19">자전거</option>
+<option class="choice3 43" value="20">배드민턴</option>
+<option class="choice3 43" value="21">볼링</option>
+<option class="choice3 43" value="22">골프</option>
+<option class="choice3 71" value="24">보드게임</option>
+<option class="choice3 71" value="25">두뇌심리게임</option>
+<option class="choice3 71" value="26">온라인게임</option>
+<option class="choice3 71" value="27">콘솔게임</option>
+<option class="choice3 61" value="41">영어</option>
+<option class="choice3 61" value="42">일본어</option>
+<option class="choice3 61" value="43">중국어</option>
+<option class="choice3 61" value="47">독일어</option>
+<option class="choice3 63" value="48">노래/보컬</option>
+<option class="choice3 63" value="49">기타/베이스</option>
+<option class="choice3 63" value="50">우쿨렐레</option>
+<option class="choice3 63" value="51">드럼</option>
+<option class="choice3 63" value="52">피아노</option>
+<option class="choice3 64" value="57">미술/그림</option>
+<option class="choice3 64" value="58">켈리그라피</option>
+<option class="choice3 64" value="59">플라워아트</option>
+<option class="choice3 64" value="60">캔들/디퓨저/석고</option>
+<option class="choice3 65" value="61">라틴댄스</option>
+<option class="choice3 65" value="62">사교댄스</option>
+<option class="choice3 65" value="63">방송/힙합</option>
+<option class="choice3 65" value="64">스트릿댄스</option>
+<option class="choice3 66" value="69">양로원</option>
+<option class="choice3 66" value="70">보육원</option>
+<option class="choice3 66" value="71">환경봉사</option>
+<option class="choice3 66" value="72">사회봉사</option>
+<option class="choice3 67" value="73">지역</option>
+<option class="choice3 67" value="74">나이</option>
+<option class="choice3 67" value="75">파티</option>
+<option class="choice3 67" value="76">결혼</option>
+<option class="choice3 68" value="77">현대</option>
+<option class="choice3 68" value="78">기아</option>
+<option class="choice3 68" value="79">르노</option>
+<option class="choice3 68" value="81">쌍용</option>
+<option class="choice3 69" value="82">필름카메라</option>
+<option class="choice3 69" value="83">영상제작</option>
+<option class="choice3 69" value="84">디지털카메라</option>
+<option class="choice3 70" value="85">디에스엠알</option>
+<option class="choice3 70" value="87">삼성라이온즈</option>
+<option class="choice3 70" value="88">기아타이거즈</option>
+<option class="choice3 70" value="89">롯데자이언츠</option>
+<option class="choice3 70" value="90">두산베어스</option>
+<option class="choice3 72" value="121">한식</option>
+<option class="choice3 72" value="92">일식</option>
+<option class="choice3 72" value="93">중식</option>
+<option class="choice3 72" value="94">양식</option>
+<option class="choice3 73" value="96">강아지</option>
+<option class="choice3 73" value="97">고양이</option>
+<option class="choice3 73" value="98">물고기</option>
+<option class="choice3 73" value="99">파충류</option>
+<option class="choice3 74" value="100">금융보험</option>
+<option class="choice3 74" value="101">취업스터디</option>
+<option class="choice3 74" value="102">시험/자격증</option>
+<option class="choice3 74" value="103">스피치/발성</option>
 										      </select>
 										    </div>
-	      		    	</div>
-	      		    </div>
 	            
 	            
 	            <div class="row mt-5">
