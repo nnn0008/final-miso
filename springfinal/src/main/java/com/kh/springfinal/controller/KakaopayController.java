@@ -530,7 +530,8 @@ public class KakaopayController {
 //				return "redirect:regularSuccessResult";
 //			}
 			@RequestMapping("/regularPurchase/regularSuccessResult")
-			public String regularSuccessResult() {
+			public String regularSuccessResult(HttpSession session) {
+				String memberId = (String) session.getAttribute("name");
 				return"pay/regularSuccessResult";
 			}
 			

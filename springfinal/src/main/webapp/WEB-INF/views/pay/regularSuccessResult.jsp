@@ -22,7 +22,7 @@
 				</p>
 			</div>
 			<div class="card-body text-end">
-				<a href="${pageContext.request.contextPath}/pay/list2" class="btn btn-primary">나의 결제 내역 보기</a>
+				<a href="${pageContext.request.contextPath}/member/mypage?memberId=${sessionScope.name}" class="btn btn-primary">나의 결제 내역 보기</a>
 			</div>
 		</div>
 	</div>
