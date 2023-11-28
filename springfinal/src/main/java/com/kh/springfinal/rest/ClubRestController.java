@@ -391,7 +391,7 @@ public class ClubRestController {
 		
 		else if(memberDto.getMemberLevel().equals("일반유저")) {
 			
-			if(memberJoinCount>=50) {
+			if(memberJoinCount>=12) {
 				
 				return 2;
 			}
@@ -401,7 +401,7 @@ public class ClubRestController {
 		else {
 			
 				
-				if(memberJoinCount>=50) {
+				if(memberJoinCount>=12) {
 					
 					return 3;
 					
@@ -424,7 +424,7 @@ public class ClubRestController {
 
 		if(memberDto.getMemberLevel().equals("일반유저")) {
 			
-			if(memberJoinCount>=5) {
+			if(memberJoinCount>=12) {
 				
 				return 1;
 			}
@@ -433,7 +433,7 @@ public class ClubRestController {
 		else {
 			
 				
-				if(memberJoinCount>=50) {
+				if(memberJoinCount>=12) {
 					
 					return 2;
 					
