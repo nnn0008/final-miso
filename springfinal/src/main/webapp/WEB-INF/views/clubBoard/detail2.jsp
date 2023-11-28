@@ -35,9 +35,12 @@ width:500px;
 <script>
 
 //댓글 작성 시 비동기처리로 댓글 작성 + 댓글 목록 비동기처리
+
 $(function(){
 	
 	window.notifySocket = new SockJS("${pageContext.request.contextPath}/ws/notify");
+	//전역변수로 설정
+	var replyHtmlTemplate = $.parseHTML($("#reply-insert-form").html());
 	
     //댓글 작성
     //$(".div-for-insert-reply").append(replyHtmlTemplate);
@@ -62,9 +65,8 @@ $(function(){
             success: function(response){
                 console.log("성공");
             	$(".reply-write").val("");
-              
             	loadList()
-
+            	loadMore(currentPage);
 
 					//소켓 전송
                     var notifyType = "reply";
@@ -91,6 +93,7 @@ $(function(){
 	});
     
     //대댓글 작성
+    //$(replyHtmlTemplate).find(".btn-miso").click(function(e){
     $(document).on("click", ".btn-misos", function(e){
 // 	    $(".btn-open-reply-edit").hide();
 		var params = new URLSearchParams(location.search);
@@ -115,11 +118,9 @@ $(function(){
                 console.log("성공");
             	$(".reply-write").val("");
             	$(this).remove();
-
             	loadList()
-
-
-                $(".div-for-insert-reply").show();
+            	loadMore(currentPage);
+//                 $(".div-for-insert-reply").show();
                 $(".btn-open-reply-edit").show();
 
               //소켓 전송
@@ -148,6 +149,11 @@ $(function(){
 		      }
 		    });
 	});
+
+		//로그인 한 아이디
+		var memberId = "${sessionScope.name}";
+		
+
 	});
 
 </script>
@@ -255,35 +261,228 @@ $(function(){
 	});
 </script>
 <script>
+//스크롤 템플릿
+// $(window).scroll(function() {
+// 	// 현재 스크롤 위치
+// 	var scrollTop = $(window).scrollTop();
+// 	// 문서의 전체 높이
+// 	var docHeight = $(document).height();
+// 	// 창의 높이
+// 	var windowHeight = $(window).height();
+// 	// 스크롤의 위치를 퍼센트로 계산
+// 	var scrollPercent = (scrollTop / (docHeight - windowHeight)) * 100;
+// 	// 퍼센트를 콘솔에 출력
+// 	//console.log("스크롤 퍼센트: " + scrollPercent.toFixed(2) + "%");
+	
+// 	if(!loading && scrollPercent >= 65){
+// 		$(".go-upside").show();
+// 		loading = true;
+// 		console.log(currentPage);
+		
+// 	}
+// });
+
+// // 스크롤 이벤트를 감지하여 처리합니다.
+// $(window).scroll(function () {
+//     // 스크롤 위치를 계산합니다.
+//     var scrollPercentage = getScrollPercentage();
+//     console.log("스크롤 위치: " + scrollPercentage + "%");
+    
+//     // 여기에 추가적인 무한 스크롤 처리를 추가하세요.
+// });
+
+// // 스크롤 위치를 계산하는 함수
+// function getScrollPercentage() {
+//     var scrollPosition = $(window).scrollTop();
+//     var windowHeight = $(window).height();
+//     var bodyHeight = $(document).height();
+
+//     var scrollPercentage = (scrollPosition / (bodyHeight - windowHeight)) * 100;
+//     return scrollPercentage.toFixed(2); // 소수점 두 자리까지만 표시
+// }
+//전역변수로 설정
+var loading = false;
+var currentPage = 1;
 //스크롤 관련
 $(function(){
+	loadList()
 
-	loadList();
-
+	loadMore(currentPage);
 });
 
-//화면이 로딩되거나 댓글이 작성되었을경우 댓글목록을 다시 찍어주는 비동기처리
 
+//화면이 로딩되거나 댓글이 작성되었을경우 댓글목록을 다시 찍어주는 비동기처리
+function loadMore(currentPage){
+	var params = new URLSearchParams(location.search);
+	var clubBoardNo = params.get("clubBoardNo");
+	//var memberId = "${sessionScope.name}";
+	$(window).scroll(function() {
+		// 현재 스크롤 위치
+		var scrollTop = $(window).scrollTop();
+		// 문서의 전체 높이
+		var docHeight = $(document).height();
+		// 창의 높이
+		var windowHeight = $(window).height();
+		// 스크롤의 위치를 퍼센트로 계산
+		var scrollPercent = (scrollTop / (docHeight - windowHeight)) * 100;
+		// 퍼센트를 콘솔에 출력
+		console.log("스크롤 퍼센트: " + scrollPercent.toFixed(2) + "%");
+		
+		if(!loading && scrollPercent >= 65){
+// 			$(".go-upside").show();
+			loading = true;
+			console.log(currentPage);
+			
+			$.ajax({
+				url: window.contextPath+"/rest/reply/list",
+				method:"post",
+				data:{
+					clubBoardNo : clubBoardNo,
+					page : currentPage,
+				},
+				//response를 댓글 목록으로 받아옴
+				success:function(response){
+					$(".reply-list").empty();
+					console.log(response);
+					currentPage++;
+					for(var i = 0; i < response.length; i++){
+						//console.log(response);
+						var template = $("#reply-template").html();
+						var htmlTemplate = $.parseHTML(template);
+						
+						$(htmlTemplate).find(".clubBoardReplyWriter").text(response[i].clubBoardReplyWriter);
+						$(htmlTemplate).find(".clubBoardReplyContent").text(response[i].clubBoardReplyContent);
+						$(htmlTemplate).find(".clubBoardReplyDate").text(response[i].formattedClubBoardReplyDate);
+						$(htmlTemplate).find(".btn-subReply").attr("data-reply-no", response[i].clubBoardReplyNo);
+						//내가 작성한 댓글인지 확인하여 수정/삭제 버튼을 안보이게
+						if(response[i].match == false){
+							$(htmlTemplate).find(".edit-delete").empty();
+						}
+						
+						//대댓글 이라면
+		              	if(response[i].clubBoardReplyParent != null){
+		                    $(htmlTemplate).addClass("ms-5");
+		                    $(htmlTemplate).find(".only-attach-reply").remove();
+		                    $(htmlTemplate).find("hr").remove();
+		                }
+						
+						$(htmlTemplate).find(".btn-reply-delete").attr("data-reply-no", response[i].clubBoardReplyNo).click(function(e){
+							var clubBoardReplyNo = $(this).attr("data-reply-no");
+							$.ajax({
+								url: window.contextPath + "/rest/reply/delete",
+								method:"post",
+								data:{clubBoardReplyNo: clubBoardReplyNo},
+								//삭제 성공하면
+								success:function(response){
+									loadList();
+						
+									loadMore(currentPage); //목록을 갱신 
+								},
+							});
+						});
+
+						$(htmlTemplate).find(".btn-open-reply-edit").attr("data-reply-no", response[i].clubBoardReplyNo).click(function(){
+							var editTemplate = $("#reply-edit-template").html();
+							var editHtmlTemplate = $.parseHTML(editTemplate);
+							
+							//기존 댓글 창을 숨기자
+							$(".div-for-insert-reply").hide();
+							//다른 수정 버튼을 안보이게
+							$(".btn-open-reply-edit").hide();
+							//수정 버튼 누르고 답글 달기 버튼 누르면 2개가 동시에 보임
+							$(".btn-subReply").hide();
+							
+							var clubBoardReplyNo = $(this).attr("data-reply-no");
+							var clubBoardReplyContent = $(this).parents(".for-reply-edit").find(".clubBoardReplyContent").text();
+							//console.log(clubBoardReplyContent);
+							$(editHtmlTemplate).find("[name=clubBoardReplyNo]").val(clubBoardReplyNo);
+							$(editHtmlTemplate).find("[name=clubBoardReplyContent]").val(clubBoardReplyContent);
+							
+							//취소버튼을 클릭한다면
+							$(editHtmlTemplate).find(".btn-cancel").click(function(e){
+								$(this).parents(".edit-container").prev(".for-reply-edit").show();
+								$(this).parents(".edit-container").remove();
+								$(".div-for-insert-reply").show();
+								//숨긴 수정 버튼 다시 보여주기
+									$(".btn-open-reply-edit").show();
+									$(".btn-subReply").show();
+							});
+							
+							//완료(등록)버튼 처리
+							$(editHtmlTemplate).submit(function(e){
+								e.preventDefault();
+								
+								$.ajax({
+									url: window.contextPath + "/rest/reply/edit",
+									method: "post",
+									data: $(e.target).serialize(),
+									success: function(response){
+										loadList();
+										loadMore(currentPage);
+										$(".div-for-insert-reply").show();
+										$(".btn-subReply").show();
+									}
+								});
+							});
+							
+							//화면 배치
+							$(this).parents(".for-reply-edit").hide().after(editHtmlTemplate);
+						});
+						
+						$(htmlTemplate).find(".btn-subReply").attr("data-reply-no", response[i].clubBoardReplyNo).click(function(e){
+							$(this).hide();
+							$(".btn-open-reply-edit").hide();
+							var parent = $(this).parents(".for-reply-edit");
+							if(!parent.is(replyHtmlTemplate)){
+								$(this).parents(".for-reply-edit").append(replyHtmlTemplate);
+								$(".div-for-insert-reply").hide();
+								//console.log("생성");
+							 }
+							//console.log("취소준비");
+							parent.find(".btn-reReply-cancel").on("click", function(e){
+								$(this).parents(".for-reply-edit").find(".btn-subReply").show();
+								$(replyHtmlTemplate).remove();
+								$(".div-for-insert-reply").show();
+								$(".btn-open-reply-edit").show();
+								//console.log("취소");
+							});
+						});
+						
+						//댓글을 붙여
+						$(".reply-list").append(htmlTemplate);
+							
+						
+					}
+					loading = false;	
+					//여기에 댓글 입력창 붙이면 됨
+					//$(".div-for-insert-reply").append(replyHtmlTemplate);		
+				}
+				
+				
+				});//여기가 loadList의 최상위 ajax 끝낸 자리임
+		}
+	});
+}
+
+//화면이 로딩되거나 댓글이 작성되었을경우 댓글목록을 다시 찍어주는 비동기처리
+//최초 10개
 function loadList(){
 	var params = new URLSearchParams(location.search);
 	var clubBoardNo = params.get("clubBoardNo");
-
+	//var memberId = "${sessionScope.name}";\
+	var currentPage = 1;
 	$.ajax({
 		url: window.contextPath+"/rest/reply/list",
 		method:"post",
 		data:{
 			clubBoardNo : clubBoardNo,
+			page : currentPage,
 		},
 
 		//response를 댓글 목록으로 받아옴
 		success:function(response){
 			$(".reply-list").empty();
-			totalComments = response.length;
 			console.log(response);
-			
-			if(response.length == 0){
-				$(".btn-success").hide();
-			}
 
 			for(var i = 0; i < response.length; i++){
 				//console.log(response);
@@ -302,7 +501,7 @@ function loadList(){
 				//대댓글 이라면
               	if(response[i].clubBoardReplyParent != null){
                     $(htmlTemplate).addClass("ms-5");
-                    $(htmlTemplate).find(".btn-subReply").remove();
+                    $(htmlTemplate).find(".only-attach-reply").remove();
                     $(htmlTemplate).find("hr").remove();
                 }
 				
@@ -328,7 +527,7 @@ function loadList(){
 					//다른 수정 버튼을 안보이게
 					$(".btn-open-reply-edit").hide();
 					//수정 버튼 누르고 답글 달기 버튼 누르면 2개가 동시에 보임
-					//$(".btn-subReply").hide();
+					$(".btn-subReply").hide();
 					
 					var clubBoardReplyNo = $(this).attr("data-reply-no");
 					var clubBoardReplyContent = $(this).parents(".for-reply-edit").find(".clubBoardReplyContent").text();
@@ -365,7 +564,7 @@ function loadList(){
 					//화면 배치
 					$(this).parents(".for-reply-edit").hide().after(editHtmlTemplate);
 				});
-				var replyHtmlTemplate = $.parseHTML($("#reply-insert-form").html());
+				
 				$(htmlTemplate).find(".btn-subReply").attr("data-reply-no", response[i].clubBoardReplyNo).click(function(e){
 					$(this).hide();
 					$(".btn-open-reply-edit").hide();
@@ -387,35 +586,19 @@ function loadList(){
 				
 				//댓글을 붙여
 				$(".reply-list").append(htmlTemplate);
+					
+				
 			}
 			
-// 			loadedComments += response.length;
-// 			console.log("totalComments = " + totalComments);
-// 			console.log("loadedComments = " + loadedComments);
-				// 댓글이 20개 이상이면 먼저 작성된 댓글을 숨김
-// 				if(loadedComments >= pageSize){
-// 					hideOldComments();			
-
-// 				}
-			
-				
-	
+			//여기에 댓글 입력창 붙이면 됨
+			//$(".div-for-insert-reply").append(replyHtmlTemplate);		
 		}
 		
 		
 		});//여기가 loadList의 최상위 ajax 끝낸 자리임
 
 }
-// //더 보기 버튼 클릭 시 숨겨진 댓글을 확장
-// function showMoreComments() {
-//     currentPage++;
-//     loadList();
-// }
-// //먼저 작성된 댓글을 숨김
-// function hideOldComments() {
-//     $(".reply-list .for-reply-edit:gt(" + (loadedComments - pageSize) + ")").hide();
-//     $(".reply-list").append('<button type="button" class="btn btn-success" onclick="showMoreComments()">더 보기</button>');
-// }
+
 </script>
 <script>
 	//신고와 관련된 스크립트
@@ -508,7 +691,6 @@ function loadList(){
             <div class="col edit-delete text-end">
                 <i class="fa-solid fa-eraser ms-auto p-2 fa-gray btn-open-reply-edit"></i>
                 <i class="fa-solid fa-trash-can p-2 fa-gray btn-reply-delete"></i>
-				<i class="fa-regular fa-message btn-subReply p-2"></i>
             </div>
         </div>
         <div class="card-body">
@@ -517,7 +699,12 @@ function loadList(){
                     <span class="clubBoardReplyContent fs-6">내용</span>
                 </div>
             </div>
- 
+            <hr>
+            <div class="row mt-2 only-attach-reply">
+                <div class="col mb-2">
+                    <i class="fa-regular fa-message btn-subReply"><span class="ms-2">답글 달기</span></i>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -583,13 +770,11 @@ function loadList(){
 			
 			<div class="row d-flex align-items-center">
 				<div class="col-1">
-					<c:if test="${memberProfileDto.attachNo == null }">
+					<c:if test="${attachDto.attachNo == null }">
 						<img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="60" height="60">				
 					</c:if>
-
-					<c:if test="${memberProfileDto.attachNo != null}">
-						<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${memberProfileDto.attachNo}" class="rounded-circle" width="60" height="60">
-
+					<c:if test="${attachDto.attachNo != null}">
+						<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardAllDto.attachNoMp}" class="rounded-circle" width="60" height="60">
 					</c:if>
 				</div>
 				<div class="col ms-4">
@@ -597,7 +782,8 @@ function loadList(){
 				</div>
 				<div class="col-5 text-end">
 				<span class="badge bg-success">${clubBoardDto.clubBoardCategory}</span>
-					<small><fmt:formatDate value="${clubBoardDto.clubBoardDate}" pattern="M월 d일(E) H시 m분"/></small>
+					<small><fmt:formatDate value="${clubBoardDto.clubBoardDate}" pattern="M월 d일 a h시 m분"/></small>
+<%-- 					${clubBoardDto.clubBoardDate} --%>
 				</div>
 				
     <div class="col-1 text-end">
@@ -662,7 +848,7 @@ function loadList(){
 					<c:if test="${!isLiked}">
 						<i class="fa-solid fa-heart me-1 fa-2x" style="color: red"></i>
 					</c:if>					
-					좋아요<span class="board-like-count ms-1">	${likeCount}</span>
+					좋아요<span class="board-like-count ms-1">	${clubBoardDto.clubBoardLikecount}</span>
 				</div>
 			</div>
 			<hr>

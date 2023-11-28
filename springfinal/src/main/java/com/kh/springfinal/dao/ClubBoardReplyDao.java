@@ -20,9 +20,12 @@ public interface ClubBoardReplyDao {
 	//마이페이지에서 쓸 모든 댓글 리스트
 	List<ClubBoardDto> selectReplyByMember(String memberId);
 	
-	//답글까지 생각해서 만들기
-	List<ClubBoardReplyDto> selectListByReply(PaginationVO vo);
-	int count(PaginationVO vo);
+	//답글까지 생각해서 만들기(vo사용) - 추후 사용 예정
+	List<ClubBoardReplyDto> selectListByReplyForVO(PaginationVO vo);
+	int countForVO(PaginationVO vo);
+	
+	List<ClubBoardReplyDto> selectListByReply(int clubBoardNo);
+	int count(int clubBoardNo);
 	
 	//알림 부분
 	ClubBoardReplyMemberVO selectBoardReplyMember(int clubBoardReplyNo);

@@ -22,4 +22,8 @@
 		WHERE member_profile.attach_no = #{attachNo}
 	</delete>
 	
+	<select id="profileFind" resultType="MemberProfileDto">
+		select * from member_profile where member_id = #{memberId}
+	</select>
+	
 </mapper>

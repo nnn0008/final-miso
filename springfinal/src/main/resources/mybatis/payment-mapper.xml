@@ -18,7 +18,7 @@
     insert into payment(
         payment_no, payment_member, payment_tid,
         payment_name, payment_price, payment_remain,
-        payment_end
+        payment_end, payment_club_no
     )
     values(
         #{paymentNo}, #{paymentMember}, #{paymentTid},
@@ -28,7 +28,8 @@
             THEN ADD_MONTHS(SYSDATE, 1)
             WHEN #{paymentName} IN ('파워 유저 이용권(1년)', '프리미엄 모임 이용권(1년)')
             THEN ADD_MONTHS(SYSDATE, 12)
-        END
+        END,
+        #{paymentClubNo}
     )
 </insert>
     	
@@ -127,6 +128,7 @@
     			<result column="payment_time" property="paymentTime"/>
     			<result column="payment_begin" property="paymentBegin"/>
     			<result column="payment_end" property="paymentEnd"/>
+    			<result column="payment_club_no" property="paymentClubNo"/>
     		</association>
     		
     		<!--

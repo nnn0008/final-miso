@@ -298,12 +298,50 @@ $(function() {
 	${paymentRegularListVO.paymentRegularDto.paymentRegularEnd}
 		</div>
 	</div>
-
+	
+	
 	
 	<hr>
 </c:forEach>
                         
-                        
+        <c:forEach var="paymentRegularListVO" items="${list2}">
+
+	<!-- 대표 정보 -->
+
+<div class="row mt-3">	
+<div class="col text-start d-flex align-items-center btn btn-miso">
+    <a href="${pageContext.request.contextPath}/club/detail?clubNo=${paymentListVO.paymentDto.paymentClubNo}"
+        class="link"
+        style="height: 100%; padding: 0; box-sizing: border-box; text-decoration: none; color: inherit;">
+        모임명 : <strong class="ms-2 main-text">${paymentListVO.clubDto.clubName}</strong>
+    </a></div>
+
+<!-- 		<div class="col text-end"> -->
+<%-- 	<c:if test="${paymentRegularListVO.paymentRegularDto.paymentRegularRemain > 0 }"> --%>
+<%-- 	<a href="regularCancelAll?paymentRegularNo=${paymentRegularListVO.paymentRegularDto.paymentRegularNo}" class="btn btn-danger"> --%>
+<!-- 	구독 취소</a> -->
+<%-- 	</c:if>		 --%>
+<!-- </div> -->
+	</div>
+	
+		 <div class="row mt-2">
+		<div class="col-6">
+	${paymentListVO.paymentDto.paymentName}		
+		</div>
+		<div class="col">
+		<i class="fa-solid fa-hourglass-start"></i>
+	${paymentListVO.paymentDto.paymentTime}
+		</div>
+		<div class="col">
+		<i class="fa-solid fa-hourglass-end"></i>
+	${paymentListVO.paymentDto.paymentEnd}
+		</div>
+	</div>
+	
+	
+	
+	<hr>
+</c:forEach>                
 		</div>
 	</div>
 
