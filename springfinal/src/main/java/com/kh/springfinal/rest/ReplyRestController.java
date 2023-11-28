@@ -122,15 +122,15 @@ public class ReplyRestController {
 
 	@PostMapping("/list")
 	public List<ClubBoardReplyDto> list(@ModelAttribute("vo") PaginationVO vo, @RequestParam int clubBoardNo, HttpSession session
-			,@RequestParam(required = false) int page){
+			,@RequestParam(required = false) int page, @RequestParam(required = false) int size){
 		log.debug("응답왔음");
 		log.debug("page = {}", page);
 		String memberId = (String)session.getAttribute("name");
 		ClubBoardDto clubBoardDto = clubBoardDao.selectOnes(clubBoardNo);
 		int clubNo = clubBoardDto.getClubNo();
 		Integer clubMemberNo = clubMemberDao.findClubMemberNo(clubNo, memberId); 
-		
 		vo.setClubBoardNo(clubBoardNo);
+		vo.setSize(size);
 		int count = clubBoardReplyDao.count(vo);
 		log.debug("count={}", count);
 		vo.setSize(10);
