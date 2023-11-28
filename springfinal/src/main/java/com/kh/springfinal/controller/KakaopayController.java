@@ -212,6 +212,9 @@ public class KakaopayController {
 				//[1] 결제번호 생성
 				int paymentNo = Integer.parseInt(response.getPartnerOrderId());
 				
+				//세션에서 클럽 번호를 읽어옴
+				int clubNo = (int) session.getAttribute("clubNo");
+				
 				//[2] 결제번호 등록
 				paymentDao.insert(PaymentDto.builder()
 						.paymentNo(paymentNo)//결제고유번호
@@ -220,6 +223,7 @@ public class KakaopayController {
 						.paymentName(response.getItemName())//PG사 결제상품명
 						.paymentPrice(response.getAmount().getTotal())//총 결제액
 						.paymentRemain(response.getAmount().getTotal())//총 취소가능액
+						.paymentclubNo(clubNo)//등록번호
 						.build());
 				
 				//[3] 상품 개수 만큼 결제 상세정보를 등록

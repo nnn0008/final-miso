@@ -77,7 +77,6 @@ $(function(){
 					<option>회원</option>
 					<option>동호회</option>
 					<option>신고</option>
-					<option>고소</option>
 					<option>결제</option>
 					<option>기타문의</option>
 				</select>
