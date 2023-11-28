@@ -355,7 +355,8 @@ ORDER BY
 	</update>
 
 	<select id="clubFindOwner" resultType="ClubDto">
-		select * from club where club_owner = #{clubOwner}	
+		select * from club
+		where club_owner = #{clubOwner} and club_premium = 'N'
 	</select>
 
     <select id="searchClub" resultType="ClubListVO">

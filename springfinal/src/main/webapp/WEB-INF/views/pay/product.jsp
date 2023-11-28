@@ -141,7 +141,14 @@ font-size: 15px;
     <span class="ms-1">본인 메시지 삭제 기능</span></li>
   </ul>
   <div class="card-body pe-3">
-    <a href="singleList" class="card-link btn bg-miso w-100">구매하기</a>
+    <c:choose>
+    <c:when test="${sessionScope.memberLevel eq '파워유저'}">
+        <a class="card-link btn bg-miso w-100" style="pointer-events: none; opacity: 0.6;">구매하기</a>
+    </c:when>
+    <c:otherwise>
+        <a href="singleList" class="card-link btn bg-miso w-100">구매하기</a>
+    </c:otherwise>
+</c:choose>
   </div>
   <div class="card-footer text-muted">
   <span class="text-footer">
@@ -173,7 +180,14 @@ font-size: 15px;
     <span class="ms-1">본인 메시지 삭제 기능</span></li>
   </ul>
   <div class="card-body pe-3">
-    <a href="singleList" class="card-link btn bg-miso w-100 ">구매하기</a>
+      <c:choose>
+    <c:when test="${sessionScope.memberLevel eq '파워유저'}">
+        <a class="card-link btn bg-miso w-100" style="pointer-events: none; opacity: 0.6;">구매하기</a>
+    </c:when>
+    <c:otherwise>
+        <a href="regularList" class="card-link btn bg-miso w-100">구매하기</a>
+    </c:otherwise>
+</c:choose>
   </div>
   <div class="card-footer text-muted">
     <span class="text-footer">
