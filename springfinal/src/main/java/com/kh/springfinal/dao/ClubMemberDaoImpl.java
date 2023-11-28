@@ -175,6 +175,13 @@ public class ClubMemberDaoImpl implements ClubMemberDao{
 	public boolean downgradeRank(int clubMemberNo) {
 		return sqlSession.update("clubMember.rankDowngrade",clubMemberNo)>0;
 	}
+
+	@Override
+	public boolean removeMember(int clubMemberNo) {
+		
+		
+		return sqlSession.delete("clubMember.clubMemberDelete",clubMemberNo)>0;
+	}
 	
 	
 	
