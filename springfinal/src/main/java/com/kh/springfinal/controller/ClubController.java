@@ -432,10 +432,16 @@ public class ClubController {
 		}
 		
 		@RequestMapping("/list3")
-		public String list3(HttpSession session,Model model, @RequestParam int minorCategoryNo) {
+		public String list3(HttpSession session,Model model, @RequestParam int minorCategoryNo,
+				@RequestParam(required=false) int majorCategoryNo) {
 			
 			List<MinorCategoryDto> categoryList = 
-					categoryDao.minorCategoryList(minorCategoryNo);
+					categoryDao.minorCategoryList(majorCategoryNo);
+			
+			/*
+			 * List<MinorCategoryDto> minorCategoryList =
+			 * categoryDao.minorCategoryList(majorCategoryNo);
+			 */
 			
 			String memberId = (String) session.getAttribute("name");
 			
