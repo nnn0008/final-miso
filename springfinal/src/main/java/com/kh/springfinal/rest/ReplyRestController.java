@@ -27,7 +27,6 @@ import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.dto.PhotoReplyDto;
 import com.kh.springfinal.vo.ClubBoardReplyMemberVO;
-import com.kh.springfinal.vo.PaginationVO;
 import com.kh.springfinal.vo.PhotoReplyVO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -154,17 +153,16 @@ public class ReplyRestController {
 		int clubNo = clubBoardDto.getClubNo();
 		Integer clubMemberNo = clubMemberDao.findClubMemberNo(clubNo, memberId); 
 
-
 		int count = clubBoardReplyDao.count(clubBoardNo);
-//		
-//		log.debug("count={}", count);
+	
+		log.debug("clubBoardNo = {}", clubBoardNo);
+		log.debug("count = {}", count);
 		
 		List<ClubBoardReplyDto> dtoList = clubBoardReplyDao.selectListByReply(clubBoardNo);
 
 		for(ClubBoardReplyDto dto : dtoList) { // 오른쪽에 반복할 리스트, 왼쪽에 아무거나 이름
 			//댓글을 작성한 자와 로그인 한 자가 동일한지 비교해라
-			boolean isMatch = clubMemberNo == dto.getClubMemberNo(); 
-				
+			boolean isMatch = clubMemberNo == dto.getClubMemberNo();
 			dto.setMatch(isMatch);
 		}
 //		log.debug("dtoList = {}",dtoList);

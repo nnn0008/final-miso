@@ -230,7 +230,7 @@ $(function(){
 
 			<div class="col-4 second-attached">
 				<input type="file" class="form-control second-attach attach-selector" accept="image/*" name="attachSecond">
-				<div class="mt-3 image-box""></div>
+				<div class="mt-3 image-box"></div>
 				<div class="row">
 					<div class="col">
 						<button type="button" class="btn btn-outline-warning btn-attach-delete btn-second-delete w-100">기존 사진 지우기</button>

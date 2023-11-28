@@ -365,7 +365,7 @@ $(function(){
 			<c:when test="${clubBoardImage3Dto != null}">
 				<div class="col-4 third-attached image-attached">
 					<input type="file" class="form-control third-attach attach-selector" accept="image/*" name="attachThird" class="attach-selected">
-					<div class="mt-2 third-attached-image">
+					<div class="mt-2 third-attached-image for-attached-image">
 						<img src="${pageContext.request.contextPath}/clubBoard/download?attachNo=${clubBoardImage3Dto.attachNo}" style="width:162.66px" class="attach-selected" data-bs-toggle="modal" data-bs-target="#exampleModal">
 					</div>
 					<div class="row delete-row third-row">
@@ -378,7 +378,7 @@ $(function(){
 			<c:otherwise>
 				<div class="col-4 third-attached image-attached">
 					<input type="file" class="form-control third-attach attach-selector" accept="image/*" name="attachThird" class="attach-selected">
-					<div class="mt-2 third-attached-image">
+					<div class="mt-2 third-attached-image for-attached-image">
 					</div>
 					<div class="row delete-row third-row">
 						<div class="col">

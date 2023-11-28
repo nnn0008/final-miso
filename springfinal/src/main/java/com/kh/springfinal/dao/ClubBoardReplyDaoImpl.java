@@ -41,6 +41,7 @@ public class ClubBoardReplyDaoImpl implements ClubBoardReplyDao{
 	public boolean delete(int clubBoardReplyNo) {
 		return sqlSession.delete("clubBoardReply.remove", clubBoardReplyNo) > 0;
 	}
+	
 	@Override
 	public boolean edit(int clubBoardReplyNo, String clubBoardReplyContent) {
 		Map params = Map.of("clubBoardReplyNo", clubBoardReplyNo, "clubBoardReplyContent", clubBoardReplyContent);
