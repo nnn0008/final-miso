@@ -52,9 +52,36 @@
 
 
 <hr>
+<<<<<<< HEAD
 </div>
 </div>
 </div>
+=======
+
+<div class="mt-4 p-4 text-light bg-dark rounded">
+   <h1>모임장인 동호회 목록</h1>
+</div>
+<c:forEach var="clubDto" items="${ownerList}">
+	<div class="row">
+		<div class="col-2">
+			<input type="checkbox" name="clubNo" value="${clubDto.clubNo}">
+		</div>
+		<div class="col-2">
+			${clubDto.clubExplain}
+		</div>
+	</div>
+
+</c:forEach>
+
+<div class="row">
+   <div class="col text-end">
+      <button class="btn btn-success purchase-btn" type="button">
+         <img src="/images/payment.png">
+      </button>
+   </div>
+</div> 
+
+>>>>>>> branch 'won' of https://github.com/nnn0008/final-miso.git
 </div>
 </div>
 </div>
