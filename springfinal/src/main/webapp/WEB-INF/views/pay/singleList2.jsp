@@ -6,14 +6,11 @@
 
 
 
- <div class="container-fluid mb-5 pb-5">
-    <div class="row">
-        <div class="col-md-10 offset-md-1">
-            <div class="container-fluid mb-5 pb-5">
-                <div class="row">
-                    <div class="col-md-10 offset-md-1">
 
-                        <div class="mt-4 p-4 text-light bg-dark rounded">
+                <div class="row">
+                    <div class="col">
+
+                        <div class="mt-4 p-4 bg-miso rounded">
                             <h1>단건 상품</h1>
                         </div>
 
@@ -54,10 +51,7 @@
 
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <script>
 $(function () {
