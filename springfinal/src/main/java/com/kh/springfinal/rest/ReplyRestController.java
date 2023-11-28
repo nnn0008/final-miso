@@ -121,28 +121,53 @@ public class ReplyRestController {
 	    }
 	}
 
-	@PostMapping("/list")
-	public List<ClubBoardReplyDto> list(@ModelAttribute("vo") PaginationVO vo, @RequestParam int clubBoardNo, HttpSession session){
+//	@PostMapping("/list")
+//	public List<ClubBoardReplyDto> list(@ModelAttribute("vo") PaginationVO vo, @RequestParam int clubBoardNo, HttpSession session
+//			,@RequestParam(required = false) int page){
 //		log.debug("응답왔음");
 //		log.debug("page = {}", page);
+//		String memberId = (String)session.getAttribute("name");
+//		ClubBoardDto clubBoardDto = clubBoardDao.selectOnes(clubBoardNo);
+//		int clubNo = clubBoardDto.getClubNo();
+//		Integer clubMemberNo = clubMemberDao.findClubMemberNo(clubNo, memberId); 
+//		
+//		vo.setClubBoardNo(clubBoardNo);
+//		int count = clubBoardReplyDao.countForVO(vo);
+//		log.debug("count={}", count);
+//		vo.setSize(10);
+//		
+//		List<ClubBoardReplyDto> dtoList = clubBoardReplyDao.selectListByReplyForVO(vo);
+//		for(ClubBoardReplyDto dto : dtoList) { // 오른쪽에 반복할 리스트, 왼쪽에 아무거나 이름
+//			//댓글을 작성한 자와 로그인 한 자가 동일한지 비교해라
+//			boolean isMatch = clubMemberNo == dto.getClubMemberNo(); 
+//
+//			dto.setMatch(isMatch);
+//		}
+//		log.debug("dtoList = {}",dtoList);
+//		return dtoList;
+//	}
+  
+	@PostMapping("/list")
+	public List<ClubBoardReplyDto> list( @RequestParam int clubBoardNo, HttpSession session){
 		String memberId = (String)session.getAttribute("name");
 		ClubBoardDto clubBoardDto = clubBoardDao.selectOnes(clubBoardNo);
 		int clubNo = clubBoardDto.getClubNo();
 		Integer clubMemberNo = clubMemberDao.findClubMemberNo(clubNo, memberId); 
-		vo.setClubBoardNo(clubBoardNo);
-		vo.setSize(100);
-	
-		int count = clubBoardReplyDao.count(vo);
-		log.debug("count={}", count);
+
+
+		int count = clubBoardReplyDao.count(clubBoardNo);
+//		
+//		log.debug("count={}", count);
 		
-		List<ClubBoardReplyDto> dtoList = clubBoardReplyDao.selectListByReply(vo);
+		List<ClubBoardReplyDto> dtoList = clubBoardReplyDao.selectListByReply(clubBoardNo);
+
 		for(ClubBoardReplyDto dto : dtoList) { // 오른쪽에 반복할 리스트, 왼쪽에 아무거나 이름
 			//댓글을 작성한 자와 로그인 한 자가 동일한지 비교해라
 			boolean isMatch = clubMemberNo == dto.getClubMemberNo(); 
 				
 			dto.setMatch(isMatch);
 		}
-		log.debug("dtoList = {}",dtoList);
+//		log.debug("dtoList = {}",dtoList);
 		return dtoList;
 	}
 

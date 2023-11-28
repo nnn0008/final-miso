@@ -216,12 +216,6 @@ $(function(){
 				<label class="content-length">0</label> / 1300
 			</div>
 		</div>
-		
-		<div class="row mt-2">
-			<div class="col-12 text-start">
-				<p class="text-info fs-6">첫 번째 사진이 게시판 목록에 보이도록 등록됩니다</p>
-			</div>
-		</div>
 
 		<div class="row mt-4">	
 			<div class="col-4 first-attached">

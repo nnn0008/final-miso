@@ -56,9 +56,9 @@ public class HomeRestController {
 					
 			hVO.setAttended(isAttended);
 		}
-		log.debug("page = {}", page);
-		log.debug("vo = {}", vo);
-		log.debug("list = {}", list);
+//		log.debug("page = {}", page);
+//		log.debug("vo = {}", vo);
+//		log.debug("list = {}", list);
 		
 		return list;
 	}
