@@ -230,7 +230,7 @@ public class ClubRestController {
 		
 		vo.setWhereString(memberId);
 		
-		vo.setSize(6);
+		vo.setSize(8);
 		
 		List<ClubListVO> clubList= clubDao.majorClubListPage(vo);
 		
@@ -265,7 +265,7 @@ public class ClubRestController {
 		
 		vo.setWhereString(memberId);
 		
-		vo.setSize(6);
+		vo.setSize(8);
 		
 		List<ClubListVO> clubList= clubDao.minorClubListPage(vo);
 		
