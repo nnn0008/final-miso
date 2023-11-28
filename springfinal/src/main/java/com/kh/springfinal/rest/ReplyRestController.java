@@ -27,7 +27,6 @@ import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MemberDto;
 import com.kh.springfinal.dto.PhotoReplyDto;
 import com.kh.springfinal.vo.ClubBoardReplyMemberVO;
-import com.kh.springfinal.vo.ClubBoardReplyVO;
 import com.kh.springfinal.vo.PaginationVO;
 import com.kh.springfinal.vo.PhotoReplyVO;
 
@@ -140,7 +139,7 @@ public class ReplyRestController {
 		for(ClubBoardReplyDto dto : dtoList) { // 오른쪽에 반복할 리스트, 왼쪽에 아무거나 이름
 			//댓글을 작성한 자와 로그인 한 자가 동일한지 비교해라
 			boolean isMatch = clubMemberNo == dto.getClubMemberNo(); 
-
+				
 			dto.setMatch(isMatch);
 		}
 		log.debug("dtoList = {}",dtoList);

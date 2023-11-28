@@ -51,8 +51,9 @@ font-size: 18px;
 <script>
 	//jQuery를 이용한 스크롤바의 위치를 보기
     //초기페이지는 1
+    // 전역으로 선언
     var currentPage = 1;
-	var loading = false; // 전역으로 선언
+	var loading = false;
     var keyword = "";
 	 $(function() {
         $(".go-upside").hide();
@@ -64,18 +65,21 @@ font-size: 18px;
         loadMore(keyword, currentPage);        	
         	
         $(".badge").click(function(e){
-        	console.log("currentPage");
+//         	console.log("currentPage = " + currentPage);
         	$(".go-upside").hide();
 //         	e.preventDefault();
         	$(".board-list").empty();
-        	keyword = $(this).text().trim();
+//         	keyword = $(this).text().trim();
         	if(keyword == "전체") keyword="";
         	// 페이지 초기화
-            currentPage = 1;
-        	console.log(currentPage);
+//         	console.log("작동중1");
         	loadList(keyword);
         	////////////////////
-        	$(window).scroll(function() {
+        	loading = false;
+        	currentPage = 1;
+        	
+        	$(window).off("scroll").scroll(function() {
+//         		console.log("작동중2");
                 var scrollTop = $(this).scrollTop();
                 var windowHeight = $(window).height();
                 var documentHeight = $(document).height();
@@ -84,21 +88,27 @@ font-size: 18px;
                 var scrollPercentage = (scrollTop / (documentHeight - windowHeight)) * 100;
                 
             	//콘솔에 스크롤 위치 출력
-                console.log('스크롤 위치:', scrollPercentage.toFixed(2) + '%');
+//                 console.log('스크롤 위치:', scrollPercentage.toFixed(2) + '%');
 
                 // 표시할 퍼센트 값을 업데이트
-                scrollPercent.text(scrollPercentage.toFixed(2) + '%');
-    			
+//                 scrollPercent.text(scrollPercentage.toFixed(2) + '%');
+//    	        	console.log("keyword", keyword);
+//     			console.log("currentPage2 = " + currentPage);
 //             	var currentPage = parseInt($("#currentPage").val()) + 1;
     	        var params = new URLSearchParams(location.search);
     	        var clubNo = params.get("clubNo");
+//     	        currentPage = 1;
+// 				console.log("currentPage2 = " + currentPage);
+// 				console.log("loading중인가? " + loading);
     	        if(scrollPercentage.toFixed(2) >= 65 && !loading){
-    	        	var currentPage = 1;
-//     	        	var keyword = "공지사항";
+//         	       	currentPage = 1;
     	        	currentPage ++;
+//     	        	console.log("작동중3");
+//     	        	console.log("currentPage3 = " + currentPage);
     	        	$(".go-upside").show();
-    	        	//console.log('로딩 시작 - 현재 페이지 = ', currentPage);
+//     	        	console.log('로딩 시작 - 현재 페이지 = ', currentPage);
     	        	loading = true;
+    	        	
     	            
     	            $.ajax({
     	                url: window.contextPath + "/rest/clubBoard/page",
@@ -106,19 +116,19 @@ font-size: 18px;
     	                data: {
     	                    clubNo: clubNo,
     	                    page: currentPage,
-    	                    keyword: keyword ? keyword : undefined 
+    	                    keyword: keyword 
     	                },
     	                success: function (response) {
-    	                    //currentPage = response.currentPage;
+//     	                    currentPage = response.currentPage;
 //     	                    console.log('로딩 성공', response);
     						if(response.length == 0){
     							$(window).off("scroll");
-    							console.log('스크롤 종료', response);
+//     							console.log('여기서 스크롤 종료', response);
     						}
     						else{
     	                    // 받아온 데이터를 현재 목록에 추가하는 로직
     	                    for (var i = 0; i < response.length; i++) {
-    		                   	console.log(response);
+//     		                   	console.log(response);
     	                        var clubBoardAllDto = response[i];
     	                        
     	                    	var template = $("#list-template").html();
@@ -186,142 +196,13 @@ font-size: 18px;
     						}
     	                },
     	                error: function (error) {
-    	                    console.error('스크롤 종료', error);
+//     	                    console.error('스크롤 종료', error);
     	                    loading = false;
     	                }
     	            });       	
     	        }
             });
-        	
-        	
-        	
-        	
-        	
-        	
-        	
-//         	$(window).scroll(function() {
-//                 var scrollTop = $(this).scrollTop();
-//                 var windowHeight = $(window).height();
-//                 var documentHeight = $(document).height();
-            
-//                //스크롤 위치 계산
-//                 var scrollPercentage = (scrollTop / (documentHeight - windowHeight)) * 100;
-                
-//             	//콘솔에 스크롤 위치 출력
-//                 console.log('스크롤 위치:', scrollPercentage.toFixed(2) + '%');
 
-//                 // 표시할 퍼센트 값을 업데이트
-//                 scrollPercent.text(scrollPercentage.toFixed(2) + '%');
-    			
-// //             	var currentPage = parseInt($("#currentPage").val()) + 1;
-//     	        var params = new URLSearchParams(location.search);
-//     	        var clubNo = params.get("clubNo");
-//     	        if(scrollPercentage.toFixed(2) >= 65 && !loading){
-//     	        	var currentPage = 1;
-// //     	        	var keyword = "공지사항";
-//     	        	currentPage ++;
-//     	        	$(".go-upside").show();
-//     	        	//console.log('로딩 시작 - 현재 페이지 = ', currentPage);
-//     	        	loading = true;
-    	            
-//     	            $.ajax({
-//     	                url: window.contextPath + "/rest/clubBoard/page",
-//     	                method: "get",
-//     	                data: {
-//     	                    clubNo: clubNo,
-//     	                    page: currentPage,
-//     	                    keyword: keyword ? keyword : undefined 
-//     	                },
-//     	                success: function (response) {
-//     	                    //currentPage = response.currentPage;
-// //     	                    console.log('로딩 성공', response);
-//     						if(response.length == 0){
-//     							$(window).off("scroll");
-//     							console.log('스크롤 종료', response);
-//     						}
-//     						else{
-//     	                    // 받아온 데이터를 현재 목록에 추가하는 로직
-//     	                    for (var i = 0; i < response.length; i++) {
-//     		                   	console.log(response);
-//     	                        var clubBoardAllDto = response[i];
-    	                        
-//     	                    	var template = $("#list-template").html();
-//     	    					var htmlTemplate = $.parseHTML(template);
-    	    					
-//     	    					//프로필 있는지 검토
-//     	    					if(clubBoardAllDto.attachNoMp != null){
-//     	    						var profile = $("<img>").attr("src", window.contextPath + "/clubBoard/download?attachNo="+clubBoardAllDto.attachNoMp)
-//     	     						.addClass("rounded-circle").attr("width", 50).attr("height", 50).attr("data-board-no", response[i].clubBoardNo);
-//     	     						$(htmlTemplate).find(".for-attach").html(profile);
-//     	    					}
-//     	    					else{
-//     	    						var profile = $("<img>").attr("src",  window.contextPath + "/images/basic-profile.png")
-//     	    						.addClass("rounded-circle").attr("width", 50).attr("height", 50).attr("data-board-no", response[i].clubBoardNo);
-//     	    						$(htmlTemplate).find(".for-attach").html(profile);
-//     	    					}
-//     	    					//이름
-//     	    					$(htmlTemplate).find(".text-name").text(clubBoardAllDto.clubBoardName);
-//     	    					//시간
-//     							const originalDate = response[i].clubBoardDate;
-//     		 					const formattedDate = formatDate(originalDate);
-//     							$(htmlTemplate).find(".text-date").text(formattedDate + "분");	
-//     	    					//제목
-//     	    					$(htmlTemplate).find(".text-title").text(clubBoardAllDto.clubBoardTitle);
-//     	    					//내용
-//     	    					$(htmlTemplate).find(".text-content").text(clubBoardAllDto.clubBoardContent);
-//     	    					//사진이 어디에 있냐
-//     	    					if(clubBoardAllDto.attachNoCbi != null){
-//     	    						var photo = $("<img>").attr("src", window.contextPath + "/clubBoard/download?attachNo=" + clubBoardAllDto.attachNoCbi);
-//     	    						$(htmlTemplate).find(".text-image").html(photo);
-//     	    					}
-//     	    					else if(clubBoardAllDto.attachNoCbi == null && clubBoardAllDto.attachNoCbi2 != null){
-//     	    						var photo = $("<img>").attr("src", window.contextPath + "/clubBoard/download?attachNo=" + clubBoardAllDto.attachNoCbi2);
-//     	    						$(htmlTemplate).find(".text-image").html(photo);
-//     	    					}
-//     	    					else if(clubBoardAllDto.attachNoCbi == null && clubBoardAllDto.attachNoCbi2 == null && clubBoardAllDto.attachNoCbi3 != null){
-//     	    						var photo = $("<img>").attr("src", window.contextPath + "/clubBoard/download?attachNo=" + clubBoardAllDto.attachNoCbi3);
-//     	    						$(htmlTemplate).find(".text-image").html(photo);
-//     	    					}
-//     	    					//좋아요 했는지를 표시하여 하트의 클래스를 변경
-//     	    					if(response[i].liked == true){
-//     	    						$(htmlTemplate).find(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-solid");
-//     	    					}
-//     	    					else{
-//     	    						$(htmlTemplate).find(".fa-heart").removeClass("fa-solid fa-regular").addClass("fa-regular");
-//     	    					}
-//     	    					//좋아요 카운트
-//     	    					$(htmlTemplate).find(".text-like-count").text(clubBoardAllDto.clubBoardLikecount);
-//     	    					//댓글 수
-//     	    					$(htmlTemplate).find(".text-reply-count").text(clubBoardAllDto.clubBoardReplyCount);
-//     	    					//카테고리
-//     	    					$(htmlTemplate).find(".text-category").text(clubBoardAllDto.clubBoardCategory);
-    	                        
-//     	                        $('.board-list').append(htmlTemplate); // 새로운 행을 현재 목록에 추가
-    	                        
-//     	                        $(htmlTemplate).click(function(e){
-//     	    						var clubBoardNo = $(this).find(".rounded-circle").data("board-no");
-//     	    						//console.log(clubBoardNo);
-//     	                        	window.location.href = window.contextPath + "/clubBoard/detail?clubBoardNo=" + clubBoardNo;
-//     	                        });
-//     	                    }
-
-//     	                    loading = false;
-    							
-//     						}
-//     	                },
-//     	                error: function (error) {
-//     	                    console.error('스크롤 종료', error);
-//     	                    loading = false;
-//     	                }
-//     	            });       	
-//     	        }
-//             });
-        	
-
-        	
-//         	console.log("최초 로딩 성공");
-//         	loadMore(keyword, currentPage);
-//         	console.log("추가 로딩 성공");
         	
         });
 
@@ -348,7 +229,7 @@ font-size: 18px;
                 //console.log('로딩 성공', response);
             	if(response.length == 0){
 					$(window).off("scroll");
-					console.log('스크롤 종료', response);
+// 					console.log('스크롤 종료', response);
 				}
                 // 받아온 데이터를 현재 목록에 추가하는 로직
                 for (var i = 0; i < response.length; i++) {
@@ -408,7 +289,7 @@ font-size: 18px;
 					
 					$(htmlTemplate).click(function(e){
 						var clubBoardNo = $(this).find(".rounded-circle").data("board-no");
-						console.log(clubBoardNo);
+// 						console.log(clubBoardNo);
                     	window.location.href = window.contextPath + "/clubBoard/detail?clubBoardNo=" + clubBoardNo;
                     });
 					
@@ -444,7 +325,7 @@ font-size: 18px;
  		var scrollIndicator = $('#scroll-indicator');
         var scrollPercent = $('#scroll-percent');
 
-        $(window).scroll(function() {
+        $(window).off("scroll").scroll(function() {
             var scrollTop = $(this).scrollTop();
             var windowHeight = $(window).height();
             var documentHeight = $(document).height();
@@ -464,8 +345,10 @@ font-size: 18px;
 	        if(scrollPercentage.toFixed(2) >= 65 && !loading){
 	        	currentPage ++;
 	        	$(".go-upside").show();
-	        	console.log('로딩 시작 - 현재 페이지 = ', currentPage);
+	        	//console.log('로딩 시작 - 현재 페이지 = ', currentPage);
 	        	loading = true;
+	        	
+// 	        	console.log("keyword", keyword);
 	            
 	            $.ajax({
 	                url: window.contextPath + "/rest/clubBoard/page",
@@ -477,15 +360,15 @@ font-size: 18px;
 	                },
 	                success: function (response) {
 	                    //currentPage = response.currentPage;
-	                    console.log('로딩 성공', response);
+// 	                    console.log('로딩 성공', response);
 						if(response.length == 0){
 							$(window).off("scroll");
-							console.log('스크롤 종료', response);
+// 							console.log('스크롤 종료', response);
 						}
 						else{
 	                    // 받아온 데이터를 현재 목록에 추가하는 로직
 	                    for (var i = 0; i < response.length; i++) {
-		                   	console.log(response);
+// 		                   	console.log(response);
 	                        var clubBoardAllDto = response[i];
 	                        
 	                    	var template = $("#list-template").html();
@@ -553,7 +436,7 @@ font-size: 18px;
 						}
 	                },
 	                error: function (error) {
-	                    console.error('스크롤 종료', error);
+// 	                    console.error('스크롤 종료', error);
 	                    loading = false;
 	                }
 	            });       	

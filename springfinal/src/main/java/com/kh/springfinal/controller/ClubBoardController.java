@@ -153,11 +153,13 @@ public class ClubBoardController {
 		clubBoardLikeDto.setClubBoardNo(clubBoardNo);
 		clubBoardLikeDto.setClubMemberNo(clubBoardDto.getClubMemberNo());
 		boolean isLiked = clubBoardLikeDao.check(clubBoardLikeDto);
-		
+		int likeCount = clubBoardLikeDao.count(clubBoardNo);
+		clubBoardDto.setClubBoardLikecount(likeCount);
 		if(clubBoardImageDto != null) model.addAttribute("clubBoardImageDto", clubBoardImageDto);
 		if(clubBoardImage2Dto != null) model.addAttribute("clubBoardImage2Dto", clubBoardImage2Dto);
 		if(clubBoardImage3Dto != null) model.addAttribute("clubBoardImage3Dto", clubBoardImage3Dto);
 		
+		model.addAttribute("likeCount", likeCount);
 		model.addAttribute("isLiked", isLiked);
 		model.addAttribute("clubMemberDto", clubMemberDto);
 		model.addAttribute("clubBoardDto", clubBoardDto);

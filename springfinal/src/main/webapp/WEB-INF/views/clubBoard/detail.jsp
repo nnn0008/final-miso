@@ -848,7 +848,7 @@ function loadList(){
 					<c:if test="${!isLiked}">
 						<i class="fa-solid fa-heart me-1 fa-2x" style="color: red"></i>
 					</c:if>					
-					좋아요<span class="board-like-count ms-1">	${clubBoardDto.clubBoardLikecount}</span>
+					좋아요<span class="board-like-count ms-1">	${likeCount}</span>
 				</div>
 			</div>
 			<hr>
