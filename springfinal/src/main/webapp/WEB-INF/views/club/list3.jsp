@@ -9,6 +9,16 @@
   <link href="${pageContext.request.contextPath}/css/club.css" rel="stylesheet"> 
   
   <style>
+  
+  #scrollToTopBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 99;
+    }
+  
+  
        .badge.rounded-pill.bg-gray{
      font-size: 14px;
      }
@@ -23,6 +33,28 @@ width:20px;
     z-index: 3;
 }
   </style>
+  
+  <script>
+    $(document).ready(function () {
+    	
+    	 $('#scrollToTopBtn').hide();
+    	 
+        // 스크롤 위치에 따라 맨 위로 이동 버튼을 표시하거나 숨깁니다.
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 100) {
+                $('#scrollToTopBtn').fadeIn();
+            } else {
+                $('#scrollToTopBtn').fadeOut();
+            }
+        });
+
+        // 버튼을 클릭하면 부드럽게 맨 위로 스크롤합니다.
+        $('#scrollToTopBtn').click(function () {
+            $('html, body').animate({ scrollTop: 0 }, 'fast');
+            return false;
+        });
+    });
+</script>
   
   <script>
     	
@@ -387,7 +419,7 @@ width:20px;
           </div>
 
 
-
+<button id="scrollToTopBtn" class="btn btn-primary" title="맨 위로 이동">위로</button>
 
 
     
