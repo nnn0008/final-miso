@@ -31,6 +31,7 @@ import com.kh.springfinal.vo.PaginationVO;
 import com.kh.springfinal.vo.PhotoReplyVO;
 
 import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @RestController
 @RequestMapping("/rest/reply")
@@ -121,19 +122,18 @@ public class ReplyRestController {
 	}
 
 	@PostMapping("/list")
-	public List<ClubBoardReplyDto> list(@ModelAttribute("vo") PaginationVO vo, @RequestParam int clubBoardNo, HttpSession session
-			,@RequestParam(required = false) int page, @RequestParam(required = false) int size){
-		log.debug("응답왔음");
-		log.debug("page = {}", page);
+	public List<ClubBoardReplyDto> list(@ModelAttribute("vo") PaginationVO vo, @RequestParam int clubBoardNo, HttpSession session){
+//		log.debug("응답왔음");
+//		log.debug("page = {}", page);
 		String memberId = (String)session.getAttribute("name");
 		ClubBoardDto clubBoardDto = clubBoardDao.selectOnes(clubBoardNo);
 		int clubNo = clubBoardDto.getClubNo();
 		Integer clubMemberNo = clubMemberDao.findClubMemberNo(clubNo, memberId); 
 		vo.setClubBoardNo(clubBoardNo);
-		vo.setSize(size);
+		vo.setSize(100);
+	
 		int count = clubBoardReplyDao.count(vo);
 		log.debug("count={}", count);
-		vo.setSize(10);
 		
 		List<ClubBoardReplyDto> dtoList = clubBoardReplyDao.selectListByReply(vo);
 		for(ClubBoardReplyDto dto : dtoList) { // 오른쪽에 반복할 리스트, 왼쪽에 아무거나 이름
@@ -145,22 +145,7 @@ public class ReplyRestController {
 		log.debug("dtoList = {}",dtoList);
 		return dtoList;
 	}
-	
-//	@PostMapping("/list")
-//	public Map<String, Object> list(@RequestParam int clubBoardNo, HttpSession session){
-//		String memberId = (String)session.getAttribute("name");
-//		MemberDto memberDto = memberDao.loginId(memberId);
-//	
-//		List<ClubBoardReplyDto> list = clubBoardReplyDao.selectList(clubBoardNo);
-//		ClubBoardDto clubBoardDto = clubBoardDao.selectOnes(clubBoardNo);
-//		ClubMemberDto clubMemberDto = clubBoardDao.selectOneClubMemberNo(memberId, clubBoardDto.getClubNo());
-//		//로그인 한 사람의 memberNo
-//		int clubMemberNo = clubMemberDto.getClubMemberNo(); 
-//		
-//		Map params = Map.of("replyList", list, "clubMemberNo", clubMemberNo);
-//		return params;
-//	}2
-	
+
 	@PostMapping("/delete")
 	public void delete(@RequestParam int clubBoardReplyNo) {
 		ClubBoardReplyDto clubBoardReplyDto = clubBoardReplyDao.selectOne(clubBoardReplyNo);

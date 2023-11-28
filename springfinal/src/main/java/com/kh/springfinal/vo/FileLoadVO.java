@@ -38,11 +38,6 @@ public class FileLoadVO {
 	private AttachDao attachDao;
 	
 	@Autowired
-	private FileUploadProperties props;
-	
-	private File dir;
-	
-	@Autowired
 	private ClubBoardImageDao clubBoardImageDao;
 	
 	@Autowired
@@ -57,9 +52,14 @@ public class FileLoadVO {
 	@Autowired
 	private PhotoImageDao photoImageDao;
 	
+	@Autowired
+	private FileUploadProperties props;
+	
+	private File dir;
+	
 	@PostConstruct
 	public void init() {
-		dir = new File(props.getHome());
+		dir = new File(props.getHome()).getAbsoluteFile();
 		dir.mkdirs();
 	}
 	
@@ -272,10 +272,7 @@ public class FileLoadVO {
 				)
 			.body(resource);
 	}
-	
-	//edit시
-	
-	
+
 	/////////////////////////////////////////////////////////////////////////////////
 	//MeetingRestController
 	//정모 게시글 insert 시

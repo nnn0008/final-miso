@@ -7,4 +7,5 @@ public interface MemberProfileDao {
 	void profileUpload(MemberProfileDto profileDto);
 	AttachDto profileFindOne(String memberId);
 	boolean profileDelete(String memberId, int attachNo);
+	MemberProfileDto selectOne(String memberId);
 }

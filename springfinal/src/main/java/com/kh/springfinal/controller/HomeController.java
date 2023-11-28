@@ -60,10 +60,10 @@ public class HomeController {
 //		model.addAttribute("meetingList", meetingList);
 		model.addAttribute("memberList", memberList);
 		
-//		log.debug("wishlist ={}",wishList);
-//		log.debug("joinlist ={}", joinList);
+		log.debug("wishlist ={}",wishList);
+		log.debug("joinlist ={}", joinList);
 //		log.debug("updateList = {}", updateList);
-//		log.debug("memberList = {}", memberList.size());
+		log.debug("memberList = {}", memberList);
 		return "home";
 	}
 	
