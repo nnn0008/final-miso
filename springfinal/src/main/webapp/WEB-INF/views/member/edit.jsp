@@ -31,10 +31,24 @@
 		var major0Value = "${major0}";
 		var major1Value = "${major1}";
 		var major2Value = "${major2}";
-		console.log(major0Value);
+		var mojor1 = $("#mojor1");
+		var mojor2 = $("#mojor2");
+		var mojor3 = $("#mojor3");
+		
+		$("#mojor1 option.major-op1").filter(function() {
+		    return $(this).val() === major0Value;
+		}).prop("selected", true);
+		
+		$("#mojor2 option.major-op2").filter(function() {
+		    return $(this).val() === major1Value;
+		}).prop("selected", true);
+		$("#mojor3 option.major-op3").filter(function() {
+		    return $(this).val() === major2Value;
+		}).prop("selected", true);
+		console.log(mojor1);
+		
 	    // .d-major1 클래스에 해당하는 select 요소를 대상으로 처리
 	    var selectElement = $("#mojor1");
-	    console.log(selectElement);
 	    // 각 옵션에 대해 처리
 	    selectElement.find(".check-major").each(function() {
 	        var optionValue = $(this).val();
@@ -102,8 +116,8 @@
 	        
 	        // 선택된 옵션의 값이 major0Value와 일치하면 selected 속성을 추가
 	        if (optionValue === minor1Value) {
-	            $(this).prop("selected", true);
-	            $(monor1).prop("disabled", false);
+	            $(monor2).prop("disabled", false);
+	            $(this).prop("selected", true).trigger("change");
 	        }
 	    });	    
 	    
@@ -117,7 +131,7 @@
 	        // 선택된 옵션의 값이 major0Value와 일치하면 selected 속성을 추가
 	        if (optionValue === minor2Value) {
 	            $(this).prop("selected", true);
-	            $(monor1).prop("disabled", false);
+	            $(monor3).prop("disabled", false);
 	        }
 	    });	    
 	    
@@ -667,27 +681,28 @@
 										      <span class="mt-1">관심 1</span>
 										      <select class="form-select" name="mojor-s1" id="mojor1" >
 										        <option class="dj1" value=null>선택하지 않음</option>
-										        <option value="40">아웃도어/여행</option>
-										        <option value="41">업종/직무</option>
-										        <option value="42">인문학/책/글</option>
-										        <option value="43">운동/스포츠</option>
-										        <option value="61">외국/언어</option>
-										        <option value="62">문화/공연/축제</option>
-										        <option value="63">음악/악기</option>
-										        <option value="64">공예/만들기</option>
-										        <option value="65">댄스/무용</option>
-										        <option value="66">봉사활동</option>
-										        <option value="67">사교/인맥</option>
-										        <option value="68">차/오토바이</option>
-										        <option value="69">사진/영상</option>
-										        <option value="70">야구관람</option>
-										        <option value="71">게임/오락</option>
-										        <option value="72">요리/제조</option>
-										        <option value="73">반려동물</option>
-										        <option value="74">자유주제</option>
+										        <option class="major-op1" value="40">아웃도어/여행</option>
+													<option class="major-op1" value="41">업종/직무</option>
+													<option class="major-op1" value="42">인문학/책/글</option>
+													<option class="major-op1" value="43">운동/스포츠</option>
+													<option class="major-op1" value="61">외국/언어</option>
+													<option class="major-op1" value="62">문화/공연/축제</option>
+													<option class="major-op1" value="63">음악/악기</option>
+													<option class="major-op1" value="64">공예/만들기</option>
+													<option class="major-op1" value="65">댄스/무용</option>
+													<option class="major-op1" value="66">봉사활동</option>
+													<option class="major-op1" value="67">사교/인맥</option>
+													<option class="major-op1" value="68">차/오토바이</option>
+													<option class="major-op1" value="69">사진/영상</option>
+													<option class="major-op1" value="70">야구관람</option>
+													<option class="major-op1" value="71">게임/오락</option>
+													<option class="major-op1" value="72">요리/제조</option>
+													<option class="major-op1" value="73">반려동물</option>
+													<option class="major-op1" value="74">자유주제</option>
 										      </select>
 										    </div>
-										    
+									    </div>
+								    </div>
 										    
 										<!-- 
 											40=아웃도어/여행
@@ -709,7 +724,7 @@
 											73=반려동물
 											74=자유주제
 										-->
-<!-- 										관심 카테고리 소분류 -->
+										<!-- 관심 카테고리 소분류 -->
 										    <div class="form-group"> 
 										      <select class="form-select mojor-check" name="likeCategory" id="monor1" disabled>
 								                <option class="ds1" value=""></option>
@@ -790,24 +805,24 @@
 										      <label for="mojor2" class="form-label mt-4">관심 2</label>
 										      <select class="form-select" name="mojor-s2" id="mojor2">
 										        <option class="dj2" value=null>선택하지 않음</option>
-										        <option value="40">아웃도어/여행</option>
-										        <option value="41">업종/직무</option>
-										        <option value="42">인문학/책/글</option>
-										        <option value="43">운동/스포츠</option>
-										        <option value="61">외국/언어</option>
-										        <option value="62">문화/공연/축제</option>
-										        <option value="63">음악/악기</option>
-										        <option value="64">공예/만들기</option>
-										        <option value="65">댄스/무용</option>
-										        <option value="66">봉사활동</option>
-										        <option value="67">사교/인맥</option>
-										        <option value="68">차/오토바이</option>
-										        <option value="69">사진/영상</option>
-										        <option value="70">야구관람</option>
-										        <option value="71">게임/오락</option>
-										        <option value="72">요리/제조</option>
-										        <option value="73">반려동물</option>
-										        <option value="74">자유주제</option>
+										        <option class="major-op2" value="40">아웃도어/여행</option>
+<option class="major-op2" value="41">업종/직무</option>
+<option class="major-op2" value="42">인문학/책/글</option>
+<option class="major-op2" value="43">운동/스포츠</option>
+<option class="major-op2" value="61">외국/언어</option>
+<option class="major-op2" value="62">문화/공연/축제</option>
+<option class="major-op2" value="63">음악/악기</option>
+<option class="major-op2" value="64">공예/만들기</option>
+<option class="major-op2" value="65">댄스/무용</option>
+<option class="major-op2" value="66">봉사활동</option>
+<option class="major-op2" value="67">사교/인맥</option>
+<option class="major-op2" value="68">차/오토바이</option>
+<option class="major-op2" value="69">사진/영상</option>
+<option class="major-op2" value="70">야구관람</option>
+<option class="major-op2" value="71">게임/오락</option>
+<option class="major-op2" value="72">요리/제조</option>
+<option class="major-op2" value="73">반려동물</option>
+<option class="major-op2" value="74">자유주제</option>
 										      </select>
 										    </div>
 										    
@@ -893,24 +908,24 @@
 										      <label for="mojor3" class="form-label mt-4">관심 3</label>
 										      <select class="form-select" name="mojor-s3" id="mojor3">
 										        <option class="dj3" value=null>선택하지 않음</option>
-										        <option value="40">아웃도어/여행</option>
-										        <option value="41">업종/직무</option>
-										        <option value="42">인문학/책/글</option>
-										        <option value="43">운동/스포츠</option>
-										        <option value="61">외국/언어</option>
-										        <option value="62">문화/공연/축제</option>
-										        <option value="63">음악/악기</option>
-										        <option value="64">공예/만들기</option>
-										        <option value="65">댄스/무용</option>
-										        <option value="66">봉사활동</option>
-										        <option value="67">사교/인맥</option>
-										        <option value="68">차/오토바이</option>
-										        <option value="69">사진/영상</option>
-										        <option value="70">야구관람</option>
-										        <option value="71">게임/오락</option>
-										        <option value="72">요리/제조</option>
-										        <option value="73">반려동물</option>
-										        <option value="74">자유주제</option>
+										      <option class="major-op3" value="40">아웃도어/여행</option>
+<option class="major-op3" value="41">업종/직무</option>
+<option class="major-op3" value="42">인문학/책/글</option>
+<option class="major-op3" value="43">운동/스포츠</option>
+<option class="major-op3" value="61">외국/언어</option>
+<option class="major-op3" value="62">문화/공연/축제</option>
+<option class="major-op3" value="63">음악/악기</option>
+<option class="major-op3" value="64">공예/만들기</option>
+<option class="major-op3" value="65">댄스/무용</option>
+<option class="major-op3" value="66">봉사활동</option>
+<option class="major-op3" value="67">사교/인맥</option>
+<option class="major-op3" value="68">차/오토바이</option>
+<option class="major-op3" value="69">사진/영상</option>
+<option class="major-op3" value="70">야구관람</option>
+<option class="major-op3" value="71">게임/오락</option>
+<option class="major-op3" value="72">요리/제조</option>
+<option class="major-op3" value="73">반려동물</option>
+<option class="major-op3" value="74">자유주제</option>
 										      </select>
 										    </div>
 										    
@@ -1000,7 +1015,6 @@
 			      		    <button type="submit" class="btn btn-primary rounded-button w-75 btn-edit" style="font-size: 40px;">완료</button>
 	      		    	</div>
 	      		    </div>
-	            
 	            </form>
 	            
 	            </div>

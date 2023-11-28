@@ -54,16 +54,16 @@ $(function () {
     $.ajax({
     	url:"http://localhost:8080/rest/member/profile",
     	method:"post",
-    	data: {memberId:memberId}
+    	data: {memberId:memberId},
     success: function (response) {
     	var attachDto = response.data;
-    }}
+    }
     	
     
     
     })
     
-    
+    });
     
     </script>
     

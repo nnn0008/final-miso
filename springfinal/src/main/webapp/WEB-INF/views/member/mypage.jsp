@@ -253,10 +253,6 @@ $(function() {
                         </c:choose>
                         
                         
-                       
-                    
-                    
-                    
                         
                 	</c:otherwise>
                 	</c:choose>

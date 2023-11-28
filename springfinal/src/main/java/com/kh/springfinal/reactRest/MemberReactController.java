@@ -34,13 +34,13 @@ public class MemberReactController {
 	@GetMapping("/{userId}/{password}")
 	public MemberDto selectOne(@PathVariable String userId, @PathVariable String password) {
 			MemberDto memberDto = memberDao.loginId(userId);
-//			String memberPw  = password;
-//			String originPw = memberDto.getMemberPw();
-//			boolean result = encoder.matches(memberPw, originPw);
-//			if(result == true) {
-//				memberDto.setMemberPw(memberPw);
-//				return memberDto;
-//			}
+			String memberPw  = password;
+			String originPw = memberDto.getMemberPw();
+			boolean result = encoder.matches(memberPw, originPw);
+			if(result == true) {
+				memberDto.setMemberPw(memberPw);
+				return memberDto;
+			}
 			return memberDto;
 	}
 	
