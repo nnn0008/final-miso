@@ -3,6 +3,7 @@ package com.kh.springfinal.controller;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
@@ -213,18 +214,31 @@ public class KakaopayController {
 				int paymentNo = Integer.parseInt(response.getPartnerOrderId());
 				
 				//세션에서 클럽 번호를 읽어옴
-				int clubNo = (int) session.getAttribute("clubNo");
+				Integer clubNoObject = (Integer) session.getAttribute("clubNo");
+
+				if (clubNoObject != null) {
+				    int clubNo = clubNoObject; // 클럽 번호가 null이 아닌 경우에만 값을 가져옴
+				    paymentDao.insert(PaymentDto.builder()
+							.paymentNo(paymentNo)//결제고유번호
+							.paymentMember(response.getPartnerUserId())//결제자ID
+							.paymentTid(response.getTid())//PG사 거래번호
+							.paymentName(response.getItemName())//PG사 결제상품명
+							.paymentPrice(response.getAmount().getTotal())//총 결제액
+							.paymentRemain(response.getAmount().getTotal())//총 취소가능액
+							.paymentClubNo(clubNo)//등록번호
+							.build());
+				} else {
+					paymentDao.insert(PaymentDto.builder()
+							.paymentNo(paymentNo)//결제고유번호
+							.paymentMember(response.getPartnerUserId())//결제자ID
+							.paymentTid(response.getTid())//PG사 거래번호
+							.paymentName(response.getItemName())//PG사 결제상품명
+							.paymentPrice(response.getAmount().getTotal())//총 결제액
+							.paymentRemain(response.getAmount().getTotal())//총 취소가능액
+							.build());
+				}
 				
-				//[2] 결제번호 등록
-				paymentDao.insert(PaymentDto.builder()
-						.paymentNo(paymentNo)//결제고유번호
-						.paymentMember(response.getPartnerUserId())//결제자ID
-						.paymentTid(response.getTid())//PG사 거래번호
-						.paymentName(response.getItemName())//PG사 결제상품명
-						.paymentPrice(response.getAmount().getTotal())//총 결제액
-						.paymentRemain(response.getAmount().getTotal())//총 취소가능액
-						.paymentclubNo(clubNo)//등록번호
-						.build());
+				
 				
 				//[3] 상품 개수 만큼 결제 상세정보를 등록
 					List<PurchaseVO> list = listVO.getProduct();
@@ -461,19 +475,34 @@ public class KakaopayController {
 						int paymentRegularNo = Integer.parseInt(response.getPartnerOrderId());
 					
 						// 세션에서 클럽 번호를 읽어옴
-						int clubNo = (int) session.getAttribute("clubNo");
+						Integer clubNoObject = (Integer) session.getAttribute("clubNo");
 						
-						//[2] 결제번호 등록
-						paymentRegularDao.insert(PaymentRegularDto.builder()
-								.paymentRegularNo(paymentRegularNo)//결제고유번호
-								.paymentRegularMember(response.getPartnerUserId())//결제자ID
-								.paymentRegularTid(response.getTid())//PG사 거래번호
-								.paymentRegularSid(response.getSid())//PG사 정기결제번호
-								.paymentRegularName(response.getItemName())//PG사 결제상품명
-								.paymentRegularPrice(response.getAmount().getTotal())//총 결제액
-								.paymentRegularRemain(response.getAmount().getTotal())//총 취소가능액
-								.paymentRegularClubNo(clubNo) //클럽번호
-								.build());
+						if (clubNoObject != null) {
+						    int clubNo = clubNoObject; // 클럽 번호가 null이 아닌 경우에만 값을 가져옴
+						    paymentRegularDao.insert(PaymentRegularDto.builder()
+									.paymentRegularNo(paymentRegularNo)//결제고유번호
+									.paymentRegularMember(response.getPartnerUserId())//결제자ID
+									.paymentRegularTid(response.getTid())//PG사 거래번호
+									.paymentRegularSid(response.getSid())//PG사 정기결제번호
+									.paymentRegularName(response.getItemName())//PG사 결제상품명
+									.paymentRegularPrice(response.getAmount().getTotal())//총 결제액
+									.paymentRegularRemain(response.getAmount().getTotal())//총 취소가능액
+									.paymentRegularClubNo(clubNo) //클럽번호
+									.build());
+						    
+						    clubDao.updatePremiumClub(clubNo);
+						} else {
+							 paymentRegularDao.insert(PaymentRegularDto.builder()
+										.paymentRegularNo(paymentRegularNo)//결제고유번호
+										.paymentRegularMember(response.getPartnerUserId())//결제자ID
+										.paymentRegularTid(response.getTid())//PG사 거래번호
+										.paymentRegularSid(response.getSid())//PG사 정기결제번호
+										.paymentRegularName(response.getItemName())//PG사 결제상품명
+										.paymentRegularPrice(response.getAmount().getTotal())//총 결제액
+										.paymentRegularRemain(response.getAmount().getTotal())//총 취소가능액
+										.build());
+						}
+						
 						
 						//[3] 상품 개수 만큼 결제 상세정보를 등록
 							List<PurchaseVO> list = listVO.getProduct();
@@ -492,10 +521,8 @@ public class KakaopayController {
 							String memberId=(String)session.getAttribute("name");
 							memberDao.updateLevel(memberId);
 							
-							//모임 프리미엄 업데이트
-							 clubDao.updatePremiumClub(clubNo);
+							
 						    
-//							clubDao.updatePremium(memberId);
 					
 				return "redirect:regularSuccessResult";
 			}
@@ -554,7 +581,6 @@ public class KakaopayController {
 //			}
 			@RequestMapping("/regularPurchase/regularSuccessResult")
 			public String regularSuccessResult(HttpSession session) {
-				String memberId = (String) session.getAttribute("name");
 				return"pay/regularSuccessResult";
 			}
 			

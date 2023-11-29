@@ -26,7 +26,9 @@
         
     </div>
 <hr>
-<h5>동호회명 : <strong>${clubDto.clubName}</strong></h5>
+<c:if test="${clubDto.clubName != null}">
+    <h5>동호회명 : <strong>${clubDto.clubName}</strong></h5>
+</c:if>
 <h6 class="mt-2">결제금액 : <fmt:formatNumber value="${confirmVO.productDto.productPrice}" pattern="#,###원" /></h6>
 </c:forEach>
                                 	</div>
@@ -35,7 +37,7 @@
             
     
     <!-- 전송되는 부분 -->
-    <form method="post" action="/pay/regularPurchase">
+    <form method="post" action="/pay/purchase">
      <input type="hidden" name="clubNo" value="${clubDto.clubNo}">
     <c:forEach var="confirmVO" items="${list}" varStatus="stat">
         <input type="hidden" name="product[${stat.index}].productNo" value="${confirmVO.purchaseVO.productNo}">

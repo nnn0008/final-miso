@@ -333,7 +333,7 @@ public class MemberController {
 		
 		// 클럽 정보 조회 및 로그 출력
 		for (PaymentListVO paymentListVO : paymentList) {
-		    int clubNo = paymentListVO.getPaymentDto().getPaymentclubNo();
+		    int clubNo = paymentListVO.getPaymentDto().getPaymentClubNo();
 		    ClubDto clubDto = clubDao.clubSelectOne(clubNo);
 
 		    // ClubDto가 null이 아닌지, 그리고 clubName이 있는지 로그에 출력
