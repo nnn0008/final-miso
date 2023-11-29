@@ -62,7 +62,8 @@ public class MemberDaoImpl implements MemberDao{
 	public boolean changePw(String memberId, String memberPw) {
 		MemberDto memberDto = sqlSession.selectOne("member.loginId", memberId);
 		if(memberDto != null) {
-			memberDto.setMemberPw(memberPw);
+			String encrypt = encoder.encode(memberPw);
+			memberDto.setMemberPw(encrypt);
 			int count = sqlSession.update("member.changePw", memberDto);
 			boolean result =  count>0;
 			return result;

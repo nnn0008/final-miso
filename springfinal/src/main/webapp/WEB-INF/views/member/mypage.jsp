@@ -83,18 +83,19 @@ $(function() {
                             <div class="col-3">
                                 <c:choose>
                                     <c:when test="${memberDto==null}">
-										<img src="${pageContext.request.contextPath}/images/avatar50.png" width="35%">
+										<img src="${pageContext.request.contextPath}/images/avatar50.png" width="150px" height="150px"  style="max-height: 120px; max-width: 120px">
                                     </c:when>
                                     <c:otherwise>
-                                        <img src="/rest/member/profileShow?memberId=${memberDto.memberId}" class="rounded-circle profile" style="width:120px; height: 120px;" >
+                                        <img src="/rest/member/profileShow?memberId=${memberDto.memberId}" class="rounded-circle profile"width="120px" height="120px"  style="max-height: 120px; max-width: 120px" >
                                     </c:otherwise>
                                 </c:choose>
                                 <a href="./edit" class="edit-icon"><i class="fa-solid fa-pen edit-p"></i></a>
                             </div>
                             <div class="col-9">
                                 <div class="col">
-                                    <strong>${memberDto.memberName}</strong> 
+                                    <strong class="">${memberDto.memberName}</strong> 
                                 </div>
+                                
                                 <div class="col mt-2">
                                     <span class="text-gray">지역 | ${memberDto.memberBirth}</span> 
                                 </div>
@@ -143,7 +144,7 @@ $(function() {
                     </div>
                     
                     <c:choose>
-                    <c:when test="${wishList == null}">
+                    <c:when test="${empty	 wishList}">
 							  <div class="row d-flex align-items-center mt-3">
 					                <div class="col-3 text-start">
 					                    <img src="${pageContext.request.contextPath}/images/open-door.png" width="100%">
@@ -166,11 +167,10 @@ $(function() {
 					<div class="row">
                             <div class="col d-flex align-items-center mt-3 me-3">
                                 <div class="col-6">
-                                    <img src="${pageContext.request.contextPath}/images/logo-door.	png" width="5%">
+                                    <img src="${pageContext.request.contextPath}/images/logo-door.	png" width="5%" style="max-height: 159.25px; max-width: 145px;">
                                     <strong class="ms-2 text-start">찜한 정모</strong>
                                 </div>
                                 <div class="col-6 text-end">
-                                    <strong>전체보기</strong>
                                 </div>
                             </div>
                         </div>
@@ -210,7 +210,6 @@ $(function() {
                                     <strong class="ms-2 text-start">${memberDto.memberName}의 마이페이지</strong>
                                 </div>
                                 <div class="col-6 text-end">
-                                    <strong>전체보기</strong>
                                 </div>
                             </div>
                         </div>

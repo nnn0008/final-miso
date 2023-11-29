@@ -9,6 +9,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,7 +126,7 @@ public class MemberController {
 	public String login() {
 		return "member/login";
 	}
-	//임시 로그인(아이디 새로 만든거 쓰실분은 아래 코드 주석풀어서 이용해주세요)
+//	임시 로그인(아이디 새로 만든거 쓰실분은 아래 코드 주석풀어서 이용해주세요)
 	  @PostMapping("/login")
 	   public String login(@RequestParam String memberId, @RequestParam String memberPw, HttpSession session) {
 		  	MemberDto memberDto = memberDao.loginId(memberId);
