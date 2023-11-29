@@ -55,12 +55,6 @@ background-color: #FFED00;
 
 <script>
 $(function () {
-    // 클럽 선택 드롭다운 변경 시
-    $("#clubSelect").click(function () {
-        var clubNo = $(this).val();
-        // 선택한 클럽의 clubNo 값을 저장
-        $(this).data("clubNo", clubNo);
-    });
 
     $("[name=productNo]").change(function () {
         var checked = $(this).prop("checked");
