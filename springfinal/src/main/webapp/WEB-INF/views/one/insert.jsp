@@ -76,7 +76,6 @@ $(function(){
 					<option  disabled selected hidden>종류를 선택해주세요.</option>
 					<option>회원</option>
 					<option>동호회</option>
-					<option>신고</option>
 					<option>결제</option>
 					<option>기타문의</option>
 				</select>

@@ -19,7 +19,7 @@ background-color: #FFED00;
         <div class="row">
 
 <div class="mt-4 p-4 bg-miso rounded">
-   <h1>정기 상품</h1>
+   <h1>단건 상품</h1>
 </div>
 
 
