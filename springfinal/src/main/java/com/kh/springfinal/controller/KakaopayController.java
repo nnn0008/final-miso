@@ -362,13 +362,16 @@ public class KakaopayController {
 	
 	//결제 확인화면
 	@GetMapping("/regularPurchase")
-	public String regularPurchase(@ModelAttribute PurchaseListVO listVO, Model model, int clubNo, HttpSession session) {
+	public String regularPurchase(@ModelAttribute PurchaseListVO listVO, Model model, @RequestParam(required = false) Integer clubNo, HttpSession session) {
 		List<PurchaseVO> purchaseList = listVO.getProduct();
 		
-		   // 클럽 정보 조회
-	    ClubDto clubDto = clubDao.clubSelectOne(clubNo);
-	    model.addAttribute("clubDto", clubDto);
-	    log.debug("ClubDto: {}", clubDto);
+		// 클럽 정보 조회
+	    ClubDto clubDto = (clubNo != null) ? clubDao.clubSelectOne(clubNo) : null;
+	    
+	    if (clubDto != null) {
+	        model.addAttribute("clubDto", clubDto);
+	        log.debug("ClubDto={}", clubDto);
+	    }
 	    
 		List<PurchaseConfirmVO> confirmList = new ArrayList<>();//옮겨닮을 리스트
 		int total = 0;
@@ -386,10 +389,11 @@ public class KakaopayController {
 		
 		model.addAttribute("list", confirmList);//선택한번호의상품
 		model.addAttribute("total",total);
-		model.addAttribute("clubDto", clubDto);
 		
-		// 클럽 번호를 세션에 저장
-	    session.setAttribute("clubNo", clubNo);
+		// 클럽 번호가 존재하면 세션에 저장
+	    if (clubNo != null) {
+	        session.setAttribute("clubNo", clubNo);
+	    }
 	    
 		return"pay/regularPurchase";
 	}
