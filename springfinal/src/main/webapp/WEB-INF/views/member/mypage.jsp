@@ -21,6 +21,35 @@ color: gray;
     left: 110px;
   }
 
+.club-image{
+width: 100%; 
+height: 100%;
+object-fit: cover;
+border-radius: 20%;
+}
+.alert.alert-dismissible.club-box{
+border-radius: 20%;
+width:120px;
+height: 120px;
+}
+.alert.alert-dismissible.circle-time{
+width: 120px;
+}
+
+.club-name{
+font-size: 14px;
+}
+
+.col.d-flex.flex-column.align-items-start{
+margin-right: 0px;
+}
+.btn.btn-in, .btn.btn-out{
+width: 90px;
+}
+.btn.btn-home{
+width: 110px;
+}
+
 
 </style>
 <script>
@@ -163,26 +192,34 @@ $(function() {
 						
 						
 					<c:otherwise>
-					<div class="row mt-4">
+					 <div class="row mt-4">
                             <div class="col text-start d-flex align-items-center">
                                 <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
-                                <strong class="ms-2 main-text">찜한정모</strong>
+                                <strong class="ms-2 main-text">찜한 정모</strong>
                             </div>
                         </div>
                         <div class="row">
+                        
                         <c:forEach var="wishListDto" items="${wishList}">
-                                <div class="col-2 ms-2">
-                                    <div class="alert alert-dismissible alert-light">
-                                    
-                                        <a
-											href="${pageContext.request.contextPath}/club/detail?clubNo=${wishListDto.clubNo}"
-											class="link"
-											style="height: 100%; padding: 0; box-sizing: border-box;"> <img
-											src="${pageContext.request.contextPath}/club/image?clubNo=${wishListDto.clubNo}"  class="club-image">
-										</a>
-                                    </div>
-                                        <span>${wishListDto.clubName}</span>
-                                </div>
+                                    <div class="col-3 d-flex flex-column align-items-start mt-3 p-0 m-0">
+
+				<div class="alert alert-dismissible club-box alert-light circle p-0">
+						<a
+							href="${pageContext.request.contextPath}/club/detail?clubNo=${wishListDto.clubNo}"
+							class="link"
+							style="height: 100%; padding: 0; box-sizing: border-box;"> <img
+							src="${pageContext.request.contextPath}/club/image?clubNo=${wishListDto.clubNo}"  class="club-image">
+						</a>
+				</div>
+
+			<div class="alert alert-dismissible alert-light circle circle-time p-0 text-center mt-2 d-flex justify-content-center align-items-center">
+			<a href="${pageContext.request.contextPath}/club/detail?clubNo=${wishListDto.clubNo}" class="link">
+			  <strong class="club-name">${wishListDto.clubName} </strong>
+			    </a>
+			</div>
+
+			</div>
+
                         </c:forEach>
                         </div>
 					</c:otherwise>
@@ -331,14 +368,26 @@ $(function() {
 		<i class="fa-solid fa-hourglass-end"></i>
 	${paymentListVO.paymentDto.paymentEnd}
 		</div>
-	</div>
-	
-	
-	
+	</div>	
 	<hr>
 </c:forEach>                
 		</div>
+
+	
+	<div class="row mt-4">
+     <div class="col text-start d-flex align-items-center">
+         <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+        <strong class="ms-2 main-text">1대 1 문의</strong>
+    </div>
+</div>
+	
+	<div class="row">
+		<div class="col">
+		  <a href="${pageContext.request.contextPath}/one/insert" class="link">
+			<button class="btn btn-miso mt-2">1대 1 문의하기</button></a>
+		</div>
 	</div>
 
+</div>
 
 <jsp:include page="/WEB-INF/views/template/rightSidebar.jsp"></jsp:include>
