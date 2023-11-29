@@ -163,15 +163,10 @@ $(function() {
 						
 						
 					<c:otherwise>
-					<div class="row">
-                            <div class="col d-flex align-items-center mt-3 me-3">
-                                <div class="col-6">
-                                    <img src="${pageContext.request.contextPath}/images/logo-door.	png" width="5%">
-                                    <strong class="ms-2 text-start">찜한 정모</strong>
-                                </div>
-                                <div class="col-6 text-end">
-                                    <strong>전체보기</strong>
-                                </div>
+					<div class="row mt-4">
+                            <div class="col text-start d-flex align-items-center">
+                                <img src="${pageContext.request.contextPath}/images/logo-door.png" width="5%">
+                                <strong class="ms-2 main-text">찜한정모</strong>
                             </div>
                         </div>
                         <div class="row">
