@@ -35,6 +35,10 @@ font-size: 13px;
 font-size: 14px;
 }
 
+.card-footer{
+height: 90px;
+}
+
 .text-footer{
 font-size: 15px;
 }
