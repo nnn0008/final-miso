@@ -35,7 +35,7 @@
     	var no = $(this).find(":selected").val()
 		  		
     	$.ajax({
-            url:"http://localhost:8080/rest/category",
+            url:window.contextPath+"/rest/category",
             method:"get",
             data: {majorCategoryNo:no},
             success:function(response){
@@ -58,7 +58,7 @@
     		
     		
     	$.ajax({
-            url:"http://localhost:8080/rest/category",
+            url:window.contextPath+"/rest/category",
             method:"get",
             data: {majorCategoryNo:no},
             success:function(response){
@@ -222,7 +222,7 @@
     		        }
 
     		        $.ajax({
-    		            url: "http://localhost:8080/rest/zipPage",
+    		            url: window.contextPath+"/rest/zipPage",
     		            method: "get",
     		            data: { keyword: keyword },
     		            success: function (response) {
@@ -251,7 +251,7 @@
     		        }
 
     		        $.ajax({
-    		            url: "http://localhost:8080/rest/zipPage",
+    		            url: window.contextPath+"/rest/zipPage",
     		            method: "get",
     		            data: { keyword: keyword },
     		            success: function (response) {
@@ -330,7 +330,7 @@
     	     var keyword = $(".search-input").val();
 
     	     $.ajax({
-    	         url: "http://localhost:8080/rest/zipPage",
+    	         url: window.contextPath+"/rest/zipPage",
     	         method: "get",
     	         data: { keyword: keyword, page: page }, // 페이지 정보를 서버에 전달
     	         success: function (response) {
