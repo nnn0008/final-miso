@@ -1,5 +1,7 @@
 //package com.kh.springfinal.interceptor;
 //
+//import java.rmi.AccessException;
+//
 //import javax.servlet.http.HttpServletRequest;
 //import javax.servlet.http.HttpServletResponse;
 //import javax.servlet.http.HttpSession;
@@ -53,7 +55,7 @@
 //		
 //		if(memberJoinClubCount>=5) {
 //			
-//			throw new AuthorityException("만들 수 있는 동호회 수 초과");
+//			throw new AccessException("만들 수 있는 동호회 수 초과");
 //		}
 //		
 //		else {
@@ -67,7 +69,7 @@
 //		
 //		if(memberJoinClubCount>=12) {
 //			
-//			throw new AuthorityException("만들 수 있는 동호회 수 초과");
+//			throw new Exception("만들 수 있는 동호회 수 초과");
 //		}
 //		else {
 //			

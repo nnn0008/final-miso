@@ -48,7 +48,7 @@
 //		
 //		if(stringClubNo==null) {
 //			
-//			throw new NoTargetException("존재하지 않는 동호회");
+//			throw new Exception("존재하지 않는 동호회");
 //			
 //		}
 //		else if(!isLogin) { //가장 처음으로 로그인 안된 계정은 로그인으로 리 다이렉트
@@ -57,18 +57,18 @@
 //		}
 //		else if(joinedClub) { //이미 가입한 회원
 //			
-//			throw new AuthorityException("이미 가입한 동호회");
+//			throw new Exception("이미 가입한 동호회");
 //			
 //		}
 //		else if(clubDto.getClubPersonnel()>=clubMemberCount) {
 //			
-//			throw new AuthorityException("정원이 꽉 찬 동호회");
+//			throw new Exception("정원이 꽉 찬 동호회");
 //		}
 //		else if(memberRank.equals("일반유저")) {
 //			
 //			if(memberJoinClubCount>=5) {
 //				
-//				throw new AuthorityException("가입할 수 있는 동호회 수 초과");
+//				throw new Exception("가입할 수 있는 동호회 수 초과");
 //			}
 //			
 //			else {
@@ -82,7 +82,7 @@
 //			
 //			if(memberJoinClubCount>=12) {
 //				
-//				throw new AuthorityException("가입할 수 있는 동호회 수 초과");
+//				throw new Exception("가입할 수 있는 동호회 수 초과");
 //			}
 //			else {
 //				

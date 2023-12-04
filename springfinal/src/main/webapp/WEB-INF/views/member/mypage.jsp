@@ -34,13 +34,13 @@ $(function() {
 	    formData.append('attach', $('#formFile')[0].files[0]);
 
 	    $.ajax({
-	        url: "http://localhost:8080/rest/member/profileUpdate",
+	        url: "window.contextPath/rest/member/profileUpdate",
 	        method: "post",
 	        data: formData,
 	        contentType: false,
 	        processData: false,
 	        success: function (response) {
-	        	$(".profile").attr("src", "https://localhost:8080/rest/member/profileShow?memberId=" + response.memberId);
+	        	$(".profile").attr("src", "${pageContext.request.contextPath}/rest/member/profileShow?memberId=" + response.memberId);
 	        }
 	    });
 	});
@@ -52,7 +52,7 @@ $(function() {
 		var memberSelf = $("#self-content").val();
 		var memberId = "${sessionScope.name}";
 		$.ajax({
-			url:"http://localhost:8080/rest/member/memberEditSelf",
+			url:"window.contextPath/rest/member/memberEditSelf",
 			method: "post",
 			data: {
 				memberSelf : memberSelf,

@@ -163,14 +163,14 @@
 		    formData.append('attach', $('#formFile')[0].files[0]);
 
 		    $.ajax({
-		        url: "http://localhost:8080/rest/member/profileUpdate",
+		        url: "window.contextPath/rest/member/profileUpdate",
 		        method: "post",
 		        data: formData,
 		        contentType: false,
 		        processData: false,
 		        success: function (response) {
 		        	$(".profile").removeAttr("src");
-		        	$(".profile").attr("src", "http://localhost:8080/rest/member/profileShow?memberId=" + response.memberId+ "&timestamp=" + new Date().getTime());
+		        	$(".profile").attr("src", "${pageContext.request.contextPath}/rest/member/profileShow?memberId=" + response.memberId+ "&timestamp=" + new Date().getTime());
 		        }
 		    });
 		});
@@ -402,7 +402,7 @@
     		        }
 
     		        $.ajax({
-    		            url: "http://localhost:8080/rest/zipPage",
+    		            url: "window.contextPath/rest/zipPage",
     		            method: "get",
     		            data: { keyword: keyword },
     		            success: function (response) {
@@ -470,7 +470,7 @@
     	     var keyword = $(".search-input").val();
 
     	     $.ajax({
-    	         url: "http://localhost:8080/rest/zipPage",
+    	         url: "window.contextPath/rest/zipPage",
     	         method: "get",
     	         data: { keyword: keyword, page: page }, // 페이지 정보를 서버에 전달
     	         success: function (response) {
@@ -550,7 +550,7 @@
                                 <img src="https://dummyimage.com/150x150/000/fff" class="rounded-circle profile">
                             </c:when>
                             <c:otherwise>
-                                <img src="/rest/member/profileShow?memberId=${memberDto.memberId}" class="rounded-circle profile" style="width:150px; height: 150px;">
+                                <img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${memberDto.memberId}" class="rounded-circle profile" style="width:150px; height: 150px;">
                             </c:otherwise>
                         </c:choose>
                         <div class="position-relative ">
