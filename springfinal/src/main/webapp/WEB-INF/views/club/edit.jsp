@@ -64,7 +64,7 @@ border-radius: 1%;
 		console.log(minorNo);
 
 		$.ajax({
-			url : "http://localhost:8080/rest/category",
+			url : window.contextPath+"/rest/category",
 			method : "get",
 			data : {
 				majorCategoryNo : no
@@ -99,7 +99,7 @@ border-radius: 1%;
 
 
 					$.ajax({
-						url : "http://localhost:8080/rest/category",
+						url : window.contextPath+"/rest/category",
 						method : "get",
 						data : {
 							majorCategoryNo : no
@@ -250,7 +250,7 @@ $(function () {
 	        }
 
 	        $.ajax({
-	            url: "http://localhost:8080/rest/zipPage",
+	            url: window.contextPath+"/rest/zipPage",
 	            method: "get",
 	            data: { keyword: keyword },
 	            success: function (response) {
@@ -320,7 +320,7 @@ $(function () {
      var keyword = $(".search-input").val();
 
      $.ajax({
-         url: "http://localhost:8080/rest/zipPage",
+         url: window.contextPath+"/rest/zipPage",
          method: "get",
          data: { keyword: keyword, page: page }, // 페이지 정보를 서버에 전달
          success: function (response) {
@@ -432,7 +432,7 @@ $(function(){
 	<img src="${pageContext.request.contextPath}/club/image?clubNo=${clubDto.clubNo}" width="200" class="preview">
 	</c:when>
 	<c:otherwise>
-	<img src="/images/noimage.jpg" width="200" height="200" class="preview">
+	<img src="${pageContext.request.contextPath}/images/noimage.jpg" width="200" height="200" class="preview">
 	</c:otherwise>
 	</c:choose>
 	</div>
