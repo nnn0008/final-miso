@@ -59,6 +59,10 @@ public class KakaoPayRegularServiceImpl implements KakaoPayRegularService {
 		//주소 설정
 		URI uri = new URI("https://kapi.kakao.com/v1/payment/ready");
 		
+		String approval_url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/regularSuccess").toUriString();
+		String cancel_url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/cancelPage").toUriString();
+		String fail_url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/fail").toUriString();
+		
 		//바디 설정
 		MultiValueMap <String,String> body = new LinkedMultiValueMap<>();
 		body.add("cid", kakaoPayProperties.getRegularCid());
@@ -68,12 +72,15 @@ public class KakaoPayRegularServiceImpl implements KakaoPayRegularService {
 		body.add("quantity", "1");
 		body.add("total_amount", String.valueOf(request.getItemPrice()));
 		body.add("tax_free_amount", "0");
+		body.add("approval_url", approval_url);//성공시 실행될 주소
+		body.add("cancel_url", cancel_url);//취소시 실행될 주소
+		body.add("fail_url", fail_url);//실패시 실행될 주소
 		
-		//현재 페이지 주소 계산
-		String path = ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString();
-		body.add("approval_url",path+"/regularSuccess");
-		body.add("cancel_url",path+"/cancelPage");
-		body.add("fail_url",path+"/fail");
+//		//현재 페이지 주소 계산
+//		String path = ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString();
+//		body.add("approval_url",path+"/regularSuccess");
+//		body.add("cancel_url",path+"/cancelPage");
+//		body.add("fail_url",path+"/fail");
 		
 		//요청 발송
 		HttpEntity entity = new HttpEntity(body,headers);//요청객체
