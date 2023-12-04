@@ -91,10 +91,10 @@
         <c:when test="${empty clubInfo.clubNo}">
             <c:choose>
                 <c:when test="${sessionScope.name eq oneMembers.chatSender}">
-                    <img src="/rest/member/profileShow?memberId=${oneMembers.chatReceiver}" class="rounded-circle" width="60" height="60">
+                    <img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${oneMembers.chatReceiver}" class="rounded-circle" width="60" height="60">
                 </c:when>
                <c:when test="${sessionScope.name eq oneMembers.chatReceiver}">
-                    <img src="/rest/member/profileShow?memberId=${oneMembers.chatSender}" class="rounded-circle" width="60" height="60">
+                    <img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${oneMembers.chatSender}" class="rounded-circle" width="60" height="60">
                 </c:when>
                 <c:otherwise>
                     <!-- 이 부분은 meetingMembers가 리스트이므로 첫 번째 값만 사용합니다. -->
@@ -138,7 +138,7 @@
 								 <c:forEach var="member" items="${members}">
 					    <li class="list-group-item d-flex justify-content-between align-items-center">
 					     <span class="offline-icon"  id="clubMemberId_${member.clubMemberId}" value="${member.clubMemberId}"></span>
-					        <img src="/rest/member/profileShow?memberId=${member.clubMemberId}" class="rounded-circle" width="50" height="50">
+					        <img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${member.clubMemberId}" class="rounded-circle" width="50" height="50">
 					        <span>${member.memberName}</span>
 				        
 					        <c:choose>
@@ -165,7 +165,7 @@
     <!-- chatSender 정보 -->
     <li class="list-group-item d-flex justify-content-between align-items-center">
     <span class="offline-icon"  id="clubMemberId_${oneMembers.chatSender}" value="${oneMembers.chatSender}"></span>
-        <img src="/rest/member/profileShow?memberId=${oneMembers.chatSender}" class="rounded-circle" width="50" height="50">
+        <img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${oneMembers.chatSender}" class="rounded-circle" width="50" height="50">
         <span>${oneMembers.senderName}</span>
         <c:choose>
             <c:when test="${oneMembers.senderLevel eq '운영진'}">
@@ -188,7 +188,7 @@
     <!-- chatReceiver 정보 -->
     <li class="list-group-item d-flex justify-content-between align-items-center">
     <span class="offline-icon"  id="clubMemberId_${oneMembers.chatReceiver}" value="${oneMembers.chatReceiver}"></span>
-        <img src="/rest/member/profileShow?memberId=${oneMembers.chatReceiver}" class="rounded-circle" width="50" height="50">
+        <img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${oneMembers.chatReceiver}" class="rounded-circle" width="50" height="50">
         <span>${oneMembers.receiverName}</span>
         <c:choose>
             <c:when test="${oneMembers.receiverLevel eq '운영진'}">
@@ -213,7 +213,7 @@
  <c:forEach var="meetingMember" items="${meetingMembers}">
     <li class="list-group-item d-flex justify-content-between align-items-center">
     <span class="offline-icon"  id="clubMemberId_${meetingMember.clubMemberId}" value="${meetingMember.clubMemberId}"></span>
-        <img src="/rest/member/profileShow?memberId=${meetingMember.clubMemberId}" class="rounded-circle" width="50" height="50">
+        <img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${meetingMember.clubMemberId}" class="rounded-circle" width="50" height="50">
         <span>${meetingMember.memberName}</span>
         <c:choose>
             <c:when test="${meetingMember.clubMemberRank eq '운영진'}">
@@ -794,7 +794,7 @@ if (data.messageType === "delete") {
 											    .append('<button type="button" class="btn-close" data-bs-dismiss="alert"></button>')
 											    .append('<strong>권한이 없습니다. </strong><br>')
 											    .append('<span class="badge bg-success rounded-pill bg-miso">파워유저</span>가 되어보세요! <br>')
-											    .append('<a href="/pay/product" class="alert-link btn btn-miso bg-miso w-100 mt-2">구매하기</a>');
+											    .append('<a href="${pageContext.request.contextPath}/pay/product" class="alert-link btn btn-miso bg-miso w-100 mt-2">구매하기</a>');
 
 
 		                                	// 경고창을 body에 표시
@@ -1101,7 +1101,7 @@ $(".dm-send").on("click", function () {
 	    .append('<button type="button" class="btn-close" data-bs-dismiss="alert"></button>')
 	    .append('<strong>권한이 없습니다. </strong><br>')
 	    .append('<span class="badge bg-success rounded-pill bg-miso">파워유저</span>가 되어보세요! <br>')
-	    .append('<a href="/pay/product" class="alert-link btn btn-miso bg-miso w-100 mt-2">구매하기</a>');
+	    .append('<a href="${pageContext.request.contextPath}/pay/product" class="alert-link btn btn-miso bg-miso w-100 mt-2">구매하기</a>');
 
 
 	// 경고창을 body에 표시

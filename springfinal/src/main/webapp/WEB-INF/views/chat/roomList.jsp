@@ -125,7 +125,7 @@
                 <img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="80" height="80">
             </c:when>
             <c:otherwise>
-                <img src="/rest/member/profileShow?memberId=${oneChatRoom.chatReceiver}" class="rounded-circle" width="80" height="80">
+                <img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${oneChatRoom.chatReceiver}" class="rounded-circle" width="80" height="80">
             </c:otherwise>
         </c:choose>
     </c:when>
@@ -135,7 +135,7 @@
                 <img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="80" height="80">
             </c:when>
             <c:otherwise>
-                <img src="/rest/member/profileShow?memberId=${oneChatRoom.chatSender}" class="rounded-circle" width="80" height="80">
+                <img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${oneChatRoom.chatSender}" class="rounded-circle" width="80" height="80">
             </c:otherwise>
         </c:choose>
     </c:otherwise>
