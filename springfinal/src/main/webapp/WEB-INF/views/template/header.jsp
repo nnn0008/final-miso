@@ -235,14 +235,14 @@ $(document).click(function (event) {
 
    
 function enterRoom(chatRoomNo) {
-    window.location.href = "/chat/enterRoom/" + chatRoomNo;
+    window.location.href = window.contextPath+"/chat/enterRoom/" + chatRoomNo;
 }
 
 function getNotifyList() {
     var notifyReceiver = "${sessionScope.name}";
 
     $.ajax({
-        url: "/rest/notify/list",
+        url: window.contextPath+"/rest/notify/list",
         type: "GET",
         dataType: "json",
         contentType: 'application/json',
@@ -253,7 +253,7 @@ function getNotifyList() {
             populateModal(data);
         },
         error: function (xhr, status, error) {
-            console.error('Failed to get notifications:', error);
+//             console.error('Failed to get notifications:', error);
         }
     });
 }
@@ -270,7 +270,7 @@ function createNotificationMessage(item) {
             '</div>' +
             '<div class="row">' +
             '<div class="col-10">' +
-            '<a href="/clubBoard/detail?clubBoardNo=' + item.notifyClubBoardNo + '" class="link-body-emphasis link-underline link-underline-opacity-0" style="color: black;">' +
+            '<a href="${pageContext.request.contextPath}/clubBoard/detail?clubBoardNo=' + item.notifyClubBoardNo + '" class="link-body-emphasis link-underline link-underline-opacity-0" style="color: black;">'
             item.notifySender + '님이 ' + item.notifyClubBoardTitle + ' 글에 댓글을 달았습니다</a>' +
             '</div>' +
             '<div class="col-2">' +
@@ -288,7 +288,7 @@ function createNotificationMessage(item) {
             '</div>' +
             '<div class="row">' +
             '<div class="col-10">' +
-            '<a href="/clubBoard/detail?clubBoardNo=' + item.notifyClubBoardNo + '" class="link-body-emphasis link-underline link-underline-opacity-0" style="color: black;">' +
+            '<a href="${pageContext.request.contextPath}/clubBoard/detail?clubBoardNo=' + item.notifyClubBoardNo + '" class="link-body-emphasis link-underline link-underline-opacity-0" style="color: black;">' +
             item.notifySender + '님이 ' + item.notifyClubBoardTitle + ' 글을 좋아합니다</a>' +
             '</div>' +
             '<div class="col-2">' +
@@ -312,7 +312,7 @@ $(document).on('click', '.delete-button', function () {
     // 서버에 삭제 요청 보내기
     $.ajax({
        type: 'GET',
-        url: '/rest/notify/delete',
+        url: window.contextPath+'/rest/notify/delete',
         contentType: 'application/json',
         data: { notifyNo: notifyNo },
         success: function (response) {
@@ -383,7 +383,7 @@ function showItem(index) {
 // 삭제 버튼 클릭 시 호출되는 함수
 function deleteNotification(notifyNo) {
     // 이 부분에 삭제 처리 로직을 추가
-    console.log('Delete notification with notifyNo:', notifyNo);
+//     console.log('Delete notification with notifyNo:', notifyNo);
 }
 
 
@@ -398,7 +398,7 @@ function getChatRoomList() {
     var memberId = "${sessionScope.name}";
 
     $.ajax({
-        url: "/rest/notify/roomList",
+        url: window.contextPath+"/rest/notify/roomList",
         type: "GET",
         data: {
             memberId: memberId
@@ -407,10 +407,10 @@ function getChatRoomList() {
         success: function (data) {
             // 채팅 모달에 데이터 추가
             populateChatModal(data);
-            console.log("Successful response:", data);
+//             console.log("Successful response:", data);
         },
         error: function (error) {
-            console.error('Failed to get chat room list:', error);
+//             console.error('Failed to get chat room list:', error);
         }
     });
 }
@@ -456,16 +456,16 @@ $(document).ready(function() {
 
         // 서버로 Ajax 요청 보내기
         $.ajax({
-            url: "/rest/notify/notifyOff", 
+            url: window.contextPath+"/rest/notify/notifyOff", 
             method: "GET",  
             data: { isEnabled: !isChecked, notifyReceiver: notifyReceiver },  
             success: function(response) {
                 // 성공적으로 서버에서 응답을 받았을 때 실행할 코드
-                console.log("서버 응답:", response);
+//                 console.log("서버 응답:", response);
             },
             error: function(error) {
                 // Ajax 요청이 실패했을 때 실행할 코드
-                console.error("Ajax 오류:", error);
+//                 console.error("Ajax 오류:", error);
             }
         });
     });
@@ -485,7 +485,7 @@ if (Array.isArray(data.roomList)) {
     var sectionHeader =
         '<div class="row">' +
         '<div class="col text-start d-flex align-items-center ms-3 mt-3">' +
-        '<img src="' + contextPath + '/images/logo-door.png" width="10%">' +
+        '<img src="${pageContext.request.contextPath}/images/logo-door.png" width="10%">' +
         '<strong class="ms-2">모임채팅</strong>' +
         '</div>' +
         '</div>';
@@ -497,7 +497,7 @@ if (Array.isArray(data.roomList)) {
         var message =
             '<div class="row mt-3 ms-2 d-flex align-items-center club-box2" onclick="enterRoom(' + chatRoom.chatRoomNo + ')">' +
             '<div class="col-2">' +
-            '<img src="' + contextPath + '/club/image?clubNo=' + chatRoom.clubNo + '" class="rounded-circle" width="50" height="50">' +
+            '<img src="${pageContext.request.contextPath}/club/image?clubNo=' + chatRoom.clubNo + '" class="rounded-circle" width="50" height="50">' +
             '</div>' +
             '<div class="col-10">' +
             '<div class="col ms-3">' +
@@ -520,7 +520,7 @@ if (Array.isArray(data.roomList)) {
         modalContent.append(listItem);
     });
 } else {
-    console.error("roomList is not an array:", data.roomList);
+//     console.error("roomList is not an array:", data.roomList);
 }
 
 
@@ -531,7 +531,7 @@ if (Array.isArray(data.oneChatRoomList)) {
    var sectionHeader =
        '<div class="row">' +
        '<div class="col text-start d-flex align-items-center ms-3 mt-3">' +
-       '<img src="' + contextPath + '/images/logo-door.png" width="10%">' +
+       '<img src="${pageContext.request.contextPath}/images/logo-door.png" width="10%">' +
        '<strong class="ms-2">개인채팅</strong>' +
        '</div>' +
        '</div>';
@@ -541,12 +541,13 @@ if (Array.isArray(data.oneChatRoomList)) {
    
     data.oneChatRoomList.forEach(function (oneChatRoom) {
         var otherUser = (oneChatRoom.chatSender === "${sessionScope.name}") ? oneChatRoom.chatReceiver : oneChatRoom.chatSender;
-        var imageUrl = (oneChatRoom.chatSender === "${sessionScope.name}") ? '/rest/member/profileShow?memberId=' + oneChatRoom.chatReceiver : '/rest/member/profileShow?memberId=' + oneChatRoom.chatSender;
+        var imageUrl = (oneChatRoom.chatSender === "${sessionScope.name}") ? '${pageContext.request.contextPath}/rest/member/profileShow?memberId=' + oneChatRoom.chatReceiver : 
+        	'${pageContext.request.contextPath}/rest/member/profileShow?memberId=' + oneChatRoom.chatSender;
 
         var oneRoomMessage =
             '<div class="row mt-3 ms-2 d-flex align-items-center club-box2" onclick="enterRoom(' + oneChatRoom.chatRoomNo + ')">' +
             '<div class="col-2">' +
-            '<img src="' + contextPath + imageUrl + '" class="rounded-circle" width="50" height="50">' +
+            '<img src="${pageContext.request.contextPath}' + imageUrl + '" class="rounded-circle" width="50" height="50">'
             '</div>' +
             '<div class="col-10">' +
             '<div class="col ms-3">' +
@@ -568,7 +569,7 @@ if (Array.isArray(data.meetingRoomList)) {
     var sectionHeader =
         '<div class="row">' +
         '<div class="col text-start d-flex align-items-center ms-3 mt-3">' +
-        '<img src="' + contextPath + '/images/logo-door.png" width="10%">' +
+        '<img src="${pageContext.request.contextPath}/images/logo-door.png" width="10%">' +
         '<strong class="ms-2">정모채팅</strong>' +
         '</div>' +
         '</div>';
@@ -580,7 +581,7 @@ if (Array.isArray(data.meetingRoomList)) {
         var message =
             '<div class="row mt-3 ms-2 d-flex align-items-center club-box2" onclick="enterRoom(' + meetingRoom.chatRoomNo + ')">' +
             '<div class="col-2">' +
-            '<img src="' + contextPath + '/rest/meeting/attchImage?attachNo=' + meetingRoom.attachNo + '" class="rounded-circle" width="50" height="50">' +
+            '<img src="${pageContext.request.contextPath}/rest/meeting/attchImage?attachNo=' + meetingRoom.attachNo + '" class="rounded-circle" width="50" height="50">' +
             '</div>' +
             '<div class="col-10">' +
             '<div class="col ms-3">' +
@@ -603,13 +604,13 @@ if (Array.isArray(data.meetingRoomList)) {
         modalContent.append(listItem);
     });
 } else {
-    console.error("meetingRoomList is not an array:", data.meetingRoomList);
+//     console.error("meetingRoomList is not an array:", data.meetingRoomList);
 }
 
 }
 
 function truncateClubDescription() {
-    console.log('truncateClubDescription 함수 호출됨');
+//     console.log('truncateClubDescription 함수 호출됨');
 
     const clubDescriptions = document.querySelectorAll('.explain-text2');
 
@@ -617,11 +618,11 @@ function truncateClubDescription() {
         const maxLength = 30; // 최대 길이 설정
         const text = description.textContent;
 
-        console.log('현재 텍스트:', text);
+//         console.log('현재 텍스트:', text);
 
         if (text.length > maxLength) {
             description.textContent = text.substring(0, maxLength) + '...';
-            console.log('텍스트가 제한됨:', description.textContent);
+//             console.log('텍스트가 제한됨:', description.textContent);
         }
     });
 }
@@ -641,7 +642,7 @@ function truncateClubDescription() {
 
          
 <div class="title ms-5 me-5 mb-3 mt-4">
-    <form action="/club/searchList" class="w-100">
+    <form action="${pageContext.request.contextPath}/club/searchList" class="w-100">
         <div class="title input-group d-flex justify-content-center align-items-center">
             <input type="search" name="keyword" class="form-control rounded-pill " placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
             <button type="submit" class="btn btn-outline-primary rounded-pill search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>

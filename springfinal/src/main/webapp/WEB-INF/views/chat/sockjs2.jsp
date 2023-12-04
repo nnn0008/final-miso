@@ -368,7 +368,7 @@ $(document).ready(function () {
 
 	function connect() {
 	// 클라이언트에서 SockJS로 서버에 접속하는 부분
-	window.socket = new SockJS("http://localhost:8080/ws/chat");
+	window.socket = new SockJS(window.contextPath+"/ws/chat");
 
 	var chatRoomNo = getRoomNoFromURL();  // 채팅방 번호를 얻어옴
 	var chatSender = "${sessionScope.name}"; //발신자
@@ -411,7 +411,7 @@ $(document).ready(function () {
 
 	// 방 이동 시
 	function moveToRoom(selectedRoomNo) {
-	    window.location.href = "/chat/enterRoom/" + selectedRoomNo;
+	    window.location.href = window.contextPath+"/chat/enterRoom/" + selectedRoomNo;
 	}
 
 	// JavaScript에서 룸번호 읽어오기
@@ -492,7 +492,6 @@ $(document).ready(function () {
 		
 		
 		var data = JSON.parse(e.data);
-		console.log(data);
 		
 		var clubMemberRank;
 
@@ -531,13 +530,12 @@ $(document).ready(function () {
             if (onlineMemberElement.classList.contains('offline-icon')) {
                 onlineMemberElement.classList.remove('offline-icon');
                 onlineMemberElement.classList.add('online-icon');
-                console.log('온라인 상태입니다.');
             } else {
-                console.log('이미 온라인 상태입니다.');
+//                 console.log('이미 온라인 상태입니다.');
             }
         } else {
             // 오프라인 상태인 경우
-            console.log('오프라인 상태입니다.');
+//             console.log('오프라인 상태입니다.');
         }
 
         // 다른 온라인 멤버 상태 업데이트
@@ -551,13 +549,13 @@ $(document).ready(function () {
                     if (otherOnlineMemberElement.classList.contains('offline-icon')) {
                         otherOnlineMemberElement.classList.remove('offline-icon');
                         otherOnlineMemberElement.classList.add('online-icon');
-                        console.log('다른 멤버 ' + memberId + '도 온라인 상태입니다.');
+//                         console.log('다른 멤버 ' + memberId + '도 온라인 상태입니다.');
                     } else {
-                        console.log('다른 멤버 ' + memberId + '는 이미 온라인 상태입니다.');
+//                         console.log('다른 멤버 ' + memberId + '는 이미 온라인 상태입니다.');
                     }
                 } else {
                     // 다른 멤버가 오프라인 상태인 경우
-                    console.log('다른 멤버 ' + memberId + '는 오프라인 상태입니다.');
+//                     console.log('다른 멤버 ' + memberId + '는 오프라인 상태입니다.');
                 }
             }
         }
@@ -568,30 +566,30 @@ $(document).ready(function () {
 
 
 if (data.messageType === "delete") {
-    console.log("Received delete event:", data);
+//     console.log("Received delete event:", data);
 
     // 여기서 data.chatNo를 사용하도록 수정
     var chatNo = data.chatNo;
-    console.log("chatNo:", chatNo);
+//     console.log("chatNo:", chatNo);
 
     // 내가 보낸 메시지인 경우
     var messageContainerSend = $(".message-list").find(".msg_cotainer_send[data-chatNo='" + chatNo + "']");
-    console.log("Found message container (send):", messageContainerSend);
+//     console.log("Found message container (send):", messageContainerSend);
 
     // 상대방이 보낸 메시지인 경우
     var messageContainerReceive = $(".message-list").find(".msg_cotainer[data-chatNo='" + chatNo + "']");
-    console.log("Found message container (receive):", messageContainerReceive);
+//     console.log("Found message container (receive):", messageContainerReceive);
 
     if (messageContainerSend.length > 0) {
-        console.log("Before updating text (send):", messageContainerSend.text());
+//         console.log("Before updating text (send):", messageContainerSend.text());
         messageContainerSend.text("삭제된 메시지입니다");
-        console.log("After updating text (send):", messageContainerSend.text());
+//         console.log("After updating text (send):", messageContainerSend.text());
     } else if (messageContainerReceive.length > 0) {
-        console.log("Before updating text (receive):", messageContainerReceive.text());
+//         console.log("Before updating text (receive):", messageContainerReceive.text());
         messageContainerReceive.text("삭제된 메시지입니다");
-        console.log("After updating text (receive):", messageContainerReceive.text());
+//         console.log("After updating text (receive):", messageContainerReceive.text());
     } else {
-        console.log("Message container not found for chatNo:", chatNo);
+//         console.log("Message container not found for chatNo:", chatNo);
     }
 }
 
@@ -604,7 +602,7 @@ if (data.messageType === "delete") {
 		
 		 // 만약 메세지 타입이 dm이면서 receiver가 있는 경우
 	    if (data.messageType === "dm" && data.chatReceiver) {    	
-	    	 console.log("Before moveToRoom: ", data); // 이 줄 추가
+// 	    	 console.log("Before moveToRoom: ", data); // 이 줄 추가
 	    	 
 	        // 방 이동 처리
 	        moveToRoom(data.chatRoomNo);
@@ -613,7 +611,7 @@ if (data.messageType === "delete") {
 
 	        // 메시지 내용이 비어있으면 전송하지 않음
 		    if (!chatContent) {
-		        console.log("Content is empty. Message not sent.");
+// 		        console.log("Content is empty. Message not sent.");
 		        return;
 		    }
 	        
@@ -625,7 +623,7 @@ if (data.messageType === "delete") {
 	            content: chatContent, 
 	        };
 	        
-	        console.log("Before sending message: ", sendMessage); // 이 줄 추가
+// 	        console.log("Before sending message: ", sendMessage); // 이 줄 추가
 
 	        window.socket.send(JSON.stringify(sendMessage));
 	    }
@@ -752,11 +750,11 @@ if (data.messageType === "delete") {
 		                    var messageDiv = $(this).closest(".d-flex");
 		                    var messageContent = $(".msg_cotainer_send", messageDiv);
 		                    var chatNo = messageContainer.attr("data-chatNo");
-		                    console.log("chatNo", chatNo);
+// 		                    console.log("chatNo", chatNo);
 							
 		                    var memberId = "${sessionScope.name}";
 		                    var memberLevel = "${sessionScope.level}";
-		                    console.log("memberLevel",memberLevel);
+// 		                    console.log("memberLevel",memberLevel);
 		                    
 		                    $.ajax({
 		                    	type:"GET",
@@ -816,7 +814,7 @@ if (data.messageType === "delete") {
 		                            },
 		                            error: function (error) {
 		                                // 오류 처리
-		                                console.error("Error fetching clubMemberRank:", error);
+// 		                                console.error("Error fetching clubMemberRank:", error);
 		                            }
 		                        });
 		                    });
@@ -870,7 +868,7 @@ if (data.messageType === "delete") {
 		    	        type: 'GET',
 		    	        success: function(data) {
 		    	            // 성공적으로 데이터를 받아왔을 때 처리
-		    	            console.log(data); // 여기서 data는 List<MemberDto> 형태
+// 		    	            console.log(data); // 여기서 data는 List<MemberDto> 형태
 							
 		    	            // data 배열에서 클릭된 멤버의 정보 찾기
 		    	            var selectedMember = data.find(function(member) {
@@ -903,7 +901,7 @@ if (data.messageType === "delete") {
 		    	        },
 		    	        error: function(error) {
 		    	            // 오류 발생 시 처리
-		    	            console.error(error);
+// 		    	            console.error(error);
 		    	        }
 		    	    });
 		    	});
@@ -925,7 +923,7 @@ if (data.messageType === "delete") {
 
 
 				   var messageContainer = $("<div>").addClass("msg_cotainer").attr("data-chatNo", data.chatNo);
-				   console.log(messageContainer);
+// 				   console.log(messageContainer);
 					
 				   // 파일인 경우 이미지 태그를 추가
 				   if (data.messageType === "file") {
@@ -958,7 +956,7 @@ if (data.messageType === "delete") {
 			                    var messageDiv = $(this).closest(".d-flex");
 			                    var messageContent = $(".msg_cotainer_send", messageDiv);
 			                    var chatNo = messageContainer.attr("data-chatNo");
-			                    console.log("chatNo", chatNo);
+// 			                    console.log("chatNo", chatNo);
 								
 			                    var memberId = "${sessionScope.name}";
 			                    
@@ -1017,7 +1015,7 @@ if (data.messageType === "delete") {
 			                            },
 			                            error: function (error) {
 			                                // 오류 처리
-			                                console.error("Error fetching clubMemberRank:", error);
+// 			                                console.error("Error fetching clubMemberRank:", error);
 			                            }
 			                        });
 			                    });
@@ -1090,7 +1088,7 @@ $(".dm-send").on("click", function () {
         // WebSocket을 통해 서버로 메시지 전송
         window.socket.send(JSON.stringify(dm));
 
-        console.log("DM 메시지 전송 완료");
+//         console.log("DM 메시지 전송 완료");
         console.log(dm);
     } else {
         // '파워유저'가 아닌 경우에는 경고창 표시
@@ -1137,7 +1135,7 @@ $(".dm-send").on("click", function () {
 		    
 		    // 메시지 내용이 비어있으면 전송하지 않음
 		    if (!chatContent) {
-		        console.log("Content is empty. Message not sent.");
+// 		        console.log("Content is empty. Message not sent.");
 		        return;
 		    }
 

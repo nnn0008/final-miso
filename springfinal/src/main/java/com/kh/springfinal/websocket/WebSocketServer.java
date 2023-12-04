@@ -113,7 +113,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 		 ClientVO client = new ClientVO(session);
 		clients.add(client);
 
-		log.debug("사용자 접속 {}명", clients.size());
+//		log.debug("사용자 접속 {}명", clients.size());
 	}
 	
 
@@ -130,7 +130,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            iterator.remove();
 	            
 	            Integer chatRoomNo = (Integer) mapSessionList.get("chatRoomNo");
-	            log.debug("사용자 종료! 현재 {}명", sessionList.size());
+//	            log.debug("사용자 종료! 현재 {}명", sessionList.size());
 	            
 	            break;
 	        }
@@ -158,9 +158,9 @@ public class WebSocketServer extends TextWebSocketHandler{
 
 	    ClientVO client = clientService.createClientVO(session);
 	    String chatSender = client.getMemberId();
-	    log.debug("chatSender:{}", chatSender);
+//	    log.debug("chatSender:{}", chatSender);
 	    
-	    log.debug("Before executing the query for chatRoomNo {} and chatSender {}", chatRoomNo, chatSender);
+//	    log.debug("Before executing the query for chatRoomNo {} and chatSender {}", chatRoomNo, chatSender);
 	    List<ChatDto> chatHistory = chatDao.getChatHistoryDetail(chatRoomNo, chatSender); // 동호회 채팅 내역
 	    List<ChatDto> oneChatHistory = chatOneDao.getChatOnetHistory(chatRoomNo); // 개인 채팅 내역
 	    List<ChatDto> meetingChatHistory = chatDao.getMeetingHistory(chatRoomNo, chatSender); //정모 채팅 내역
@@ -275,7 +275,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	    ObjectMapper mapper = new ObjectMapper();
 	    MessageDto messageDto = mapper.readValue(message.getPayload(), MessageDto.class);
 	    
-	    log.debug("메세지 유형 = {}", messageDto.getMessageType());
+//	    log.debug("메세지 유형 = {}", messageDto.getMessageType());
 
 	    // messageType 추출
 	    MessageType messageType = messageDto.getMessageType();
@@ -300,7 +300,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	            memberIds.add(memberIdToAdd);
 	        }
 	        
-	        System.out.println("Current sessionList: " + sessionList);
+//	        System.out.println("Current sessionList: " + sessionList);
 	        
 	     // 채팅 목록을 검색
 	        List<ChatListVO> chatList = chatRoomDao.chatRoomList(chatRoomNo);
@@ -473,7 +473,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	                .collect(Collectors.toList());
 
 	        // log.debug("roomMembers for chatRoomNo {}: {}", chatRoomNo, roomMembers);
-	        log.debug("Target sessions for chatRoomNo {}: {}", chatRoomNo, targetSessions);
+//	        log.debug("Target sessions for chatRoomNo {}: {}", chatRoomNo, targetSessions);
 
 	        if (!targetSessions.isEmpty()) {
 	            // 정보를 Map에 담아서 변환 후 전송
@@ -508,7 +508,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	                    .chatRoomNo(chatRoomNo)
 	                    .build());
 	        } else {
-	            log.debug("No target sessions for chatRoomNo {}", chatRoomNo);
+//	            log.debug("No target sessions for chatRoomNo {}", chatRoomNo);
 	        }
 	    }
 
@@ -546,7 +546,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	        
 	        //채팅방을 생성하고 번호를 받아옴
 	        Integer chatRoomNo = chatRoomDao.sequence();
-	        log.debug("Created new chat room with number: {}", chatRoomNo); // 로그 추가
+//	        log.debug("Created new chat room with number: {}", chatRoomNo); // 로그 추가
 	        ChatRoomDto chatRoomDto = new ChatRoomDto(); // ChatRoomDto 생성
 	        chatRoomDto.setChatRoomNo(chatRoomNo); // 생성된 룸 번호를 ChatRoomDto에 설정
 	        chatRoomDao.insert(chatRoomDto); // DB에 넣기        
@@ -597,14 +597,14 @@ public class WebSocketServer extends TextWebSocketHandler{
 	 	        		.chatReceiver(chatReceiver)
 	 	        		.build());
 	            
-	            log.debug("Inserted chat data into DB for chat room: {}", chatRoomNo); // 로그 추가
+//	            log.debug("Inserted chat data into DB for chat room: {}", chatRoomNo); // 로그 추가
 	            
 	        }
 	    }
 	    
 	    //메세지 타입이 파일일 경우
 	    else if (MessageType.file.equals(messageType)) { 
-	        log.debug("Entering the file processing block");
+//	        log.debug("Entering the file processing block");
 	        
 	        Integer chatRoomNo = messageDto.getChatRoomNo();
 	        String chatContent = messageDto.getChatContent();
@@ -671,7 +671,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	                .filter(map -> map.get("chatRoomNo").equals(chatRoomNo))
 	                .collect(Collectors.toList());
 
-	        log.debug("Target sessions for chatRoomNo {}: {}", chatRoomNo, targetSessions);
+//	        log.debug("Target sessions for chatRoomNo {}: {}", chatRoomNo, targetSessions);
 	        
             if (!targetSessions.isEmpty()) {
             Map<String, Object> FileChat = new HashMap<>();
@@ -712,7 +712,7 @@ public class WebSocketServer extends TextWebSocketHandler{
 	                .filter(map -> map.get("chatRoomNo").equals(chatRoomNo))
 	                .collect(Collectors.toList());
 
-	        log.debug("Target sessions for chatRoomNo {}: {}", chatRoomNo, targetSessions);
+//	        log.debug("Target sessions for chatRoomNo {}: {}", chatRoomNo, targetSessions);
 
 	        if (!targetSessions.isEmpty()) {
 	            // 정보를 Map에 담아서 변환 후 전송
