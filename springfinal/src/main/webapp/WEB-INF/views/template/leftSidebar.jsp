@@ -9,11 +9,15 @@
     <link href="${pageContext.request.contextPath}/css/misolayout.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/miso.css" rel="stylesheet">
     
+  <script>
+	window.contextPath = "${pageContext.request.contextPath}";
+</script>  
+    
 <script>
 $(function () {
 	var memberId = "${sessionScope.name}";
     $.ajax({
-    	url:"http://localhost:8080/rest/member/profile",
+    	url:window.contextPath+"/rest/member/profile",
     	method:"post",
     	data: {memberId:memberId},
     success: function (response) {
@@ -25,7 +29,7 @@ $(function () {
     	}
     	else{
     		$(".profile").attr("src", "");
-    		$(".profile").attr("src", "http://localhost:8080/rest/member/profileShow?memberId="+memberId);
+    		$(".profile").attr("src", "${pageContext.request.contextPath}/rest/member/profileShow?memberId="+memberId);
     	}
     }
     });
@@ -85,7 +89,7 @@ $(function () {
                             <div class="col d-flex justify-content-center">
                                 <c:choose>
 			                    	<c:when test="${sessionScope.name!=null}">
-			                    			<img src="/rest/member/profileShow?memberId=${sessionScope.name}" class="rounded-circle profile" style="width: 80px; height: 80px;">
+			                    			<img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${sessionScope.name}" class="rounded-circle profile" style="width: 80px; height: 80px;">
 			                    	</c:when>
 			                    	<c:otherwise>
 		                                <img src="${pageContext.request.contextPath}/images/avatar50.png" class="profile" style="width: 80px; height: 80px;">
@@ -149,7 +153,7 @@ $(function () {
 
                     <div class="row p-1 mt-4">
                         <div class="col">
-                            <a href="/club/insert" class="badge rounded-pill bg-miso btn-miso p-3 club-make-link link">
+                            <a href="${pageContext.request.contextPath}/club/insert" class="badge rounded-pill bg-miso btn-miso p-3 club-make-link link">
                                 모임 만들기
                             </a>
                         </div>
@@ -157,7 +161,7 @@ $(function () {
                     
                     <div class="row p-2 align-items-center mt-4">
                         <div class="col">
-                            <a href="/pay/product" class="link d-flex align-items-center">
+                            <a href="${pageContext.request.contextPath}/pay/product" class="link d-flex align-items-center">
                                 <img src="${pageContext.request.contextPath}/images/Vector4.png" width="20%">
                                 <strong class="ms-3">상품</strong>
                             </a>

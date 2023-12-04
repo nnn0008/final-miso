@@ -80,10 +80,10 @@ public class NotifyRestController {
 	    boolean result;
 	    if (isEnabled) {
 	        result = notifyDao.notifyEnabledOff(notifyReceiver);
-	        System.out.println("Notify Off: " + notifyReceiver);
+//	        System.out.println("Notify Off: " + notifyReceiver);
 	    } else {
 	        result = notifyDao.notifyEnabledOn(notifyReceiver);
-	        System.out.println("Notify On: " + notifyReceiver);
+//	        System.out.println("Notify On: " + notifyReceiver);
 	    }
 	    return result;
 	}
