@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
@@ -17,7 +18,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.springfinal.configuration.FileUploadProperties;
 import com.kh.springfinal.dao.AttachDao;
 import com.kh.springfinal.dao.ChatRoomDao;
 import com.kh.springfinal.dao.ClubBoardDao;
@@ -39,7 +40,6 @@ import com.kh.springfinal.dto.ChatRoomDto;
 import com.kh.springfinal.dto.ClubMemberDto;
 import com.kh.springfinal.dto.MeetingDto;
 import com.kh.springfinal.dto.MeetingMemberDto;
-import com.kh.springfinal.dto.ZipCodeDto;
 import com.kh.springfinal.vo.FileLoadVO;
 import com.kh.springfinal.vo.PaginationVO;
 
@@ -73,6 +73,17 @@ public class MeetingRestController {
 	
 	@Autowired
 	private ChatRoomDao chatRoomDao;
+	
+	@Autowired
+	private FileUploadProperties props;
+	
+	private File dir;
+	
+	@PostConstruct
+	public void init() {
+		dir = new File(props.getHome());
+		dir.mkdirs();
+	}
 	
 	@PostMapping("/insert")
 	public void insert(HttpSession session,
@@ -118,9 +129,6 @@ public class MeetingRestController {
 			int attachNo = attachDao.sequence();
 			
 			//첨부파일 등록(파일이 있을 때만)
-			String home = System.getProperty("user.home");
-			File dir = new File(home,"upload");
-			dir.mkdirs();
 			File target = new File(dir,String.valueOf(attachNo));
 			attach.transferTo(target);
 			AttachDto attachDto = new AttachDto();
@@ -200,14 +208,10 @@ public class MeetingRestController {
 		meetingDto.setMeetingFix(meetingFix);
 		meetingDto.setMeetingNo(meetingNo);
 		
-		log.debug("meetingTime={}",meetingTime);
 		meetingDao.update(meetingDto);
-		log.debug("meetingDto={}",meetingDto);
 		if(attach!=null) {//파일이 있으면
 			//파일 삭제 - 기존 파일이 있을 경우에만 처리
 			AttachDto attachDto = meetingDao.findImage(meetingNo);
-			String home = System.getProperty("user.home");
-			File dir = new File(home,"upload");
 			
 			if(attachDto != null) {
 			
@@ -421,8 +425,6 @@ public class MeetingRestController {
 		}
 		
 		//3
-		String home = System.getProperty("user.home");
-		File dir = new File(home,"upload");
 		File target = new File(dir, String.valueOf(attachDto.getAttachNo()));
 		
 		byte[] data = FileUtils.readFileToByteArray(target);// 실제파일정보 불러오기
@@ -458,43 +460,44 @@ public class MeetingRestController {
 		//[5] 사용자한테 준다
 		
 		//1,2
-		AttachDto attachDto = meetingImageDao.findImageByAttachNo(attachNo);
+//		AttachDto attachDto = meetingImageDao.findImageByAttachNo(attachNo);
 		
+		return fileLoadVO.download(attachNo);
 		
-		if(attachDto == null) {
-//			throw new NoTargetException("파일 없음");
-			//내가 만든 예외로 통합
-			
-			return ResponseEntity.notFound().build();
-			//404로 반환
-			
-		}
-		
-		//3
-		String home = System.getProperty("user.home");
-		File dir = new File(home,"upload");
-		File target = new File(dir, String.valueOf(attachDto.getAttachNo()));
-		
-		byte[] data = FileUtils.readFileToByteArray(target);// 실제파일정보 불러오기
-		ByteArrayResource resource = new ByteArrayResource(data);
-		
-		//4,5 - header(정보), body(내용)
-		return ResponseEntity.ok()
-//				.header("Content-Encoding","UTF-8")
-				.header(HttpHeaders.CONTENT_ENCODING, StandardCharsets.UTF_8.name())
-//				.header("Content-Length",String.valueOf(attachDto.getAttachSize()))
-				.contentLength(attachDto.getAttachSize())
-//				.header("Content-Type",attachDto.getAttachType())//저장된 유형
-				.header(HttpHeaders.CONTENT_TYPE,attachDto.getAttachType())
-//				.header("Content-Type","application/octet-stream")//무조건 다운로드
-//				.contentType(MediaType.APPLICATION_OCTET_STREAM)
-//				.header("Content-Disposition","attachment; filename="+attachDto.getAttachName())
-				.header(HttpHeaders.CONTENT_DISPOSITION,
-					ContentDisposition.attachment().filename(attachDto.getAttachName(),StandardCharsets.UTF_8)
-					.build().toString()
-						)
-				
-			.body(resource);	
+//		if(attachDto == null) {
+////			throw new NoTargetException("파일 없음");
+//			//내가 만든 예외로 통합
+//			
+//			return ResponseEntity.notFound().build();
+//			//404로 반환
+//			
+//		}
+//		
+//		//3
+//		String home = System.getProperty("user.home");
+//		File dir = new File(home,"upload");
+//		File target = new File(dir, String.valueOf(attachDto.getAttachNo()));
+//		
+//		byte[] data = FileUtils.readFileToByteArray(target);// 실제파일정보 불러오기
+//		ByteArrayResource resource = new ByteArrayResource(data);
+//		
+//		//4,5 - header(정보), body(내용)
+//		return ResponseEntity.ok()
+////				.header("Content-Encoding","UTF-8")
+//				.header(HttpHeaders.CONTENT_ENCODING, StandardCharsets.UTF_8.name())
+////				.header("Content-Length",String.valueOf(attachDto.getAttachSize()))
+//				.contentLength(attachDto.getAttachSize())
+////				.header("Content-Type",attachDto.getAttachType())//저장된 유형
+//				.header(HttpHeaders.CONTENT_TYPE,attachDto.getAttachType())
+////				.header("Content-Type","application/octet-stream")//무조건 다운로드
+////				.contentType(MediaType.APPLICATION_OCTET_STREAM)
+////				.header("Content-Disposition","attachment; filename="+attachDto.getAttachName())
+//				.header(HttpHeaders.CONTENT_DISPOSITION,
+//					ContentDisposition.attachment().filename(attachDto.getAttachName(),StandardCharsets.UTF_8)
+//					.build().toString()
+//						)
+//				
+//			.body(resource);	
 	}
 	
 	@PostMapping("/attend")
@@ -537,13 +540,17 @@ public class MeetingRestController {
 		
 		//이미지 있는 경우 이미지 삭제 처리 추가
 		if(attachDto!=null) {
-		String home=System.getProperty("user.home");
-		File dir = new File(home,"upload");
+//		String home=System.getProperty("user.home");
+//		File dir = new File(home,"upload");
 		File target = new File(dir,String.valueOf(attachDto.getAttachNo()));
 		target.delete();	//실제파일 삭제
-
+//
 		attachDao.delete(attachDto.getAttachNo());	//파일정보 삭제
+			
+			
 		}
+		
+		
 		meetingDao.delete(meetingNo);	//포켓몬 + 이미지연결정보 삭제
 		
 	} 

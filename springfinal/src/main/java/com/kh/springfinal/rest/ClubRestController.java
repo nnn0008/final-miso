@@ -247,7 +247,6 @@ public class ClubRestController {
 			list.setLikeClub(likeClub);
 			
 		}
-		log.debug("clubList={}",clubList);
 		
 		return clubList;
 		
