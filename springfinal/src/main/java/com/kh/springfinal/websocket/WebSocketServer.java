@@ -160,8 +160,6 @@ public class WebSocketServer extends TextWebSocketHandler{
 	    String chatSender = client.getMemberId();
 	    log.debug("chatSender:{}", chatSender);
 	    
-	    LocalDateTime targetTime = LocalDateTime.now();
-	    
 	    log.debug("Before executing the query for chatRoomNo {} and chatSender {}", chatRoomNo, chatSender);
 	    List<ChatDto> chatHistory = chatDao.getChatHistoryDetail(chatRoomNo, chatSender); // 동호회 채팅 내역
 	    List<ChatDto> oneChatHistory = chatOneDao.getChatOnetHistory(chatRoomNo); // 개인 채팅 내역

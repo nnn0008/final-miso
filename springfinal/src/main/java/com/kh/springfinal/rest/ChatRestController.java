@@ -120,8 +120,8 @@ public class ChatRestController {
 
 //	     log.debug("Profile image found for Member ID: {}", memberId);
 
-	     String home = System.getProperty("user.home");
-	     File dir = new File(home, "upload");
+//	     String home = System.getProperty("user.home");
+//	     File dir = new File(home, "upload");
 	     File target = new File(dir, String.valueOf(attachDto.getAttachNo()));
 
 	     byte[] data = FileUtils.readFileToByteArray(target);
