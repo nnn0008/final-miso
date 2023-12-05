@@ -52,7 +52,7 @@
 //		
 //		if(stringClubNo==null) {
 //			
-//			throw new NoTargetException("존재하지 않는 동호회");
+//			throw new Exception("존재하지 않는 동호회");
 //			
 //		}
 //		else if(!isLogin) { //가장 처음으로 로그인 안된 계정은 로그인으로 리 다이렉트
@@ -61,8 +61,9 @@
 //		}
 //		else if(clubMemberNo==0) {
 //			
-//			throw new AuthorityException("동호회 회원이 아닙니다");
+//			throw new Exception("동호회 회원이 아닙니다");
 //		}
+//		return joinedClub;
 //
 //	}
 //}

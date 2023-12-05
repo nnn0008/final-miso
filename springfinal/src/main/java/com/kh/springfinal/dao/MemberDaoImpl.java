@@ -24,9 +24,9 @@ public class MemberDaoImpl implements MemberDao{
 	private BCryptPasswordEncoder encoder;
 	@Override
 	public void join(MemberDto memberDto) {
-		String memberPw = memberDto.getMemberPw();
-		String encrypt = encoder.encode(memberPw);
-		memberDto.setMemberPw(encrypt);
+//		String memberPw = memberDto.getMemberPw();
+//		String encrypt = encoder.encode(memberPw);
+//		memberDto.setMemberPw(encrypt);
 		sqlSession.insert("member.join", memberDto);
 	}
 	@Override
@@ -39,14 +39,14 @@ public class MemberDaoImpl implements MemberDao{
 	public MemberDto selectOne(String memberId, String memberPw) {
 		MemberDto memberDto = sqlSession.selectOne("member.loginId", memberId);
 		String originPw = memberDto.getMemberPw();
-		if(memberDto != null) {
-			boolean result = encoder.matches(memberPw, originPw);
-			if(result == true) {
-				memberDto.setMemberPw(memberPw);
-				return memberDto;
-			}
-		}
-		return null;
+//		if(memberDto != null) {
+//			boolean result = encoder.matches(memberPw, originPw);
+//			if(result == true) {
+//				memberDto.setMemberPw(memberPw);
+//				return memberDto;
+//			}
+//		}
+		return memberDto;
 	}
 	
 	@Override
@@ -62,7 +62,8 @@ public class MemberDaoImpl implements MemberDao{
 	public boolean changePw(String memberId, String memberPw) {
 		MemberDto memberDto = sqlSession.selectOne("member.loginId", memberId);
 		if(memberDto != null) {
-			memberDto.setMemberPw(memberPw);
+//			String encrypt = encoder.encode(memberPw);
+//			memberDto.setMemberPw(encrypt);
 			int count = sqlSession.update("member.changePw", memberDto);
 			boolean result =  count>0;
 			return result;

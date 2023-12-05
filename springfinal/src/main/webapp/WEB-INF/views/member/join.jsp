@@ -199,6 +199,9 @@
                                             "is-valid is-invalid");
                                         $(".d-e-feedback").removeClass(
                                             "text-danger");
+                                        if(inputEmail===""){
+                                        	return;
+                                        }
                                         if (!isValid) {
                                             $(this).addClass("is-invalid");
                                             $(".email-feedback").addClass(
@@ -243,9 +246,7 @@
                                     function () {
                                         $(this).removeClass("is-invalid is-valid");
                                     	if($(this).val()=="") {
-                                    		$(this).addClass("is-invalid");
-                                    		$(".d-content-feedback").addClass(
-                                            "text-danger");
+                                    		retrun;
                                     	};
                                         var inputContent = $(this).val();
                                         var regex = /^\d{10,11}$/;
@@ -638,7 +639,7 @@
                                                     <div class="input-group has-validation">
                                                         <div class="form-floating">
                                                             <input type="checkbox" name="check2" class="check">
-                                                            <input type="text" class="form-control" name="memberPw"
+                                                            <input type="password" class="form-control" name="memberPw"
                                                                 id="inputPw" placeholder="비밀번호" required> <label
                                                                 for="inputPw">비밀번호*</label>
                                                             <div class="feedback gray d-pw-feedback">영어와 숫자로 이루어진 글자 8글자
@@ -652,7 +653,7 @@
                                                 <div class="col">
                                                     <div class="input-group has-validation">
                                                         <div class="form-floating checkPw-feed">
-                                                            <input type="text" class="form-control" name="checkPw"
+                                                            <input type="password" class="form-control" name="checkPw"
                                                                 id="checkPw" placeholder="비밀번호" required> <label
                                                                 for="checkPw">비밀번호 확인</label>
                                                         </div>
@@ -747,9 +748,10 @@
 							                       <div class="input-group has-validation">
                                                        <div class="form-floating addr-feed">
                                                             <input type="search" class="form-control search-input" name="StringmemberAddr"
-                                                                id="memberAddr" placeholder="동,읍,면을 입력해주세요" required>  <label
-                                                                for="memberBirth">동,읍,면을 입력해주세요</label>
+                                                                id="memberAddr" placeholder="" required>  <label
+                                                                for="memberBirth">주소</label>
                                                        	</div>
+                                                       	<div class="invalid-feedback">동,읍,면을 입력해주세요</div>
                                                     	</div>
                                                     </div>
 							                    </div>                    
@@ -774,7 +776,7 @@
 				                                    		$(".addrCheck").prop("checked", false).trigger("change");
 				                                    	};
 					                                        var inputContent = $(this).val();
-					                                        var regex = /^[가-힣]+\s[가-힣]+\s[가-힣]+$/;
+					                                        var regex = /^[가-힣]+\s[가-힣]+\s[가-힣0-9]+$/;
 					                                        var isValid = regex.test(inputContent);
 					                                        if (isValid) {
 					                                            $(this).addClass("is-valid");
@@ -794,7 +796,7 @@
                                             
                                             <input type="checkbox" class="category-check check">
                                             <div class="form-group"> 
-										      <label for="mojor1" class="form-label mt-4">무엇에 관심이 있으신가요?</label>
+										      <label for="mojor1" class="form-label mt-4">무엇에 관심이 있으신가요?*</label>
 										      <br>
 										      <span class="mt-1">관심 1</span>
 										      <select class="form-select" name="mojor-s1" id="mojor1">
@@ -849,10 +851,10 @@
 <option class="choice1 40" value="57">산책/트래킹</option>
 <option class="choice1 40" value="54">캠핑/백패킹</option>
 <option class="choice1 40" value="55">국내여행</option>
-<option class="choice2 62" value="1">뮤지컬/오페라</option>
-<option class="choice2 62" value="2">영화</option>
-<option class="choice2 62" value="3">전시회</option>
-<option class="choice2 62" value="4">연기/공연제작</option>
+<option class="choice1 62" value="1">뮤지컬/오페라</option>
+<option class="choice1 62" value="2">영화</option>
+<option class="choice1 62" value="3">전시회</option>
+<option class="choice1 62" value="4">연기/공연제작</option>
 <option class="choice1 42" value="58">책/독서</option>
 <option class="choice1 42" value="59">인문학</option>
 <option class="choice1 42" value="60">심리학</option>
@@ -952,79 +954,79 @@
 										    <div class="form-group"> 
 										      <select class="form-select mojor-check" name="likeCategory" id="monor2" disabled>
 								                <option class="ds2" value=""></option>
-<option class="choice1 40" value="56">등산</option>
-<option class="choice1 40" value="57">산책/트래킹</option>
-<option class="choice1 40" value="54">캠핑/백패킹</option>
-<option class="choice1 40" value="55">국내여행</option>
+<option class="choice2 40" value="56">등산</option>
+<option class="choice2 40" value="57">산책/트래킹</option>
+<option class="choice2 40" value="54">캠핑/백패킹</option>
+<option class="choice2 40" value="55">국내여행</option>
 <option class="choice2 62" value="1">뮤지컬/오페라</option>
 <option class="choice2 62" value="2">영화</option>
 <option class="choice2 62" value="3">전시회</option>
 <option class="choice2 62" value="4">연기/공연제작</option>
-<option class="choice1 42" value="58">책/독서</option>
-<option class="choice1 42" value="59">인문학</option>
-<option class="choice1 42" value="60">심리학</option>
-<option class="choice1 42" value="61">철학</option>
-<option class="choice1 41" value="62">금융업</option>
-<option class="choice1 41" value="63">교육업</option>
-<option class="choice1 41" value="64">디자인업계</option>
-<option class="choice1 41" value="65">컨설팅</option>
-<option class="choice1 43" value="66">자전거</option>
-<option class="choice1 43" value="67">배드민턴</option>
-<option class="choice1 43" value="68">볼링</option>
-<option class="choice1 43" value="69">골프</option>
-<option class="choice1 71" value="70">보드게임</option>
-<option class="choice1 71" value="71">두뇌심리게임</option>
-<option class="choice1 71" value="72">온라인게임</option>
-<option class="choice1 71" value="73">콘솔게임</option>
-<option class="choice1 61" value="6">영어</option>
-<option class="choice1 61" value="7">일본어</option>
-<option class="choice1 61" value="8">중국어</option>
-<option class="choice1 61" value="9">독일어</option>
-<option class="choice1 63" value="10">노래/보컬</option>
-<option class="choice1 63" value="11">기타/베이스</option>
-<option class="choice1 63" value="12">우쿨렐레</option>
-<option class="choice1 63" value="13">드럼</option>
-<option class="choice1 63" value="14">피아노</option>
-<option class="choice1 64" value="15">미술/그림</option>
-<option class="choice1 64" value="16">켈리그라피</option>
-<option class="choice1 64" value="17">플라워아트</option>
-<option class="choice1 64" value="18">캔들/디퓨저/석고</option>
-<option class="choice1 65" value="19">라틴댄스</option>
-<option class="choice1 65" value="20">사교댄스</option>
-<option class="choice1 65" value="21">방송/힙합</option>
-<option class="choice1 65" value="22">스트릿댄스</option>
-<option class="choice1 66" value="27">양로원</option>
-<option class="choice1 66" value="28">보육원</option>
-<option class="choice1 66" value="23">환경봉사</option>
-<option class="choice1 66" value="24">사회봉사</option>
-<option class="choice1 67" value="25">지역</option>
-<option class="choice1 67" value="26">나이</option>
-<option class="choice1 67" value="29">파티</option>
-<option class="choice1 67" value="30">결혼</option>
-<option class="choice1 68" value="31">현대</option>
-<option class="choice1 68" value="32">기아</option>
-<option class="choice1 68" value="33">르노</option>
-<option class="choice1 68" value="34">쌍용</option>
-<option class="choice1 69" value="35">필름카메라</option>
-<option class="choice1 69" value="36">영상제작</option>
-<option class="choice1 69" value="37">디지털카메라</option>
-<option class="choice1 70" value="38">디에스엠알</option>
-<option class="choice1 70" value="39">삼성라이온즈</option>
-<option class="choice1 70" value="40">기아타이거즈</option>
-<option class="choice1 70" value="41">롯데자이언츠</option>
-<option class="choice1 70" value="42">두산베어스</option>
-<option class="choice1 72" value="5">한식</option>
-<option class="choice1 72" value="43">일식</option>
-<option class="choice1 72" value="44">중식</option>
-<option class="choice1 72" value="45">양식</option>
-<option class="choice1 73" value="46">강아지</option>
-<option class="choice1 73" value="47">고양이</option>
-<option class="choice1 73" value="48">물고기</option>
-<option class="choice1 73" value="49">파충류</option>
-<option class="choice1 74" value="50">금융보험</option>
-<option class="choice1 74" value="51">취업스터디</option>
-<option class="choice1 74" value="52">시험/자격증</option>
-<option class="choice1 74" value="53">스피치/발성</option>
+<option class="choice2 42" value="58">책/독서</option>
+<option class="choice2 42" value="59">인문학</option>
+<option class="choice2 42" value="60">심리학</option>
+<option class="choice2 42" value="61">철학</option>
+<option class="choice2 41" value="62">금융업</option>
+<option class="choice2 41" value="63">교육업</option>
+<option class="choice2 41" value="64">디자인업계</option>
+<option class="choice2 41" value="65">컨설팅</option>
+<option class="choice2 43" value="66">자전거</option>
+<option class="choice2 43" value="67">배드민턴</option>
+<option class="choice2 43" value="68">볼링</option>
+<option class="choice2 43" value="69">골프</option>
+<option class="choice2 71" value="70">보드게임</option>
+<option class="choice2 71" value="71">두뇌심리게임</option>
+<option class="choice2 71" value="72">온라인게임</option>
+<option class="choice2 71" value="73">콘솔게임</option>
+<option class="choice2 61" value="6">영어</option>
+<option class="choice2 61" value="7">일본어</option>
+<option class="choice2 61" value="8">중국어</option>
+<option class="choice2 61" value="9">독일어</option>
+<option class="choice2 63" value="10">노래/보컬</option>
+<option class="choice2 63" value="11">기타/베이스</option>
+<option class="choice2 63" value="12">우쿨렐레</option>
+<option class="choice2 63" value="13">드럼</option>
+<option class="choice2 63" value="14">피아노</option>
+<option class="choice2 64" value="15">미술/그림</option>
+<option class="choice2 64" value="16">켈리그라피</option>
+<option class="choice2 64" value="17">플라워아트</option>
+<option class="choice2 64" value="18">캔들/디퓨저/석고</option>
+<option class="choice2 65" value="19">라틴댄스</option>
+<option class="choice2 65" value="20">사교댄스</option>
+<option class="choice2 65" value="21">방송/힙합</option>
+<option class="choice2 65" value="22">스트릿댄스</option>
+<option class="choice2 66" value="27">양로원</option>
+<option class="choice2 66" value="28">보육원</option>
+<option class="choice2 66" value="23">환경봉사</option>
+<option class="choice2 66" value="24">사회봉사</option>
+<option class="choice2 67" value="25">지역</option>
+<option class="choice2 67" value="26">나이</option>
+<option class="choice2 67" value="29">파티</option>
+<option class="choice2 67" value="30">결혼</option>
+<option class="choice2 68" value="31">현대</option>
+<option class="choice2 68" value="32">기아</option>
+<option class="choice2 68" value="33">르노</option>
+<option class="choice2 68" value="34">쌍용</option>
+<option class="choice2 69" value="35">필름카메라</option>
+<option class="choice2 69" value="36">영상제작</option>
+<option class="choice2 69" value="37">디지털카메라</option>
+<option class="choice2 70" value="38">디에스엠알</option>
+<option class="choice2 70" value="39">삼성라이온즈</option>
+<option class="choice2 70" value="40">기아타이거즈</option>
+<option class="choice2 70" value="41">롯데자이언츠</option>
+<option class="choice2 70" value="42">두산베어스</option>
+<option class="choice2 72" value="5">한식</option>
+<option class="choice2 72" value="43">일식</option>
+<option class="choice2 72" value="44">중식</option>
+<option class="choice2 72" value="45">양식</option>
+<option class="choice2 73" value="46">강아지</option>
+<option class="choice2 73" value="47">고양이</option>
+<option class="choice2 73" value="48">물고기</option>
+<option class="choice2 73" value="49">파충류</option>
+<option class="choice2 74" value="50">금융보험</option>
+<option class="choice2 74" value="51">취업스터디</option>
+<option class="choice2 74" value="52">시험/자격증</option>
+<option class="choice2 74" value="53">스피치/발성</option>
 										      </select>
 										    </div>
 										    
@@ -1059,93 +1061,83 @@
 										    <div class="form-group"> 
 										      <select class="form-select mojor-check" name="	" id="monor3" disabled>
 								                <option class="ds3" value=""></option>
-<option class="choice1 40" value="56">등산</option>
-<option class="choice1 40" value="57">산책/트래킹</option>
-<option class="choice1 40" value="54">캠핑/백패킹</option>
-<option class="choice1 40" value="55">국내여행</option>
-<option class="choice2 62" value="1">뮤지컬/오페라</option>
-<option class="choice2 62" value="2">영화</option>
-<option class="choice2 62" value="3">전시회</option>
-<option class="choice2 62" value="4">연기/공연제작</option>
-<option class="choice1 42" value="58">책/독서</option>
-<option class="choice1 42" value="59">인문학</option>
-<option class="choice1 42" value="60">심리학</option>
-<option class="choice1 42" value="61">철학</option>
-<option class="choice1 41" value="62">금융업</option>
-<option class="choice1 41" value="63">교육업</option>
-<option class="choice1 41" value="64">디자인업계</option>
-<option class="choice1 41" value="65">컨설팅</option>
-<option class="choice1 43" value="66">자전거</option>
-<option class="choice1 43" value="67">배드민턴</option>
-<option class="choice1 43" value="68">볼링</option>
-<option class="choice1 43" value="69">골프</option>
-<option class="choice1 71" value="70">보드게임</option>
-<option class="choice1 71" value="71">두뇌심리게임</option>
-<option class="choice1 71" value="72">온라인게임</option>
-<option class="choice1 71" value="73">콘솔게임</option>
-<option class="choice1 61" value="6">영어</option>
-<option class="choice1 61" value="7">일본어</option>
-<option class="choice1 61" value="8">중국어</option>
-<option class="choice1 61" value="9">독일어</option>
-<option class="choice1 63" value="10">노래/보컬</option>
-<option class="choice1 63" value="11">기타/베이스</option>
-<option class="choice1 63" value="12">우쿨렐레</option>
-<option class="choice1 63" value="13">드럼</option>
-<option class="choice1 63" value="14">피아노</option>
-<option class="choice1 64" value="15">미술/그림</option>
-<option class="choice1 64" value="16">켈리그라피</option>
-<option class="choice1 64" value="17">플라워아트</option>
-<option class="choice1 64" value="18">캔들/디퓨저/석고</option>
-<option class="choice1 65" value="19">라틴댄스</option>
-<option class="choice1 65" value="20">사교댄스</option>
-<option class="choice1 65" value="21">방송/힙합</option>
-<option class="choice1 65" value="22">스트릿댄스</option>
-<option class="choice1 66" value="27">양로원</option>
-<option class="choice1 66" value="28">보육원</option>
-<option class="choice1 66" value="23">환경봉사</option>
-<option class="choice1 66" value="24">사회봉사</option>
-<option class="choice1 67" value="25">지역</option>
-<option class="choice1 67" value="26">나이</option>
-<option class="choice1 67" value="29">파티</option>
-<option class="choice1 67" value="30">결혼</option>
-<option class="choice1 68" value="31">현대</option>
-<option class="choice1 68" value="32">기아</option>
-<option class="choice1 68" value="33">르노</option>
-<option class="choice1 68" value="34">쌍용</option>
-<option class="choice1 69" value="35">필름카메라</option>
-<option class="choice1 69" value="36">영상제작</option>
-<option class="choice1 69" value="37">디지털카메라</option>
-<option class="choice1 70" value="38">디에스엠알</option>
-<option class="choice1 70" value="39">삼성라이온즈</option>
-<option class="choice1 70" value="40">기아타이거즈</option>
-<option class="choice1 70" value="41">롯데자이언츠</option>
-<option class="choice1 70" value="42">두산베어스</option>
-<option class="choice1 72" value="5">한식</option>
-<option class="choice1 72" value="43">일식</option>
-<option class="choice1 72" value="44">중식</option>
-<option class="choice1 72" value="45">양식</option>
-<option class="choice1 73" value="46">강아지</option>
-<option class="choice1 73" value="47">고양이</option>
-<option class="choice1 73" value="48">물고기</option>
-<option class="choice1 73" value="49">파충류</option>
-<option class="choice1 74" value="50">금융보험</option>
-<option class="choice1 74" value="51">취업스터디</option>
-<option class="choice1 74" value="52">시험/자격증</option>
-<option class="choice1 74" value="53">스피치/발성</option>
+<option class="choice3 40" value="56">등산</option>
+<option class="choice3 40" value="57">산책/트래킹</option>
+<option class="choice3 40" value="54">캠핑/백패킹</option>
+<option class="choice3 40" value="55">국내여행</option>
+<option class="choice3 62" value="1">뮤지컬/오페라</option>
+<option class="choice3 62" value="2">영화</option>
+<option class="choice3 62" value="3">전시회</option>
+<option class="choice3 62" value="4">연기/공연제작</option>
+<option class="choice3 42" value="58">책/독서</option>
+<option class="choice3 42" value="59">인문학</option>
+<option class="choice3 42" value="60">심리학</option>
+<option class="choice3 42" value="61">철학</option>
+<option class="choice3 41" value="62">금융업</option>
+<option class="choice3 41" value="63">교육업</option>
+<option class="choice3 41" value="64">디자인업계</option>
+<option class="choice3 41" value="65">컨설팅</option>
+<option class="choice3 43" value="66">자전거</option>
+<option class="choice3 43" value="67">배드민턴</option>
+<option class="choice3 43" value="68">볼링</option>
+<option class="choice3 43" value="69">골프</option>
+<option class="choice3 71" value="70">보드게임</option>
+<option class="choice3 71" value="71">두뇌심리게임</option>
+<option class="choice3 71" value="72">온라인게임</option>
+<option class="choice3 71" value="73">콘솔게임</option>
+<option class="choice3 61" value="6">영어</option>
+<option class="choice3 61" value="7">일본어</option>
+<option class="choice3 61" value="8">중국어</option>
+<option class="choice3 61" value="9">독일어</option>
+<option class="choice3 63" value="10">노래/보컬</option>
+<option class="choice3 63" value="11">기타/베이스</option>
+<option class="choice3 63" value="12">우쿨렐레</option>
+<option class="choice3 63" value="13">드럼</option>
+<option class="choice3 63" value="14">피아노</option>
+<option class="choice3 64" value="15">미술/그림</option>
+<option class="choice3 64" value="16">켈리그라피</option>
+<option class="choice3 64" value="17">플라워아트</option>
+<option class="choice3 64" value="18">캔들/디퓨저/석고</option>
+<option class="choice3 65" value="19">라틴댄스</option>
+<option class="choice3 65" value="20">사교댄스</option>
+<option class="choice3 65" value="21">방송/힙합</option>
+<option class="choice3 65" value="22">스트릿댄스</option>
+<option class="choice3 66" value="27">양로원</option>
+<option class="choice3 66" value="28">보육원</option>
+<option class="choice3 66" value="23">환경봉사</option>
+<option class="choice3 66" value="24">사회봉사</option>
+<option class="choice3 67" value="25">지역</option>
+<option class="choice3 67" value="26">나이</option>
+<option class="choice3 67" value="29">파티</option>
+<option class="choice3 67" value="30">결혼</option>
+<option class="choice3 68" value="31">현대</option>
+<option class="choice3 68" value="32">기아</option>
+<option class="choice3 68" value="33">르노</option>
+<option class="choice3 68" value="34">쌍용</option>
+<option class="choice3 69" value="35">필름카메라</option>
+<option class="choice3 69" value="36">영상제작</option>
+<option class="choice3 69" value="37">디지털카메라</option>
+<option class="choice3 70" value="38">디에스엠알</option>
+<option class="choice3 70" value="39">삼성라이온즈</option>
+<option class="choice3 70" value="40">기아타이거즈</option>
+<option class="choice3 70" value="41">롯데자이언츠</option>
+<option class="choice3 70" value="42">두산베어스</option>
+<option class="choice3 72" value="5">한식</option>
+<option class="choice3 72" value="43">일식</option>
+<option class="choice3 72" value="44">중식</option>
+<option class="choice3 72" value="45">양식</option>
+<option class="choice3 73" value="46">강아지</option>
+<option class="choice3 73" value="47">고양이</option>
+<option class="choice3 73" value="48">물고기</option>
+<option class="choice3 73" value="49">파충류</option>
+<option class="choice3 74" value="50">금융보험</option>
+<option class="choice3 74" value="51">취업스터디</option>
+<option class="choice3 74" value="52">시험/자격증</option>
+<option class="choice3 74" value="53">스피치/발성</option>
 										      </select>
 										    </div>
 
-                                            <div class="row mt-4">
-                                                <div class="col">
-                                                    <label class="form-input">등급(지울예정)</label> <select
-                                                        name="memberLevel" class="form-select">
-                                                        <option value="일반유저">일반유저</option>
-                                                        <option value="프리미엄">프리미엄</option>
-                                                        <option value="파워유저">파워유저</option>
-                                                        <option value="마스터">마스터</option>
-                                                    </select>
-                                                </div>
-                                            </div>
+                                            
 
                                             <div class="row">
                                                 <div class="col">

@@ -41,11 +41,13 @@
 	window.contextPath = "${pageContext.request.contextPath}";
 	$(function () {
 		const urlParams = new URLSearchParams(window.location.search);
+		console.log(urlParams);
 		const errorParam = urlParams.get('error');
+		console.log(errorParam);
 		if(errorParam){
 			$(".error-feed").css("display", "inline-block");
 		}
-	})
+	});
 </script>
 
 
@@ -74,6 +76,7 @@
                      <img src="${pageContext.request.contextPath}/images/miso_logo.png" width="70%">
                         </div>
                     </div>
+                    <span class="error-feed text-danger">아이디 혹은 비밀번호가 틀렸습니다</span>
                     <form class="form-group" action="./login" method="post">
                         <div class="row mt-4">
                             <div class="col-sm-6 offset-sm-3 col-lg-10 offset-lg-1">
