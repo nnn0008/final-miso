@@ -606,11 +606,11 @@ $(document).ready(function () {
 					<form class="reply-insert-form">
 <%-- 						<input type="hidden" name="clubBoardNo" value="${clubBoardDto.clubBoardNo}"> --%>
 						<div class="row mt-5">
-							<div class="col-10">
-								<textarea type="text" class="form-control w-100 reply-write" rows="3" placeholder="댓글을 달아주세요"></textarea>
+							<div class="col-9">
+								<textarea class="form-control w-100 reply-write" rows="3" placeholder="댓글을 달아주세요"></textarea>
 							</div>
-							<div class="col">
-								<button type="submit" class="btn btn-reply-send btn-miso">전송</button>
+							<div class="col-3">
+								<button type="submit" class="btn btn-reply-send btn-miso w-100" style="min-height:75px;">전송</button>
 							</div>
 						</div>
 					</form>
