@@ -64,7 +64,7 @@
 <c:if test="${not empty clubDto}">
     <div class="row">
         <div class="col-3 pe-0">
-            <a id="homeLink" href="${pageContext.request.contextPath}/club/detail?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100 active">홈</a>
+            <a id="homeLink" href="${pageContext.request.contextPath}/club/detail?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100 ">홈</a>
         </div>
         <div class="col-3 pe-0">
             <a id="boardLink" href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100">게시판</a>
@@ -365,6 +365,32 @@ $(document).ready(function () {
         $("#homeLink, #boardLink, #photoLink, #chatLink").hide();
     }
 });
+	
+$(document).ready(function () {
+    // 각 링크에 대한 클릭 이벤트 처리
+    $("#homeLink").click(function () {
+        activateLink("homeLink");
+    });
+
+    $("#boardLink").click(function () {
+        activateLink("boardLink");
+    });
+
+    $("#photoLink").click(function () {
+        activateLink("photoLink");
+    });
+
+    $("#chatLink").click(function () {
+        activateLink("chatLink");
+    });
+
+    // 링크를 활성화하고 다른 링크를 비활성화하는 함수
+    function activateLink(linkId) {
+        $(".btn").removeClass("active").addClass("inactive-link"); // 모든 링크 비활성화
+        $("#" + linkId).removeClass("inactive-link").addClass("active"); // 선택한 링크 활성화
+    }
+});
+
 
 	function connect() {
 	// 클라이언트에서 SockJS로 서버에 접속하는 부분
