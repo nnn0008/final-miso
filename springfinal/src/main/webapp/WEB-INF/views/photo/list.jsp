@@ -368,6 +368,33 @@ function clickHeart(photoNo, clubNo){
 			});
 		});
 }
+
+$(document).ready(function () {
+    // 각 링크에 대한 클릭 이벤트 처리
+    $("#homeLink").click(function () {
+        activateLink("homeLink");
+    });
+
+    $("#boardLink").click(function () {
+        activateLink("boardLink");
+    });
+
+    $("#photoLink").click(function () {
+        activateLink("photoLink");
+    });
+
+    $("#chatLink").click(function () {
+        activateLink("chatLink");
+    });
+
+    // 링크를 활성화하고 다른 링크를 비활성화하는 함수
+    function activateLink(linkId) {
+        $(".btn").removeClass("active").addClass("inactive-link"); // 모든 링크 비활성화
+        $("#" + linkId).removeClass("inactive-link").addClass("active"); // 선택한 링크 활성화
+    }
+});
+
+
 </script>
 
 <script id="reply-template" type="text/template">
@@ -449,7 +476,7 @@ function clickHeart(photoNo, clubNo){
 
 <div class="row">
     <div class="col-3 pe-0">
-        <a id="homeLink" href="${pageContext.request.contextPath}/club/detail?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100 active">홈</a>
+           <a id="homeLink" href="${pageContext.request.contextPath}/club/detail?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100">홈</a>
     </div>
     <div class="col-3 pe-0">
         <a id="boardLink" href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100">게시판</a>
@@ -458,7 +485,7 @@ function clickHeart(photoNo, clubNo){
         <a id="photoLink" href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100">사진첩</a>
     </div>
     <div class="col-3">
-        <a id="chatLink" href="/chat/enterRoom/${clubDto.chatRoomNo}" class="btn btn-miso bg-miso w-100">채팅</a>
+        <a id="chatLink" href="${pageContext.request.contextPath}/chat/enterRoom/${clubDto.chatRoomNo}" class="btn btn-miso bg-miso w-100">채팅</a>
     </div>
 </div>
 

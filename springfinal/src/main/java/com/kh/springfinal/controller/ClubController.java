@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.springfinal.configuration.FileUploadProperties;
 import com.kh.springfinal.dao.AttachDao;
 import com.kh.springfinal.dao.CategoryDao;
 import com.kh.springfinal.dao.ChatRoomDao;
@@ -89,6 +91,16 @@ public class ClubController {
 	@Autowired
 	private MemberDao memberDao;
 	
+	@Autowired
+	private FileUploadProperties props;
+	
+	private File dir;
+	
+	@PostConstruct
+	public void init() {
+		dir = new File(props.getHome());
+		dir.mkdirs();
+	}
 	
 	
 	
@@ -103,7 +115,7 @@ public class ClubController {
 //		model.addAttribute("zipList",zipList);
 		
 		
-		
+		 
 		MemberDto memberDto = memberDao.loginId(memberId);
 		int memberClubCount = clubMemberDao.memberJoinClubCount(memberId);
 		
@@ -181,7 +193,6 @@ public class ClubController {
 		ZipCodeDto zipDto = zipDao.findZip(clubNo);
 		List<ClubDetailBoardListVO> clubDetailBoardList  = clubBoardDao.clubDetailBoardList(clubNo);
 		
-		log.debug("clubDetailBoardList={}",clubDetailBoardList);
 		
 		List<PhotoDto> photoList = photoDao.selectList(clubNo);
 		
@@ -305,8 +316,6 @@ public class ClubController {
 			//파일이 있으면
 			//파일 삭제 - 기존 파일이 있을 경우에만 처리
 			AttachDto attachDto = clubDao.findImage(clubNo);
-			String home = System.getProperty("user.home");
-			File dir = new File(home,"upload");
 			
 			
 			
@@ -366,8 +375,6 @@ public class ClubController {
 			}
 			
 			//3
-			String home = System.getProperty("user.home");
-			File dir = new File(home,"upload");
 			File target = new File(dir, String.valueOf(attachDto.getAttachNo()));
 			
 			byte[] data = FileUtils.readFileToByteArray(target);// 실제파일정보 불러오기

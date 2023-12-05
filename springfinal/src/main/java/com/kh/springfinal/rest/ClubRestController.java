@@ -158,7 +158,7 @@ public class ClubRestController {
 		int count = clubDao.searchCount(vo);
 		
 		vo.setWhereString(memberId);
-		vo.setSize(6);
+		vo.setSize(8);
 		vo.setCount(count);
 		
 		List<ClubListVO> clubList= clubDao.clubSearchPageList(vo);
@@ -230,7 +230,7 @@ public class ClubRestController {
 		
 		vo.setWhereString(memberId);
 		
-		vo.setSize(6);
+		vo.setSize(8);
 		
 		List<ClubListVO> clubList= clubDao.majorClubListPage(vo);
 		
@@ -247,7 +247,6 @@ public class ClubRestController {
 			list.setLikeClub(likeClub);
 			
 		}
-		log.debug("clubList={}",clubList);
 		
 		return clubList;
 		
@@ -265,7 +264,7 @@ public class ClubRestController {
 		
 		vo.setWhereString(memberId);
 		
-		vo.setSize(6);
+		vo.setSize(8);
 		
 		List<ClubListVO> clubList= clubDao.minorClubListPage(vo);
 		

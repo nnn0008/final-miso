@@ -136,7 +136,7 @@ font-size: 18px;
     	    					
     	    					//프로필 있는지 검토
     	    					if(clubBoardAllDto.attachNoMp != null){
-    	    						var profile = $("<img>").attr("src", window.contextPath + "/clubBoard/download?attachNo="+clubBoardAllDto.attachNoMp)
+    	    						var profile = $("<img>").attr("src", window.contextPath + "/rest/member/profileShow?memberId="+clubBoardAllDto.memberId)
     	     						.addClass("rounded-circle").attr("width", 50).attr("height", 50).attr("data-board-no", response[i].clubBoardNo);
     	     						$(htmlTemplate).find(".for-attach").html(profile);
     	    					}
@@ -241,7 +241,7 @@ font-size: 18px;
 					
 					//프로필 있는지 검토
 					if(clubBoardAllDto.attachNoMp != null){
-						var profile = $("<img>").attr("src", window.contextPath + "/clubBoard/download?attachNo="+clubBoardAllDto.attachNoMp)
+						var profile = $("<img>").attr("src", window.contextPath + "/rest/member/profileShow?memberId="+clubBoardAllDto.memberId)
  						.addClass("rounded-circle").attr("width", 50).attr("height", 50).attr("data-board-no", response[i].clubBoardNo);
  						$(htmlTemplate).find(".for-attach").html(profile);
 					}
@@ -376,7 +376,7 @@ font-size: 18px;
 	    					
 	    					//프로필 있는지 검토
 	    					if(clubBoardAllDto.attachNoMp != null){
-	    						var profile = $("<img>").attr("src", window.contextPath + "/clubBoard/download?attachNo="+clubBoardAllDto.attachNoMp)
+	    						var profile = $("<img>").attr("src", window.contextPath + "/rest/member/profileShow?memberId="+clubBoardAllDto.memberId)
 	     						.addClass("rounded-circle").attr("width", 50).attr("height", 50).attr("data-board-no", response[i].clubBoardNo);
 	     						$(htmlTemplate).find(".for-attach").html(profile);
 	    					}
@@ -462,6 +462,32 @@ $(function () {
     });
 });
 
+$(document).ready(function () {
+    // 각 링크에 대한 클릭 이벤트 처리
+    $("#homeLink").click(function () {
+        activateLink("homeLink");
+    });
+
+    $("#boardLink").click(function () {
+        activateLink("boardLink");
+    });
+
+    $("#photoLink").click(function () {
+        activateLink("photoLink");
+    });
+
+    $("#chatLink").click(function () {
+        activateLink("chatLink");
+    });
+
+    // 링크를 활성화하고 다른 링크를 비활성화하는 함수
+    function activateLink(linkId) {
+        $(".btn").removeClass("active").addClass("inactive-link"); // 모든 링크 비활성화
+        $("#" + linkId).removeClass("inactive-link").addClass("active"); // 선택한 링크 활성화
+    }
+});
+
+
 </script>
 <script id="list-template" type="text/template">
 	<div class="col-12 clickable-item mt-2">
@@ -503,7 +529,7 @@ $(function () {
 
 <div class="row">
     <div class="col-3 pe-0">
-        <a id="homeLink" href="${pageContext.request.contextPath}/club/detail?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100 active">홈</a>
+           <a id="homeLink" href="${pageContext.request.contextPath}/club/detail?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100">홈</a>
     </div>
     <div class="col-3 pe-0">
         <a id="boardLink" href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100">게시판</a>
@@ -512,7 +538,7 @@ $(function () {
         <a id="photoLink" href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100">사진첩</a>
     </div>
     <div class="col-3">
-        <a id="chatLink" href="/chat/enterRoom/${clubDto.chatRoomNo}" class="btn btn-miso bg-miso w-100">채팅</a>
+        <a id="chatLink" href="${pageContext.request.contextPath}/chat/enterRoom/${clubDto.chatRoomNo}" class="btn btn-miso bg-miso w-100">채팅</a>
     </div>
 </div>
 

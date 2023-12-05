@@ -375,7 +375,7 @@ $(function(){
 	        var clubNo = params.get("clubNo");
 		  
 		  $.ajax({
-	            url: "http://localhost:8080/rest/clubMemberList",
+	            url: window.contextPath+"/rest/clubMemberList",
 	            method: "get",
 	            data: { clubNo: clubNo , page : 1 , size1 : size},
 	            success: function (response) {
@@ -387,10 +387,10 @@ $(function(){
 	            	var template = $("#clubMember-template").html();
               	var htmlTemplate = $.parseHTML(template);
               	
-              	$(htmlTemplate).find(".href").attr('href',"/member/mypage?memberId="+clubMember.memberId);
+              	$(htmlTemplate).find(".href").attr('href',${pageContext.request.contextPath}+"/member/mypage?memberId="+clubMember.memberId);
               	
               	if(clubMember.attachNo!=0){
-              	$(htmlTemplate).find(".profileImage").attr('src',"/rest/member/profileShow?memberId="+clubMember.memberId);
+              	$(htmlTemplate).find(".profileImage").attr('src',${pageContext.request.contextPath}+"/rest/member/profileShow?memberId="+clubMember.memberId);
               	}
               		if(clubMember.clubMemberRank == '운영진'){
               			var i =$('<i>');
@@ -402,7 +402,7 @@ $(function(){
               		}
               		
               	if(clubMember.attachNo==0){
-              		$(htmlTemplate).find(".profileImage").attr('src',"/images/basic-profile2.png");
+              		$(htmlTemplate).find(".profileImage").attr('src',${pageContext.request.contextPath}+"/images/basic-profile2.png");
               		
               	}
               	
@@ -459,7 +459,7 @@ $(function(){
 	        memberPage++;
 		  
 		  $.ajax({
-	            url: "http://localhost:8080/rest/clubMemberList",
+	            url: window.contextPath+"/rest/clubMemberList",
 	            method: "get",
 	            data: { clubNo: clubNo , page : memberPage, size1 : 3},
 	            success: function (response) {
@@ -470,10 +470,10 @@ $(function(){
 	            	var template = $("#clubMember-template").html();
               	var htmlTemplate = $.parseHTML(template);
               	
-              	$(htmlTemplate).find(".href").attr('href',"/member/mypage?memberId="+clubMember.memberId);
+              	$(htmlTemplate).find(".href").attr('href',${pageContext.request.contextPath}+"/member/mypage?memberId="+clubMember.memberId);
               	
               	if(clubMember.attachNo!=0){
-              	$(htmlTemplate).find(".profileImage").attr('src',"/rest/member/profileShow?memberId="+clubMember.memberId);
+              	$(htmlTemplate).find(".profileImage").attr('src',${pageContext.request.contextPath}+"/rest/member/profileShow?memberId="+clubMember.memberId);
               	}
               		if(clubMember.clubMemberRank == '운영진'){
               			var i =$('<i>');
@@ -485,7 +485,7 @@ $(function(){
               		}
               		
               	if(clubMember.attachNo==0){
-              		$(htmlTemplate).find(".profileImage").attr('src',"/images/basic-profile2.png");
+              		$(htmlTemplate).find(".profileImage").attr('src',${pageContext.request.contextPath}+"/images/basic-profile2.png");
               		
               	}
               	
@@ -544,7 +544,7 @@ $(function(){
 		  var tagCount = $(".clubMemberList").children().length;
 		  
 		  $.ajax({
-			  url: "http://localhost:8080/rest/upgradeRank",
+			  url: window.contextPath+"/rest/upgradeRank",
 	          method: "get",
 	          data: { clubMemberNo: clubMemberNo},
 	          success: function (response) {
@@ -566,7 +566,7 @@ $(function(){
 		  var tagCount = $(".clubMemberList").children().length;
 		  
 		  $.ajax({
-			  url: "http://localhost:8080/rest/downgradeRank",
+			  url: window.contextPath+"/rest/downgradeRank",
 	          method: "get",
 	          data: { clubMemberNo: clubMemberNo},
 	          success: function (response) {
@@ -592,7 +592,7 @@ $(function(){
 				  var tagCount = $(".clubMemberList").children().length;
 				  
 				  $.ajax({
-					  url: "http://localhost:8080/rest/removeMember",
+					  url: window.contextPath+"/rest/removeMember",
 			          method: "get",
 			          data: { clubMemberNo: clubMemberNo},
 			          success: function (response) {
@@ -622,7 +622,7 @@ $(function(){
 	    // 여기에 원하는 동작을 추가하세요.
 	    
 	    $(".makeMeetingForm")[0].reset();
-	    $("#exampleModal .preview").attr("src","/images/noimage.jpg");
+	    $("#exampleModal .preview").attr("src",${pageContext.request.contextPath}+"/images/noimage.jpg");
 	    
 	    
 	});
@@ -715,7 +715,7 @@ $(".meetingFix").change(function(){
                 		
                 		  
                 		        $.ajax({
-                		            url: "http://localhost:8080/rest/clubMember",
+                		            url: window.contextPath+"/rest/clubMember",
                 		            method: "post",
                 		            data: { clubNo: clubNo, clubMemberId: memberId, joinMessage: joinMessage },
                 		            success: function (response) {
@@ -1077,14 +1077,14 @@ $(".meetingFix").change(function(){
                  	if(meeting.attachNo!=0){
                  	
                  	var img = $('<img>')
-                     .attr('src', "/rest/meeting/attchImage?attachNo=" + meeting.attachNo)
+                     .attr('src', ${pageContext.request.contextPath}+"/rest/meeting/attchImage?attachNo=" + meeting.attachNo)
                      .attr('width', '230')
                      .attr('height', '130')
                  	.css('border-radius', '10px'); 
                  	}
                  	else{
                  		var img = $('<img>')
-                         .attr('src', "/images/noimage.jpg")
+                         .attr('src', ${pageContext.request.contextPath}+"/images/noimage.jpg")
                          .attr('width', '230')
                          .attr('height', '130')
                          .css('border-radius', '10px'); 
@@ -1110,18 +1110,18 @@ $(".meetingFix").change(function(){
                       profileList.addClass("d-flex align-items-center flex-wrap"); // flex-wrap 추가
 
                       for (var a = 0; a < attendMemberList.length; a++) {
-                          var aLink = $('<a>').attr('href', "/member/mypage?memberId=" + attendMemberList[a].clubMemberId);
+                          var aLink = $('<a>').attr('href', ${pageContext.request.contextPath}+"/member/mypage?memberId=" + attendMemberList[a].clubMemberId);
 
                           if (attendMemberList[a].attachNo != 0) {
                               var image = $('<img>')
                                   .addClass("rounded-circle me-3")
-                                  .attr('src', "/rest/member/profileShow?memberId=" + attendMemberList[a].clubMemberId)
+                                  .attr('src', ${pageContext.request.contextPath}+"/rest/member/profileShow?memberId=" + attendMemberList[a].clubMemberId)
                                   .attr('width', '50')
                                   .attr('height', '50');
                           } else {
                               var image = $('<img>')
                                   .addClass("rounded-circle me-3")
-                                  .attr('src', "/images/basic-profile.png")
+                                  .attr('src', ${pageContext.request.contextPath}+"/images/basic-profile.png")
                                   .attr('width', '50')
                                   .attr('height', '50');
                           }
@@ -1265,12 +1265,12 @@ $(".meetingFix").change(function(){
         $("#meetingEditModal .meetingMaxPeopleByEdit").val(meetingData.meetingNumber);
         
         if(meetingData.attachNo!=0){
-        	$("#meetingEditModal .preview2").attr("src","/rest/meeting/attchImage?attachNo=" + meetingData.attachNo);
+        	$("#meetingEditModal .preview2").attr("src",${pageContext.request.contextPath}+"/rest/meeting/attchImage?attachNo=" + meetingData.attachNo);
         }
         
         else{
         	
-        	$("#meetingEditModal .preview2").attr("src","/images/noimage.jpg");
+        	$("#meetingEditModal .preview2").attr("src",${pageContext.request.contextPath}+"/images/noimage.jpg");
         	
         }
         // 나머지 필드에 대해서도 필요한 데이터 채우기
@@ -1314,12 +1314,12 @@ $(".meetingFix").change(function(){
                 	if(meeting.attachNo!=0){
                 	
                 	var img = $('<img>')
-                    .attr('src', "/rest/meeting/attchImage?attachNo=" + meeting.attachNo)
+                    .attr('src', ${pageContext.request.contextPath}+"/rest/meeting/attchImage?attachNo=" + meeting.attachNo)
                     .attr('width', '230')
                     .attr('height', '130');}
                 	else{
                 		var img = $('<img>')
-                        .attr('src', "/images/noimage.jpg")
+                        .attr('src', ${pageContext.request.contextPath}+"/images/noimage.jpg")
                         .attr('width', '230')
                         .attr('height', '130');
                 		
@@ -1347,18 +1347,18 @@ $(".meetingFix").change(function(){
                         profileList.addClass("d-flex align-items-center flex-wrap"); // flex-wrap 추가
 
                         for (var a = 0; a < attendMemberList.length; a++) {
-                            var aLink = $('<a>').attr('href', "/member/mypage?memberId=" + attendMemberList[a].clubMemberId);
+                            var aLink = $('<a>').attr('href', ${pageContext.request.contextPath}+"/member/mypage?memberId=" + attendMemberList[a].clubMemberId);
 
                             if (attendMemberList[a].attachNo != 0) {
                                 var image = $('<img>')
                                     .addClass("rounded-circle me-3")
-                                    .attr('src', "/rest/member/profileShow?memberId=" + attendMemberList[a].clubMemberId)
+                                    .attr('src', ${pageContext.request.contextPath}+"/rest/member/profileShow?memberId=" + attendMemberList[a].clubMemberId)
                                     .attr('width', '50')
                                     .attr('height', '50');
                             } else {
                                 var image = $('<img>')
                                     .addClass("rounded-circle me-3")
-                                    .attr('src', "/images/basic-profile.png")
+                                    .attr('src', ${pageContext.request.contextPath}+"/images/basic-profile.png")
                                     .attr('width', '50')
                                     .attr('height', '50');
                             }
@@ -1858,7 +1858,7 @@ $(document).ready(function () {
 <div class="col memberList">
     <div class="row d-flex align-items-center">
         <div class="col-2 position-relative">
-            <a href="/member/mypage?memberId=${clubMember.memberId}" class="href">
+            <a href="${pageContext.request.contextPath}/member/mypage?memberId=${clubMember.memberId}" class="href">
                 <img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${clubMember.memberId}" width="100" height="100" class="rounded-circle profileImage">
             </a>
             <c:if test="${clubMember.clubMemberRank == '운영진'}">
@@ -1956,8 +1956,8 @@ $(document).ready(function () {
 
 	<div class="row">
 		<div class="col-3 pe-0">
-			<a id="homeLink" href="#"
-				class="btn btn-miso bg-miso w-100 active">홈</a>
+			  <a id="homeLink" href="${pageContext.request.contextPath}/club/detail?clubNo=${clubDto.clubNo}" 
+			  class="btn btn-miso bg-miso w-100 active">홈</a>
 		</div>
 		<div class="col-3 pe-0">
 			<a id="boardLink"
@@ -1970,7 +1970,7 @@ $(document).ready(function () {
 				class="btn btn-miso bg-miso w-100">사진첩</a>
 		</div>
 		<div class="col-3">
-			<a id="chatLink" href="/chat/enterRoom/${clubDto.chatRoomNo}"
+			<a id="chatLink" href="${pageContext.request.contextPath}/chat/enterRoom/${clubDto.chatRoomNo}"
 				class="btn btn-miso bg-miso w-100">채팅</a>
 		</div>
 	</div>
@@ -2009,7 +2009,7 @@ $(document).ready(function () {
 			</div>
 			<div>
 				<c:if test="${editPossible==true}">
-					<a href="/club/edit?clubNo=${clubDto.clubNo}"> <i
+					<a href="${pageContext.request.contextPath}/club/edit?clubNo=${clubDto.clubNo}"> <i
 						class="fa-solid fa-eraser ms-auto"></i>
 					</a>
 				</c:if>
@@ -2086,11 +2086,11 @@ $(document).ready(function () {
 						<c:choose>
 							<c:when test="${clubDetailBoardList[0].attachNo!=0}">
 								<img
-									src="/rest/member/profileShow?memberId=${clubDetailBoardList[0].memberId}"
+									src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${clubDetailBoardList[0].memberId}"
 									width="50" height="50" class="rounded-circle">
 							</c:when>
 							<c:otherwise>
-								<img src="/images/basic-profile.png" width="50" height="50"
+								<img src="${pageContext.request.contextPath}/images/basic-profile.png" width="50" height="50"
 									class="rounded-circle">
 
 							</c:otherwise>
@@ -2210,12 +2210,12 @@ $(document).ready(function () {
 		</c:when>
 		<c:otherwise>
 
-			<a href="/photo/list?clubNo=${clubDto.clubNo}">
+			<a href="${pageContext.request.contextPath}/photo/list?clubNo=${clubDto.clubNo}">
 				<div class="container">
 					<div class="row mt-2">
 						<c:forEach var="photoDto" items="${photoList}" varStatus="loop">
 							<div class="col-4 p-0 img-box">
-								<img src="/rest/photo/download/${photoDto.photoNo}"
+								<img src="${pageContext.request.contextPath}/rest/photo/download/${photoDto.photoNo}"
 									class="attached-image img-thumbnail">
 							</div>
 							<c:if test="${loop.index % 3 == 2}">
@@ -2256,7 +2256,7 @@ $(document).ready(function () {
         <div class="col memberList">
             <div class="row d-flex align-items-center">
                 <div class="col-2 position-relative">
-                <a href="/member/mypage?memberId=${clubMember.memberId}">
+                <a href="${pageContext.request.contextPath}/member/mypage?memberId=${clubMember.memberId}">
                     <img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${clubMember.memberId}" width="100" height="100" class="rounded-circle">
                     </a>
                     <c:if test="${clubMember.clubMemberRank == '운영진'}">
@@ -2333,7 +2333,7 @@ $(document).ready(function () {
                </div>
                <div class="modal-body">
                   <div class="preview-wrapper2">
-                     <img src="/images/noimage.jpg" width="200" height="200"
+                     <img src="${pageContext.request.contextPath}/images/noimage.jpg" width="200" height="200"
                         class="preview">
                   </div>
                   <input type="hidden" class="meetingClubNo"

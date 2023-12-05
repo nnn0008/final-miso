@@ -22,7 +22,9 @@
 .text-title{
 font-size: 18px;
 }
-
+.clubBoardReplyDate{
+font-size: 11px;
+}
 .board-like-count{
 color: #43adff;
 }
@@ -63,7 +65,7 @@ $(function(){
                 console.log("성공");
             	$(".reply-write").val("");
               
-            	loadList()
+            	loadList();
 
 
 					//소켓 전송
@@ -116,7 +118,7 @@ $(function(){
             	$(".reply-write").val("");
             	$(this).remove();
 
-            	loadList()
+            	loadList();
 
 
                 $(".div-for-insert-reply").show();
@@ -259,9 +261,12 @@ $(function(){
 $(function(){
 
 	loadList();
-
+	
+	appendReply();
+	$(".go-upside").hide();
+	$(".btn-fold").hide();
 });
-
+//div를 하나 더 만들어서 숨기는 댓글은 .reply-list에 보여주는 댓글 20개는 그 아래 div인 .next-reply-list 에 보여주기
 //화면이 로딩되거나 댓글이 작성되었을경우 댓글목록을 다시 찍어주는 비동기처리
 
 function loadList(){
@@ -278,13 +283,16 @@ function loadList(){
 		//response를 댓글 목록으로 받아옴
 		success:function(response){
 			$(".reply-list").empty();
+			$(".next-reply-list").empty();
 			totalComments = response.length;
 			console.log(response);
 			
-			if(response.length == 0){
-				$(".btn-success").hide();
+			if(response.length < 21){
+				$(".btn-plus").hide();
 			}
-
+			
+			var replyCount = 0;
+			
 			for(var i = 0; i < response.length; i++){
 				//console.log(response);
 				var template = $("#reply-template").html();
@@ -294,9 +302,11 @@ function loadList(){
 				$(htmlTemplate).find(".clubBoardReplyContent").text(response[i].clubBoardReplyContent);
 				$(htmlTemplate).find(".clubBoardReplyDate").text(response[i].formattedClubBoardReplyDate);
 				$(htmlTemplate).find(".btn-subReply").attr("data-reply-no", response[i].clubBoardReplyNo);
+				
 				//내가 작성한 댓글인지 확인하여 수정/삭제 버튼을 안보이게
 				if(response[i].match == false){
-					$(htmlTemplate).find(".edit-delete").empty();
+					$(htmlTemplate).find(".btn-open-reply-edit").remove();
+					$(htmlTemplate).find(".btn-reply-delete").remove();
 				}
 				
 				//대댓글 이라면
@@ -304,6 +314,7 @@ function loadList(){
                     $(htmlTemplate).addClass("ms-5");
                     $(htmlTemplate).find(".btn-subReply").remove();
                     $(htmlTemplate).find("hr").remove();
+//                     $(htmlTemplate).find(".bg-miso").css("max-width", "520px");
                 }
 				
 				$(htmlTemplate).find(".btn-reply-delete").attr("data-reply-no", response[i].clubBoardReplyNo).click(function(e){
@@ -367,7 +378,8 @@ function loadList(){
 				});
 				var replyHtmlTemplate = $.parseHTML($("#reply-insert-form").html());
 				$(htmlTemplate).find(".btn-subReply").attr("data-reply-no", response[i].clubBoardReplyNo).click(function(e){
-					$(this).hide();
+					$(this).hide();//자기 자신은 숨기고
+					$(".btn-subReply").show(); //나머지 버튼은 다시 보여주기
 					$(".btn-open-reply-edit").hide();
 					var parent = $(this).parents(".for-reply-edit");
 					if(!parent.is(replyHtmlTemplate)){
@@ -386,44 +398,54 @@ function loadList(){
 				});
 				
 				//댓글을 붙여
-				$(".reply-list").append(htmlTemplate);
-			}
-			
-// 			loadedComments += response.length;
-// 			console.log("totalComments = " + totalComments);
-// 			console.log("loadedComments = " + loadedComments);
-				// 댓글이 20개 이상이면 먼저 작성된 댓글을 숨김
-// 				if(loadedComments >= pageSize){
-// 					hideOldComments();			
-
-// 				}
-			
+				//댓글이 57개면 37개 까지는 위에 붙이고 나머지는 아래 붙여야 됨
+				replyCount ++;
+				if(replyCount <= response.length - 20){
+					$(".reply-list").append(htmlTemplate);					
+				}
 				
+				else{
+					$(".next-reply-list").append(htmlTemplate);
+				}
+				
+				//만약 댓글의 개수가 21개가 된다면 더보기 버튼을 만들어주자
+				if(replyCount > 20){						
+					$(".reply-list").hide();
+					$(".btn-plus").show();
+				}
+				if(response.length > 30){
+					$(".go-upside").show();
+				}
+			}
+
 	
 		}
 		
 		
 		});//여기가 loadList의 최상위 ajax 끝낸 자리임
-
+	
 }
-// //더 보기 버튼 클릭 시 숨겨진 댓글을 확장
-// function showMoreComments() {
-//     currentPage++;
-//     loadList();
-// }
-// //먼저 작성된 댓글을 숨김
-// function hideOldComments() {
-//     $(".reply-list .for-reply-edit:gt(" + (loadedComments - pageSize) + ")").hide();
-//     $(".reply-list").append('<button type="button" class="btn btn-success" onclick="showMoreComments()">더 보기</button>');
-// }
+
+function appendReply(){
+	$(".btn-plus").click(function(){
+		$(this).hide();
+		$(".reply-list").show();
+		$(".go-upside").show();
+		$(".btn-fold").show(); //더보기 버튼 누르면 접기 버튼
+	});
+	$(".btn-fold").click(function(){
+		$(this).hide();
+		$(".reply-list").hide();
+		$(".btn-plus").show();
+	});
+}
+
 </script>
 <script>
 	//신고와 관련된 스크립트
 	$(function(){
 		
-		//$(".btn-report-send").prop("disabled", true);
 		$(".btn-report-send").click(function(e){
-		//$(".report-send-form").submit(function(e){
 			e.preventDefault();
 			
 			var reportCategory = $("[name=reportCategory]").val();
@@ -497,7 +519,7 @@ function loadList(){
 
 <script id="reply-template" type="text/template">
 <div class="col-12 for-reply-edit mt-2">
-    <div class="card bg-miso mb-3"">
+    <div class="card bg-miso mb-3 w-100">
         <div class="card-header d-flex align-items-center reply-box">
             <div class="col-5 me-2">
                 <h6 class="clubBoardReplyWriter">작성자</h6>
@@ -517,7 +539,6 @@ function loadList(){
                     <span class="clubBoardReplyContent fs-6">내용</span>
                 </div>
             </div>
- 
         </div>
     </div>
 </div>
@@ -586,9 +607,9 @@ function loadList(){
 					<c:if test="${memberProfileDto.attachNo == null }">
 						<img src="${pageContext.request.contextPath}/images/basic-profile.png" class="rounded-circle" width="60" height="60">				
 					</c:if>
-					<c:if test="${attachDto.attachNo != null}">
-						<img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${clubMemberDto.clubMemberId}" class="rounded-circle" width="60" height="60">
 
+					<c:if test="${memberProfileDto.attachNo != null}">
+						<img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${memberProfileDto.memberId}" class="rounded-circle" width="60" height="60">
 					</c:if>
 				</div>
 				<div class="col ms-4">
@@ -603,10 +624,10 @@ function loadList(){
             <div class="btn-group" role="group">
                 <i class="fas fa-ellipsis-vertical"  id="btnGroupDrop1"  class="btn dropdown-toggle show" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></i>
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" data-popper-placement="bottom-start" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, 41px);">
-                    <a class="dropdown-item" href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubBoardDto.clubNo}"">목록</a>
+                    <a class="dropdown-item" href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubBoardDto.clubNo}">목록</a>
                     <c:if test="${sessionScope.name == clubMemberDto.clubMemberId}">
 	                    <a class="dropdown-item" href="${pageContext.request.contextPath}/clubBoard/edit?clubBoardNo=${clubBoardDto.clubBoardNo}">수정</a>
-	                    <a class="dropdown-item" href="${pageContext.request.contextPath}/clubBoard/delete?clubBoardNo=${clubBoardDto.clubBoardNo}"">삭제</a>    
+	                    <a class="dropdown-item" href="${pageContext.request.contextPath}/clubBoard/delete?clubBoardNo=${clubBoardDto.clubBoardNo}">삭제</a>    
 	                </c:if>                
                     <c:if test="${sessionScope.name != clubMemberDto.clubMemberId}">
 	                    <a class="dropdown-item" href="#exampleModal" data-bs-toggle="modal" data-bs-target="#exampleModal">신고</a>
@@ -661,13 +682,20 @@ function loadList(){
 					<c:if test="${!isLiked}">
 						<i class="fa-solid fa-heart me-1 fa-2x" style="color: red"></i>
 					</c:if>					
-					좋아요<span class="board-like-count ms-1">	${likeCount}</span>
+					좋아요<span class="board-like-count ms-1">${likeCount}</span>
 				</div>
 			</div>
 			<hr>
 			
-			<%--댓글이 있는 곳 --%>
+			<%-- 더보기 접기 버튼 --%>
+			<div class="row"><button type="button" class="btn btn-miso btn-plus btn-success w-100">더보기</button></div>
+			<div class="row"><button type="button" class="btn btn-miso btn-fold btn-success w-100">접기</button></div>
+			<%-- 이미 작성된 댓글이 달리는 곳 --%>
 			<div class="row mt-2 reply-list"></div>
+			<%-- 최신 댓글 20개만 보여주는 곳 --%>
+			<div class="row next-reply-list"></div>
+			<%-- 위로 올라가기 --%>
+			<div class="row go-upside"><a href="#" class="btn btn-miso btn-success w-100">위로</a></div>
 			
 			<%-- 댓글 작성할 곳이 있는 곳 --%>
 <div class="row mt-2 div-for-insert-reply">
@@ -689,7 +717,6 @@ function loadList(){
 			
 		</div>
 	</div>
-</div>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

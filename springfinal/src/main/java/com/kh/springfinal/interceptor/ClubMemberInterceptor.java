@@ -11,6 +11,8 @@
 //import com.kh.springfinal.dao.ClubMemberDao;
 //import com.kh.springfinal.dao.MemberDao;
 //import com.kh.springfinal.dto.MemberDto;
+//import com.kh.springfinal.error.AuthorityException;
+//import com.kh.springfinal.error.NoTargetException;
 //import com.kh.springfinal.vo.ClubImageVO;
 //
 //public class ClubMemberInterceptor implements HandlerInterceptor {

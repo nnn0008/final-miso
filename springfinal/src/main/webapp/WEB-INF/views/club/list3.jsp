@@ -142,7 +142,7 @@ width:20px;
 	       
 	       
 	       $.ajax({
-	           url: "/rest/minorCategoryClubList",
+	           url: window.contextPath +"/rest/minorCategoryClubList",
 	           method: "get",
 	           data: {
 	        	   whereNo:minorCategoryNo,page:page
@@ -164,12 +164,12 @@ width:20px;
 	               	if(clubDto.attachNo!=0){
 	               	
 	               	
-	               	$(htmlTemplate).find(".club-image-list").attr('src',"/club/image?clubNo=" + clubDto.clubNo);
+	               	$(htmlTemplate).find(".club-image-list").attr('src',${pageContext.request.contextPath}+"/club/image?clubNo=" + clubDto.clubNo);
 	               	}
 	               	else{
 	               
 	               		
-	               		$(htmlTemplate).find(".club-image-list").attr('src',"/images/basic-profile2.png");
+	               		$(htmlTemplate).find(".club-image-list").attr('src',${pageContext.request.contextPath}+"/images/basic-profile2.png");
 
 	               	}
 	               	
@@ -191,13 +191,13 @@ width:20px;
 	               	
 	               	if(clubDto.likeClub==true){
 	                	$(htmlTemplate).find("[name=heart]").attr
-	                	('src', "/images/suit-heart-fill.png")
+	                	('src', ${pageContext.request.contextPath}+"/images/suit-heart-fill.png")
 			            .attr('class',"heart-fill");
 	                	}
 	                	if(clubDto.likeClub==false){
 	                		
 	                		$(htmlTemplate).find("[name=heart]")
-	                		.attr('src', "/images/suit-heart.png")
+	                		.attr('src', ${pageContext.request.contextPath}+"/images/suit-heart.png")
 	    		            .attr('class',"heart")
 	                		
 	                		
@@ -217,7 +217,7 @@ width:20px;
 	       var minorCategoryNo = params.get("minorCategoryNo");
 	       
 	       $.ajax({
-	           url: "/rest/minorCategoryClubList",
+	           url: window.contextPath +"/rest/minorCategoryClubList",
 	           method: "get",
 	           data: {
 	        	   whereNo:minorCategoryNo,page:page
@@ -238,12 +238,12 @@ width:20px;
 	               	if(clubDto.attachNo!=0){
 	               	
 	               	
-	               	$(htmlTemplate).find(".club-image-list").attr('src',"/club/image?clubNo=" + clubDto.clubNo);
+	               	$(htmlTemplate).find(".club-image-list").attr('src',${pageContext.request.contextPath}+"/club/image?clubNo=" + clubDto.clubNo);
 	               	}
 	               	else{
 	               
 	               		
-	               		$(htmlTemplate).find(".club-image-list").attr('src',"/images/basic-profile2.png");
+	               		$(htmlTemplate).find(".club-image-list").attr('src',${pageContext.request.contextPath}+"/images/basic-profile2.png");
 
 	               	}
 	               	
@@ -265,13 +265,13 @@ width:20px;
 	               	
 	               	if(clubDto.likeClub==true){
 	                	$(htmlTemplate).find("[name=heart]").attr
-	                	('src', "/images/suit-heart-fill.png")
+	                	('src', ${pageContext.request.contextPath}+"/images/suit-heart-fill.png")
 			            .attr('class',"heart-fill");
 	                	}
 	                	if(clubDto.likeClub==false){
 	                		
 	                		$(htmlTemplate).find("[name=heart]")
-	                		.attr('src', "/images/suit-heart.png")
+	                		.attr('src', ${pageContext.request.contextPath}+"/images/suit-heart.png")
 	    		            .attr('class',"heart")
 	                		
 	                		
@@ -289,7 +289,7 @@ width:20px;
 			
 			
 			    var clubNo = $(this).find(".club-name").data("no");
-			     location.href = '/club/detail?clubNo=' + clubNo; 
+			     location.href = ${pageContext.request.contextPath}+'/club/detail?clubNo=' + clubNo; 
 
 			
 			
@@ -304,13 +304,13 @@ width:20px;
 
 		    
 		    $.ajax({
-		        url: "/rest/wishInsert",
+		        url: window.contextPath +"/rest/wishInsert",
 		        method: "post",
 		        data: {
 		            clubNo: clubNo
 		        },
 		        success: function (response) {
-		            $(event.currentTarget).attr('src', "/images/suit-heart-fill.png")
+		            $(event.currentTarget).attr('src', ${pageContext.request.contextPath}+"/images/suit-heart-fill.png")
 		            .attr('class',"heart-fill");
 		            event.stopPropagation(); 
 		        }
@@ -325,14 +325,14 @@ width:20px;
 
 		    console.log("지움시도");
 		    $.ajax({
-		        url: "/rest/wishDelete",
+		        url: window.contextPath +"/rest/wishDelete",
 		        method: "post",
 		        data: {
 		            clubNo: clubNo
 		        },
 		        success: function (response) {
 		        	console.log("지움성공");
-		            $(event.currentTarget).attr('src', "/images/suit-heart.png")
+		            $(event.currentTarget).attr('src', ${pageContext.request.contextPath}+"/images/suit-heart.png")
 		            .attr('class',"heart");
 		            event.stopPropagation(); 
 		        }
@@ -359,7 +359,7 @@ width:20px;
 
 <div class="container text-center">
     <c:forEach var="category" items="${categoryList}">
-        <a href="list3?minorCategoryNo=${category.minorCategoryNo}&majorCategoryNo=${category.majorCategoryNo}"><span class="badge rounded-pill bg-gray mb-3">${category.minorCategoryName}</span></a>
+        <a href="${pageContext.request.contextPath}/club/list3?minorCategoryNo=${category.minorCategoryNo}&majorCategoryNo=${category.majorCategoryNo}"><span class="badge rounded-pill bg-gray mb-3">${category.minorCategoryName}</span></a>
     </c:forEach>
 </div>
 
@@ -386,7 +386,7 @@ width:20px;
                             </div>
 <div class="row p-1 mt-4 text-center">
                         <div class="col">
-                            <a href="/club/insert" class="badge rounded-pill bg-miso btn-miso p-3 link w-100 club-make-link">
+                            <a href="${pageContext.request.contextPath}/club/insert" class="badge rounded-pill bg-miso btn-miso p-3 link w-100 club-make-link">
                                 모임 만들기
                             </a>
                         </div>
@@ -414,7 +414,7 @@ width:20px;
             <span class="club-member">멤버 ${clubListVO.memberCount}</span> |
             <span class="badge bg-info">${clubListVO.majorCategoryName}</span>
             <span class="badge rounded-pill bg-gray">${clubListVO.minorCategoryName}</span>
-			<img src="/images/suit-heart.png" class="heart" name="heart"></img>       
+			<img src="${pageContext.request.contextPath}/images/suit-heart.png" class="heart" name="heart"></img>       
  </div>
     </div>
 </div>

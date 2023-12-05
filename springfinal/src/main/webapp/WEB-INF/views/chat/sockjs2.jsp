@@ -64,7 +64,7 @@
 <c:if test="${not empty clubDto}">
     <div class="row">
         <div class="col-3 pe-0">
-            <a id="homeLink" href="${pageContext.request.contextPath}/club/detail?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100 active">홈</a>
+            <a id="homeLink" href="${pageContext.request.contextPath}/club/detail?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100 ">홈</a>
         </div>
         <div class="col-3 pe-0">
             <a id="boardLink" href="${pageContext.request.contextPath}/clubBoard/list?clubNo=${clubDto.clubNo}" class="btn btn-miso bg-miso w-100">게시판</a>
@@ -91,10 +91,10 @@
         <c:when test="${empty clubInfo.clubNo}">
             <c:choose>
                 <c:when test="${sessionScope.name eq oneMembers.chatSender}">
-                    <img src="/rest/member/profileShow?memberId=${oneMembers.chatReceiver}" class="rounded-circle" width="60" height="60">
+                    <img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${oneMembers.chatReceiver}" class="rounded-circle" width="60" height="60">
                 </c:when>
                <c:when test="${sessionScope.name eq oneMembers.chatReceiver}">
-                    <img src="/rest/member/profileShow?memberId=${oneMembers.chatSender}" class="rounded-circle" width="60" height="60">
+                    <img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${oneMembers.chatSender}" class="rounded-circle" width="60" height="60">
                 </c:when>
                 <c:otherwise>
                     <!-- 이 부분은 meetingMembers가 리스트이므로 첫 번째 값만 사용합니다. -->
@@ -138,7 +138,7 @@
 								 <c:forEach var="member" items="${members}">
 					    <li class="list-group-item d-flex justify-content-between align-items-center">
 					     <span class="offline-icon"  id="clubMemberId_${member.clubMemberId}" value="${member.clubMemberId}"></span>
-					        <img src="/rest/member/profileShow?memberId=${member.clubMemberId}" class="rounded-circle" width="50" height="50">
+					        <img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${member.clubMemberId}" class="rounded-circle" width="50" height="50">
 					        <span>${member.memberName}</span>
 				        
 					        <c:choose>
@@ -165,7 +165,7 @@
     <!-- chatSender 정보 -->
     <li class="list-group-item d-flex justify-content-between align-items-center">
     <span class="offline-icon"  id="clubMemberId_${oneMembers.chatSender}" value="${oneMembers.chatSender}"></span>
-        <img src="/rest/member/profileShow?memberId=${oneMembers.chatSender}" class="rounded-circle" width="50" height="50">
+        <img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${oneMembers.chatSender}" class="rounded-circle" width="50" height="50">
         <span>${oneMembers.senderName}</span>
         <c:choose>
             <c:when test="${oneMembers.senderLevel eq '운영진'}">
@@ -188,7 +188,7 @@
     <!-- chatReceiver 정보 -->
     <li class="list-group-item d-flex justify-content-between align-items-center">
     <span class="offline-icon"  id="clubMemberId_${oneMembers.chatReceiver}" value="${oneMembers.chatReceiver}"></span>
-        <img src="/rest/member/profileShow?memberId=${oneMembers.chatReceiver}" class="rounded-circle" width="50" height="50">
+        <img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${oneMembers.chatReceiver}" class="rounded-circle" width="50" height="50">
         <span>${oneMembers.receiverName}</span>
         <c:choose>
             <c:when test="${oneMembers.receiverLevel eq '운영진'}">
@@ -213,7 +213,7 @@
  <c:forEach var="meetingMember" items="${meetingMembers}">
     <li class="list-group-item d-flex justify-content-between align-items-center">
     <span class="offline-icon"  id="clubMemberId_${meetingMember.clubMemberId}" value="${meetingMember.clubMemberId}"></span>
-        <img src="/rest/member/profileShow?memberId=${meetingMember.clubMemberId}" class="rounded-circle" width="50" height="50">
+        <img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${meetingMember.clubMemberId}" class="rounded-circle" width="50" height="50">
         <span>${meetingMember.memberName}</span>
         <c:choose>
             <c:when test="${meetingMember.clubMemberRank eq '운영진'}">
@@ -365,10 +365,36 @@ $(document).ready(function () {
         $("#homeLink, #boardLink, #photoLink, #chatLink").hide();
     }
 });
+	
+$(document).ready(function () {
+    // 각 링크에 대한 클릭 이벤트 처리
+    $("#homeLink").click(function () {
+        activateLink("homeLink");
+    });
+
+    $("#boardLink").click(function () {
+        activateLink("boardLink");
+    });
+
+    $("#photoLink").click(function () {
+        activateLink("photoLink");
+    });
+
+    $("#chatLink").click(function () {
+        activateLink("chatLink");
+    });
+
+    // 링크를 활성화하고 다른 링크를 비활성화하는 함수
+    function activateLink(linkId) {
+        $(".btn").removeClass("active").addClass("inactive-link"); // 모든 링크 비활성화
+        $("#" + linkId).removeClass("inactive-link").addClass("active"); // 선택한 링크 활성화
+    }
+});
+
 
 	function connect() {
 	// 클라이언트에서 SockJS로 서버에 접속하는 부분
-	window.socket = new SockJS("http://localhost:8080/ws/chat");
+	window.socket = new SockJS(window.contextPath+"/ws/chat");
 
 	var chatRoomNo = getRoomNoFromURL();  // 채팅방 번호를 얻어옴
 	var chatSender = "${sessionScope.name}"; //발신자
@@ -411,7 +437,7 @@ $(document).ready(function () {
 
 	// 방 이동 시
 	function moveToRoom(selectedRoomNo) {
-	    window.location.href = "/chat/enterRoom/" + selectedRoomNo;
+	    window.location.href = window.contextPath+"/chat/enterRoom/" + selectedRoomNo;
 	}
 
 	// JavaScript에서 룸번호 읽어오기
@@ -492,7 +518,6 @@ $(document).ready(function () {
 		
 		
 		var data = JSON.parse(e.data);
-		console.log(data);
 		
 		var clubMemberRank;
 
@@ -531,13 +556,12 @@ $(document).ready(function () {
             if (onlineMemberElement.classList.contains('offline-icon')) {
                 onlineMemberElement.classList.remove('offline-icon');
                 onlineMemberElement.classList.add('online-icon');
-                console.log('온라인 상태입니다.');
             } else {
-                console.log('이미 온라인 상태입니다.');
+//                 console.log('이미 온라인 상태입니다.');
             }
         } else {
             // 오프라인 상태인 경우
-            console.log('오프라인 상태입니다.');
+//             console.log('오프라인 상태입니다.');
         }
 
         // 다른 온라인 멤버 상태 업데이트
@@ -551,13 +575,13 @@ $(document).ready(function () {
                     if (otherOnlineMemberElement.classList.contains('offline-icon')) {
                         otherOnlineMemberElement.classList.remove('offline-icon');
                         otherOnlineMemberElement.classList.add('online-icon');
-                        console.log('다른 멤버 ' + memberId + '도 온라인 상태입니다.');
+//                         console.log('다른 멤버 ' + memberId + '도 온라인 상태입니다.');
                     } else {
-                        console.log('다른 멤버 ' + memberId + '는 이미 온라인 상태입니다.');
+//                         console.log('다른 멤버 ' + memberId + '는 이미 온라인 상태입니다.');
                     }
                 } else {
                     // 다른 멤버가 오프라인 상태인 경우
-                    console.log('다른 멤버 ' + memberId + '는 오프라인 상태입니다.');
+//                     console.log('다른 멤버 ' + memberId + '는 오프라인 상태입니다.');
                 }
             }
         }
@@ -568,30 +592,30 @@ $(document).ready(function () {
 
 
 if (data.messageType === "delete") {
-    console.log("Received delete event:", data);
+//     console.log("Received delete event:", data);
 
     // 여기서 data.chatNo를 사용하도록 수정
     var chatNo = data.chatNo;
-    console.log("chatNo:", chatNo);
+//     console.log("chatNo:", chatNo);
 
     // 내가 보낸 메시지인 경우
     var messageContainerSend = $(".message-list").find(".msg_cotainer_send[data-chatNo='" + chatNo + "']");
-    console.log("Found message container (send):", messageContainerSend);
+//     console.log("Found message container (send):", messageContainerSend);
 
     // 상대방이 보낸 메시지인 경우
     var messageContainerReceive = $(".message-list").find(".msg_cotainer[data-chatNo='" + chatNo + "']");
-    console.log("Found message container (receive):", messageContainerReceive);
+//     console.log("Found message container (receive):", messageContainerReceive);
 
     if (messageContainerSend.length > 0) {
-        console.log("Before updating text (send):", messageContainerSend.text());
+//         console.log("Before updating text (send):", messageContainerSend.text());
         messageContainerSend.text("삭제된 메시지입니다");
-        console.log("After updating text (send):", messageContainerSend.text());
+//         console.log("After updating text (send):", messageContainerSend.text());
     } else if (messageContainerReceive.length > 0) {
-        console.log("Before updating text (receive):", messageContainerReceive.text());
+//         console.log("Before updating text (receive):", messageContainerReceive.text());
         messageContainerReceive.text("삭제된 메시지입니다");
-        console.log("After updating text (receive):", messageContainerReceive.text());
+//         console.log("After updating text (receive):", messageContainerReceive.text());
     } else {
-        console.log("Message container not found for chatNo:", chatNo);
+//         console.log("Message container not found for chatNo:", chatNo);
     }
 }
 
@@ -604,7 +628,7 @@ if (data.messageType === "delete") {
 		
 		 // 만약 메세지 타입이 dm이면서 receiver가 있는 경우
 	    if (data.messageType === "dm" && data.chatReceiver) {    	
-	    	 console.log("Before moveToRoom: ", data); // 이 줄 추가
+// 	    	 console.log("Before moveToRoom: ", data); // 이 줄 추가
 	    	 
 	        // 방 이동 처리
 	        moveToRoom(data.chatRoomNo);
@@ -613,7 +637,7 @@ if (data.messageType === "delete") {
 
 	        // 메시지 내용이 비어있으면 전송하지 않음
 		    if (!chatContent) {
-		        console.log("Content is empty. Message not sent.");
+// 		        console.log("Content is empty. Message not sent.");
 		        return;
 		    }
 	        
@@ -625,7 +649,7 @@ if (data.messageType === "delete") {
 	            content: chatContent, 
 	        };
 	        
-	        console.log("Before sending message: ", sendMessage); // 이 줄 추가
+// 	        console.log("Before sending message: ", sendMessage); // 이 줄 추가
 
 	        window.socket.send(JSON.stringify(sendMessage));
 	    }
@@ -752,11 +776,11 @@ if (data.messageType === "delete") {
 		                    var messageDiv = $(this).closest(".d-flex");
 		                    var messageContent = $(".msg_cotainer_send", messageDiv);
 		                    var chatNo = messageContainer.attr("data-chatNo");
-		                    console.log("chatNo", chatNo);
+// 		                    console.log("chatNo", chatNo);
 							
 		                    var memberId = "${sessionScope.name}";
 		                    var memberLevel = "${sessionScope.level}";
-		                    console.log("memberLevel",memberLevel);
+// 		                    console.log("memberLevel",memberLevel);
 		                    
 		                    $.ajax({
 		                    	type:"GET",
@@ -794,7 +818,7 @@ if (data.messageType === "delete") {
 											    .append('<button type="button" class="btn-close" data-bs-dismiss="alert"></button>')
 											    .append('<strong>권한이 없습니다. </strong><br>')
 											    .append('<span class="badge bg-success rounded-pill bg-miso">파워유저</span>가 되어보세요! <br>')
-											    .append('<a href="/pay/product" class="alert-link btn btn-miso bg-miso w-100 mt-2">구매하기</a>');
+											    .append('<a href="${pageContext.request.contextPath}/pay/product" class="alert-link btn btn-miso bg-miso w-100 mt-2">구매하기</a>');
 
 
 		                                	// 경고창을 body에 표시
@@ -816,7 +840,7 @@ if (data.messageType === "delete") {
 		                            },
 		                            error: function (error) {
 		                                // 오류 처리
-		                                console.error("Error fetching clubMemberRank:", error);
+// 		                                console.error("Error fetching clubMemberRank:", error);
 		                            }
 		                        });
 		                    });
@@ -870,7 +894,7 @@ if (data.messageType === "delete") {
 		    	        type: 'GET',
 		    	        success: function(data) {
 		    	            // 성공적으로 데이터를 받아왔을 때 처리
-		    	            console.log(data); // 여기서 data는 List<MemberDto> 형태
+// 		    	            console.log(data); // 여기서 data는 List<MemberDto> 형태
 							
 		    	            // data 배열에서 클릭된 멤버의 정보 찾기
 		    	            var selectedMember = data.find(function(member) {
@@ -903,7 +927,7 @@ if (data.messageType === "delete") {
 		    	        },
 		    	        error: function(error) {
 		    	            // 오류 발생 시 처리
-		    	            console.error(error);
+// 		    	            console.error(error);
 		    	        }
 		    	    });
 		    	});
@@ -925,7 +949,7 @@ if (data.messageType === "delete") {
 
 
 				   var messageContainer = $("<div>").addClass("msg_cotainer").attr("data-chatNo", data.chatNo);
-				   console.log(messageContainer);
+// 				   console.log(messageContainer);
 					
 				   // 파일인 경우 이미지 태그를 추가
 				   if (data.messageType === "file") {
@@ -958,7 +982,7 @@ if (data.messageType === "delete") {
 			                    var messageDiv = $(this).closest(".d-flex");
 			                    var messageContent = $(".msg_cotainer_send", messageDiv);
 			                    var chatNo = messageContainer.attr("data-chatNo");
-			                    console.log("chatNo", chatNo);
+// 			                    console.log("chatNo", chatNo);
 								
 			                    var memberId = "${sessionScope.name}";
 			                    
@@ -1017,7 +1041,7 @@ if (data.messageType === "delete") {
 			                            },
 			                            error: function (error) {
 			                                // 오류 처리
-			                                console.error("Error fetching clubMemberRank:", error);
+// 			                                console.error("Error fetching clubMemberRank:", error);
 			                            }
 			                        });
 			                    });
@@ -1090,7 +1114,7 @@ $(".dm-send").on("click", function () {
         // WebSocket을 통해 서버로 메시지 전송
         window.socket.send(JSON.stringify(dm));
 
-        console.log("DM 메시지 전송 완료");
+//         console.log("DM 메시지 전송 완료");
         console.log(dm);
     } else {
         // '파워유저'가 아닌 경우에는 경고창 표시
@@ -1101,7 +1125,7 @@ $(".dm-send").on("click", function () {
 	    .append('<button type="button" class="btn-close" data-bs-dismiss="alert"></button>')
 	    .append('<strong>권한이 없습니다. </strong><br>')
 	    .append('<span class="badge bg-success rounded-pill bg-miso">파워유저</span>가 되어보세요! <br>')
-	    .append('<a href="/pay/product" class="alert-link btn btn-miso bg-miso w-100 mt-2">구매하기</a>');
+	    .append('<a href="${pageContext.request.contextPath}/pay/product" class="alert-link btn btn-miso bg-miso w-100 mt-2">구매하기</a>');
 
 
 	// 경고창을 body에 표시
@@ -1137,7 +1161,7 @@ $(".dm-send").on("click", function () {
 		    
 		    // 메시지 내용이 비어있으면 전송하지 않음
 		    if (!chatContent) {
-		        console.log("Content is empty. Message not sent.");
+// 		        console.log("Content is empty. Message not sent.");
 		        return;
 		    }
 

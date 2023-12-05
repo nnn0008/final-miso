@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.kh.springfinal.dao.ChatRoomDao;
+import com.kh.springfinal.error.AuthorityException;
 
 //회원인지 아닌지 검사하여 비회원을 차단하는 인터셉터 구현
 
@@ -33,7 +34,7 @@ public class ChatRoomIntercepter implements HandlerInterceptor {
             chatRoomNo = Integer.parseInt(chatRoomNoStr);
         } catch (NumberFormatException e) {
             // chatRoomNo가 정수로 변환할 수 없는 경우 처리
-        	throw new Exception("error");
+        	throw new AuthorityException("error");
         }
 
         // 세션에서 회원 아이디 추출
@@ -47,7 +48,7 @@ public class ChatRoomIntercepter implements HandlerInterceptor {
             return true;
         } else {
             // 채팅방 회원이 아니면 chatRoomError.jsp로 포워딩
-            throw new Exception("채팅방 멤버가 아닙니다.");
+            throw new AuthorityException("채팅방 멤버가 아닙니다.");
         }
     }
 

@@ -50,10 +50,10 @@ vertical-align: middle;
 
 <script>
 function connect() {	
-	window.notifySocket = new SockJS("${pageContext.request.contextPath}/ws/notify");
+	window.notifySocket = new SockJS(window.contextPath+"/ws/notify");
 	
 	notifySocket.onopen = function (e) {
-	     console.log('Info: connection opened.');
+// 	     console.log('Info: connection opened.');
 	 };
 	 
 	 let notifications = [];

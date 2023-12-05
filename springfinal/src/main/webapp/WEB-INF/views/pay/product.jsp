@@ -35,6 +35,10 @@ font-size: 13px;
 font-size: 14px;
 }
 
+.card-footer{
+height: 90px;
+}
+
 .text-footer{
 font-size: 15px;
 }
@@ -58,7 +62,7 @@ font-size: 15px;
   
   <div class="card-body-regular">
   <strong class="card-title">한달 / 1년</strong>
-    <h6 class="card-subtitle text-muted mt-1">2,900원 / 23,000원</h6>
+    <h6 class="card-subtitle text-muted mt-1">5,900원 / 59,000원</h6>
     <h6 class="card-text">(부가세 포함)</h6>
   </div>
   <ul class="list-group list-group-flush">
@@ -85,7 +89,7 @@ font-size: 15px;
   
   <div class="card-body-regular ">
      <strong class="card-title">한달 / 1년</strong>
-    <h6 class="card-subtitle text-muted mt-1">2,900원 / 23,000원</h6>
+    <h6 class="card-subtitle text-muted mt-1">5,900원 / 59,000원</h6>
     <h6 class="card-text">(부가세 포함)</h6>
   </div>
   <ul class="list-group list-group-flush">
@@ -127,7 +131,7 @@ font-size: 15px;
   
   <div class="card-body-single">
      <strong class="card-title">한달 / 1년</strong>
-    <h6 class="card-subtitle text-muted mt-1">3,900원 / 31,000원</h6>
+    <h6 class="card-subtitle text-muted mt-1">3,900원 / 39,000원</h6>
     <h6 class="card-text">(부가세 포함)</h6>
   </div>
   <ul class="list-group list-group-flush">
@@ -167,7 +171,7 @@ font-size: 15px;
   
   <div class="card-body-single">
     <strong class="card-title">한달 / 1년</strong>
-    <h6 class="card-subtitle text-muted mt-1">3,900원 / 31,000원</h6>
+    <h6 class="card-subtitle text-muted mt-1">3,900원 / 39,000원</h6>
     <h6 class="card-text">(부가세 포함)</h6>
   </div>
   <ul class="list-group list-group-flush">

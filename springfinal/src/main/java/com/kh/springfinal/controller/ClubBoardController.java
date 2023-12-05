@@ -101,10 +101,11 @@ public class ClubBoardController {
 		
 		int clubBoardNo = clubBoardDao.sequence();
 		clubMemberDto = clubBoardDao.selectOneClubMemberNo(memberId, clubNo);
+		
 //		log.debug("clubNo ={}" , clubNo);
 //		log.debug("memberId ={}" , memberId);
-//		
 //		log.debug("clubMemberDto ={}" , clubMemberDto);
+		
 		int clubMemberNo = clubMemberDto.getClubMemberNo();
 		
 		clubBoardDto.setClubBoardName(memberDto.getMemberName());
