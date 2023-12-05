@@ -51,7 +51,7 @@
 			var memberPw = $("#memberPw").val();
 			console.log("jsp중간체크")
 			$.ajax({
-				url: "http://localhost:8080/rest/member/delete",
+				url: "window.contextPath/rest/member/delete",
 				method: "post",
 				data:{
 					memberId:memberId,
@@ -60,7 +60,7 @@
 				success: function (response) {
 					console.log(response);
 					$(".error-feed").show();
-					window.location.href = "http://localhost:8080/member/outFinish";
+					window.location.href = "window.contextPath/member/outFinish";
 				  },
 			});
 		});

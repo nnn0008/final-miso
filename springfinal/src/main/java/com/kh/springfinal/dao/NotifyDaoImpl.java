@@ -48,7 +48,9 @@ public class NotifyDaoImpl implements NotifyDao{
 	
 	 @Override
 	    public boolean isNotificationEnabled(@RequestParam String notifyReceiver) {
-	        return sqlSession.selectOne("notify.isNotificationEnabled", notifyReceiver);
+	        Boolean result = sqlSession.selectOne("notify.isNotificationEnabled", notifyReceiver);
+	        return result != null && result.booleanValue();
 	    }
 
+	 
 }

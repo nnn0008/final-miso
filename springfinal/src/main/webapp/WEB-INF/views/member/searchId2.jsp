@@ -60,7 +60,8 @@
 	<div class="row">
 		<div class="col">
 
-
+		<c:choose>
+			<c:when test="${idCount!=0}">
 			<div class="row mt-5 pt-5">
 				<div class="col">
 					<h1>아이디를 찾았습니다</h1>
@@ -84,6 +85,24 @@
 				</div>
 			</div>
 		</div>
+			</c:when>
+			<c:otherwise>
+				<div class="row mt-4">
+				<div class="col">
+					<div class="card border-primary border border-2 mb-3 w-100 h-100">
+						<div class="card-body">
+							<h4 class="card-text">등록되지 않은 회원입니다</h4>
+							<hr class="my-4">
+				            <p>자세한 정보는 웹 사이트를 방문하세요.</p>
+				            <a class="btn btn-primary btn-lg mt-3" href="./join" role="button">가입하기</a>
+						</div>
+					</div>
+			</div>
+			</div>
+			
+			
+			</c:otherwise>
+		</c:choose>
 	</div>
 </div>
 </div>

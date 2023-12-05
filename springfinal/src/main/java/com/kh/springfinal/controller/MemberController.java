@@ -9,6 +9,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,74 +126,74 @@ public class MemberController {
 	public String login() {
 		return "member/login";
 	}
-	//임시 로그인(아이디 새로 만든거 쓰실분은 아래 코드 주석풀어서 이용해주세요)
-	  @PostMapping("/login")
-	   public String login(@RequestParam String memberId, @RequestParam String memberPw, HttpSession session) {
-		  	MemberDto memberDto = memberDao.loginId(memberId);
-	         //세션에 아이디 저장+등급 저장
-	         session.setAttribute("name", memberId);
-	         session.setAttribute("level", memberDto.getMemberLevel());
-	         session.setAttribute("memberName", memberDto.getMemberName());
-	       
-	         //메인페이지로 이동
-	         return "redirect:/club/list"; 
-	      };
+//	임시 로그인(아이디 새로 만든거 쓰실분은 아래 코드 주석풀어서 이용해주세요)
+//	  @PostMapping("/login")
+//	   public String login(@RequestParam String memberId, @RequestParam String memberPw, HttpSession session) {
+//		  	MemberDto memberDto = memberDao.loginId(memberId);
+//	         //세션에 아이디 저장+등급 저장
+//	         session.setAttribute("name", memberId);
+//	         session.setAttribute("level", memberDto.getMemberLevel());
+//	         session.setAttribute("memberName", memberDto.getMemberName());
+//	       
+//	         //메인페이지로 이동
+//	         return "redirect:/club/list"; 
+//	      };
 	
-//	@PostMapping("/login")
-//	public String login(HttpServletResponse httpServletResponse,
-//						@RequestParam String memberId, @RequestParam String memberPw,
-//						@RequestParam(required = false) String saveId,
-//								HttpSession session, Model model) {
-////		db 유저 정보
-//		MemberDto userDto = memberDao.selectOne(memberId, memberPw);
-////		 id 틀리면 되돌림
-//		if(userDto==null) {
-//			if(saveId != null) {
-//				Cookie cookie = new Cookie("saveId", memberId);
-//				cookie.setMaxAge(4*7*24*60*60);//4주
-//				httpServletResponse.addCookie(cookie);
-//			}
-//			else {
-//				Cookie cookie = new Cookie("saveId", memberId);
-//				cookie.setMaxAge(0);
-//				httpServletResponse.addCookie(cookie);
-//			}
-//			return "redirect:login?error";
-//		}
-////		db Pw
-//		String userPw = userDto.getMemberPw();
-////		db Pw 와 입력값Pw 검사 후 session입력
-//		if(userPw.equals(memberPw)) {
-//			session.setAttribute("name", userDto.getMemberId());
-//			session.setAttribute("level", userDto.getMemberLevel());
-//      session.setAttribute("memberName", userDto.getMemberName());	
-//			if(saveId != null) {
-//				Cookie cookie = new Cookie("saveId", memberId);
-//				cookie.setMaxAge(4*7*24*60*60);//4주
-//				httpServletResponse.addCookie(cookie);
-//			}
-//			else {
-//				Cookie cookie = new Cookie("saveId", memberId);
-//				cookie.setMaxAge(0);//4주
-//				httpServletResponse.addCookie(cookie);
-//			}
-//		}
-//		else {
-//			if(saveId != null) {
-//				Cookie cookie = new Cookie("saveId", memberId);
-//				cookie.setMaxAge(4*7*24*60*60);//4주
-//				httpServletResponse.addCookie(cookie);
-//			}
-//			else {
-//				Cookie cookie = new Cookie("saveId", memberId);
-//				cookie.setMaxAge(0);
-//				httpServletResponse.addCookie(cookie);
-//			}
-//			return "redirect:login?error";
-//		}
-////		로그인 완료창으로 보내기
-//		return "redirect:/club/list";	
-//	}
+	@PostMapping("/login")
+	public String login(HttpServletResponse httpServletResponse,
+						@RequestParam String memberId, @RequestParam String memberPw,
+						@RequestParam(required = false) String saveId,
+								HttpSession session, Model model) {
+//		db 유저 정보
+		MemberDto userDto = memberDao.selectOne(memberId, memberPw);
+//		 id 틀리면 되돌림
+		if(userDto==null) {
+			if(saveId != null) {
+				Cookie cookie = new Cookie("saveId", memberId);
+				cookie.setMaxAge(4*7*24*60*60);//4주
+				httpServletResponse.addCookie(cookie);
+			}
+			else {
+				Cookie cookie = new Cookie("saveId", memberId);
+				cookie.setMaxAge(0);
+				httpServletResponse.addCookie(cookie);
+			}
+			return "redirect:login?error";
+		}
+//		db Pw
+		String userPw = userDto.getMemberPw();
+//		db Pw 와 입력값Pw 검사 후 session입력
+		if(userPw.equals(memberPw)) {
+			session.setAttribute("name", userDto.getMemberId());
+			session.setAttribute("level", userDto.getMemberLevel());
+      session.setAttribute("memberName", userDto.getMemberName());	
+			if(saveId != null) {
+				Cookie cookie = new Cookie("saveId", memberId);
+				cookie.setMaxAge(4*7*24*60*60);//4주
+				httpServletResponse.addCookie(cookie);
+			}
+			else {
+				Cookie cookie = new Cookie("saveId", memberId);
+				cookie.setMaxAge(0);//4주
+				httpServletResponse.addCookie(cookie);
+			}
+		}
+		else {
+			if(saveId != null) {
+				Cookie cookie = new Cookie("saveId", memberId);
+				cookie.setMaxAge(4*7*24*60*60);//4주
+				httpServletResponse.addCookie(cookie);
+			}
+			else {
+				Cookie cookie = new Cookie("saveId", memberId);
+				cookie.setMaxAge(0);
+				httpServletResponse.addCookie(cookie);
+			}
+			return "redirect:login?error";
+		}
+//		로그인 완료창으로 보내기
+		return "redirect:/club/list";	
+	}
 	
 			
   	@RequestMapping("/logout")
