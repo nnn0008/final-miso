@@ -24,7 +24,8 @@
 	
 	<!-- 정모 채팅방 조회(회원별)-->
 	<select id="findMeeting" resultType="MeetingDto">
-	SELECT m.chat_room_no, m.MEETING_NAME, m.MEETING_LOCATION, m.MEETING_DATE, m.meeting_no, c.CLUB_NO 
+	SELECT m.chat_room_no, m.MEETING_NAME, m.MEETING_LOCATION, 
+	m.MEETING_DATE, m.meeting_no, c.CLUB_NO 
 	FROM meeting m
 	JOIN meeting_member mm ON m.meeting_no = mm.meeting_no
 	JOIN CLUB c ON c.CLUB_NO = m.CLUB_NO 
