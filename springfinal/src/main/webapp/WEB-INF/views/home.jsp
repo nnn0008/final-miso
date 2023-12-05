@@ -353,7 +353,7 @@ width: 110px;
 			    <div class="col-3 d-flex flex-column align-items-start mt-3 p-0 m-0">
 
 				<div class="alert alert-dismissible club-box alert-light circle p-0">
-					<c:if test="${homeForClubVO.attachNo == null}">
+					<c:if test="${wishListDto.clubNo == null}">
 						<a
 							href="${pageContext.request.contextPath}/club/detail?clubNo=${wishListDto.clubNo}"
 							class="link"
@@ -362,7 +362,7 @@ width: 110px;
 							src="${pageContext.request.contextPath}/images/basic-profile2.png" class="club-image">
 						</a>
 					</c:if>
-					<c:if test="${homeForClubVO.attachNo != null}">
+					<c:if test="${wishListDto.clubNo != null}">
 						<a
 							href="${pageContext.request.contextPath}/club/detail?clubNo=${wishListDto.clubNo}"
 							class="link"

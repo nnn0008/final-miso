@@ -7,8 +7,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.kh.springfinal.interceptor.BoardInterceptor;
 import com.kh.springfinal.interceptor.ChatRoomIntercepter;
-import com.kh.springfinal.interceptor.ClubCreateInterceptor;
-import com.kh.springfinal.interceptor.ClubManagerInterceptor;
 import com.kh.springfinal.interceptor.HomeInterceptor;
 import com.kh.springfinal.interceptor.MemberInterceptor;
 
@@ -39,14 +37,14 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
 //	@Autowired
 //	private ClubJoinInterceptor clubJoinInterceptor;
 	
-	@Autowired
-	private ClubManagerInterceptor clubManagerInterceptor;
+//	@Autowired
+//	private ClubManagerInterceptor clubManagerInterceptor;
 	
 //	@Autowired
 //	private ClubMemberInterceptor clubMemberInterceptor;
 	
-	@Autowired
-	private ClubCreateInterceptor clubCreateInterceptor;
+//	@Autowired
+//	private ClubCreateInterceptor clubCreateInterceptor;
 	
 	//인터셉트를 추가할 수 있는 설정 메소드(registry 저장소에 설정)
 	//등록 시 주소의 패턴 설정 방법
