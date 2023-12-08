@@ -76,7 +76,7 @@ public class MemberRestController {
 		String memberId = (String) session.getAttribute("name");
 		AttachDto attachDto = profileDao.profileFindOne(memberId);
 		String home = "D:/upload/kh12fa";
-		File dir = new File(home, "profile");
+		File dir = new File(home);
 		if(attachDto != null) {
 			attachDao.delete(attachDto.getAttachNo());
 		File target = new File(dir,String.valueOf(attachDto.getAttachNo()));
@@ -109,7 +109,7 @@ public class MemberRestController {
 
 			if(attachDto == null) {
 				String home = "D:/upload/kh12fa";
-		        File dir = new File(home, "profile");
+		        File dir = new File(home);
 		        File target = new File(dir, "avatar50.png");
 
 		        // 기본 이미지 데이터 읽어오기
@@ -129,7 +129,7 @@ public class MemberRestController {
 			}
 
 			String home = "D:/upload/kh12fa";
-			File dir = new File(home, "profile");
+			File dir = new File(home);
 			File target = new File(dir,String.valueOf(attachDto.getAttachNo()));
 
 			byte[] data = FileUtils.readFileToByteArray(target);//실제파일정보 불러오기
