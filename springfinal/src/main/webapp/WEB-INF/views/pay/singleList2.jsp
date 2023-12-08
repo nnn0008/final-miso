@@ -62,22 +62,71 @@ background-color: #FFED00;
 <script>
 $(function () {
     // 클럽 선택 드롭다운 변경 시
-    $("#clubSelect").click(function () {
+    $("#clubSelect").change(function () {
         var clubNo = $(this).val();
         // 선택한 클럽의 clubNo 값을 저장
         $(this).data("clubNo", clubNo);
     });
 
+    $("[name=productNo]").change(function () {
+        var checked = $(this).prop("checked");
+        if (checked) {
+            $("[name=productNo]").not(this).prop("checked", false);
+        }
+        $(this).parents(".product-item").find("[name=qty]").prop("disabled", !checked);
+        calculateUnit($(this).parents(".product-item"));
+    });
+    $("[name=qty]").on("input", function () {
+        calculateUnit($(this).parents(".product-item"));
+    });
+
+    function calculateUnit(row) {
+        if (row.find("[name=productNo]").prop("checked")) {
+            var price = parseInt(row.find(".price-wrapper").text().replace(",", ""));
+            var qty = parseInt(row.find("[name=qty]").val());
+            row.find(".total-wrapper").text(numberWithCommas(price * qty) + "원");
+        } else {
+            row.find(".total-wrapper").text("-");
+        }
+    }
+
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
     $(".purchase-btn").click(function () {
+        if ($("[name=productNo]:checked").length == 0) {
+            alert("한 개 이상 선택하셔야 구매가 가능합니다");
+            return;
+        }
 
         if (confirm("선택한 항목을 구매하시겠습니까?") == false) {
             return;
         }
 
-        var form = $("<form>").attr("action", "singlePurchase").attr("method", "get");
+        var form = $("<form>").attr("action", "purchase").attr("method", "get");
 
         var count = 0;
 
+        $(".product-item").each(function (index, tag) {
+            var checked = $(this).find("[name=productNo]").prop("checked");
+            if (checked == false) return;
+
+            var productNo = $(this).find("[name=productNo]").val();
+            var qty = $(this).find("[name=qty]").val();
+
+            $("<input>")
+                .attr("name", "product[" + count + "].productNo")
+                .attr("type", "hidden")
+                .val(productNo)
+                .appendTo(form);
+            $("<input>")
+                .attr("name", "product[" + count + "].qty")
+                .attr("type", "hidden")
+                .val(qty)
+                .appendTo(form);
+            count++;
+        });
 
         // 이전에 선택한 클럽의 clubNo 가져오기
         var clubNo = $("#clubSelect").data("clubNo");

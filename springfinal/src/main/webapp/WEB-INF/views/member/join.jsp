@@ -96,7 +96,7 @@
                                             if (isValid && inputId != null) {
                                                 // 이미 사용중이 아이디인지 체크
                                                 $.ajax({
-                                                    url: "http://localhost:8080/rest/member/checkId",
+                                                    url: window.contextPath + "/rest/member/checkId",
                                                     method: "post",
                                                     data: {
                                                         memberId: inputId
@@ -305,7 +305,7 @@
                                     var memberEmail = $("[name=memberEmail]").val();
                                     if (memberEmail.length == 0) return;
                                     $.ajax({
-                                        url: "http://localhost:8080/cert/send",
+                                        url: window.contextPath + "/cert/send",
                                         method: "post",
                                         data: { certEmail: memberEmail },
                                         success: function (response) {
@@ -320,7 +320,7 @@
 									$(".checkNumber-feed").removeClass("is-invalid");
 									$("#checkNumber").removeClass("is-invalid is-valid");
 									$.ajax({
-										url:"http://localhost:8080/cert/check",
+										url: window.contextPath + "/cert/check",
 										method:"post",
 										data:{
 											certEmail:certEmail,
@@ -468,7 +468,7 @@
     		        }
 
     		        $.ajax({
-    		            url: "http://localhost:8080/rest/zipPage",
+    		            url: window.contextPath + "/rest/zipPage",
     		            method: "get",
     		            data: { keyword: keyword },
     		            success: function (response) {
@@ -536,7 +536,7 @@
     	     var keyword = $(".search-input").val();
 
     	     $.ajax({
-    	         url: "http://localhost:8080/rest/zipPage",
+    	         url: window.contextPath "/rest/zipPage",
     	         method: "get",
     	         data: { keyword: keyword, page: page }, // 페이지 정보를 서버에 전달
     	         success: function (response) {

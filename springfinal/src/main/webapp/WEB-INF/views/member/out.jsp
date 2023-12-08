@@ -31,10 +31,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 
-    
-<script>
-	window.contextPath = "${pageContext.request.contextPath}";
-</script>
+
 
 <style>
 	.error-feed{
@@ -51,7 +48,7 @@
 			var memberPw = $("#memberPw").val();
 			console.log("jsp중간체크")
 			$.ajax({
-				url: "window.contextPath/rest/member/delete",
+				url: window.contextPath + "/rest/member/delete",
 				method: "post",
 				data:{
 					memberId:memberId,
@@ -60,7 +57,7 @@
 				success: function (response) {
 					console.log(response);
 					$(".error-feed").show();
-					window.location.href = "window.contextPath/member/outFinish";
+					window.location.href = window.contextPath + "/member/outFinish";
 				  },
 			});
 		});

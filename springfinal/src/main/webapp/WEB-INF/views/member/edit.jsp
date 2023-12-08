@@ -170,7 +170,7 @@
 		        processData: false,
 		        success: function (response) {
 		        	$(".profile").removeAttr("src");
-		        	$(".profile").attr("src", "${pageContext.request.contextPath}/rest/member/profileShow?memberId=" + response.memberId+ "&timestamp=" + new Date().getTime());
+		        	$(".profile").attr("src", window.contextPath + "/rest/member/profileShow?memberId=" + response.memberId+ "&timestamp=" + new Date().getTime());
 		        }
 		    });
 		});

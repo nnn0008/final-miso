@@ -387,10 +387,10 @@ $(function(){
 	            	var template = $("#clubMember-template").html();
               	var htmlTemplate = $.parseHTML(template);
               	
-              	$(htmlTemplate).find(".href").attr('href',${pageContext.request.contextPath}+"/member/mypage?memberId="+clubMember.memberId);
+              	$(htmlTemplate).find(".href").attr('href',window.contextPath+"/member/mypage?memberId="+clubMember.memberId);
               	
               	if(clubMember.attachNo!=0){
-              	$(htmlTemplate).find(".profileImage").attr('src',${pageContext.request.contextPath}+"/rest/member/profileShow?memberId="+clubMember.memberId);
+              	$(htmlTemplate).find(".profileImage").attr('src',window.contextPath+"/rest/member/profileShow?memberId="+clubMember.memberId);
               	}
               		if(clubMember.clubMemberRank == '운영진'){
               			var i =$('<i>');
@@ -402,7 +402,7 @@ $(function(){
               		}
               		
               	if(clubMember.attachNo==0){
-              		$(htmlTemplate).find(".profileImage").attr('src',${pageContext.request.contextPath}+"/images/basic-profile2.png");
+              		$(htmlTemplate).find(".profileImage").attr('src',window.contextPath+"/images/basic-profile2.png");
               		
               	}
               	
@@ -470,10 +470,10 @@ $(function(){
 	            	var template = $("#clubMember-template").html();
               	var htmlTemplate = $.parseHTML(template);
               	
-              	$(htmlTemplate).find(".href").attr('href',${pageContext.request.contextPath}+"/member/mypage?memberId="+clubMember.memberId);
+              	$(htmlTemplate).find(".href").attr('href',window.contextPath+"/member/mypage?memberId="+clubMember.memberId);
               	
               	if(clubMember.attachNo!=0){
-              	$(htmlTemplate).find(".profileImage").attr('src',${pageContext.request.contextPath}+"/rest/member/profileShow?memberId="+clubMember.memberId);
+              	$(htmlTemplate).find(".profileImage").attr('src',window.contextPath+"/rest/member/profileShow?memberId="+clubMember.memberId);
               	}
               		if(clubMember.clubMemberRank == '운영진'){
               			var i =$('<i>');
@@ -485,7 +485,7 @@ $(function(){
               		}
               		
               	if(clubMember.attachNo==0){
-              		$(htmlTemplate).find(".profileImage").attr('src',${pageContext.request.contextPath}+"/images/basic-profile2.png");
+              		$(htmlTemplate).find(".profileImage").attr('src',window.contextPath+"/images/basic-profile2.png");
               		
               	}
               	
@@ -622,7 +622,7 @@ $(function(){
 	    // 여기에 원하는 동작을 추가하세요.
 	    
 	    $(".makeMeetingForm")[0].reset();
-	    $("#exampleModal .preview").attr("src",${pageContext.request.contextPath}+"/images/noimage.jpg");
+	    $("#exampleModal .preview").attr("src",window.contextPath+"/images/noimage.jpg");
 	    
 	    
 	});
@@ -1077,14 +1077,14 @@ $(".meetingFix").change(function(){
                  	if(meeting.attachNo!=0){
                  	
                  	var img = $('<img>')
-                     .attr('src', ${pageContext.request.contextPath}+"/rest/meeting/attchImage?attachNo=" + meeting.attachNo)
+                     .attr('src', window.contextPath+"/rest/meeting/attchImage?attachNo=" + meeting.attachNo)
                      .attr('width', '230')
                      .attr('height', '130')
                  	.css('border-radius', '10px'); 
                  	}
                  	else{
                  		var img = $('<img>')
-                         .attr('src', ${pageContext.request.contextPath}+"/images/noimage.jpg")
+                         .attr('src', window.contextPath+"/images/noimage.jpg")
                          .attr('width', '230')
                          .attr('height', '130')
                          .css('border-radius', '10px'); 
@@ -1110,18 +1110,18 @@ $(".meetingFix").change(function(){
                       profileList.addClass("d-flex align-items-center flex-wrap"); // flex-wrap 추가
 
                       for (var a = 0; a < attendMemberList.length; a++) {
-                          var aLink = $('<a>').attr('href', ${pageContext.request.contextPath}+"/member/mypage?memberId=" + attendMemberList[a].clubMemberId);
+                          var aLink = $('<a>').attr('href', window.contextPath+"/member/mypage?memberId=" + attendMemberList[a].clubMemberId);
 
                           if (attendMemberList[a].attachNo != 0) {
                               var image = $('<img>')
                                   .addClass("rounded-circle me-3")
-                                  .attr('src', ${pageContext.request.contextPath}+"/rest/member/profileShow?memberId=" + attendMemberList[a].clubMemberId)
+                                  .attr('src', window.contextPath+"/rest/member/profileShow?memberId=" + attendMemberList[a].clubMemberId)
                                   .attr('width', '50')
                                   .attr('height', '50');
                           } else {
                               var image = $('<img>')
                                   .addClass("rounded-circle me-3")
-                                  .attr('src', ${pageContext.request.contextPath}+"/images/basic-profile.png")
+                                  .attr('src', window.contextPath+"/images/basic-profile.png")
                                   .attr('width', '50')
                                   .attr('height', '50');
                           }
@@ -1265,12 +1265,12 @@ $(".meetingFix").change(function(){
         $("#meetingEditModal .meetingMaxPeopleByEdit").val(meetingData.meetingNumber);
         
         if(meetingData.attachNo!=0){
-        	$("#meetingEditModal .preview2").attr("src",${pageContext.request.contextPath}+"/rest/meeting/attchImage?attachNo=" + meetingData.attachNo);
+        	$("#meetingEditModal .preview2").attr("src",window.contextPath+"/rest/meeting/attchImage?attachNo=" + meetingData.attachNo);
         }
         
         else{
         	
-        	$("#meetingEditModal .preview2").attr("src",${pageContext.request.contextPath}+"/images/noimage.jpg");
+        	$("#meetingEditModal .preview2").attr("src",window.contextPath+"/images/noimage.jpg");
         	
         }
         // 나머지 필드에 대해서도 필요한 데이터 채우기
@@ -1314,12 +1314,12 @@ $(".meetingFix").change(function(){
                 	if(meeting.attachNo!=0){
                 	
                 	var img = $('<img>')
-                    .attr('src', ${pageContext.request.contextPath}+"/rest/meeting/attchImage?attachNo=" + meeting.attachNo)
+                    .attr('src', window.contextPath+"/rest/meeting/attchImage?attachNo=" + meeting.attachNo)
                     .attr('width', '230')
                     .attr('height', '130');}
                 	else{
                 		var img = $('<img>')
-                        .attr('src', ${pageContext.request.contextPath}+"/images/noimage.jpg")
+                        .attr('src', window.contextPath+"/images/noimage.jpg")
                         .attr('width', '230')
                         .attr('height', '130');
                 		
@@ -1347,18 +1347,18 @@ $(".meetingFix").change(function(){
                         profileList.addClass("d-flex align-items-center flex-wrap"); // flex-wrap 추가
 
                         for (var a = 0; a < attendMemberList.length; a++) {
-                            var aLink = $('<a>').attr('href', ${pageContext.request.contextPath}+"/member/mypage?memberId=" + attendMemberList[a].clubMemberId);
+                            var aLink = $('<a>').attr('href', window.contextPath+"/member/mypage?memberId=" + attendMemberList[a].clubMemberId);
 
                             if (attendMemberList[a].attachNo != 0) {
                                 var image = $('<img>')
                                     .addClass("rounded-circle me-3")
-                                    .attr('src', ${pageContext.request.contextPath}+"/rest/member/profileShow?memberId=" + attendMemberList[a].clubMemberId)
+                                    .attr('src', window.contextPath+"/rest/member/profileShow?memberId=" + attendMemberList[a].clubMemberId)
                                     .attr('width', '50')
                                     .attr('height', '50');
                             } else {
                                 var image = $('<img>')
                                     .addClass("rounded-circle me-3")
-                                    .attr('src', ${pageContext.request.contextPath}+"/images/basic-profile.png")
+                                    .attr('src', window.contextPath+"/images/basic-profile.png")
                                     .attr('width', '50')
                                     .attr('height', '50');
                             }

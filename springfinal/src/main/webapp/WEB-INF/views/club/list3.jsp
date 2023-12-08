@@ -164,12 +164,12 @@ width:20px;
 	               	if(clubDto.attachNo!=0){
 	               	
 	               	
-	               	$(htmlTemplate).find(".club-image-list").attr('src',${pageContext.request.contextPath}+"/club/image?clubNo=" + clubDto.clubNo);
+	               	$(htmlTemplate).find(".club-image-list").attr('src',window.contextPath+"/club/image?clubNo=" + clubDto.clubNo);
 	               	}
 	               	else{
 	               
 	               		
-	               		$(htmlTemplate).find(".club-image-list").attr('src',${pageContext.request.contextPath}+"/images/basic-profile2.png");
+	               		$(htmlTemplate).find(".club-image-list").attr('src',window.contextPath+"/images/basic-profile2.png");
 
 	               	}
 	               	
@@ -191,13 +191,13 @@ width:20px;
 	               	
 	               	if(clubDto.likeClub==true){
 	                	$(htmlTemplate).find("[name=heart]").attr
-	                	('src', ${pageContext.request.contextPath}+"/images/suit-heart-fill.png")
+	                	('src', window.contextPath+"/images/suit-heart-fill.png")
 			            .attr('class',"heart-fill");
 	                	}
 	                	if(clubDto.likeClub==false){
 	                		
 	                		$(htmlTemplate).find("[name=heart]")
-	                		.attr('src', ${pageContext.request.contextPath}+"/images/suit-heart.png")
+	                		.attr('src', window.contextPath+"/images/suit-heart.png")
 	    		            .attr('class',"heart")
 	                		
 	                		
@@ -238,12 +238,12 @@ width:20px;
 	               	if(clubDto.attachNo!=0){
 	               	
 	               	
-	               	$(htmlTemplate).find(".club-image-list").attr('src',${pageContext.request.contextPath}+"/club/image?clubNo=" + clubDto.clubNo);
+	               	$(htmlTemplate).find(".club-image-list").attr('src',window.contextPath+"/club/image?clubNo=" + clubDto.clubNo);
 	               	}
 	               	else{
 	               
 	               		
-	               		$(htmlTemplate).find(".club-image-list").attr('src',${pageContext.request.contextPath}+"/images/basic-profile2.png");
+	               		$(htmlTemplate).find(".club-image-list").attr('src',window.contextPath+"/images/basic-profile2.png");
 
 	               	}
 	               	
@@ -265,13 +265,13 @@ width:20px;
 	               	
 	               	if(clubDto.likeClub==true){
 	                	$(htmlTemplate).find("[name=heart]").attr
-	                	('src', ${pageContext.request.contextPath}+"/images/suit-heart-fill.png")
+	                	('src', window.contextPath+"/images/suit-heart-fill.png")
 			            .attr('class',"heart-fill");
 	                	}
 	                	if(clubDto.likeClub==false){
 	                		
 	                		$(htmlTemplate).find("[name=heart]")
-	                		.attr('src', ${pageContext.request.contextPath}+"/images/suit-heart.png")
+	                		.attr('src', window.contextPath+"/images/suit-heart.png")
 	    		            .attr('class',"heart")
 	                		
 	                		
@@ -289,7 +289,7 @@ width:20px;
 			
 			
 			    var clubNo = $(this).find(".club-name").data("no");
-			     location.href = ${pageContext.request.contextPath}+'/club/detail?clubNo=' + clubNo; 
+			     location.href = window.contextPath+'/club/detail?clubNo=' + clubNo; 
 
 			
 			
@@ -310,7 +310,7 @@ width:20px;
 		            clubNo: clubNo
 		        },
 		        success: function (response) {
-		            $(event.currentTarget).attr('src', ${pageContext.request.contextPath}+"/images/suit-heart-fill.png")
+		            $(event.currentTarget).attr('src', window.contextPath+"/images/suit-heart-fill.png")
 		            .attr('class',"heart-fill");
 		            event.stopPropagation(); 
 		        }
@@ -332,7 +332,7 @@ width:20px;
 		        },
 		        success: function (response) {
 		        	console.log("지움성공");
-		            $(event.currentTarget).attr('src', ${pageContext.request.contextPath}+"/images/suit-heart.png")
+		            $(event.currentTarget).attr('src', window.contextPath+"/images/suit-heart.png")
 		            .attr('class',"heart");
 		            event.stopPropagation(); 
 		        }
