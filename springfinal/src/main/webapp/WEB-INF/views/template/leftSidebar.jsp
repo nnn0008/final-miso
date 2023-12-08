@@ -115,7 +115,7 @@ $(function () {
 
                     <div class="row mt-3 p-2 align-items-center">
                         <div class="col">
-                            <a href="/" class="link d-flex align-items-center">
+                            <a href="${pageContext.request.contextPath}/" class="link d-flex align-items-center">
                                 <img src="${pageContext.request.contextPath}/images/Vector-3.png" width="20%">
                                 <strong class="ms-3">홈</strong> 
                             </a>
@@ -124,7 +124,7 @@ $(function () {
 
                     <div class="row p-2 align-items-center">
                         <div class="col">
-                            <a href="/club/list" class="link d-flex align-items-center">
+                            <a href="${pageContext.request.contextPath}/club/list" class="link d-flex align-items-center">
                                 <img src="${pageContext.request.contextPath}/images/Vector.png" width="20%">
                                 <strong class="ms-3">모임 찾기</strong> 
                             </a>
@@ -133,7 +133,7 @@ $(function () {
 
                     <div class="row p-2 align-items-center">
                         <div class="col">
-                            <a href="/chat/roomList" class="link d-flex align-items-center">
+                            <a href="${pageContext.request.contextPath}/chat/roomList" class="link d-flex align-items-center">
                                 <img src="${pageContext.request.contextPath}/images/Vector-1.png" width="20%">
                                 <strong class="ms-3">채팅</strong> 
                             </a>
@@ -142,7 +142,7 @@ $(function () {
 
                     <div class="row p-2 align-items-center">
                         <div class="col">
-                            <a href="/member/mypage?memberId=${sessionScope.name}" class="link d-flex align-items-center">
+                            <a href="${pageContext.request.contextPath}/member/mypage?memberId=${sessionScope.name}" class="link d-flex align-items-center">
                                 <img src="${pageContext.request.contextPath}/images/Vector-2.png" width="20%">
                                 <strong class="ms-3">프로필</strong>
                             </a>
