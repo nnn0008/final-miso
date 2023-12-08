@@ -163,12 +163,13 @@
 		    formData.append('attach', $('#formFile')[0].files[0]);
 
 		    $.ajax({
-		        url: "window.contextPath/rest/member/profileUpdate",
+		        url:window.contextPath+"/rest/member/profileUpdate",
 		        method: "post",
 		        data: formData,
 		        contentType: false,
 		        processData: false,
 		        success: function (response) {
+		        	console.log(response.memberId);
 		        	$(".profile").removeAttr("src");
 		        	$(".profile").attr("src", window.contextPath + "/rest/member/profileShow?memberId=" + response.memberId+ "&timestamp=" + new Date().getTime());
 		        }
@@ -402,7 +403,7 @@
     		        }
 
     		        $.ajax({
-    		            url: "window.contextPath/rest/zipPage",
+    		            url: window.contextPath+"/rest/zipPage",
     		            method: "get",
     		            data: { keyword: keyword },
     		            success: function (response) {
@@ -470,7 +471,7 @@
     	     var keyword = $(".search-input").val();
 
     	     $.ajax({
-    	         url: "window.contextPath/rest/zipPage",
+    	         url:window.contextPath+"/rest/zipPage",
     	         method: "get",
     	         data: { keyword: keyword, page: page }, // 페이지 정보를 서버에 전달
     	         success: function (response) {
