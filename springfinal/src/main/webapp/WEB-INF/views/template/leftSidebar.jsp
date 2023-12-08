@@ -83,14 +83,7 @@ $(function () {
                     <div class="row mt-4">
                         <div class="col">
                             <div class="col d-flex justify-content-center">
-                                <c:choose>
-			                    	<c:when test="${sessionScope.name!=null}">
-			                    			<img src="${pageContext.request.contextPath}/rest/member/profileShow?memberId=${sessionScope.name}" class="rounded-circle profile" style="width: 80px; height: 80px;">
-			                    	</c:when>
-			                    	<c:otherwise>
-		                                <img src="${pageContext.request.contextPath}/images/avatar50.png" class="profile" style="width: 80px; height: 80px;">
-			                    	</c:otherwise>
-			                    </c:choose>
+		                                <img src="${pageContext.request.contextPath}/images/avatar50.png" class="rounded-circle profile" style="width: 80px; height: 80px;">
                             </div>
                             <div class="col d-flex justify-content-center mt-3">
                             	<c:choose>

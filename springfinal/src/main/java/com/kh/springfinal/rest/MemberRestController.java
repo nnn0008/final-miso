@@ -75,12 +75,9 @@ public class MemberRestController {
 		int attachNo = attachDao.sequence();
 		String memberId = (String) session.getAttribute("name");
 		AttachDto attachDto = profileDao.profileFindOne(memberId);
-		
-		String home = System.getProperty("user.home");
-		File dir = new File(home,"upload");
-		
+		String home = "D:/upload/kh12fa";
+		File dir = new File(home, "profile");
 		if(attachDto != null) {
-			
 			attachDao.delete(attachDto.getAttachNo());
 		File target = new File(dir,String.valueOf(attachDto.getAttachNo()));
 		target.delete();
@@ -111,8 +108,8 @@ public class MemberRestController {
 			AttachDto attachDto = profileDao.profileFindOne(memberId);
 
 			if(attachDto == null) {
-				String home = System.getProperty("user.home");
-		        File dir = new File(home, "upload");
+				String home = "D:/upload/kh12fa";
+		        File dir = new File(home, "profile");
 		        File target = new File(dir, "avatar50.png");
 
 		        // 기본 이미지 데이터 읽어오기
@@ -131,9 +128,9 @@ public class MemberRestController {
 		                .body(resource);
 			}
 
-			String home = System.getProperty("user.home");
-			File dir = new File(home, "upload");
-			File target = new File(dir, String.valueOf(attachDto.getAttachNo()));
+			String home = "D:/upload/kh12fa";
+			File dir = new File(home, "profile");
+			File target = new File(dir,String.valueOf(attachDto.getAttachNo()));
 
 			byte[] data = FileUtils.readFileToByteArray(target);//실제파일정보 불러오기
 			ByteArrayResource resource = new ByteArrayResource(data);
