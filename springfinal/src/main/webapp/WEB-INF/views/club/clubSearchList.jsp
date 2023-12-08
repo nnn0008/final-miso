@@ -166,7 +166,7 @@ width:20px;
 		                	if(clubDto.likeClub==false){
 		                		
 		                		$(htmlTemplate).find("[name=heart]")
-		                		.attr('src', "/images/suit-heart.png")
+		                		.attr('src', ${pageContext.request.contextPath}+"/images/suit-heart.png")
 		    		            .attr('class',"heart")
 		                		
 		                		
