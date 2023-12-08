@@ -75,7 +75,7 @@ public class MemberRestController {
 		int attachNo = attachDao.sequence();
 		String memberId = (String) session.getAttribute("name");
 		AttachDto attachDto = profileDao.profileFindOne(memberId);
-		String home = "C:/upload/kh12fa";
+		String home = "D:/upload/kh12fa";
 		File dir = new File(home);
 		if(attachDto != null) {
 			attachDao.delete(attachDto.getAttachNo());
@@ -108,7 +108,7 @@ public class MemberRestController {
 			AttachDto attachDto = profileDao.profileFindOne(memberId);
 
 			if(attachDto == null) {
-				String home = "C:/upload/kh12fa";
+				String home = "D:/upload/kh12fa";
 		        File dir = new File(home);
 		        File target = new File(dir, "avatar50.png");
 
@@ -128,7 +128,7 @@ public class MemberRestController {
 		                .body(resource);
 			}
 
-			String home = "C:/upload/kh12fa";
+			String home = "D:/upload/kh12fa";
 			File dir = new File(home);
 			File target = new File(dir,String.valueOf(attachDto.getAttachNo()));
 
