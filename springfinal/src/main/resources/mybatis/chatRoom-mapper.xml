@@ -56,28 +56,23 @@ SELECT
     (
         SELECT mi.attach_no
         FROM MEETING_IMAGE mi
-        WHERE mi.meeting_no = m.meeting_no
-        FETCH FIRST 1 ROWS ONLY
+        WHERE mi.meeting_no = m.meeting_no AND ROWNUM = 1
     ) AS attach_no,
-    (
-        SELECT c2.CHAT_CONTENT
-        FROM CHAT c2
-        WHERE c2.CHAT_ROOM_NO = m.chat_room_no
-        ORDER BY c2.CHAT_TIME DESC
-        FETCH FIRST 1 ROWS ONLY
-    ) AS chat_content,
-    (
-        SELECT c2.CHAT_BLIND
-        FROM CHAT c2
-        WHERE c2.CHAT_ROOM_NO = m.chat_room_no
-        ORDER BY c2.CHAT_TIME DESC
-        FETCH FIRST 1 ROWS ONLY
-    ) AS chat_blind
+    c2.CHAT_CONTENT,
+    c2.CHAT_BLIND
 FROM meeting m
 JOIN meeting_member mm ON m.meeting_no = mm.meeting_no
 JOIN CLUB c ON c.CLUB_NO = m.CLUB_NO 
 JOIN club_member cm ON mm.club_member_no = cm.club_member_no
 JOIN CHAT_ROOM cr ON cr.CHAT_ROOM_NO = m.chat_room_no
+LEFT JOIN (
+    SELECT 
+        cc.CHAT_ROOM_NO,
+        cc.CHAT_CONTENT,
+        cc.CHAT_BLIND,
+        ROW_NUMBER() OVER (PARTITION BY cc.CHAT_ROOM_NO ORDER BY cc.CHAT_TIME DESC) AS rn
+    FROM CHAT cc
+) c2 ON m.chat_room_no = c2.CHAT_ROOM_NO AND c2.rn = 1
 WHERE cm.club_member_id = #{memberId}
 	</select>
 	
@@ -114,23 +109,19 @@ SELECT
     c.club_name,
     c.club_explain,
     ci.attach_no,
-    (
-        SELECT CHAT_CONTENT
-        FROM CHAT
-        WHERE CHAT_ROOM_NO = cr.chat_room_no
-        ORDER BY CHAT_TIME DESC
-        FETCH FIRST 1 ROWS ONLY
-    ) AS chat_content,
-    (
-        SELECT CHAT_BLIND
-        FROM CHAT
-        WHERE CHAT_ROOM_NO = cr.chat_room_no
-        ORDER BY CHAT_TIME DESC
-        FETCH FIRST 1 ROWS ONLY
-    ) AS chat_blind
+    c2.CHAT_CONTENT,
+    c2.CHAT_BLIND
 FROM chat_room cr
 INNER JOIN club c ON c.chat_room_no = cr.chat_room_no
 LEFT JOIN club_image ci ON c.club_no = ci.club_no
+LEFT JOIN (
+    SELECT 
+        cc.CHAT_ROOM_NO,
+        cc.CHAT_CONTENT,
+        cc.CHAT_BLIND,
+        ROW_NUMBER() OVER (PARTITION BY cc.CHAT_ROOM_NO ORDER BY cc.CHAT_TIME DESC) AS rn
+    FROM CHAT cc
+) c2 ON cr.chat_room_no = c2.CHAT_ROOM_NO AND c2.rn = 1
 WHERE cr.chat_room_no = #{chatRoomNo}
 
 	</select>
